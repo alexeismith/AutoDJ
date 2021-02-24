@@ -3,10 +3,6 @@
 //==============================================================================
 MainComponent::MainComponent()
 {
-    // Make sure you set the size of the component after
-    // you add any child components.
-    setSize (800, 600);
-
     // Some platforms require permissions to open input channels so request that here
     if (juce::RuntimePermissions::isRequired (juce::RuntimePermissions::recordAudio)
         && ! juce::RuntimePermissions::isGranted (juce::RuntimePermissions::recordAudio))
@@ -19,6 +15,13 @@ MainComponent::MainComponent()
         // Specify the number of input and output channels that we want to open
         setAudioChannels (2, 2);
     }
+    
+    library.reset(new LibraryComponent());
+    addAndMakeVisible(library.get());
+    
+    // Make sure you set the size of the component after
+    // you add any child components.
+    setSize (800, 600);
 }
 
 MainComponent::~MainComponent()
@@ -69,7 +72,6 @@ void MainComponent::paint (juce::Graphics& g)
 
 void MainComponent::resized()
 {
-    // This is called when the MainContentComponent is resized.
-    // If you add any child components, this is where you should
-    // update their positions.
+    library->setSize(getWidth(), getHeight());
+    library->setTopLeftPosition(0, 0);
 }

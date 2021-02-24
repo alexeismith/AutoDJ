@@ -8,6 +8,10 @@
       <FILE id="MM3lb8" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="OYsJkP" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
+      <FILE id="NwPWlb" name="LibraryComponent.cpp" compile="1" resource="0"
+            file="Source/LibraryComponent.cpp"/>
+      <FILE id="FNH2p5" name="LibraryComponent.hpp" compile="0" resource="0"
+            file="Source/LibraryComponent.hpp"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>

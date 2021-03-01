@@ -128,28 +128,24 @@ SqliteConnection::~SqliteConnection ()
         sqlite3_close ((sqlite3*) database);
 }
 
-const juce::String SqliteConnection::openDatabaseFile (const juce::File& file)
+const juce::String SqliteConnection::openDatabaseFile(const juce::File& file)
 {
     juce::String errorText;
 
     if (database)
         sqlite3_close ((sqlite3*) database);
 
-    if (file.existsAsFile ())
+    if (!file.existsAsFile())
+        DBG("Creating new database file");
+        
+    sqlite3* db = 0;
+    if (sqlite3_open ((const char*) file.getFullPathName().getCharPointer() , &db))
     {
-        sqlite3* db = 0;
-        if (sqlite3_open ((const char*) file.getFullPathName().getCharPointer() , &db))
-        {
-            errorText = "Error connecting to " + file.getFullPathName();
-        }
-        else
-        {
-            database = db;
-        }
+        errorText = "Error connecting to " + file.getFullPathName();
     }
     else
     {
-        errorText = "Database file " + file.getFullPathName() + " does not exists";
+        database = db;
     }
     
     return errorText;

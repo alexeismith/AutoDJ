@@ -9,6 +9,9 @@
 #define DataManager_hpp
 
 #include <JuceHeader.h>
+#include "Third Party/jucetice_Sqlite.hpp"
+
+#define DATABASE_FILENAME (".AutoDjData")
 
 typedef struct TrackData {
     juce::String filename;
@@ -23,18 +26,21 @@ typedef struct TrackData {
 
 class DataManager
 {
-  public:
+public:
       
-      DataManager() {}
+    DataManager() {}
       
-      ~DataManager() {}
+    ~DataManager() {}
+    
+    void initialise(juce::File directory);
       
+private:
+    
+    void createTable();
+
+    void* database;      
       
-      
-  private:
-      
-      
-      JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DataManager)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DataManager)
 };
 
 #endif /* DataManager_hpp */

@@ -18,6 +18,8 @@ LibraryComponent::LibraryComponent()
     if (chooser.browseForDirectory())
     {
         dirContents->setDirectory(chooser.getResult(), true, true);
+        dataManager.initialise(chooser.getResult());
+        initialised = true;
     }
     
     fileList.reset(new juce::FileListComponent(*dirContents));

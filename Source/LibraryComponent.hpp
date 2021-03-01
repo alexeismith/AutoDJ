@@ -9,6 +9,7 @@
 #define LibraryComponent_hpp
 
 #include <JuceHeader.h>
+#include "DataManager.hpp"
 
 
 class LibraryComponent : public juce::Component
@@ -23,9 +24,13 @@ public:
     
 private:
     
+    bool initialised = false;
+    
     juce::TimeSliceThread thread {"BackgroundUpdateThread"};
     std::unique_ptr<juce::FileListComponent> fileList;
     std::unique_ptr<juce::DirectoryContentsList> dirContents;
+    
+    DataManager dataManager;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LibraryComponent)
 };

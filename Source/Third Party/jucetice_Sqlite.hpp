@@ -165,7 +165,7 @@ private:
     void removeResultset (SqliteResultset* resultSet, const bool deleteObject = false);
 
     void* database;
-      juce::CriticalSection queriesLock;
+    juce::CriticalSection queriesLock;
     juce::OwnedArray<SqliteResultset> queries;
 };
 

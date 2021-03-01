@@ -1,0 +1,1 @@
+After exporting from Projucer, must add -lsqlite3 to Other Linker Flags in Xcode

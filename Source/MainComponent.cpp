@@ -16,8 +16,8 @@ MainComponent::MainComponent()
         setAudioChannels (2, 2);
     }
     
-    library.reset(new LibraryComponent());
-    addAndMakeVisible(library.get());
+//    library.reset(new LibraryComponent());
+//    addAndMakeVisible(library.get());
     
     // Make sure you set the size of the component after
     // you add any child components.
@@ -72,6 +72,6 @@ void MainComponent::paint (juce::Graphics& g)
 
 void MainComponent::resized()
 {
-    library->setSize(getWidth(), getHeight());
-    library->setTopLeftPosition(0, 0);
+//    library->setSize(getWidth(), getHeight());
+//    library->setTopLeftPosition(0, 0);
 }

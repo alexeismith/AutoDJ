@@ -5,6 +5,7 @@
   <MAINGROUP id="r4tD07" name="AutoDJ">
     <GROUP id="{A84FEFF8-C709-ECFA-E10F-9FF3F5BBB565}" name="Source">
       <FILE id="gOh4WX" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="WCmtkz" name="CommonDefs.hpp" compile="0" resource="0" file="Source/CommonDefs.hpp"/>
       <GROUP id="{98CFD4F3-7539-9CFE-F3AC-DBA7432077B9}" name="UI">
         <FILE id="OYsJkP" name="MainComponent.cpp" compile="1" resource="0"
               file="Source/MainComponent.cpp"/>
@@ -19,8 +20,6 @@
     <GROUP id="{9D7FECDF-8952-8FC4-090E-52526F978CD8}" name="Database">
       <FILE id="raxDnC" name="DataManager.cpp" compile="1" resource="0" file="Source/DataManager.cpp"/>
       <FILE id="Xjjo2P" name="DataManager.hpp" compile="0" resource="0" file="Source/DataManager.hpp"/>
-      <FILE id="ZeNZFx" name="TrackData.cpp" compile="1" resource="0" file="Source/TrackData.cpp"/>
-      <FILE id="lVfPxr" name="TrackData.hpp" compile="0" resource="0" file="Source/TrackData.hpp"/>
       <FILE id="egvvOQ" name="jucetice_Sqlite.cpp" compile="1" resource="0"
             file="Source/Third Party/jucetice_Sqlite.cpp"/>
       <FILE id="Z87or1" name="jucetice_Sqlite.hpp" compile="0" resource="0"

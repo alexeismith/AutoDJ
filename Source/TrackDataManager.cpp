@@ -12,11 +12,13 @@ extern "C" {
 }
 
 
-TrackDataManager::TrackDataManager()
+TrackDataManager::TrackDataManager() :
+    fileFilter(juce::WildcardFileFilter("*.wav,*.mp3,*.aiff,*.m4a", "*", "AudioFormats"))
 {
-    thread.startThread(3);
+    formatManager.registerBasicFormats();
     
-    dirContents.reset(new juce::DirectoryContentsList(nullptr, thread));
+    thread.startThread(3);
+    dirContents.reset(new juce::DirectoryContentsList(&fileFilter, thread));
 }
 
 
@@ -26,6 +28,8 @@ void TrackDataManager::initialise(juce::File directory)
     
     if (!database.initialise(directory))
         jassert(false); // Database failed to initialise
+    
+    parseFiles();
     
     database.store(TrackData {"Example.mp3", "The Beatles", "Noise, Waves & Fields", 7938000, 130, 11, 3});
     
@@ -46,4 +50,10 @@ void TrackDataManager::printTrackData(TrackData data)
     "\nEnergy: " << data.energy << '\n';
     
     DBG(ss.str());
+}
+
+
+void TrackDataManager::parseFiles()
+{
+    DBG("NUM FILES: " << dirContents->getNumFiles());
 }

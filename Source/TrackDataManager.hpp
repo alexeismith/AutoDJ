@@ -28,7 +28,12 @@ public:
 private:
     
     void printTrackData(TrackData data);
+    
+    void parseFiles();
 
+    
+    juce::AudioFormatManager formatManager;
+    juce::WildcardFileFilter fileFilter;
     SqlDatabase database;
     
     juce::TimeSliceThread thread {"BackgroundUpdateThread"};

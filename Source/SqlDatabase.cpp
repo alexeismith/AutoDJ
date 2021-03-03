@@ -12,7 +12,7 @@ extern "C" {
 }
 
 
-void SqlDatabase::initialise(juce::File directory)
+bool SqlDatabase::initialise(juce::File directory)
 {
     juce::File dbFile = juce::File(directory.getFullPathName() + "/" + DATABASE_FILENAME);
     
@@ -30,7 +30,10 @@ void SqlDatabase::initialise(juce::File directory)
         database = db;
         createTable();
         initialised = true;
+        return true;
     }
+    
+    return false;
 }
 
 

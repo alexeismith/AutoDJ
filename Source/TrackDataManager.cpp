@@ -24,7 +24,8 @@ void TrackDataManager::initialise(juce::File directory)
 {
     dirContents->setDirectory(directory, true, true);
     
-    database.initialise(directory);
+    if (!database.initialise(directory))
+        jassert(false); // Database failed to initialise
     
     database.store(TrackData {"Example.mp3", "The Beatles", "Noise, Waves & Fields", 7938000, 130, 11, 3});
     

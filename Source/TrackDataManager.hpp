@@ -31,8 +31,6 @@ private:
 
     SqlDatabase database;
     
-    bool initialised = false;
-    
     juce::TimeSliceThread thread {"BackgroundUpdateThread"};
     std::unique_ptr<juce::DirectoryContentsList> dirContents;
     

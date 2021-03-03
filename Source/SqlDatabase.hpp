@@ -22,7 +22,7 @@ public:
       
     ~SqlDatabase() {}
     
-    void initialise(juce::File directory);
+    bool initialise(juce::File directory);
     
     void store(TrackData data);
     

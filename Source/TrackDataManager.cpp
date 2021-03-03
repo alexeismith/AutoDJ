@@ -12,108 +12,23 @@ extern "C" {
 }
 
 
+TrackDataManager::TrackDataManager()
+{
+    thread.startThread(3);
+    
+    dirContents.reset(new juce::DirectoryContentsList(nullptr, thread));
+}
+
+
 void TrackDataManager::initialise(juce::File directory)
 {
-    juce::File dbFile = juce::File(directory.getFullPathName() + "/" + DATABASE_FILENAME);
+    dirContents->setDirectory(directory, true, true);
     
-    if (!dbFile.existsAsFile())
-        DBG("Creating new database file");
+    database.initialise(directory);
     
-    // Open/create database
-    sqlite3* db = 0;
-    if (sqlite3_open((const char*) dbFile.getFullPathName().getCharPointer(), &db))
-    {
-        DBG("Error connecting to " + dbFile.getFullPathName());
-    }
-    else
-    {
-        database = db;
-        createTable();
-        initialised = true;
-    }
+    database.store(TrackData {"Example.mp3", "The Beatles", "Noise, Waves & Fields", 7938000, 130, 11, 3});
     
-    store(TrackData {"Example.mp3", "The Beatles", "Noise, Waves & Fields", 7938000, 130, 11, 3});
-    printTrackData(read("Example.mp3"));
-}
-
-
-void TrackDataManager::store(TrackData data)
-{
-    if (!initialised) jassert(false);
-    
-    std::stringstream ss;
-    ss << "REPLACE INTO Library VALUES('" \
-    << data.filename << "','" << data.artist << "','" << data.title << "'," << data.length << "," << data.bpm << "," << data.key << "," << data.energy << ")";
-    
-    execute(ss.str());
-    
-    execute("SELECT COUNT(*) FROM Library");
-}
-
-
-TrackData TrackDataManager::read(juce::String filename)
-{
-    TrackData data;
-    int errCode;
-    char *zErrMsg = 0;
-    sqlite3_stmt *statement;
-    
-    if (!initialised) jassert(false);
-    
-    std::stringstream ss;
-    ss << "SELECT * FROM Library WHERE Filename = '" << filename << "'";
-    
-    execute(ss.str());
-    
-    errCode = sqlite3_prepare_v2((sqlite3*)database, ss.str().c_str(), -1, &statement, 0);
-    if (errCode != SQLITE_OK)
-    {
-       fprintf(stderr, "SQL error: %s\n", zErrMsg);
-       sqlite3_free(zErrMsg);
-    }
-    
-    errCode = sqlite3_step(statement);
-    if (errCode == SQLITE_ROW) {
-        data.filename = juce::String(reinterpret_cast<const char*>(sqlite3_column_text(statement, 0)));
-        data.artist = juce::String(reinterpret_cast<const char*>(sqlite3_column_text(statement, 1)));
-        data.title = juce::String(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
-        data.length = sqlite3_column_int(statement, 3);
-        data.bpm = sqlite3_column_int(statement, 4);
-        data.key = sqlite3_column_int(statement, 5);
-        data.energy = sqlite3_column_int(statement, 6);
-    }
-    
-    sqlite3_finalize(statement);
-    
-    return data;
-}
-
-
-void TrackDataManager::createTable()
-{
-    execute("CREATE TABLE IF NOT EXISTS Library ("  \
-                           "Filename TEXT UNIQUE NOT NULL," \
-                           "Artist TEXT NOT NULL," \
-                           "Title TEXT NOT NULL," \
-                           "Length INT NOT NULL," \
-                           "Bpm INT," \
-                           "Key INT," \
-                           "Energy INT)");
-}
-
-
-void TrackDataManager::execute(juce::String statement)
-{
-    int errCode;
-    char *zErrMsg = 0;
-    
-    errCode = sqlite3_exec((sqlite3*)database, statement.getCharPointer(), nullptr, 0, &zErrMsg);
-    
-    if (errCode != SQLITE_OK)
-    {
-       fprintf(stderr, "SQL error: %s\n", zErrMsg);
-       sqlite3_free(zErrMsg);
-    }
+    printTrackData(database.read("Example.mp3"));
 }
 
 

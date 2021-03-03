@@ -9,45 +9,33 @@
 #define DataManager_hpp
 
 #include <JuceHeader.h>
+#include "SqlDatabase.hpp"
 
 #define DATABASE_FILENAME ("AutoDjData.db")
-
-typedef struct TrackData {
-    juce::String filename;
-    juce::String artist;
-    juce::String title;
-    int length; // Total number of samples, divide this by SUPPORTED_SAMPLERATE to get length in seconds
-    int bpm = -1; // Tempo in beats per minute
-    int key = -1; // Musical key signature TODO: how to represent camelot?
-    int energy = -1; // Overall energy level TODO: how to represent energy? thinking about track distribution screen, maybe a numeric scale is best
-} TrackData;
-
 
 class TrackDataManager
 {
 public:
       
-    TrackDataManager() {}
+    TrackDataManager();
       
     ~TrackDataManager() {}
     
     void initialise(juce::File directory);
     
-    void store(TrackData data);
-    
-    TrackData read(juce::String filename);
+    juce::DirectoryContentsList& getContents() { return *dirContents.get(); }
       
 private:
     
-    void execute(juce::String statement);
-    
-    void createTable();
-    
     void printTrackData(TrackData data);
 
+    SqlDatabase database;
+    
     bool initialised = false;
-    void* database;
-      
+    
+    juce::TimeSliceThread thread {"BackgroundUpdateThread"};
+    std::unique_ptr<juce::DirectoryContentsList> dirContents;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackDataManager)
 };
 

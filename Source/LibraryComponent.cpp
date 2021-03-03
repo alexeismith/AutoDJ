@@ -10,18 +10,13 @@
 
 LibraryComponent::LibraryComponent()
 {
-    thread.startThread(3);
-    
-    dirContents.reset(new juce::DirectoryContentsList(nullptr, thread));
-    
     juce::FileChooser chooser ("Choose Music Folder");
     if (chooser.browseForDirectory())
     {
-        dirContents->setDirectory(chooser.getResult(), true, true);
         dataManager.initialise(chooser.getResult());
     }
     
-    fileList.reset(new juce::FileListComponent(*dirContents));
+    fileList.reset(new juce::FileListComponent(dataManager.getContents()));
     addAndMakeVisible(fileList.get());
 }
 

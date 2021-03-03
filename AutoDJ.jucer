@@ -18,10 +18,13 @@
     </GROUP>
     <GROUP id="{9E0BB712-1FB6-4131-B7F6-FA3677F5C918}" name="Processing"/>
     <GROUP id="{9D7FECDF-8952-8FC4-090E-52526F978CD8}" name="Database">
+      <FILE id="PZxFQ4" name="TrackData.hpp" compile="0" resource="0" file="Source/TrackData.hpp"/>
       <FILE id="kqk0eM" name="TrackDataManager.cpp" compile="1" resource="0"
             file="Source/TrackDataManager.cpp"/>
       <FILE id="lBTfyV" name="TrackDataManager.hpp" compile="0" resource="0"
             file="Source/TrackDataManager.hpp"/>
+      <FILE id="Fow9ik" name="SqlDatabase.cpp" compile="1" resource="0" file="Source/SqlDatabase.cpp"/>
+      <FILE id="JVHSSv" name="SqlDatabase.hpp" compile="0" resource="0" file="Source/SqlDatabase.hpp"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>

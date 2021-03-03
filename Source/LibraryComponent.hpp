@@ -24,9 +24,7 @@ public:
     
 private:
     
-    juce::TimeSliceThread thread {"BackgroundUpdateThread"};
     std::unique_ptr<juce::FileListComponent> fileList;
-    std::unique_ptr<juce::DirectoryContentsList> dirContents;
     
     TrackDataManager dataManager;
     

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="mliKgU" name="AutoDJ" projectType="guiapp" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              defines="JUCE_USE_MP3AUDIOFORMAT">
   <MAINGROUP id="r4tD07" name="AutoDJ">
     <GROUP id="{A84FEFF8-C709-ECFA-E10F-9FF3F5BBB565}" name="Source">
       <FILE id="gOh4WX" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>

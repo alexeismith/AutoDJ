@@ -13,9 +13,10 @@ extern "C" {
 
 
 TrackDataManager::TrackDataManager() :
-    fileFilter(juce::WildcardFileFilter("*.wav,*.mp3,*.aiff,*.m4a", "*", "AudioFormats"))
+    fileFilter(juce::WildcardFileFilter("*.wav,*.mp3", "*", "AudioFormats"))
 {
-    formatManager.registerBasicFormats();
+    formatManager.registerFormat(new juce::WavAudioFormat(), false);
+    formatManager.registerFormat(new juce::MP3AudioFormat(), false);
     
     thread.startThread(3);
     dirContents.reset(new juce::DirectoryContentsList(&fileFilter, thread));
@@ -55,5 +56,28 @@ void TrackDataManager::printTrackData(TrackData data)
 
 void TrackDataManager::parseFiles()
 {
+    juce::File file;
+    juce::AudioFormatReader* reader;
+    juce::StringPairArray pairs;
+    
     DBG("NUM FILES: " << dirContents->getNumFiles());
+    
+    for (int i = 0; i < dirContents->getNumFiles(); i++)
+    {
+        file = dirContents->getFile(i);
+        
+        DBG('\n' << "File: " << file.getFileName());
+        
+        reader = formatManager.createReaderFor(file);
+        
+        pairs = reader->metadataValues;
+        
+        if (reader) {
+            for (juce::String key : reader->metadataValues.getAllKeys()) {
+                DBG("Key: " + key + " value: " + reader->metadataValues.getValue(key, "unknown"));
+            }
+            
+            delete reader;
+        }
+    }
 }

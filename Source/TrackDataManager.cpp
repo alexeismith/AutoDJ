@@ -1,18 +1,18 @@
 //
-//  DataManager.cpp
+//  TrackDataManager.cpp
 //  AutoDJ - App
 //
 //  Created by Alexei Smith on 01/03/2021.
 //
 
-#include "DataManager.hpp"
+#include "TrackDataManager.hpp"
 
 extern "C" {
   #include <sqlite3.h>
 }
 
 
-void DataManager::initialise(juce::File directory)
+void TrackDataManager::initialise(juce::File directory)
 {
     juce::File dbFile = juce::File(directory.getFullPathName() + "/" + DATABASE_FILENAME);
     
@@ -37,7 +37,7 @@ void DataManager::initialise(juce::File directory)
 }
 
 
-void DataManager::store(TrackData data)
+void TrackDataManager::store(TrackData data)
 {
     if (!initialised) jassert(false);
     
@@ -51,7 +51,7 @@ void DataManager::store(TrackData data)
 }
 
 
-TrackData DataManager::read(juce::String filename)
+TrackData TrackDataManager::read(juce::String filename)
 {
     TrackData data;
     int errCode;
@@ -89,7 +89,7 @@ TrackData DataManager::read(juce::String filename)
 }
 
 
-void DataManager::createTable()
+void TrackDataManager::createTable()
 {
     execute("CREATE TABLE IF NOT EXISTS Library ("  \
                            "Filename TEXT UNIQUE NOT NULL," \
@@ -102,7 +102,7 @@ void DataManager::createTable()
 }
 
 
-void DataManager::execute(juce::String statement)
+void TrackDataManager::execute(juce::String statement)
 {
     int errCode;
     char *zErrMsg = 0;
@@ -117,7 +117,7 @@ void DataManager::execute(juce::String statement)
 }
 
 
-void DataManager::printTrackData(TrackData data)
+void TrackDataManager::printTrackData(TrackData data)
 {
     std::stringstream ss;
     ss << "\nTrack Data..." << \

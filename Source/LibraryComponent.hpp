@@ -9,7 +9,7 @@
 #define LibraryComponent_hpp
 
 #include <JuceHeader.h>
-#include "DataManager.hpp"
+#include "TrackDataManager.hpp"
 
 
 class LibraryComponent : public juce::Component
@@ -28,7 +28,7 @@ private:
     std::unique_ptr<juce::FileListComponent> fileList;
     std::unique_ptr<juce::DirectoryContentsList> dirContents;
     
-    DataManager dataManager;
+    TrackDataManager dataManager;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LibraryComponent)
 };

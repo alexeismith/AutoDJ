@@ -1,5 +1,5 @@
 //
-//  DataManager.hpp
+//  TrackDataManager.hpp
 //  AutoDJ - App
 //
 //  Created by Alexei Smith on 01/03/2021.
@@ -23,13 +23,13 @@ typedef struct TrackData {
 } TrackData;
 
 
-class DataManager
+class TrackDataManager
 {
 public:
       
-    DataManager() {}
+    TrackDataManager() {}
       
-    ~DataManager() {}
+    ~TrackDataManager() {}
     
     void initialise(juce::File directory);
     
@@ -48,7 +48,7 @@ private:
     bool initialised = false;
     void* database;
       
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DataManager)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackDataManager)
 };
 
-#endif /* DataManager_hpp */
+#endif /* TrackDataManager_hpp */

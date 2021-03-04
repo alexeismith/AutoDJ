@@ -3,6 +3,8 @@
 //==============================================================================
 MainComponent::MainComponent()
 {
+    setAppearance();
+    
     // Some platforms require permissions to open input channels so request that here
     if (juce::RuntimePermissions::isRequired (juce::RuntimePermissions::recordAudio)
         && ! juce::RuntimePermissions::isGranted (juce::RuntimePermissions::recordAudio))
@@ -74,4 +76,22 @@ void MainComponent::resized()
 {
     library->setSize(getWidth(), getHeight());
     library->setTopLeftPosition(0, 0);
+}
+
+
+void MainComponent::setAppearance()
+{
+//    juce::LookAndFeel_V4::ColourScheme colourScheme = juce::LookAndFeel_V4::ColourScheme(juce::Colours::white,
+//                                        juce::Colours::grey,
+//                                        juce::Colours::lightgrey,
+//                                        juce::Colours::black,
+//                                        juce::Colours::black,
+//                                        juce::Colours::grey,
+//                                        juce::Colours::red,
+//                                        juce::Colours::darkred,
+//                                        juce::Colours::white);
+//    
+//    customAppearance.setColourScheme(colourScheme);
+    
+    juce::LookAndFeel::setDefaultLookAndFeel(&customAppearance);
 }

@@ -24,7 +24,11 @@ public:
     void resized() override;
 
 private:
+    
+    void setAppearance();
 
+    juce::LookAndFeel_V4 customAppearance;
+    
     std::unique_ptr<LibraryComponent> library;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)

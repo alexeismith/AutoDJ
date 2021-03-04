@@ -12,4 +12,9 @@
 #define TRACK_LENGTH_SECS_MIN (60)
 #define TRACK_LENGTH_SECS_MAX (600)
 
+enum ComponentIDs : int
+{
+    chooseFolder
+};
+
 #endif /* CommonDefs_hpp */

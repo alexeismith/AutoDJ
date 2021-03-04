@@ -9,5 +9,7 @@
 #define CommonDefs_hpp
 
 #define SUPPORTED_SAMPLERATE (44100)
+#define TRACK_LENGTH_SECS_MIN (60)
+#define TRACK_LENGTH_SECS_MAX (600)
 
 #endif /* CommonDefs_hpp */

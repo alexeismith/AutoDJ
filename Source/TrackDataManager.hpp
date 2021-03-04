@@ -31,10 +31,11 @@ private:
     
     void parseFiles();
     
-    TrackData getTrackData(juce::File file);
+    void addToDatabase(juce::File file, int hash);
     
-    juce::String getChecksum(juce::File file);
-
+    bool hasFileChanged(juce::File file, int existingHash);
+    
+    int getHash(juce::File file);
     
     juce::AudioFormatManager formatManager;
     juce::WildcardFileFilter fileFilter;

@@ -26,6 +26,7 @@ public:
     
     void store(TrackData data);
     
+    // If returned track data contains hash == 0, the filename is not present in the database
     TrackData read(juce::String filename);
       
 private:

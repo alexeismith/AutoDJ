@@ -43,7 +43,7 @@ void SqlDatabase::store(TrackData data)
     
     std::stringstream ss;
     ss << "REPLACE INTO Library VALUES('" \
-    << data.filename << "','" << data.artist << "','" << data.title << "'," << data.length << "," << data.analysed << "," << data.bpm << "," << data.key << "," << data.energy << ")";
+    << data.filename << "','" << data.hash << "','" << data.artist << "','" << data.title << "'," << data.length << "," << data.analysed << "," << data.bpm << "," << data.key << "," << data.energy << ")";
     
     execute(ss.str());
     
@@ -73,15 +73,17 @@ TrackData SqlDatabase::read(juce::String filename)
     }
     
     errCode = sqlite3_step(statement);
-    if (errCode == SQLITE_ROW) {
+    if (errCode == SQLITE_ROW)
+    {
         data.filename = juce::String(reinterpret_cast<const char*>(sqlite3_column_text(statement, 0)));
-        data.artist = juce::String(reinterpret_cast<const char*>(sqlite3_column_text(statement, 1)));
-        data.title = juce::String(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
-        data.length = sqlite3_column_int(statement, 3);
-        data.analysed = sqlite3_column_int(statement, 4);
-        data.bpm = sqlite3_column_int(statement, 5);
-        data.key = sqlite3_column_int(statement, 6);
-        data.energy = sqlite3_column_int(statement, 7);
+        data.hash = sqlite3_column_int(statement, 1);
+        data.artist = juce::String(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
+        data.title = juce::String(reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)));
+        data.length = sqlite3_column_int(statement, 4);
+        data.analysed = sqlite3_column_int(statement, 5);
+        data.bpm = sqlite3_column_int(statement, 6);
+        data.key = sqlite3_column_int(statement, 7);
+        data.energy = sqlite3_column_int(statement, 8);
     }
     
     sqlite3_finalize(statement);
@@ -94,6 +96,7 @@ void SqlDatabase::createTable()
 {
     execute("CREATE TABLE IF NOT EXISTS Library ("  \
                            "Filename TEXT UNIQUE NOT NULL," \
+                           "Hash INT NOT NULL," \
                            "Artist TEXT NOT NULL," \
                            "Title TEXT NOT NULL," \
                            "Length INT NOT NULL," \

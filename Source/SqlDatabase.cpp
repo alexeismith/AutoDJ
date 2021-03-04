@@ -43,7 +43,7 @@ void SqlDatabase::store(TrackData data)
     
     std::stringstream ss;
     ss << "REPLACE INTO Library VALUES('" \
-    << data.filename << "','" << data.artist << "','" << data.title << "'," << data.length << "," << data.bpm << "," << data.key << "," << data.energy << ")";
+    << data.filename << "','" << data.artist << "','" << data.title << "'," << data.length << "," << data.analysed << "," << data.bpm << "," << data.key << "," << data.energy << ")";
     
     execute(ss.str());
     
@@ -78,9 +78,10 @@ TrackData SqlDatabase::read(juce::String filename)
         data.artist = juce::String(reinterpret_cast<const char*>(sqlite3_column_text(statement, 1)));
         data.title = juce::String(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
         data.length = sqlite3_column_int(statement, 3);
-        data.bpm = sqlite3_column_int(statement, 4);
-        data.key = sqlite3_column_int(statement, 5);
-        data.energy = sqlite3_column_int(statement, 6);
+        data.analysed = sqlite3_column_int(statement, 4);
+        data.bpm = sqlite3_column_int(statement, 5);
+        data.key = sqlite3_column_int(statement, 6);
+        data.energy = sqlite3_column_int(statement, 7);
     }
     
     sqlite3_finalize(statement);
@@ -96,6 +97,7 @@ void SqlDatabase::createTable()
                            "Artist TEXT NOT NULL," \
                            "Title TEXT NOT NULL," \
                            "Length INT NOT NULL," \
+                           "Analysed INT NOT NULL," \
                            "Bpm INT," \
                            "Key INT," \
                            "Energy INT)");

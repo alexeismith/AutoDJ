@@ -30,6 +30,10 @@ private:
     void printTrackData(TrackData data);
     
     void parseFiles();
+    
+    TrackData getTrackData(juce::File file);
+    
+    juce::String getChecksum(juce::File file);
 
     
     juce::AudioFormatManager formatManager;

@@ -10,9 +10,10 @@
 
 typedef struct TrackData {
     juce::String filename;
-    juce::String artist;
-    juce::String title;
-    int length; // Total number of samples, divide this by SUPPORTED_SAMPLERATE to get length in seconds
+    juce::String artist = "";
+    juce::String title = "";
+    int length = 0; // Total length in seconds
+    bool analysed = false; // Indicates whether analysis has been performed to extract bpm, key and energy
     int bpm = -1; // Tempo in beats per minute
     int key = -1; // Musical key signature TODO: how to represent camelot?
     int energy = -1; // Overall energy level TODO: how to represent energy? thinking about track distribution screen, maybe a numeric scale is best

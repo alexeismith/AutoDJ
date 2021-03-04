@@ -13,7 +13,7 @@ extern "C" {
 
 
 TrackDataManager::TrackDataManager() :
-    fileFilter(juce::WildcardFileFilter("*.wav,*.mp3", "*", "AudioFormats"))
+    fileFilter(juce::WildcardFileFilter("*.wav", "*", "AudioFormats"))
 {
     formatManager.registerFormat(new juce::WavAudioFormat(), false);
     formatManager.registerFormat(new juce::MP3AudioFormat(), false);
@@ -32,9 +32,8 @@ void TrackDataManager::initialise(juce::File directory)
     
     parseFiles();
     
-    database.store(TrackData {"Example.mp3", "The Beatles", "Noise, Waves & Fields", 7938000, 130, 11, 3});
-    
-    printTrackData(database.read("Example.mp3"));
+    printTrackData(database.read("Vesta.wav"));
+    printTrackData(database.read("Cool Today (New Ends Remix).wav"));
 }
 
 
@@ -46,6 +45,7 @@ void TrackDataManager::printTrackData(TrackData data)
     "\nArtist: " << data.artist << \
     "\nTitle: " << data.title << \
     "\nLength: " << data.length << \
+    "\nAnalysed: " << data.analysed << \
     "\nBPM: " << data.bpm << \
     "\nKey: " << data.key << \
     "\nEnergy: " << data.energy << '\n';
@@ -56,28 +56,38 @@ void TrackDataManager::printTrackData(TrackData data)
 
 void TrackDataManager::parseFiles()
 {
-    juce::File file;
-    juce::AudioFormatReader* reader;
-    juce::StringPairArray pairs;
+    TrackData trackData;
     
     DBG("NUM FILES: " << dirContents->getNumFiles());
     
     for (int i = 0; i < dirContents->getNumFiles(); i++)
     {
-        file = dirContents->getFile(i);
-        
-        DBG('\n' << "File: " << file.getFileName());
-        
-        reader = formatManager.createReaderFor(file);
-        
-        pairs = reader->metadataValues;
-        
-        if (reader) {
-            for (juce::String key : reader->metadataValues.getAllKeys()) {
-                DBG("Key: " + key + " value: " + reader->metadataValues.getValue(key, "unknown"));
-            }
-            
-            delete reader;
-        }
+        trackData = getTrackData(dirContents->getFile(i));
+        database.store(trackData);
     }
+    
+    // TODO: Check MD5 hash
+    // TODO: remove rows for files that are no longer present
+}
+
+
+TrackData TrackDataManager::getTrackData(juce::File file)
+{
+    TrackData trackData;
+    
+    juce::AudioFormatReader* reader = formatManager.createReaderFor(file);
+    
+    trackData.filename = file.getFileName();
+
+    if (reader)
+    {
+        trackData.artist = reader->metadataValues.getValue("IART", "");
+        trackData.title = reader->metadataValues.getValue("INAM", "");
+        
+        trackData.length = round(reader->lengthInSamples / reader->sampleRate);
+
+        delete reader;
+    }
+    
+    return trackData;
 }

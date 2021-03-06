@@ -12,6 +12,13 @@ extern "C" {
 }
 
 
+SqlDatabase::~SqlDatabase()
+{
+    if (initialised)
+        sqlite3_close((sqlite3*)database);
+}
+
+
 bool SqlDatabase::initialise(juce::File directory)
 {
     juce::File dbFile = juce::File(directory.getFullPathName() + "/" + DATABASE_FILENAME);

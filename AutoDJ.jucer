@@ -15,6 +15,10 @@
               file="Source/LibraryComponent.cpp"/>
         <FILE id="FNH2p5" name="LibraryComponent.hpp" compile="0" resource="0"
               file="Source/LibraryComponent.hpp"/>
+        <FILE id="yV87zV" name="TrackTableComponent.cpp" compile="1" resource="0"
+              file="Source/TrackTableComponent.cpp"/>
+        <FILE id="S5dMOS" name="TrackTableComponent.hpp" compile="0" resource="0"
+              file="Source/TrackTableComponent.hpp"/>
       </GROUP>
     </GROUP>
     <GROUP id="{9E0BB712-1FB6-4131-B7F6-FA3677F5C918}" name="Processing"/>

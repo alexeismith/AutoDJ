@@ -10,9 +10,10 @@
 
 #include <JuceHeader.h>
 #include "TrackDataManager.hpp"
+#include "TrackTableComponent.hpp"
 #include "CommonDefs.hpp"
 
-class LibraryComponent : public juce::Component, juce::Button::Listener
+class LibraryComponent : public juce::Component, public juce::Button::Listener
 {
 public:
     
@@ -28,7 +29,9 @@ private:
     
     void chooseFolder();
     
-    std::unique_ptr<juce::FileListComponent> fileList;
+//    std::unique_ptr<juce::FileListComponent> fileList;
+    std::unique_ptr<TrackTableComponent> trackTable;
+    
     std::unique_ptr<juce::Button> chooseFolderBtn;
     
     TrackDataManager dataManager;

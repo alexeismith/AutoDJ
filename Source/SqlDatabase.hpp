@@ -20,7 +20,7 @@ public:
       
     SqlDatabase() {}
       
-    ~SqlDatabase() {}
+    ~SqlDatabase();
     
     bool initialise(juce::File directory);
     

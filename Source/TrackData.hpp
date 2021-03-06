@@ -8,8 +8,6 @@
 #ifndef TrackData_h
 #define TrackData_h
 
-
-
 typedef struct TrackData {
     juce::String filename;
     int hash = 0; // Hash of the raw data, computed using XXHash32 algorithm

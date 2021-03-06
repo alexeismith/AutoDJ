@@ -10,20 +10,29 @@
 
 LibraryComponent::LibraryComponent()
 {
-    fileList.reset(new juce::FileListComponent(dataManager.getContents()));
-    addAndMakeVisible(fileList.get());
-    fileList->setVisible(false);
+//    fileList.reset(new juce::FileListComponent(dataManager.getContents()));
+//    addAndMakeVisible(fileList.get());
+//    fileList->setVisible(false);
+    
+    trackTable.reset(new TrackTableComponent());
+    addAndMakeVisible(trackTable.get());
+    trackTable->setVisible(true);
     
     chooseFolderBtn.reset(new juce::TextButton("Choose Folder"));
     addAndMakeVisible(chooseFolderBtn.get());
     chooseFolderBtn->setSize(120, 40);
     chooseFolderBtn->addListener(this);
+    
+    chooseFolderBtn->setVisible(false);
 }
 
 void LibraryComponent::resized()
 {
-    fileList->setSize(getWidth(), getHeight());
-    fileList->setTopLeftPosition(0, 0);
+//    fileList->setSize(getWidth(), getHeight());
+//    fileList->setTopLeftPosition(0, 0);
+    
+    trackTable->setSize(getWidth(), getHeight());
+    trackTable->setTopLeftPosition(0, 0);
     
     chooseFolderBtn->setCentrePosition(getWidth()/2, getHeight()/2);
 }
@@ -51,6 +60,7 @@ void LibraryComponent::chooseFolder()
         dataManager.initialise(chooser.getResult());
     }
     
-    fileList->setVisible(true);
+//    fileList->setVisible(true);
+    trackTable->setVisible(true);
     chooseFolderBtn->setVisible(false);
 }

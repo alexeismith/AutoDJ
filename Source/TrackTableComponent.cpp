@@ -62,7 +62,8 @@ void TrackTableComponent::resized()
 
 void TrackTableComponent::sortOrderChanged(int newSortColumnId, bool isForwards)
 {
-    
+    TrackTableSorter sorter(newSortColumnId, isForwards);
+    tracks->sort(sorter);
 }
 
 
@@ -86,4 +87,45 @@ juce::String TrackTableComponent::getValueForColumn(TrackData& track, int column
             jassert(false); // Unrecognised column ID
             return juce::String();
     }
+}
+
+
+int TrackTableSorter::compareElements(TrackData first, TrackData second)
+{
+    int result;
+    
+    switch(columnId)
+    {
+        case 1:
+            result = first.artist.compareIgnoreCase(second.artist);
+            break;
+        case 2:
+            result = first.title.compareIgnoreCase(second.title);
+            break;
+        case 3:
+            result = 2 * (second.length < first.length) - 1;
+            break;
+        case 4:
+            result = 2 * (second.bpm < first.bpm) - 1;
+            break;
+        case 5:
+            result = 2 * (second.key < first.key) - 1;
+            break;
+        // TODO: Check this energy comparison is in line with scale
+        case 6:
+            result = 2 * (second.energy < first.energy) - 1;
+            break;
+        default:
+            jassert(false); // Unrecognised column ID
+            return 0;
+    }
+    
+    // TODO: Check this extra sorting works
+    if (result == 0)
+        result = first.artist.compareIgnoreCase(second.artist);
+    
+    if (result == 0)
+        result = first.title.compareIgnoreCase(second.title);
+
+    return direction * result;
 }

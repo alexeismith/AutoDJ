@@ -29,7 +29,7 @@ public:
     
     void resized() override;
     
-    void sortOrderChanged (int newSortColumnId, bool isForwards) override;
+    void sortOrderChanged(int newSortColumnId, bool isForwards) override;
     
 private:
     
@@ -50,25 +50,15 @@ private:
 class TrackTableSorter
 {
 public:
-    TrackTableSorter (const juce::String& attributeToSortBy, bool forwards)
-        : attributeToSort (attributeToSortBy),
-          direction (forwards ? 1 : -1)
-    {}
+    TrackTableSorter(int columnId, bool forwards)
+        : columnId(columnId),
+          direction(forwards ? 1 : -1) {}
     
-    int compareElements (juce::XmlElement* first, juce::XmlElement* second) const
-    {
-        auto result = first->getStringAttribute (attributeToSort)
-                            .compareNatural (second->getStringAttribute (attributeToSort));
-
-        if (result == 0)
-            result = first->getStringAttribute ("ID")
-                           .compareNatural (second->getStringAttribute ("ID"));
-
-        return direction * result;
-    }
+    int compareElements(TrackData first, TrackData second);
     
 private:
-    juce::String attributeToSort;
+    
+    int columnId;
     int direction;
 };
 

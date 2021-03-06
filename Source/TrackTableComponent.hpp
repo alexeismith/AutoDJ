@@ -9,6 +9,7 @@
 #define TrackTableComponent_hpp
 
 #include <JuceHeader.h>
+#include "TrackData.hpp"
 
 class TrackTableComponent : public juce::Component, public juce::TableListBoxModel
 {
@@ -17,6 +18,8 @@ public:
     TrackTableComponent();
     
     ~TrackTableComponent() {}
+    
+    void populate(juce::Array<TrackData>* trackList);
     
     int getNumRows() override { return numRows; }
     
@@ -32,9 +35,13 @@ public:
     
 private:
     
+    juce::String getValueForColumn(TrackData& track, int columnId);
+    
     juce::TableListBox table { {}, this };
     
-    int numRows = 3;
+    juce::Array<TrackData>* tracks = nullptr;
+    
+    int numRows = 0;
     
     juce::Font font { 14.0f };
     

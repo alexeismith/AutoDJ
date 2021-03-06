@@ -23,7 +23,7 @@ public:
     
     void initialise(juce::File directory);
     
-    juce::DirectoryContentsList& getContents() { return *dirContents.get(); }
+    juce::Array<TrackData>* getTracks() { return &tracks; }
       
 private:
     
@@ -31,7 +31,7 @@ private:
     
     void parseFiles();
     
-    void addToDatabase(juce::File file, int hash);
+    TrackData addToDatabase(juce::File file, int hash);
     
     bool hasFileChanged(juce::File file, int existingHash);
     
@@ -40,6 +40,8 @@ private:
     juce::AudioFormatManager formatManager;
     juce::WildcardFileFilter fileFilter;
     SqlDatabase database;
+    
+    juce::Array<TrackData> tracks;
     
     juce::TimeSliceThread thread {"BackgroundUpdateThread"};
     std::unique_ptr<juce::DirectoryContentsList> dirContents;

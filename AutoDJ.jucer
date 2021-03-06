@@ -6,6 +6,7 @@
   <MAINGROUP id="r4tD07" name="AutoDJ">
     <GROUP id="{A84FEFF8-C709-ECFA-E10F-9FF3F5BBB565}" name="Source">
       <FILE id="gOh4WX" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="HUgRlp" name="CommonDefs.cpp" compile="1" resource="0" file="Source/CommonDefs.cpp"/>
       <FILE id="WCmtkz" name="CommonDefs.hpp" compile="0" resource="0" file="Source/CommonDefs.hpp"/>
       <GROUP id="{98CFD4F3-7539-9CFE-F3AC-DBA7432077B9}" name="UI">
         <FILE id="OYsJkP" name="MainComponent.cpp" compile="1" resource="0"

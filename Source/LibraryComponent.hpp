@@ -8,7 +8,6 @@
 #ifndef LibraryComponent_hpp
 #define LibraryComponent_hpp
 
-#include <JuceHeader.h>
 #include "TrackDataManager.hpp"
 #include "TrackTableComponent.hpp"
 #include "CommonDefs.hpp"

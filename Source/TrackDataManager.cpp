@@ -34,8 +34,11 @@ void TrackDataManager::initialise(juce::File directory)
     
     parseFiles();
     
-    printTrackData(database.read("Vesta.wav"));
-    printTrackData(database.read("Cool Today (New Ends Remix).wav"));
+    for (TrackData track : tracks)
+        printTrackData(track);
+
+//    printTrackData(database.read("Vesta.wav"));
+//    printTrackData(database.read("Cool Today (New Ends Remix).wav"));
 }
 
 
@@ -61,7 +64,7 @@ void TrackDataManager::parseFiles()
 {
     juce::File file;
     int hash;
-    TrackData existingData;
+    TrackData trackData;
     
     DBG("Num WAV files in directory: " << dirContents->getNumFiles());
     
@@ -70,20 +73,21 @@ void TrackDataManager::parseFiles()
         file = dirContents->getFile(i);
         hash = getHash(file);
         
-        existingData = database.read(file.getFileName());
+        trackData = database.read(file.getFileName());
         
         // If the existing hash is zero, the track hasn't been found in the database
-        if (existingData.hash == 0)
+        if (trackData.hash == 0)
             addToDatabase(file, hash);
         // Otherwise, if the file has changed since the data was stored, replace the database entry with a new one
-        else if (hash != existingData.hash)
-            addToDatabase(file, hash);
+        else if (hash != trackData.hash)
+            trackData = addToDatabase(file, hash);
+        
+        tracks.add(trackData);
     }
-    // TODO: remove rows for files that are no longer present
 }
 
 
-void TrackDataManager::addToDatabase(juce::File file, int hash)
+TrackData TrackDataManager::addToDatabase(juce::File file, int hash)
 {
     TrackData trackData;
     trackData.filename = file.getFileName();
@@ -105,6 +109,8 @@ void TrackDataManager::addToDatabase(juce::File file, int hash)
         
         DBG("Added to database: " << trackData.filename);
     }
+    
+    return trackData;
 }
 
 

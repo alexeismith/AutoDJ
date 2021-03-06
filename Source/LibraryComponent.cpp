@@ -16,14 +16,12 @@ LibraryComponent::LibraryComponent()
     
     trackTable.reset(new TrackTableComponent());
     addAndMakeVisible(trackTable.get());
-    trackTable->setVisible(true);
+    trackTable->setVisible(false);
     
     chooseFolderBtn.reset(new juce::TextButton("Choose Folder"));
     addAndMakeVisible(chooseFolderBtn.get());
     chooseFolderBtn->setSize(120, 40);
     chooseFolderBtn->addListener(this);
-    
-    chooseFolderBtn->setVisible(false);
 }
 
 void LibraryComponent::resized()
@@ -60,7 +58,10 @@ void LibraryComponent::chooseFolder()
         dataManager.initialise(chooser.getResult());
     }
     
-//    fileList->setVisible(true);
     trackTable->setVisible(true);
     chooseFolderBtn->setVisible(false);
+    
+    trackTable->populate(dataManager.getTracks());
+
+
 }

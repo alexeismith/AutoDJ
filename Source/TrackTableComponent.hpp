@@ -31,8 +31,6 @@ public:
     
     void sortOrderChanged (int newSortColumnId, bool isForwards) override;
     
-//    void paint (juce::Graphics& g) override { g.setColour(juce::Colours::red); g.fillAll(); }
-    
 private:
     
     juce::String getValueForColumn(TrackData& track, int columnId);
@@ -60,13 +58,13 @@ public:
     int compareElements (juce::XmlElement* first, juce::XmlElement* second) const
     {
         auto result = first->getStringAttribute (attributeToSort)
-                            .compareNatural (second->getStringAttribute (attributeToSort)); // [1]
+                            .compareNatural (second->getStringAttribute (attributeToSort));
 
         if (result == 0)
             result = first->getStringAttribute ("ID")
-                           .compareNatural (second->getStringAttribute ("ID"));             // [2]
+                           .compareNatural (second->getStringAttribute ("ID"));
 
-        return direction * result;                                                          // [3]
+        return direction * result;
     }
     
 private:

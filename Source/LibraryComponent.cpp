@@ -10,10 +10,6 @@
 
 LibraryComponent::LibraryComponent()
 {
-//    fileList.reset(new juce::FileListComponent(dataManager.getContents()));
-//    addAndMakeVisible(fileList.get());
-//    fileList->setVisible(false);
-    
     trackTable.reset(new TrackTableComponent());
     addAndMakeVisible(trackTable.get());
     trackTable->setVisible(false);
@@ -26,9 +22,6 @@ LibraryComponent::LibraryComponent()
 
 void LibraryComponent::resized()
 {
-//    fileList->setSize(getWidth(), getHeight());
-//    fileList->setTopLeftPosition(0, 0);
-    
     trackTable->setSize(getWidth(), getHeight());
     trackTable->setTopLeftPosition(0, 0);
     
@@ -57,11 +50,9 @@ void LibraryComponent::chooseFolder()
     {
         dataManager.initialise(chooser.getResult());
     }
+
+    trackTable->populate(dataManager.getTracks());
     
     trackTable->setVisible(true);
     chooseFolderBtn->setVisible(false);
-    
-    trackTable->populate(dataManager.getTracks());
-
-
 }

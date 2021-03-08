@@ -31,11 +31,18 @@ public:
     
     void sortOrderChanged(int newSortColumnId, bool isForwards) override;
     
+    virtual void addColumns();
+    
+protected:
+    
+    std::unique_ptr<juce::TableListBox> table;
+    
+    
 private:
     
     juce::String getValueForColumn(TrackData& track, int columnId);
     
-    juce::TableListBox table { {}, this };
+    
     
     juce::Array<TrackData>* tracks = nullptr;
     

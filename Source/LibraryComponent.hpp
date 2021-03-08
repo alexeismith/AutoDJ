@@ -9,7 +9,7 @@
 #define LibraryComponent_hpp
 
 #include "TrackDataManager.hpp"
-#include "TrackTableComponent.hpp"
+#include "QueueTableComponent.hpp"
 #include "CommonDefs.hpp"
 
 class LibraryComponent : public juce::Component, public juce::Button::Listener
@@ -28,7 +28,7 @@ private:
     
     void chooseFolder();
     
-    std::unique_ptr<TrackTableComponent> trackTable;
+    std::unique_ptr<QueueTableComponent> trackTable;
     
     std::unique_ptr<juce::Button> chooseFolderBtn;
     

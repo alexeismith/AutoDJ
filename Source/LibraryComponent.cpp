@@ -10,9 +10,10 @@
 
 LibraryComponent::LibraryComponent()
 {
-    trackTable.reset(new TrackTableComponent());
+    trackTable.reset(new QueueTableComponent());
     addAndMakeVisible(trackTable.get());
     trackTable->setVisible(false);
+    trackTable->addColumns();
     
     chooseFolderBtn.reset(new juce::TextButton("Choose Folder"));
     addAndMakeVisible(chooseFolderBtn.get());

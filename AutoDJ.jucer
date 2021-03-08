@@ -20,6 +20,10 @@
               file="Source/TrackTableComponent.cpp"/>
         <FILE id="S5dMOS" name="TrackTableComponent.hpp" compile="0" resource="0"
               file="Source/TrackTableComponent.hpp"/>
+        <FILE id="Gnh3wW" name="QueueTableComponent.cpp" compile="1" resource="0"
+              file="Source/QueueTableComponent.cpp"/>
+        <FILE id="L9LHSC" name="QueueTableComponent.hpp" compile="0" resource="0"
+              file="Source/QueueTableComponent.hpp"/>
       </GROUP>
     </GROUP>
     <GROUP id="{9E0BB712-1FB6-4131-B7F6-FA3677F5C918}" name="Processing"/>

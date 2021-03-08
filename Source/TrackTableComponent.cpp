@@ -10,16 +10,22 @@
 
 TrackTableComponent::TrackTableComponent()
 {
+    table.reset(new juce::TableListBox());
+    table->setModel(this);
+    addAndMakeVisible(table.get());
+}
+
+
+void TrackTableComponent::addColumns()
+{
     uint8_t columnFlags = juce::TableHeaderComponent::visible | juce::TableHeaderComponent::sortable;
     
-    table.getHeader().addColumn("Artist", 1, 150, 0, 0, columnFlags);
-    table.getHeader().addColumn("Title", 2, 200, 0, 0, columnFlags);
-    table.getHeader().addColumn("Length", 3, 100, 0, 0, columnFlags);
-    table.getHeader().addColumn("BPM", 4, 100, 0, 0, columnFlags);
-    table.getHeader().addColumn("Key", 5, 100, 0, 0, columnFlags);
-    table.getHeader().addColumn("Energy", 6, 100, 0, 0, columnFlags);
-    
-    addAndMakeVisible(table);
+    table->getHeader().addColumn("Artist", 1, 150, 0, 0, columnFlags);
+    table->getHeader().addColumn("Title", 2, 200, 0, 0, columnFlags);
+    table->getHeader().addColumn("Length", 3, 100, 0, 0, columnFlags);
+    table->getHeader().addColumn("BPM", 4, 100, 0, 0, columnFlags);
+    table->getHeader().addColumn("Key", 5, 100, 0, 0, columnFlags);
+    table->getHeader().addColumn("Energy", 6, 100, 0, 0, columnFlags);
 }
 
 
@@ -27,7 +33,7 @@ void TrackTableComponent::populate(juce::Array<TrackData>* trackList)
 {
     tracks = trackList;
     numRows = tracks->size();
-    table.getHeader().setSortColumnId(1, true);
+    table->getHeader().setSortColumnId(1, true);
 }
 
 
@@ -58,7 +64,7 @@ void TrackTableComponent::paintCell(juce::Graphics& g, int rowNumber, int column
 
 void TrackTableComponent::resized()
 {
-    table.setSize(getWidth(), getHeight());
+    table->setSize(getWidth(), getHeight());
 }
 
 

@@ -10,12 +10,14 @@
 
 TrackTableComponent::TrackTableComponent()
 {
-    table.getHeader().addColumn("Artist", 1, 150, 100, 300, juce::TableHeaderComponent::defaultFlags);
-    table.getHeader().addColumn("Title", 2, 200, 100, 300, juce::TableHeaderComponent::defaultFlags);
-    table.getHeader().addColumn("Length", 3, 100, 50, 200, juce::TableHeaderComponent::defaultFlags);
-    table.getHeader().addColumn("BPM", 4, 100, 50, 200, juce::TableHeaderComponent::defaultFlags);
-    table.getHeader().addColumn("Key", 5, 100, 50, 200, juce::TableHeaderComponent::defaultFlags);
-    table.getHeader().addColumn("Energy", 6, 100, 50, 200, juce::TableHeaderComponent::defaultFlags);
+    uint8_t columnFlags = juce::TableHeaderComponent::visible | juce::TableHeaderComponent::sortable;
+    
+    table.getHeader().addColumn("Artist", 1, 150, 0, 0, columnFlags);
+    table.getHeader().addColumn("Title", 2, 200, 0, 0, columnFlags);
+    table.getHeader().addColumn("Length", 3, 100, 0, 0, columnFlags);
+    table.getHeader().addColumn("BPM", 4, 100, 0, 0, columnFlags);
+    table.getHeader().addColumn("Key", 5, 100, 0, 0, columnFlags);
+    table.getHeader().addColumn("Energy", 6, 100, 0, 0, columnFlags);
     
     addAndMakeVisible(table);
 }

@@ -53,8 +53,6 @@ void SqlDatabase::store(TrackData data)
     << data.filename << "','" << data.hash << "','" << data.artist << "','" << data.title << "'," << data.length << "," << data.analysed << "," << data.bpm << "," << data.key << "," << data.energy << ")";
     
     execute(ss.str());
-    
-    execute("SELECT COUNT(*) FROM Library");
 }
 
 

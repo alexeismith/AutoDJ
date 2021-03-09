@@ -31,7 +31,7 @@ private:
     
     void parseFiles();
     
-    TrackData addToDatabase(juce::File file, int hash);
+    void addToDatabase(juce::File file, int hash, TrackData& trackData);
     
     bool hasFileChanged(juce::File file, int existingHash);
     

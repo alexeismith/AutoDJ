@@ -18,7 +18,6 @@ TrackDataManager::TrackDataManager() :
     fileFilter(juce::WildcardFileFilter("*.wav", "*", "AudioFormats"))
 {
     formatManager.registerFormat(new juce::WavAudioFormat(), false);
-    formatManager.registerFormat(new juce::MP3AudioFormat(), false);
     
     thread.startThread(3);
     dirContents.reset(new juce::DirectoryContentsList(&fileFilter, thread));
@@ -36,9 +35,6 @@ void TrackDataManager::initialise(juce::File directory)
     
     for (TrackData track : tracks)
         printTrackData(track);
-
-//    printTrackData(database.read("Vesta.wav"));
-//    printTrackData(database.read("Cool Today (New Ends Remix).wav"));
 }
 
 
@@ -68,28 +64,28 @@ void TrackDataManager::parseFiles()
     
     DBG("Num WAV files in directory: " << dirContents->getNumFiles());
     
+    while (dirContents->isStillLoading());
+    
     for (int i = 0; i < dirContents->getNumFiles(); i++)
     {
         file = dirContents->getFile(i);
+        DBG(dirContents->getNumFiles());
         hash = getHash(file);
         
         trackData = database.read(file.getFileName());
         
-        // If the existing hash is zero, the track hasn't been found in the database
-        if (trackData.hash == 0)
-            addToDatabase(file, hash);
-        // Otherwise, if the file has changed since the data was stored, replace the database entry with a new one
-        else if (hash != trackData.hash)
-            trackData = addToDatabase(file, hash);
+        // If the file has changed since the data was stored, or the file did not exist in the database, replace the database entry with a new one
+        // (If the existing hash is zero, the track hasn't been found in the database)
+        if (hash != trackData.hash)
+            addToDatabase(file, hash, trackData);
         
         tracks.add(trackData);
     }
 }
 
 
-TrackData TrackDataManager::addToDatabase(juce::File file, int hash)
+void TrackDataManager::addToDatabase(juce::File file, int hash, TrackData& trackData)
 {
-    TrackData trackData;
     trackData.filename = file.getFileName();
     trackData.hash = hash;
     
@@ -109,8 +105,6 @@ TrackData TrackDataManager::addToDatabase(juce::File file, int hash)
         
         DBG("Added to database: " << trackData.filename);
     }
-    
-    return trackData;
 }
 
 

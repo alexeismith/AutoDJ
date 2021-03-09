@@ -26,6 +26,12 @@ public:
     
     ~QueueTableComponent() { table.reset(); }
     
+    void mouseDown(const juce::MouseEvent& e) override;
+    
+    void mouseDrag(const juce::MouseEvent& e) override;
+    
+    void mouseUp(const juce::MouseEvent& e) override { isDragging = false; }
+
     void addColumns() override;
     
 protected:
@@ -34,6 +40,10 @@ protected:
     
     
 private:
+    
+    bool isDragging = false;
+    
+    int rowInitialY;
     
     QueueHeaderLook headerAppearance;
     

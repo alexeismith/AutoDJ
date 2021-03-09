@@ -62,14 +62,13 @@ void TrackDataManager::parseFiles()
     int hash;
     TrackData trackData;
     
-    DBG("Num WAV files in directory: " << dirContents->getNumFiles());
-    
     while (dirContents->isStillLoading());
+    
+    DBG("Num WAV files in directory: " << dirContents->getNumFiles());
     
     for (int i = 0; i < dirContents->getNumFiles(); i++)
     {
         file = dirContents->getFile(i);
-        DBG(dirContents->getNumFiles());
         hash = getHash(file);
         
         trackData = database.read(file.getFileName());

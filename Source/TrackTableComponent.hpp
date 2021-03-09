@@ -37,16 +37,14 @@ protected:
     
     std::unique_ptr<juce::TableListBox> table;
     
+    juce::Array<TrackData>* tracks = nullptr;
+    
+    int numRows = 0;
+    
     
 private:
     
     juce::String getValueForColumn(TrackData& track, int columnId);
-    
-    
-    
-    juce::Array<TrackData>* tracks = nullptr;
-    
-    int numRows = 0;
     
     juce::Font font { 14.0f };
     

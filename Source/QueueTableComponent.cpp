@@ -11,6 +11,7 @@
 QueueTableComponent::QueueTableComponent()
 {
     table->getHeader().setLookAndFeel(&headerAppearance);
+    table->setInterceptsMouseClicks(false, false);
 }
 
 
@@ -24,6 +25,49 @@ void QueueTableComponent::addColumns()
     table->getHeader().addColumn("BPM", 4, 100, 0, 0, columnFlags);
     table->getHeader().addColumn("Key", 5, 100, 0, 0, columnFlags);
     table->getHeader().addColumn("Energy", 6, 100, 0, 0, columnFlags);
+}
+
+
+void QueueTableComponent::mouseDown(const juce::MouseEvent& e)
+{
+    if(e.getPosition().getY() < table->getHeader().getHeight())
+    {
+        table->selectRow(-1);
+        isDragging = false;
+        return;
+    }
+    
+    int row = table->getRowContainingPosition(e.getPosition().getX(), e.getPosition().getY());
+    table->selectRow(row);
+    
+    if (row != -1)
+    {
+        rowInitialY = e.getPosition().getY();
+        isDragging = true;
+    }
+}
+
+
+void QueueTableComponent::mouseDrag(const juce::MouseEvent& e)
+{
+    int distance, newRow, row = table->getSelectedRow();
+    if (!isDragging) return;
+    
+    distance = e.getPosition().getY() - rowInitialY;
+    
+    int rowShift = floor(distance / table->getRowHeight());
+    
+    newRow = row + rowShift;
+    newRow = juce::jmin(newRow, numRows - 1);
+    newRow = juce::jmax(newRow, 0);
+    rowShift = newRow - row;
+    rowInitialY += rowShift * table->getRowHeight();
+    
+//    DBG(newRow);
+    tracks->move(row, newRow);
+    table->selectRow(newRow);
+    table->repaint();
+    
 }
 
 

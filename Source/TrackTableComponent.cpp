@@ -111,17 +111,21 @@ int TrackTableSorter::compareElements(TrackData first, TrackData second)
             result = first.title.compareIgnoreCase(second.title);
             break;
         case 3:
-            result = 2 * (second.length < first.length) - 1;
+            if (first.length == second.length) result = 0;
+            else result = first.length > second.length ? 1 : -1;
             break;
         case 4:
-            result = 2 * (second.bpm < first.bpm) - 1;
+            if (first.bpm == first.bpm) result = 0;
+            else result = first.bpm > second.bpm ? 1 : -1;
             break;
         case 5:
-            result = 2 * (second.key < first.key) - 1;
+            if (first.key == first.key) result = 0;
+            else result = first.key > second.key ? 1 : -1;
             break;
         // TODO: Check this energy comparison is in line with scale
         case 6:
-            result = 2 * (second.energy < first.energy) - 1;
+            if (first.energy == first.energy) result = 0;
+            else result = first.energy > second.energy ? 1 : -1;
             break;
         default:
             jassert(false); // Unrecognised column ID

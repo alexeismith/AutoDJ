@@ -8,6 +8,16 @@
 #include "TrackTableComponent.hpp"
 #include "CommonDefs.hpp"
 
+enum TrackTableColumns {
+    artist = 1,
+    title,
+    length,
+    bpm,
+    key,
+    energy
+};
+
+
 TrackTableComponent::TrackTableComponent()
 {
     table.reset(new juce::TableListBox());
@@ -50,7 +60,13 @@ void TrackTableComponent::paintRowBackground(juce::Graphics& g, int rowNumber, i
 
 void TrackTableComponent::paintCell(juce::Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
 {
-    g.setColour (rowIsSelected ? juce::Colours::darkblue : getLookAndFeel().findColour (juce::ListBox::textColourId));
+    if (rowIsSelected)
+        g.setColour(juce::Colours::darkblue);
+    else if(columnId == TrackTableColumns::title && tracks->getReference(rowNumber).title.isEmpty())
+        g.setColour(juce::Colours::lightslategrey.brighter());
+    else
+        g.setColour(getLookAndFeel().findColour (juce::ListBox::textColourId));
+        
     g.setFont (font);
 
     juce::String text = getValueForColumn(tracks->getReference(rowNumber), columnId);
@@ -79,18 +95,18 @@ juce::String TrackTableComponent::getValueForColumn(TrackData& track, int column
 {
     switch(columnId)
     {
-        case 1:
+        case TrackTableColumns::artist:
             return track.artist;
-        case 2:
+        case TrackTableColumns::title:
             if (track.title.isEmpty()) return track.filename;
             else return track.title;
-        case 3:
+        case TrackTableColumns::length:
             return AutoDJ::getLengthString(track.length);
-        case 4:
+        case TrackTableColumns::bpm:
             return juce::String(track.bpm);
-        case 5:
+        case TrackTableColumns::key:
             return juce::String(track.key);
-        case 6:
+        case TrackTableColumns::energy:
             return juce::String(track.energy);
         default:
             jassert(false); // Unrecognised column ID
@@ -105,26 +121,26 @@ int TrackTableSorter::compareElements(TrackData first, TrackData second)
     
     switch(columnId)
     {
-        case 1:
+        case TrackTableColumns::artist:
             result = first.artist.compareIgnoreCase(second.artist);
             break;
-        case 2:
+        case TrackTableColumns::title:
             result = first.title.compareIgnoreCase(second.title);
             break;
-        case 3:
+        case TrackTableColumns::length:
             if (first.length == second.length) result = 0;
             else result = first.length > second.length ? 1 : -1;
             break;
-        case 4:
+        case TrackTableColumns::bpm:
             if (first.bpm == first.bpm) result = 0;
             else result = first.bpm > second.bpm ? 1 : -1;
             break;
-        case 5:
+        case TrackTableColumns::key:
             if (first.key == first.key) result = 0;
             else result = first.key > second.key ? 1 : -1;
             break;
         // TODO: Check this energy comparison is in line with scale
-        case 6:
+        case TrackTableColumns::energy:
             if (first.energy == first.energy) result = 0;
             else result = first.energy > second.energy ? 1 : -1;
             break;

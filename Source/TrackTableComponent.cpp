@@ -82,7 +82,8 @@ juce::String TrackTableComponent::getValueForColumn(TrackData& track, int column
         case 1:
             return track.artist;
         case 2:
-            return track.title;
+            if (track.title.isEmpty()) return track.filename;
+            else return track.title;
         case 3:
             return AutoDJ::getLengthString(track.length);
         case 4:
@@ -132,7 +133,6 @@ int TrackTableSorter::compareElements(TrackData first, TrackData second)
             return 0;
     }
     
-    // TODO: Check this extra sorting works
     if (result == 0)
         result = first.artist.compareIgnoreCase(second.artist);
     

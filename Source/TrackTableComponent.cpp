@@ -30,12 +30,12 @@ void TrackTableComponent::addColumns()
 {
     uint8_t columnFlags = juce::TableHeaderComponent::visible | juce::TableHeaderComponent::sortable;
     
-    table->getHeader().addColumn("Artist", 1, 150, 0, 0, columnFlags);
-    table->getHeader().addColumn("Title", 2, 200, 0, 0, columnFlags);
-    table->getHeader().addColumn("Length", 3, 100, 0, 0, columnFlags);
-    table->getHeader().addColumn("BPM", 4, 100, 0, 0, columnFlags);
-    table->getHeader().addColumn("Key", 5, 100, 0, 0, columnFlags);
-    table->getHeader().addColumn("Energy", 6, 100, 0, 0, columnFlags);
+    table->getHeader().addColumn("Artist", 1, 210, 0, 0, columnFlags);
+    table->getHeader().addColumn("Title", 2, 310, 0, 0, columnFlags);
+    table->getHeader().addColumn("Length", 3, 80, 0, 0, columnFlags);
+    table->getHeader().addColumn("BPM", 4, 60, 0, 0, columnFlags);
+    table->getHeader().addColumn("Key", 5, 60, 0, 0, columnFlags);
+    table->getHeader().addColumn("Energy", 6, 80, 0, 0, columnFlags);
 }
 
 

@@ -25,7 +25,7 @@ public:
     
     juce::Array<TrackData>* getTracks() { return &tracks; }
     
-    void fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer);
+    void fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer, bool sumToMono = false);
       
 private:
     

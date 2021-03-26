@@ -133,7 +133,7 @@ int TrackDataManager::getHash(juce::File file)
 }
 
 
-void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer)
+void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer, bool sumToMono)
 {
     juce::String filePath = dirContents->getDirectory().getFullPathName() + "/" + filename;
     DBG(filePath);
@@ -145,6 +145,12 @@ void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float
         buffer.setSize(reader->numChannels, (int)reader->lengthInSamples);
         
         reader->read(buffer.getArrayOfWritePointers(), reader->numChannels, 0, (int)reader->lengthInSamples);
+        
+        if (sumToMono && buffer.getNumChannels() == 2)
+        {
+            buffer.addFrom(0, 0, buffer.getReadPointer(1), buffer.getNumSamples());
+            buffer.setSize(1, buffer.getNumSamples());
+        }
         
         delete reader;
     }

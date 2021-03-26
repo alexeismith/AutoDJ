@@ -13,5 +13,5 @@ void AnalysisManager::analyse(TrackData track)
 {
     juce::AudioBuffer<float> buffer;
     
-    dataManager->fetchAudio(track.filename, buffer);
+    dataManager->fetchAudio(track.filename, buffer, true);
 }

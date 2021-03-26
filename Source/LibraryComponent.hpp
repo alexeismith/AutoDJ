@@ -9,6 +9,7 @@
 #define LibraryComponent_hpp
 
 #include "TrackDataManager.hpp"
+#include "AnalysisManager.hpp"
 #include "QueueTableComponent.hpp"
 #include "CommonDefs.hpp"
 
@@ -33,6 +34,7 @@ private:
     std::unique_ptr<juce::Button> chooseFolderBtn;
     
     TrackDataManager dataManager;
+    std::unique_ptr<AnalysisManager> analysisManager;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LibraryComponent)
 };

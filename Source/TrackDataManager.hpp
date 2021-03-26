@@ -24,6 +24,8 @@ public:
     void initialise(juce::File directory);
     
     juce::Array<TrackData>* getTracks() { return &tracks; }
+    
+    void fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer);
       
 private:
     

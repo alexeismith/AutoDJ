@@ -131,3 +131,21 @@ int TrackDataManager::getHash(juce::File file)
     
     return hash;
 }
+
+
+void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer)
+{
+    juce::String filePath = dirContents->getDirectory().getFullPathName() + "/" + filename;
+    DBG(filePath);
+    
+    juce::AudioFormatReader* reader = formatManager.createReaderFor(filePath);
+    
+    if (reader)
+    {
+        buffer.setSize(reader->numChannels, (int)reader->lengthInSamples);
+        
+        reader->read(buffer.getArrayOfWritePointers(), reader->numChannels, 0, (int)reader->lengthInSamples);
+        
+        delete reader;
+    }
+}

@@ -10,6 +10,8 @@
 
 LibraryComponent::LibraryComponent()
 {
+    analysisManager.reset(new AnalysisManager(&dataManager));
+    
     trackTable.reset(new QueueTableComponent());
     addAndMakeVisible(trackTable.get());
     trackTable->setVisible(false);
@@ -50,10 +52,12 @@ void LibraryComponent::chooseFolder()
     if (chooser.browseForDirectory())
     {
         dataManager.initialise(chooser.getResult());
+        
+        trackTable->populate(dataManager.getTracks());
+        
+        trackTable->setVisible(true);
+        chooseFolderBtn->setVisible(false);
+        
+        analysisManager->analyse(*dataManager.getTracks()->begin());
     }
-
-    trackTable->populate(dataManager.getTracks());
-    
-    trackTable->setVisible(true);
-    chooseFolderBtn->setVisible(false);
 }

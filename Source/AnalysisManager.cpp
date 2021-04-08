@@ -69,7 +69,7 @@ void AnalysisManager::analyse(TrackData track)
 
     dataManager->fetchAudio(track.filename, buffer, true);
     
-    int blockSize = 4096;
+    int blockSize = 2048;
     int numBlocks = buffer.getNumSamples() / blockSize;
     
     for (int i = 0; i < numBlocks; i++)

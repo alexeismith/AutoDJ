@@ -4,6 +4,8 @@
 
 #include "LibraryComponent.hpp"
 
+#include "GraphComponent.hpp"
+
 
 class MainComponent  : public juce::AudioAppComponent
 {
@@ -30,6 +32,8 @@ private:
     juce::LookAndFeel_V4 customAppearance;
     
     std::unique_ptr<LibraryComponent> library;
+    
+    std::unique_ptr<juce::ResizableWindow> graphWindow;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

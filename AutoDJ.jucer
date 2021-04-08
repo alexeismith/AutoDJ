@@ -2,8 +2,8 @@
 
 <JUCERPROJECT id="mliKgU" name="AutoDJ" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              headerPath="../../Source/ThirdParty/qm-dsp/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools/"
-              defines="kiss_fft_scalar=double">
+              headerPath="../../Source/ThirdParty/qm-dsp/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools/&#10;../../Source/ThirdParty/soundtouch/include/"
+              defines="kiss_fft_scalar=double&#10;ANDROID">
   <MAINGROUP id="r4tD07" name="AutoDJ">
     <GROUP id="{A84FEFF8-C709-ECFA-E10F-9FF3F5BBB565}" name="Source">
       <FILE id="gOh4WX" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
@@ -29,6 +29,16 @@
     </GROUP>
     <GROUP id="{9E0BB712-1FB6-4131-B7F6-FA3677F5C918}" name="Processing">
       <GROUP id="{67C76829-2C6F-697A-3BEA-7FBFB680248E}" name="Third Party">
+        <GROUP id="{2637A895-BA81-8947-F3CC-9ED9B67ADA9B}" name="Soundtouch">
+          <FILE id="CVifia" name="FIFOSampleBuffer.cpp" compile="1" resource="0"
+                file="Source/ThirdParty/soundtouch/source/SoundTouch/FIFOSampleBuffer.cpp"/>
+          <FILE id="t8Kj0W" name="FIFOSampleBuffer.h" compile="0" resource="0"
+                file="Source/ThirdParty/soundtouch/include/FIFOSampleBuffer.h"/>
+          <FILE id="zFOBBI" name="PeakFinder.cpp" compile="1" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/PeakFinder.cpp"/>
+          <FILE id="KuSK5I" name="PeakFinder.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/PeakFinder.h"/>
+          <FILE id="leU5rA" name="BPMDetect.cpp" compile="1" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/BPMDetect.cpp"/>
+          <FILE id="qFicP7" name="BPMDetect.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/include/BPMDetect.h"/>
+        </GROUP>
         <GROUP id="{DC2B663B-90EE-4178-86AD-9F7A0D1DA85D}" name="KissFFT">
           <FILE id="wFBZcc" name="kiss_fft.c" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/kiss_fft.c"/>
           <FILE id="AirqQK" name="kiss_fft.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/kiss_fft.h"/>

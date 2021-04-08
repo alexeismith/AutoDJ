@@ -14,7 +14,8 @@
 
 AnalysisManager::AnalysisManager(TrackDataManager* dm) :
     dataManager(dm),
-    tempoTracker(TempoTrackV2(SUPPORTED_SAMPLERATE, STEP_SIZE))
+    tempoTracker(TempoTrackV2(SUPPORTED_SAMPLERATE, STEP_SIZE)),
+    stBpmDetect(1, SUPPORTED_SAMPLERATE)
 {
     dfConfig.DFType = DF_COMPLEXSD;
     dfConfig.stepSize = STEP_SIZE;
@@ -29,37 +30,52 @@ AnalysisManager::AnalysisManager(TrackDataManager* dm) :
 
 void AnalysisManager::analyse(TrackData track)
 {
+//    juce::AudioBuffer<float> buffer;
+//    juce::AudioBuffer<double> bufferDouble;
+//
+//    DBG("Copying");
+//
+//    dataManager->fetchAudio(track.filename, buffer, true);
+//    bufferDouble.setSize(1, buffer.getNumSamples());
+//
+//    for (int i = 0; i < buffer.getNumSamples(); i++) {
+//        bufferDouble.setSample(0, i, (double)buffer.getSample(0, i));
+//    }
+//
+//    DBG("Analysing");
+//
+//    int numFrames = (buffer.getNumSamples() - dfConfig.frameLength) / dfConfig.stepSize;
+//
+//    std::vector<double> onsetResult;
+//    onsetResult.resize(numFrames, 0);
+//
+//    for (int i = 0; i < numFrames; i++) {
+//        onsetResult[i] = onsetAnalyser->processTimeDomain(bufferDouble.getReadPointer(0, i*dfConfig.stepSize));
+//    }
+//
+//    std::vector<double> beatPeriod;
+//    beatPeriod.resize(numFrames);
+//    std::vector<double> tempi;
+//    vector<double> beats;
+//
+//    tempoTracker.calculateBeatPeriod(onsetResult, beatPeriod, tempi);
+//
+//    tempoTracker.calculateBeats(onsetResult, beatPeriod, beats);
+//
+//    DBG("DONE");
+    
+    
     juce::AudioBuffer<float> buffer;
-    juce::AudioBuffer<double> bufferDouble;
-    
-    DBG("Copying");
-    
-    dataManager->fetchAudio(track.filename, buffer, true);
-    bufferDouble.setSize(1, buffer.getNumSamples());
-    
-    for (int i = 0; i < buffer.getNumSamples(); i++) {
-        bufferDouble.setSample(0, i, (double)buffer.getSample(0, i));
-    }
-    
-    DBG("Analysing");
-    
-    int numFrames = (buffer.getNumSamples() - dfConfig.frameLength) / dfConfig.stepSize;
-    
-    std::vector<double> onsetResult;
-    onsetResult.resize(numFrames, 0);
-    
-    for (int i = 0; i < numFrames; i++) {
-        onsetResult[i] = onsetAnalyser->processTimeDomain(bufferDouble.getReadPointer(0, i*dfConfig.stepSize));
-    }
-    
-    std::vector<double> beatPeriod;
-    beatPeriod.resize(numFrames);
-    std::vector<double> tempi;
-    vector<double> beats;
 
-    tempoTracker.calculateBeatPeriod(onsetResult, beatPeriod, tempi);
+    dataManager->fetchAudio(track.filename, buffer, true);
     
-    tempoTracker.calculateBeats(onsetResult, beatPeriod, beats);
+    int blockSize = 4096;
+    int numBlocks = buffer.getNumSamples() / blockSize;
     
-    DBG("DONE");
+    for (int i = 0; i < numBlocks; i++)
+    {
+        stBpmDetect.inputSamples(buffer.getReadPointer(0, i*blockSize), blockSize);
+    }
+    
+    DBG(stBpmDetect.getBpm());
 }

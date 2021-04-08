@@ -21,6 +21,7 @@ MainComponent::MainComponent()
     library.reset(new LibraryComponent());
     addAndMakeVisible(library.get());
     
+#ifdef SHOW_GRAPH
     graphWindow.reset(new juce::ResizableWindow("Data Graph", true));
     graphWindow->setSize(600, 600);
     graphWindow->setUsingNativeTitleBar(true);
@@ -28,6 +29,7 @@ MainComponent::MainComponent()
     graphWindow->setVisible(true);
     graphWindow->setResizable(true, true);
     graphWindow->setContentOwned(new GraphComponent(), false);
+#endif
     
     // Make sure you set the size of the component after
     // you add any child components.

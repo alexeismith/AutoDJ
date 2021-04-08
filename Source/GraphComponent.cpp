@@ -30,7 +30,7 @@ void GraphComponent::paint(juce::Graphics& g)
     
     point = getPositionForValue(0);
     
-    for (int i = 1; i < getWidth(); i++)
+    for (int i = 1; i < dataStore.size(); i++)
     {
         prevPoint = point;
         point = getPositionForValue(i);
@@ -73,10 +73,6 @@ void GraphComponent::store(GRAPH_DATA_TYPE* data, int size)
     memcpy(dataStore.getRawDataPointer(), data, size);
     
     juce::findMinAndMax(dataStore.getRawDataPointer(), size, minY, maxY);
-    
-    dataSize = size;
-    
-    DBG("dataStore.size: " << dataStore.size() << " size: " << size);
     
     ready.store(true);
 }

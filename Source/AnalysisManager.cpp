@@ -9,6 +9,8 @@
 
 #include "CommonDefs.hpp"
 
+#include "GraphComponent.hpp"
+
 #define STEP_SIZE (512) // Ideal for 44.1kHz sample rate (see https://code.soundsoftware.ac.uk/projects/qm-vamp-plugins/repository/entry/plugins/BarBeatTrack.cpp#L249)
 
 
@@ -30,44 +32,46 @@ AnalysisManager::AnalysisManager(TrackDataManager* dm) :
 
 void AnalysisManager::analyse(TrackData track)
 {
-//    juce::AudioBuffer<float> buffer;
-//    juce::AudioBuffer<double> bufferDouble;
-//
-//    DBG("Copying");
-//
-//    dataManager->fetchAudio(track.filename, buffer, true);
-//    bufferDouble.setSize(1, buffer.getNumSamples());
-//
-//    for (int i = 0; i < buffer.getNumSamples(); i++) {
-//        bufferDouble.setSample(0, i, (double)buffer.getSample(0, i));
-//    }
-//
-//    DBG("Analysing");
-//
-//    int numFrames = (buffer.getNumSamples() - dfConfig.frameLength) / dfConfig.stepSize;
-//
-//    std::vector<double> onsetResult;
-//    onsetResult.resize(numFrames, 0);
-//
-//    for (int i = 0; i < numFrames; i++) {
-//        onsetResult[i] = onsetAnalyser->processTimeDomain(bufferDouble.getReadPointer(0, i*dfConfig.stepSize));
-//    }
-//
-//    std::vector<double> beatPeriod;
-//    beatPeriod.resize(numFrames);
-//    std::vector<double> tempi;
-//    vector<double> beats;
-//
-//    tempoTracker.calculateBeatPeriod(onsetResult, beatPeriod, tempi);
-//
-//    tempoTracker.calculateBeats(onsetResult, beatPeriod, beats);
-//
-//    DBG("DONE");
-    
-    
     juce::AudioBuffer<float> buffer;
-
+    juce::AudioBuffer<double> bufferDouble;
+    
     dataManager->fetchAudio(track.filename, buffer, true);
+
+    DBG("Copying");
+    
+    bufferDouble.setSize(1, buffer.getNumSamples());
+
+    for (int i = 0; i < buffer.getNumSamples(); i++) {
+        bufferDouble.setSample(0, i, (double)buffer.getSample(0, i));
+    }
+
+    DBG("Analysing");
+
+    int numFrames = (buffer.getNumSamples() - dfConfig.frameLength) / dfConfig.stepSize;
+
+    std::vector<double> onsetResult;
+    onsetResult.resize(numFrames, 0);
+
+    for (int i = 0; i < numFrames; i++) {
+        onsetResult[i] = onsetAnalyser->processTimeDomain(bufferDouble.getReadPointer(0, i*dfConfig.stepSize));
+    }
+    
+    GraphComponent::store(onsetResult.data(), numFrames);
+
+    std::vector<double> beatPeriod;
+    beatPeriod.resize(numFrames);
+    std::vector<double> tempi;
+    vector<double> beats;
+
+    tempoTracker.calculateBeatPeriod(onsetResult, beatPeriod, tempi);
+
+    tempoTracker.calculateBeats(onsetResult, beatPeriod, beats);
+
+    DBG("DONE");
+    
+//    for (int i = 0; i < tempi.size(); i++) DBG(tempi[i]);
+    
+    DBG("Analysing");
     
     int blockSize = 2048;
     int numBlocks = buffer.getNumSamples() / blockSize;
@@ -78,4 +82,6 @@ void AnalysisManager::analyse(TrackData track)
     }
     
     DBG(stBpmDetect.getBpm());
+    
+    DBG("DONE");
 }

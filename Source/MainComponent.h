@@ -6,6 +6,8 @@
 
 #include "GraphComponent.hpp"
 
+#define SHOW_GRAPH
+
 
 class MainComponent  : public juce::AudioAppComponent
 {
@@ -33,7 +35,9 @@ private:
     
     std::unique_ptr<LibraryComponent> library;
     
+#ifdef SHOW_GRAPH
     std::unique_ptr<juce::ResizableWindow> graphWindow;
+#endif
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

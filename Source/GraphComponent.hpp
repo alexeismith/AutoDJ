@@ -8,7 +8,7 @@
 #ifndef GraphComponent_hpp
 #define GraphComponent_hpp
 
-#define GRAPH_DATA_TYPE float
+#define GRAPH_DATA_TYPE double
 
 #include <JuceHeader.h>
 
@@ -35,8 +35,6 @@ private:
     void getValueForPosition(juce::Point<float> pos);
     
     inline static std::atomic<bool> ready;
-    
-    inline static int dataSize;
     
     inline static juce::Array<GRAPH_DATA_TYPE> dataStore;
     

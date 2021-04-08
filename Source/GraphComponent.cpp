@@ -26,7 +26,7 @@ void GraphComponent::paint(juce::Graphics& g)
     g.setColour(juce::Colours::black);
     g.fillAll();
     
-    g.setColour(juce::Colours::white);
+    g.setColour(juce::Colours::green);
     
     point = getPositionForValue(0);
     
@@ -41,10 +41,10 @@ void GraphComponent::paint(juce::Graphics& g)
     point = getPositionForValue(xVal);
     prevPoint.addXY(5, 5);
     
-    g.setColour(juce::Colours::red);
+    g.setColour(juce::Colours::white);
     g.fillEllipse(juce::Rectangle<float>(point.getX()-1,point.getY()-1,3,3));
     
-    g.setColour(juce::Colours::green);
+    g.setColour(juce::Colours::red);
     g.drawSingleLineText(juce::String(juce::String(xVal) + " " + juce::String(yVal)), 10, 20);
 }
 
@@ -70,7 +70,7 @@ void GraphComponent::store(GRAPH_DATA_TYPE* data, int size)
     dataStore.resize(size);
     if (dataStore.size() != size) jassert(false); // Couldn't allocate!
     
-    memcpy(dataStore.getRawDataPointer(), data, size);
+    memcpy(dataStore.getRawDataPointer(), data, size * sizeof(GRAPH_DATA_TYPE));
     
     juce::findMinAndMax(dataStore.getRawDataPointer(), size, minY, maxY);
     

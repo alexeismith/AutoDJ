@@ -11,12 +11,14 @@
 #include <JuceHeader.h>
 
 #include "TrackDataManager.hpp"
+#include "ThirdParty/qm-dsp/dsp/tempotracking/TempoTrackV2.h"
+#include "ThirdParty/qm-dsp/dsp/onsets/DetectionFunction.h"
 
 class AnalysisManager
 {
 public:
     
-    AnalysisManager(TrackDataManager* dm) : dataManager(dm) {}
+    AnalysisManager(TrackDataManager* dm);
     
     ~AnalysisManager() {}
     
@@ -25,6 +27,10 @@ public:
 private:
     
     TrackDataManager* dataManager = nullptr;
+    
+    TempoTrackV2 tempoTracker;
+    std::unique_ptr<DetectionFunction> onsetAnalyser;
+    DFConfig dfConfig;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalysisManager)
 };

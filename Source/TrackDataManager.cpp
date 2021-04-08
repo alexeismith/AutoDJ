@@ -148,8 +148,9 @@ void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float
         
         if (sumToMono && buffer.getNumChannels() == 2)
         {
+            buffer.applyGain(0.5f);
             buffer.addFrom(0, 0, buffer.getReadPointer(1), buffer.getNumSamples());
-            buffer.setSize(1, buffer.getNumSamples());
+            buffer.setSize(1, buffer.getNumSamples(), true);
         }
         
         delete reader;

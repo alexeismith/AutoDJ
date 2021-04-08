@@ -7,11 +7,59 @@
 
 #include "AnalysisManager.hpp"
 
-#include "../../Third Party/qm-dsp-1.7.1/dsp/tempotracking/TempoTrackV2.h"
+#include "CommonDefs.hpp"
+
+#define STEP_SIZE (512) // Ideal for 44.1kHz sample rate (see https://code.soundsoftware.ac.uk/projects/qm-vamp-plugins/repository/entry/plugins/BarBeatTrack.cpp#L249)
+
+
+AnalysisManager::AnalysisManager(TrackDataManager* dm) :
+    dataManager(dm),
+    tempoTracker(TempoTrackV2(SUPPORTED_SAMPLERATE, STEP_SIZE))
+{
+    dfConfig.DFType = DF_COMPLEXSD;
+    dfConfig.stepSize = STEP_SIZE;
+    dfConfig.frameLength = STEP_SIZE * 2; // See https://code.soundsoftware.ac.uk/projects/qm-vamp-plugins/repository/entry/plugins/BarBeatTrack.cpp#L258
+    dfConfig.dbRise = 3;
+    dfConfig.adaptiveWhitening = false;
+    dfConfig.whiteningRelaxCoeff = -1;
+    dfConfig.whiteningFloor = -1;
+    onsetAnalyser.reset(new DetectionFunction(dfConfig));
+}
+
 
 void AnalysisManager::analyse(TrackData track)
 {
     juce::AudioBuffer<float> buffer;
+    juce::AudioBuffer<double> bufferDouble;
+    
+    DBG("Copying");
     
     dataManager->fetchAudio(track.filename, buffer, true);
+    bufferDouble.setSize(1, buffer.getNumSamples());
+    
+    for (int i = 0; i < buffer.getNumSamples(); i++) {
+        bufferDouble.setSample(0, i, (double)buffer.getSample(0, i));
+    }
+    
+    DBG("Analysing");
+    
+    int numFrames = (buffer.getNumSamples() - dfConfig.frameLength) / dfConfig.stepSize;
+    
+    std::vector<double> onsetResult;
+    onsetResult.resize(numFrames, 0);
+    
+    for (int i = 0; i < numFrames; i++) {
+        onsetResult[i] = onsetAnalyser->processTimeDomain(bufferDouble.getReadPointer(0, i*dfConfig.stepSize));
+    }
+    
+    std::vector<double> beatPeriod;
+    beatPeriod.resize(numFrames);
+    std::vector<double> tempi;
+    vector<double> beats;
+
+    tempoTracker.calculateBeatPeriod(onsetResult, beatPeriod, tempi);
+    
+    tempoTracker.calculateBeats(onsetResult, beatPeriod, beats);
+    
+    DBG("DONE");
 }

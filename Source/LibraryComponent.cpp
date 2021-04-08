@@ -58,6 +58,6 @@ void LibraryComponent::chooseFolder()
         trackTable->setVisible(true);
         chooseFolderBtn->setVisible(false);
         
-        analysisManager->analyse(*dataManager.getTracks()->begin());
+        analysisManager->analyse(dataManager.getTracks()->getReference(1));
     }
 }

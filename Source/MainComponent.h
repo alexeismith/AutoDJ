@@ -2,11 +2,11 @@
 
 #include <JuceHeader.h>
 
+#include "AudioProcessor.hpp"
 #include "LibraryComponent.hpp"
-
 #include "GraphComponent.hpp"
 
-#define SHOW_GRAPH
+//#define SHOW_GRAPH
 
 
 class MainComponent  : public juce::AudioAppComponent
@@ -32,6 +32,8 @@ private:
     void setAppearance();
 
     juce::LookAndFeel_V4 customAppearance;
+    
+    std::unique_ptr<AudioProcessor> audioProcessor;
     
     std::unique_ptr<LibraryComponent> library;
     

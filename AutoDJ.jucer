@@ -29,6 +29,10 @@
               file="Source/GraphComponent.cpp"/>
         <FILE id="tPEz81" name="GraphComponent.hpp" compile="0" resource="0"
               file="Source/GraphComponent.hpp"/>
+        <FILE id="Ugyo69" name="WaveformComponent.cpp" compile="1" resource="0"
+              file="Source/WaveformComponent.cpp"/>
+        <FILE id="luYtIx" name="WaveformComponent.hpp" compile="0" resource="0"
+              file="Source/WaveformComponent.hpp"/>
       </GROUP>
     </GROUP>
     <GROUP id="{9E0BB712-1FB6-4131-B7F6-FA3677F5C918}" name="Processing">

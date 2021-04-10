@@ -67,9 +67,13 @@ void AnalysisManager::analyse(TrackData track)
 
     tempoTracker.calculateBeats(onsetResult, beatPeriod, beats);
 
-    DBG("DONE");
+    DBG("TEMPI");
     
-//    for (int i = 0; i < tempi.size(); i++) DBG(tempi[i]);
+    for (int i = 0; i < tempi.size(); i++) DBG(tempi[i]);
+    
+    DBG("BEATS");
+    
+    for (int i = 0; i < beats.size(); i++) DBG(beats[i]);
     
     DBG("Analysing");
     

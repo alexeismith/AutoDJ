@@ -12,12 +12,16 @@
 #include "AnalysisManager.hpp"
 #include "QueueTableComponent.hpp"
 #include "CommonDefs.hpp"
+#include "WaveformComponent.hpp"
+
+//TODO: temp?
+#include "AudioProcessor.hpp"
 
 class LibraryComponent : public juce::Component, public juce::Button::Listener
 {
 public:
     
-    LibraryComponent();
+    LibraryComponent(AudioProcessor* p);
     
     ~LibraryComponent() {}
     
@@ -35,6 +39,10 @@ private:
     
     TrackDataManager dataManager;
     std::unique_ptr<AnalysisManager> analysisManager;
+    
+    std::unique_ptr<WaveformComponent> waveform;
+    
+    AudioProcessor* audioProcessor;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LibraryComponent)
 };

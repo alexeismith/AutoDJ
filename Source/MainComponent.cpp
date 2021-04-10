@@ -18,7 +18,9 @@ MainComponent::MainComponent()
         setAudioChannels (2, 2);
     }
     
-    library.reset(new LibraryComponent());
+    audioProcessor.reset(new AudioProcessor);
+    
+    library.reset(new LibraryComponent(audioProcessor.get()));
     addAndMakeVisible(library.get());
     
 #ifdef SHOW_GRAPH
@@ -56,13 +58,9 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
 
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    // Your audio-processing code goes here!
-
-    // For more details, see the help for AudioProcessor::getNextAudioBlock()
-
-    // Right now we are not producing any data, in which case we need to clear the buffer
-    // (to prevent the output of random noise)
-    bufferToFill.clearActiveBufferRegion();
+    if (audioProcessor.get() == nullptr) jassert(false);
+    
+    audioProcessor->getNextAudioBlock(bufferToFill);
 }
 
 void MainComponent::releaseResources()

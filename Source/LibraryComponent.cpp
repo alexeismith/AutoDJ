@@ -70,7 +70,7 @@ void LibraryComponent::chooseFolder()
         
         juce::AudioBuffer<float> buffer;
         dataManager.fetchAudio(dataManager.getTracks()->getReference(1).filename, buffer, true);
-//
+
         buffer.copyFrom(0, 0, buffer.getReadPointer(0, 540000), 801*WAVEFORM_FRAME_SIZE);
         buffer.setSize(1, 800*WAVEFORM_FRAME_SIZE, true);
         waveform->setVisible(true);
@@ -78,12 +78,6 @@ void LibraryComponent::chooseFolder()
         waveform->pushBuffer(buffer.getReadPointer(0), buffer.getNumSamples());
         DBG("Waveform done");
         
-        juce::IIRFilter filterLow, filterMid, filterHigh;
-        filterLow.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 100, 1.0));
-        filterMid.setCoefficients(juce::IIRCoefficients::makeBandPass(SUPPORTED_SAMPLERATE, 500, 1.0));
-        filterHigh.setCoefficients(juce::IIRCoefficients::makeHighPass(SUPPORTED_SAMPLERATE, 10000, 1.0));
-        
-//        filterHigh.processSamples(buffer.getWritePointer(0), buffer.getNumSamples());
         audioProcessor->play(buffer);
     }
 }

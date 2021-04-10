@@ -12,16 +12,6 @@
 
 #include <JuceHeader.h>
 
-//typedef struct WaveformFrameData
-//{
-//    float magnitude;
-//    float bandLow;
-//    float bandMid;
-//    float bandHigh;
-//    float bandMax;
-//    juce::Colour colour;
-//} WaveformFrameData;
-
 // NOTE: need a separate instance for each audio channel to be visualised, because the IIR filters depend on previous samples
 class WaveformComponent : public juce::Component
 {
@@ -39,13 +29,10 @@ private:
     
     void pushFrame(const float* audio);
     
-//    void processColours();
-    
     juce::AudioBuffer<float> processBuffers;
     
     juce::Array<juce::Colour> colours;
     juce::Array<float> levels;
-//    juce::Array<WaveformFrameData> frames;
     
     juce::IIRFilter filterLow, filterMid, filterHigh;
     

@@ -48,7 +48,6 @@ void WaveformComponent::pushBuffer(const float* audio, int numSamples)
     for (int i = 0; i < numFrames; i++)
         pushFrame(&audio[i*WAVEFORM_FRAME_SIZE]);
     
-//    processColours();
     repaint();
 }
 
@@ -100,31 +99,3 @@ void WaveformComponent::pushFrame(const float* audio)
     
     colours.add(juce::Colour(low*255, mid*255, high*255));
 }
-
-
-//void WaveformComponent::processColours()
-//{
-//    juce::Colour colour;
-//    float avg = 0.f;
-//    float r,g,b;
-//
-//    for (int i = 0; i < frames.size(); i++)
-//    {
-//        avg += frames[i].bandMax;
-//    }
-//
-//    avg /= frames.size();
-//
-//    DBG("avg: " << avg);
-//
-//    avg = 0.4f;
-//
-//    for (int j = 0; j < frames.size(); j++)
-//    {
-//        r = juce::jmin(frames[j].bandLow/avg, 1.f);
-//        g = juce::jmin(frames[j].bandMid/avg, 1.f);
-//        b = juce::jmin(frames[j].bandHigh/avg, 1.f);
-//        colour.fromFloatRGBA(r, g, b, 1.f);
-//        colours.add(juce::Colour(r*255, g*255, b*255));
-//    }
-//}

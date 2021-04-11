@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="mliKgU" name="AutoDJ" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              headerPath="../../Source/ThirdParty/qm-dsp/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools/&#10;../../Source/ThirdParty/soundtouch/include/"
+              headerPath="../../Source/ThirdParty/qm-dsp/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools/"
               defines="kiss_fft_scalar=double&#10;ANDROID" cppLanguageStandard="17">
   <MAINGROUP id="r4tD07" name="AutoDJ">
     <GROUP id="{A84FEFF8-C709-ECFA-E10F-9FF3F5BBB565}" name="Source">
@@ -61,6 +61,10 @@
           <FILE id="bU6ock" name="FFT.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/transforms/FFT.h"/>
         </GROUP>
       </GROUP>
+      <FILE id="hbOA8G" name="AudioProcessor.cpp" compile="1" resource="0"
+            file="Source/AudioProcessor.cpp"/>
+      <FILE id="OU8h9B" name="AudioProcessor.hpp" compile="0" resource="0"
+            file="Source/AudioProcessor.hpp"/>
       <FILE id="DrGG4w" name="AnalysisManager.cpp" compile="1" resource="0"
             file="Source/AnalysisManager.cpp"/>
       <FILE id="pZppWL" name="AnalysisManager.hpp" compile="0" resource="0"

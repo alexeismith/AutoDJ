@@ -16,8 +16,7 @@
 
 AnalysisManager::AnalysisManager(TrackDataManager* dm) :
     dataManager(dm),
-    tempoTracker(TempoTrackV2(SUPPORTED_SAMPLERATE, STEP_SIZE)),
-    stBpmDetect(1, SUPPORTED_SAMPLERATE)
+    tempoTracker(TempoTrackV2(SUPPORTED_SAMPLERATE, STEP_SIZE))
 {
     dfConfig.DFType = DF_COMPLEXSD;
     dfConfig.stepSize = STEP_SIZE;

@@ -131,18 +131,4 @@ void AnalysisManager::analyse(TrackData track)
 //        DBG(beats[i] - prev);
 //        prev = beats[i];
 //    }
-    
-//    DBG("Analysing");
-//    
-//    int blockSize = 2048;
-//    int numBlocks = buffer.getNumSamples() / blockSize;
-//    
-//    for (int i = 0; i < numBlocks; i++)
-//    {
-//        stBpmDetect.inputSamples(buffer.getReadPointer(0, i*blockSize), blockSize);
-//    }
-//    
-//    DBG(stBpmDetect.getBpm());
-//    
-//    DBG("DONE");
 }

@@ -13,7 +13,6 @@
 #include "TrackDataManager.hpp"
 #include "ThirdParty/qm-dsp/dsp/tempotracking/TempoTrackV2.h"
 #include "ThirdParty/qm-dsp/dsp/onsets/DetectionFunction.h"
-#include "ThirdParty/soundtouch/include/BPMDetect.h"
 
 class AnalysisManager
 {
@@ -32,8 +31,6 @@ private:
     TempoTrackV2 tempoTracker;
     std::unique_ptr<DetectionFunction> onsetAnalyser;
     DFConfig dfConfig;
-    
-    soundtouch::BPMDetect stBpmDetect;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalysisManager)
 };

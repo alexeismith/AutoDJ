@@ -1,6 +1,3 @@
 [submodule "Source/ThirdParty/qm-dsp"]
 	path = Source/ThirdParty/qm-dsp
 	url = https://github.com/c4dm/qm-dsp.git
-[submodule "Source/ThirdParty/mixxx"]
-	path = Source/ThirdParty/mixxx
-	url = https://github.com/mixxxdj/mixxx.git

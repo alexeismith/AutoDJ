@@ -9,6 +9,8 @@
 
 #include "CommonDefs.hpp"
 
+#include "ThirdParty/beatutils.h"
+
 #define STEP_SIZE (512) // Ideal for 44.1kHz sample rate (see https://code.soundsoftware.ac.uk/projects/qm-vamp-plugins/repository/entry/plugins/BarBeatTrack.cpp#L249)
 
 
@@ -29,84 +31,65 @@ AnalyserBeats::AnalyserBeats() :
 void AnalyserBeats::analyse(juce::AudioBuffer<float> audio)
 {
     juce::AudioBuffer<double> buffer;
+    std::vector<double> onsets, onsetsTrim, beatPeriod, tempi, beats;
     
-    DBG("Copying");
-    
+    // Analysis classes require double, so copy audio into a double buffer
     buffer.setSize(1, audio.getNumSamples());
-
-    for (int i = 0; i < audio.getNumSamples(); i++) {
+    for (int i = 0; i < audio.getNumSamples(); i++)
         buffer.setSample(0, i, (double)audio.getSample(0, i));
-    }
 
-    DBG("Analysing");
-
+    // Find the number of onset detection frames for the provided audio
     int numFrames = (audio.getNumSamples() - dfConfig.frameLength) / dfConfig.stepSize;
+    onsets.reserve(numFrames); // Allocate buffer space for the onset results
 
-    std::vector<double> onsetResult;
-    onsetResult.resize(numFrames, 0);
-
-    for (int i = 0; i < numFrames; i++) {
-        onsetResult[i] = onsetAnalyser->processTimeDomain(buffer.getReadPointer(0, i*dfConfig.stepSize));
-//        if (onsetResult[i] < 800) onsetResult[i] = 0;
-    }
+    // Pass frames of audio to the QM onset detector, storing the returned results
+    for (int i = 0; i < numFrames; i++)
+        onsets.push_back(onsetAnalyser->processTimeDomain(buffer.getReadPointer(0, i*dfConfig.stepSize)));
     
-    int nonZeroCount = static_cast<int>(onsetResult.size());
-    while (nonZeroCount > 0 && onsetResult.at(nonZeroCount - 1) <= 0.0) {
-        --nonZeroCount;
-    }
-    
-//    GraphComponent::store(onsetResult.data(), numFrames);
+    // Find the number of non-zero values in the onset results
+    int nonZeroCount = int(onsets.size()); // Initialise count with the full vector length
+    while (nonZeroCount > 0 && onsets.at(nonZeroCount - 1) <= 0.0)
+        --nonZeroCount; // For every zero at the back of the vector, decrement the counter
 
-    std::vector<double> df;
-    std::vector<double> beatPeriod;
-    std::vector<double> tempi;
-    const auto required_size = std::max(0, nonZeroCount - 2);
-    df.reserve(required_size);
+    // Allocate memory for the trimmed results
+    int required_size = std::max(0, nonZeroCount - 2);
+    onsetsTrim.reserve(required_size);
     beatPeriod.reserve(required_size);
     
-    // skip first 2 results as it might have detect noise as onset
-    // that's how vamp does and seems works best this way
-    for (int i = 2; i < nonZeroCount; ++i) {
-        df.push_back(onsetResult.at(i));
+    // Trim the onset results and prepare the beat period vector
+    // We trim the first 2 elements (to account for unstable onset analysis at start), and the trailing zeros
+    for (int i = 2; i < nonZeroCount; ++i)
+    {
+        onsetsTrim.push_back(onsets.at(i));
         beatPeriod.push_back(0.0);
     }
-
+    
+    // Prepare the QM beat tracker
     TempoTrackV2 tt(SUPPORTED_SAMPLERATE, STEP_SIZE);
-    tt.calculateBeatPeriod(df, beatPeriod, tempi);
 
-    std::vector<double> beats;
-    tt.calculateBeats(df, beatPeriod, beats);
+    // Pass the onset results and other empty vectors to the QM beat tracker functions
+    tt.calculateBeatPeriod(onsetsTrim, beatPeriod, tempi);
+    tt.calculateBeats(onsetsTrim, beatPeriod, beats);
 
-//    std::vector<double> resultBeats;
-//    resultBeats.reserve(static_cast<int>(beats.size()));
-//    for (size_t i = 0; i < beats.size(); ++i) {
-//        // we add the halve m_stepSize here, because the beat
-//        // is detected between the two samples.
-//        double result = (beats.at(i) * STEP_SIZE) + STEP_SIZE / 2;
-//        resultBeats.push_back(result);
-//    }
-
-    onsetAnalyser.reset();
-    
-    DBG("DONE");
-    
-    DBG("tempi...");
-    for (int i = 0; i < tempi.size(); i++) DBG(tempi[i]);
-    
-    DBG("beats...");
-    for (int i = 0; i < beats.size(); i++) DBG(beats[i]);
-    
-    DBG("beatIntervals...");
-    int prev = 0;
+    // Multiply beat positions by STEP_SIZE to convert back to 44.1kHz sample rate
     for (int i = 0; i < beats.size(); i++)
-    {
-        DBG(beats[i] - prev);
-        prev = beats[i];
-    }
+        beats[i] *= STEP_SIZE;
+    
+    // Adjust the non-constant beat tracking results to get a constant BPM and beat phase
+    processBeats(beats);
+    
+    // Reset the QM onset detector
+    onsetAnalyser.reset();
 }
 
 
 void AnalyserBeats::processBeats(std::vector<double> beats)
 {
+    std::vector<BeatUtils::ConstRegion> constantRegions = BeatUtils::retrieveConstRegions(beats, SUPPORTED_SAMPLERATE);
+
+    double firstBeat = 0;
+    double constBPM = BeatUtils::makeConstBpm(constantRegions, SUPPORTED_SAMPLERATE, &firstBeat);
+    firstBeat = BeatUtils::adjustPhase(firstBeat, constBPM, SUPPORTED_SAMPLERATE, beats);
     
+    DBG("constBPM: " << constBPM << " firstBeat: " << firstBeat);
 }

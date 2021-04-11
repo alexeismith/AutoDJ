@@ -136,7 +136,6 @@ int TrackDataManager::getHash(juce::File file)
 void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer, bool sumToMono)
 {
     juce::String filePath = dirContents->getDirectory().getFullPathName() + "/" + filename;
-    DBG(filePath);
     
     juce::AudioFormatReader* reader = formatManager.createReaderFor(filePath);
     

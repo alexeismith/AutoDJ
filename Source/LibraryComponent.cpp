@@ -66,7 +66,7 @@ void LibraryComponent::chooseFolder()
         trackTable->setVisible(true);
         chooseFolderBtn->setVisible(false);
         
-//        analysisManager->analyse(dataManager.getTracks()->getReference(1));
+        analysisManager->analyse(dataManager.getTracks()->getReference(1));
         
         juce::AudioBuffer<float> buffer;
         dataManager.fetchAudio(dataManager.getTracks()->getReference(1).filename, buffer, true);

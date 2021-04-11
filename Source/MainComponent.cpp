@@ -58,7 +58,7 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
 
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    if (audioProcessor.get() == nullptr) jassert(false);
+    if (audioProcessor.get() == nullptr) return;
     
     audioProcessor->getNextAudioBlock(bufferToFill);
 }

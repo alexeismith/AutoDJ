@@ -54,38 +54,95 @@ void AnalysisManager::analyse(TrackData track)
 
     for (int i = 0; i < numFrames; i++) {
         onsetResult[i] = onsetAnalyser->processTimeDomain(bufferDouble.getReadPointer(0, i*dfConfig.stepSize));
+//        if (onsetResult[i] < 800) onsetResult[i] = 0;
     }
     
-    GraphComponent::store(onsetResult.data(), numFrames);
+    int nonZeroCount = static_cast<int>(onsetResult.size());
+    while (nonZeroCount > 0 && onsetResult.at(nonZeroCount - 1) <= 0.0) {
+        --nonZeroCount;
+    }
+    
+//    GraphComponent::store(onsetResult.data(), numFrames);
 
+    std::vector<double> df;
     std::vector<double> beatPeriod;
-    beatPeriod.resize(numFrames);
     std::vector<double> tempi;
-    vector<double> beats;
-
-    tempoTracker.calculateBeatPeriod(onsetResult, beatPeriod, tempi);
-
-    tempoTracker.calculateBeats(onsetResult, beatPeriod, beats);
-
-    DBG("TEMPI");
+    const auto required_size = std::max(0, nonZeroCount - 2);
+    df.reserve(required_size);
+    beatPeriod.reserve(required_size);
     
-    for (int i = 0; i < tempi.size(); i++) DBG(tempi[i]);
-    
-    DBG("BEATS");
-    
-    for (int i = 0; i < beats.size(); i++) DBG(beats[i]);
-    
-    DBG("Analysing");
-    
-    int blockSize = 2048;
-    int numBlocks = buffer.getNumSamples() / blockSize;
-    
-    for (int i = 0; i < numBlocks; i++)
-    {
-        stBpmDetect.inputSamples(buffer.getReadPointer(0, i*blockSize), blockSize);
+    // skip first 2 results as it might have detect noise as onset
+    // that's how vamp does and seems works best this way
+    for (int i = 2; i < nonZeroCount; ++i) {
+        df.push_back(onsetResult.at(i));
+        beatPeriod.push_back(0.0);
     }
-    
-    DBG(stBpmDetect.getBpm());
+
+    TempoTrackV2 tt(SUPPORTED_SAMPLERATE, STEP_SIZE);
+    tt.calculateBeatPeriod(df, beatPeriod, tempi);
+
+    std::vector<double> beats;
+    tt.calculateBeats(df, beatPeriod, beats);
+
+//    std::vector<double> resultBeats;
+//    resultBeats.reserve(static_cast<int>(beats.size()));
+//    for (size_t i = 0; i < beats.size(); ++i) {
+//        // we add the halve m_stepSize here, because the beat
+//        // is detected between the two samples.
+//        double result = (beats.at(i) * STEP_SIZE) + STEP_SIZE / 2;
+//        resultBeats.push_back(result);
+//    }
+
+    onsetAnalyser.reset();
     
     DBG("DONE");
+    
+    DBG("tempi...");
+    for (int i = 0; i < tempi.size(); i++) DBG(tempi[i]);
+    
+    DBG("beats...");
+    for (int i = 0; i < beats.size(); i++) DBG(beats[i]);
+    
+    DBG("beatIntervals...");
+    int prev = 0;
+    for (int i = 0; i < beats.size(); i++)
+    {
+        DBG(beats[i] - prev);
+        prev = beats[i];
+    }
+    
+    
+    
+//    tempoTracker.calculateBeatPeriod(onsetResult, beatPeriod, tempi);
+//
+//    std::fill(beatPeriod.begin(), beatPeriod.end(), AutoDJ::mostCommonValue(beatPeriod.data(), (int)beatPeriod.size()));
+//
+//    tempoTracker.calculateBeats(onsetResult, beatPeriod, beats);
+//
+////    for (int i = 0; i < tempi.size(); i++) DBG(tempi[i]);
+//
+//    DBG("Most Common: " << AutoDJ::mostCommonValue(tempi.data(), (int)tempi.size()));
+//    DBG("Most Common: " << AutoDJ::mostCommonValue(beatPeriod.data(), (int)beatPeriod.size()));
+
+//    int prev = 0;
+//    for (int i = 0; i < beats.size(); i++)
+//    {
+//        DBG(beats[i]);
+//        DBG(beats[i] - prev);
+//        prev = beats[i];
+//    }
+    
+//    DBG("Analysing");
+//    
+//    int blockSize = 2048;
+//    int numBlocks = buffer.getNumSamples() / blockSize;
+//    
+//    for (int i = 0; i < numBlocks; i++)
+//    {
+//        stBpmDetect.inputSamples(buffer.getReadPointer(0, i*blockSize), blockSize);
+//    }
+//    
+//    DBG(stBpmDetect.getBpm());
+//    
+//    DBG("DONE");
 }

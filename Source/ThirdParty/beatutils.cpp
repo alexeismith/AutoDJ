@@ -1,13 +1,6 @@
-#include "track/beatutils.h"
+#include "beatutils.h"
 
-#include <QList>
-#include <QMap>
-#include <QString>
-#include <QtDebug>
 #include <algorithm>
-
-#include "track/bpm.h"
-#include "util/math.h"
 
 namespace {
 
@@ -24,11 +17,11 @@ constexpr int kMinRegionBeatCount = 16;
 } // namespace
 
 double BeatUtils::calculateAverageBpm(int numberOfBeats,
-        mixxx::audio::SampleRate sampleRate,
+        int sampleRate,
         double lowerFrame,
         double upperFrame) {
     double frames = upperFrame - lowerFrame;
-    DEBUG_ASSERT(frames > 0);
+    jassert(frames > 0);
     if (numberOfBeats < 1) {
         return 0;
     }
@@ -36,8 +29,8 @@ double BeatUtils::calculateAverageBpm(int numberOfBeats,
 }
 
 double BeatUtils::calculateBpm(
-        const QVector<double>& beats,
-        mixxx::audio::SampleRate sampleRate) {
+        const std::vector<double>& beats,
+        int sampleRate) {
     if (beats.size() < 2) {
         return 0;
     }
@@ -45,17 +38,17 @@ double BeatUtils::calculateBpm(
     // If we don't have enough beats for our regular approach, just divide the #
     // of beats by the duration in minutes.
     if (beats.size() < kMinRegionBeatCount) {
-        return calculateAverageBpm(beats.size() - 1, sampleRate, beats.first(), beats.last());
+        return calculateAverageBpm(beats.size() - 1, sampleRate, beats.front(), beats.back());
     }
 
-    QVector<BeatUtils::ConstRegion> constantRegions =
+    std::vector<BeatUtils::ConstRegion> constantRegions =
             retrieveConstRegions(beats, sampleRate);
     return makeConstBpm(constantRegions, sampleRate, nullptr);
 }
 
-QVector<BeatUtils::ConstRegion> BeatUtils::retrieveConstRegions(
-        const QVector<double>& coarseBeats,
-        mixxx::audio::SampleRate sampleRate) {
+std::vector<BeatUtils::ConstRegion> BeatUtils::retrieveConstRegions(
+        const std::vector<double>& coarseBeats,
+        int sampleRate) {
     // The QM Beat detector has a step size of 512 frames @ 44100 Hz. This means that
     // Single beats have has a jitter of +- 12 ms around the actual position.
     // Expressed in BPM it means we have for instance steps of these BPM value around 120 BPM
@@ -72,7 +65,7 @@ QVector<BeatUtils::ConstRegion> BeatUtils::retrieveConstRegions(
     // current average to adjust them by up to +-12 ms.
     // Than we start with the region from the found beat to the end.
 
-    QVector<ConstRegion> constantRegions;
+    std::vector<ConstRegion> constantRegions;
     if (!coarseBeats.size()) {
         // no beats
         return constantRegions;
@@ -84,7 +77,7 @@ QVector<BeatUtils::ConstRegion> BeatUtils::retrieveConstRegions(
     int rightIndex = coarseBeats.size() - 1;
 
     while (leftIndex < coarseBeats.size() - 1) {
-        DEBUG_ASSERT(rightIndex > leftIndex);
+        jassert(rightIndex > leftIndex);
         double meanBeatLength =
                 (coarseBeats[rightIndex] - coarseBeats[leftIndex]) /
                 (rightIndex - leftIndex);
@@ -122,7 +115,7 @@ QVector<BeatUtils::ConstRegion> BeatUtils::retrieveConstRegions(
                 // We have found a constant enough region.
                 double firstBeat = coarseBeats[leftIndex];
                 // store the regions for the later stages
-                constantRegions.append({firstBeat, meanBeatLength});
+                constantRegions.push_back({firstBeat, meanBeatLength});
                 // continue with the next region.
                 leftIndex = rightIndex;
                 rightIndex = coarseBeats.size() - 1;
@@ -134,14 +127,14 @@ QVector<BeatUtils::ConstRegion> BeatUtils::retrieveConstRegions(
     }
 
     // Add a final region with zero length to mark the end.
-    constantRegions.append({coarseBeats[coarseBeats.size() - 1], 0});
+    constantRegions.push_back({coarseBeats[coarseBeats.size() - 1], 0});
     return constantRegions;
 }
 
 // static
 double BeatUtils::makeConstBpm(
-        const QVector<BeatUtils::ConstRegion>& constantRegions,
-        mixxx::audio::SampleRate sampleRate,
+        const std::vector<BeatUtils::ConstRegion>& constantRegions,
+        int sampleRate,
         double* pFirstBeat) {
     // We assume her the track was recorded with an unhear-able static metronome.
     // This metronome is likely at a full BPM.
@@ -318,18 +311,18 @@ double BeatUtils::roundBpmWithinRange(double minBpm, double centerBpm, double ma
 }
 
 // static
-QVector<double> BeatUtils::getBeats(const QVector<BeatUtils::ConstRegion>& constantRegions) {
-    QVector<double> beats;
+std::vector<double> BeatUtils::getBeats(const std::vector<BeatUtils::ConstRegion>& constantRegions) {
+    std::vector<double> beats;
     for (int i = 0; i < constantRegions.size() - 1; ++i) {
         double beat = constantRegions[i].firstBeat;
         constexpr double epsilon = 100; // Protection against tiny beats due rounding
         while (beat < constantRegions[i + 1].firstBeat - epsilon) {
-            beats.append(beat);
+            beats.push_back(beat);
             beat += constantRegions[i].beatLength;
         }
     }
     if (constantRegions.size() > 0) {
-        beats.append(constantRegions.last().firstBeat);
+        beats.push_back(constantRegions.back().firstBeat);
     }
     return beats;
 }
@@ -338,8 +331,8 @@ QVector<double> BeatUtils::getBeats(const QVector<BeatUtils::ConstRegion>& const
 double BeatUtils::adjustPhase(
         double firstBeat,
         double bpm,
-        mixxx::audio::SampleRate sampleRate,
-        const QVector<double>& beats) {
+        int sampleRate,
+        const std::vector<double>& beats) {
     const double beatLength = 60 * sampleRate / bpm;
     const double startOffset = fmod(firstBeat, beatLength);
     double offsetAdjust = 0;
@@ -355,8 +348,8 @@ double BeatUtils::adjustPhase(
         }
     }
     offsetAdjust /= offsetAdjustCount;
-    qDebug() << "adjusting phase by" << offsetAdjust;
-    DEBUG_ASSERT(abs(offsetAdjust) < (kMaxSecsPhaseError * sampleRate));
+    DBG("adjusting phase by" << offsetAdjust);
+    jassert(abs(offsetAdjust) < (kMaxSecsPhaseError * sampleRate));
 
     return firstBeat + offsetAdjust;
 }

@@ -16,13 +16,11 @@ constexpr int kMinRegionBeatCount = 16;
 
 } // namespace
 
-double BeatUtils::calculateAverageBpm(int numberOfBeats,
-        int sampleRate,
-        double lowerFrame,
-        double upperFrame) {
+double BeatUtils::calculateAverageBpm(int numberOfBeats, int sampleRate, double lowerFrame, double upperFrame)
+{
     double frames = upperFrame - lowerFrame;
     jassert(frames > 0);
-    if (numberOfBeats < 1) {
+    if (numberOfBeats < 1){
         return 0;
     }
     return 60.0 * numberOfBeats * sampleRate / frames;
@@ -46,9 +44,8 @@ double BeatUtils::calculateBpm(
     return makeConstBpm(constantRegions, sampleRate, nullptr);
 }
 
-std::vector<BeatUtils::ConstRegion> BeatUtils::retrieveConstRegions(
-        const std::vector<double>& coarseBeats,
-        int sampleRate) {
+std::vector<BeatUtils::ConstRegion> BeatUtils::retrieveConstRegions(const std::vector<double>& coarseBeats, int sampleRate)
+{
     // The QM Beat detector has a step size of 512 frames @ 44100 Hz. This means that
     // Single beats have has a jitter of +- 12 ms around the actual position.
     // Expressed in BPM it means we have for instance steps of these BPM value around 120 BPM
@@ -132,10 +129,8 @@ std::vector<BeatUtils::ConstRegion> BeatUtils::retrieveConstRegions(
 }
 
 // static
-double BeatUtils::makeConstBpm(
-        const std::vector<BeatUtils::ConstRegion>& constantRegions,
-        int sampleRate,
-        double* pFirstBeat) {
+double BeatUtils::makeConstBpm(const std::vector<BeatUtils::ConstRegion>& constantRegions, int sampleRate, double* pFirstBeat)
+{
     // We assume her the track was recorded with an unhear-able static metronome.
     // This metronome is likely at a full BPM.
     // The track may has intros, outros and bridges without detectable beats.
@@ -270,7 +265,8 @@ double BeatUtils::makeConstBpm(
 }
 
 // static
-double BeatUtils::roundBpmWithinRange(double minBpm, double centerBpm, double maxBpm) {
+double BeatUtils::roundBpmWithinRange(double minBpm, double centerBpm, double maxBpm)
+{
     // First try to snap to a full integer BPM
     double snapBpm = round(centerBpm);
     if (snapBpm > minBpm && snapBpm < maxBpm) {
@@ -311,9 +307,10 @@ double BeatUtils::roundBpmWithinRange(double minBpm, double centerBpm, double ma
 }
 
 // static
-std::vector<double> BeatUtils::getBeats(const std::vector<BeatUtils::ConstRegion>& constantRegions) {
+std::vector<double> BeatUtils::getBeats(const std::vector<BeatUtils::ConstRegion>& constantRegions)
+{
     std::vector<double> beats;
-    for (int i = 0; i < constantRegions.size() - 1; ++i) {
+    for (int i = 0; i < constantRegions.size() - 1; ++i){
         double beat = constantRegions[i].firstBeat;
         constexpr double epsilon = 100; // Protection against tiny beats due rounding
         while (beat < constantRegions[i + 1].firstBeat - epsilon) {
@@ -328,11 +325,8 @@ std::vector<double> BeatUtils::getBeats(const std::vector<BeatUtils::ConstRegion
 }
 
 // static
-double BeatUtils::adjustPhase(
-        double firstBeat,
-        double bpm,
-        int sampleRate,
-        const std::vector<double>& beats) {
+double BeatUtils::adjustPhase(double firstBeat, double bpm, int sampleRate, const std::vector<double>& beats)
+{
     const double beatLength = 60 * sampleRate / bpm;
     const double startOffset = fmod(firstBeat, beatLength);
     double offsetAdjust = 0;

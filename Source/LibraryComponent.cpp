@@ -61,7 +61,7 @@ void LibraryComponent::chooseFolder()
     {
         dataManager.initialise(chooser.getResult());
         
-        analysisManager->analyse(dataManager.getTracks()->getReference(1));
+        analysisManager->analyse(dataManager.getTracks()->getReference(6));
         
         trackTable->populate(dataManager.getTracks());
         

@@ -89,7 +89,11 @@ void AnalyserBeats::processBeats(std::vector<double> beats, int& bpm, int& beatP
 
     double firstBeat = 0;
     bpm = BeatUtils::makeConstBpm(constantRegions, SUPPORTED_SAMPLERATE, &firstBeat);
-    beatPhase = BeatUtils::adjustPhase(firstBeat, bpm, SUPPORTED_SAMPLERATE, beats);
+    firstBeat = BeatUtils::adjustPhase(firstBeat, bpm, SUPPORTED_SAMPLERATE, beats);
+    
+    // 'Rewind' firstBeat to start of track
+    double beatLength = 60 * SUPPORTED_SAMPLERATE / bpm;
+    beatPhase = firstBeat - floor(firstBeat / beatLength) * beatLength;
     
     DBG("constBPM: " << bpm << " firstBeat: " << beatPhase);
 }

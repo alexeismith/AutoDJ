@@ -35,7 +35,20 @@ void WaveformComponent::paint(juce::Graphics& g)
         
         g.setColour(colours[x]);
         g.drawVerticalLine(x, 0.5f * getHeight() - magnitude, 0.5f * getHeight() + magnitude);
+        
+        if (isBeat(x))
+        {
+            g.setColour(juce::Colours::white);
+            g.drawVerticalLine(x, 0, getHeight());
+        }
     }
+}
+
+
+void WaveformComponent::prepare(TrackData t)
+{
+    reset();
+    track = t;
 }
 
 
@@ -49,6 +62,19 @@ void WaveformComponent::pushBuffer(const float* audio, int numSamples)
         pushFrame(&audio[i*WAVEFORM_FRAME_SIZE]);
     
     repaint();
+}
+
+
+void WaveformComponent::reset()
+{
+    filterLow.reset();
+    filterMid.reset();
+    filterHigh.reset();
+    
+    processBuffers.clear();
+    
+    levels.clear();
+    colours.clear();
 }
 
 
@@ -98,4 +124,23 @@ void WaveformComponent::pushFrame(const float* audio)
     high = juce::jmin(high, 1.f);
     
     colours.add(juce::Colour(low*255, mid*255, high*255));
+}
+
+
+bool WaveformComponent::isBeat(int frameIndex)
+{
+    if (track.bpm == -1 || track.beatPhase == -1) return false;
+    
+    int frameStart = frameIndex * WAVEFORM_FRAME_SIZE;
+    int frameEnd = frameStart + WAVEFORM_FRAME_SIZE - 1;
+    
+    double beatLength = 60 * SUPPORTED_SAMPLERATE / track.bpm;
+    
+    frameStart -= track.beatPhase;
+    frameEnd -= track.beatPhase;
+    
+    if (floor(frameEnd/beatLength) - floor(frameStart/beatLength) > 0)
+        return true;
+    
+    return false;
 }

@@ -61,7 +61,9 @@ void LibraryComponent::chooseFolder()
     {
         dataManager.initialise(chooser.getResult());
         
-        analysisManager->analyse(dataManager.getTracks()->getReference(6));
+        TrackData track = dataManager.getTracks()->getReference(1);
+        
+        analysisManager->analyse(track);
         
         trackTable->populate(dataManager.getTracks());
         
@@ -70,16 +72,17 @@ void LibraryComponent::chooseFolder()
         
         
         
-//        juce::AudioBuffer<float> buffer;
-//        dataManager.fetchAudio(dataManager.getTracks()->getReference(1).filename, buffer, true);
-//
-//        buffer.copyFrom(0, 0, buffer.getReadPointer(0, 540000), 801*WAVEFORM_FRAME_SIZE);
-//        buffer.setSize(1, 800*WAVEFORM_FRAME_SIZE, true);
-//        waveform->setVisible(true);
-//        DBG("Waveform");
-//        waveform->pushBuffer(buffer.getReadPointer(0), buffer.getNumSamples());
-//        DBG("Waveform done");
-//
-//        audioProcessor->play(buffer);
+        juce::AudioBuffer<float> buffer;
+        dataManager.fetchAudio(track.filename, buffer, true);
+
+        buffer.copyFrom(0, 0, buffer.getReadPointer(0, 540000), 801*WAVEFORM_FRAME_SIZE);
+        buffer.setSize(1, 800*WAVEFORM_FRAME_SIZE, true);
+        waveform->prepare(track);
+        waveform->setVisible(true);
+        DBG("Waveform");
+        waveform->pushBuffer(buffer.getReadPointer(0), buffer.getNumSamples());
+        DBG("Waveform done");
+
+        audioProcessor->play(buffer);
     }
 }

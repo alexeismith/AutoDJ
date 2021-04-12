@@ -50,7 +50,7 @@ void SqlDatabase::store(TrackData data)
     
     std::stringstream ss;
     ss << "REPLACE INTO Library VALUES('" \
-    << data.filename << "','" << data.hash << "','" << data.artist << "','" << data.title << "'," << data.length << "," << data.analysed << "," << data.bpm << "," << data.key << "," << data.energy << ")";
+    << data.filename << "','" << data.hash << "','" << data.artist << "','" << data.title << "'," << data.length << "," << data.analysed << "," << data.bpm << "," << data.beatPhase << "," << data.downbeat << "," << data.key << "," << data.energy << ")";
     
     execute(ss.str());
 }
@@ -87,8 +87,10 @@ TrackData SqlDatabase::read(juce::String filename)
         data.length = sqlite3_column_int(statement, 4);
         data.analysed = sqlite3_column_int(statement, 5);
         data.bpm = sqlite3_column_int(statement, 6);
-        data.key = sqlite3_column_int(statement, 7);
-        data.energy = sqlite3_column_int(statement, 8);
+        data.beatPhase = sqlite3_column_int(statement, 7);
+        data.downbeat = sqlite3_column_int(statement, 8);
+        data.key = sqlite3_column_int(statement, 9);
+        data.energy = sqlite3_column_int(statement, 10);
     }
     
     sqlite3_finalize(statement);
@@ -100,15 +102,17 @@ TrackData SqlDatabase::read(juce::String filename)
 void SqlDatabase::createTable()
 {
     execute("CREATE TABLE IF NOT EXISTS Library ("  \
-                           "Filename TEXT UNIQUE NOT NULL," \
-                           "Hash INT NOT NULL," \
-                           "Artist TEXT NOT NULL," \
-                           "Title TEXT NOT NULL," \
-                           "Length INT NOT NULL," \
-                           "Analysed INT NOT NULL," \
-                           "Bpm INT," \
-                           "Key INT," \
-                           "Energy INT)");
+                           "filename TEXT UNIQUE NOT NULL," \
+                           "hash INT NOT NULL," \
+                           "artist TEXT NOT NULL," \
+                           "title TEXT NOT NULL," \
+                           "length INT NOT NULL," \
+                           "analysed INT NOT NULL," \
+                           "bpm INT," \
+                           "beatPhase INT," \
+                           "downbeat INT," \
+                           "key INT," \
+                           "energy INT)");
 }
 
 

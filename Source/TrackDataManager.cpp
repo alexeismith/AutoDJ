@@ -49,6 +49,8 @@ void TrackDataManager::printTrackData(TrackData data)
     "\nLength: " << data.length << \
     "\nAnalysed: " << data.analysed << \
     "\nBPM: " << data.bpm << \
+    "\nBeat Phase: " << data.beatPhase << \
+    "\nDownbeat: " << data.downbeat << \
     "\nKey: " << data.key << \
     "\nEnergy: " << data.energy << '\n';
     

@@ -28,7 +28,7 @@ AnalyserBeats::AnalyserBeats() :
 }
 
 
-void AnalyserBeats::analyse(juce::AudioBuffer<float> audio)
+void AnalyserBeats::analyse(juce::AudioBuffer<float> audio, int& bpm, int& beatPhase, int& downbeat)
 {
     juce::AudioBuffer<double> buffer;
     std::vector<double> onsets, onsetsTrim, beatPeriod, tempi, beats;
@@ -76,20 +76,20 @@ void AnalyserBeats::analyse(juce::AudioBuffer<float> audio)
         beats[i] *= STEP_SIZE;
     
     // Adjust the non-constant beat tracking results to get a constant BPM and beat phase
-    processBeats(beats);
+    processBeats(beats, bpm, beatPhase, downbeat);
     
     // Reset the QM onset detector
     onsetAnalyser.reset();
 }
 
 
-void AnalyserBeats::processBeats(std::vector<double> beats)
+void AnalyserBeats::processBeats(std::vector<double> beats, int& bpm, int& beatPhase, int& downbeat)
 {
     std::vector<BeatUtils::ConstRegion> constantRegions = BeatUtils::retrieveConstRegions(beats, SUPPORTED_SAMPLERATE);
 
     double firstBeat = 0;
-    double constBPM = BeatUtils::makeConstBpm(constantRegions, SUPPORTED_SAMPLERATE, &firstBeat);
-    firstBeat = BeatUtils::adjustPhase(firstBeat, constBPM, SUPPORTED_SAMPLERATE, beats);
+    bpm = BeatUtils::makeConstBpm(constantRegions, SUPPORTED_SAMPLERATE, &firstBeat);
+    beatPhase = BeatUtils::adjustPhase(firstBeat, bpm, SUPPORTED_SAMPLERATE, beats);
     
-    DBG("constBPM: " << constBPM << " firstBeat: " << firstBeat);
+    DBG("constBPM: " << bpm << " firstBeat: " << beatPhase);
 }

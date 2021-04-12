@@ -21,11 +21,11 @@ public:
     
     ~AnalyserBeats() {}
     
-    void analyse(juce::AudioBuffer<float> audio);
+    void analyse(juce::AudioBuffer<float> audio, int& bpm, int& beatPhase, int& downbeat);
     
 private:
     
-    void processBeats(std::vector<double> beats);
+    void processBeats(std::vector<double> beats, int& bpm, int& beatPhase, int& downbeat);
     
     TempoTrackV2 tempoTracker;
     std::unique_ptr<DetectionFunction> onsetAnalyser;

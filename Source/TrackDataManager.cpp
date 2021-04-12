@@ -38,6 +38,45 @@ void TrackDataManager::initialise(juce::File directory)
 }
 
 
+void TrackDataManager::update(TrackData track)
+{
+    database.store(track);
+    for (int i = 0; i < tracks.size(); i++)
+    {
+        if (tracks[i].hash == track.hash)
+        {
+            tracks.remove(i);
+            tracks.add(track);
+            return;
+        }
+    }
+}
+
+
+void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer, bool sumToMono)
+{
+    juce::String filePath = dirContents->getDirectory().getFullPathName() + "/" + filename;
+    
+    juce::AudioFormatReader* reader = formatManager.createReaderFor(filePath);
+    
+    if (reader)
+    {
+        buffer.setSize(reader->numChannels, (int)reader->lengthInSamples);
+        
+        reader->read(buffer.getArrayOfWritePointers(), reader->numChannels, 0, (int)reader->lengthInSamples);
+        
+        if (sumToMono && buffer.getNumChannels() == 2)
+        {
+            buffer.applyGain(0.5f);
+            buffer.addFrom(0, 0, buffer.getReadPointer(1), buffer.getNumSamples());
+            buffer.setSize(1, buffer.getNumSamples(), true);
+        }
+        
+        delete reader;
+    }
+}
+
+
 void TrackDataManager::printTrackData(TrackData data)
 {
     std::stringstream ss;
@@ -132,28 +171,4 @@ int TrackDataManager::getHash(juce::File file)
     rawFile.reset();
     
     return hash;
-}
-
-
-void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer, bool sumToMono)
-{
-    juce::String filePath = dirContents->getDirectory().getFullPathName() + "/" + filename;
-    
-    juce::AudioFormatReader* reader = formatManager.createReaderFor(filePath);
-    
-    if (reader)
-    {
-        buffer.setSize(reader->numChannels, (int)reader->lengthInSamples);
-        
-        reader->read(buffer.getArrayOfWritePointers(), reader->numChannels, 0, (int)reader->lengthInSamples);
-        
-        if (sumToMono && buffer.getNumChannels() == 2)
-        {
-            buffer.applyGain(0.5f);
-            buffer.addFrom(0, 0, buffer.getReadPointer(1), buffer.getNumSamples());
-            buffer.setSize(1, buffer.getNumSamples(), true);
-        }
-        
-        delete reader;
-    }
 }

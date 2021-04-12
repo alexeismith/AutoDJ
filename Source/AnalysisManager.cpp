@@ -18,11 +18,13 @@ void AnalysisManager::analyse(TrackData track)
 {
     juce::AudioBuffer<float> buffer;
     
-    DBG("Analysing " << track.title);
+    DBG("Analysing " << track.filename);
     
     dataManager->fetchAudio(track.filename, buffer, true);
 
-    analyserBeats->analyse(buffer);
+    analyserBeats->analyse(buffer, track.bpm, track.beatPhase, track.downbeat);
+    
+    dataManager->update(track);
     
     DBG("Analysis Done");
 }

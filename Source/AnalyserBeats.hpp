@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 
 #include "ThirdParty/qm-dsp/dsp/tempotracking/TempoTrackV2.h"
+#include "ThirdParty/qm-dsp/dsp/tempotracking/DownBeat.h"
 #include "ThirdParty/qm-dsp/dsp/onsets/DetectionFunction.h"
 
 class AnalyserBeats
@@ -25,10 +26,18 @@ public:
     
 private:
     
-    void processBeats(std::vector<double> beats, int& bpm, int& beatPhase, int& downbeat);
+    void reset();
     
-    TempoTrackV2 tempoTracker;
+    void getTempo(juce::AudioBuffer<float> audio, int numFrames, int& bpm, int& beatPhase);
+    
+    void processBeats(std::vector<double> beats, int& bpm, int& beatPhase);
+    
+    void getDownbeat(juce::AudioBuffer<float> audio, int numFrames, int bpm, int beatPhase, int& downbeat);
+    
+    bool isBeat(int frame, int bpm, int beatPhase);
+    
     std::unique_ptr<DetectionFunction> onsetAnalyser;
+    std::unique_ptr<DownBeat> downBeat;
     DFConfig dfConfig;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalyserBeats)

@@ -12,10 +12,9 @@
 #include "ThirdParty/beatutils.h"
 
 #define STEP_SIZE (512) // Ideal for 44.1kHz sample rate (see https://code.soundsoftware.ac.uk/projects/qm-vamp-plugins/repository/entry/plugins/BarBeatTrack.cpp#L249)
+#define DOWNBEAT_DECIMATION_FACTOR (16)
 
-
-AnalyserBeats::AnalyserBeats() :
-    tempoTracker(TempoTrackV2(SUPPORTED_SAMPLERATE, STEP_SIZE))
+AnalyserBeats::AnalyserBeats()
 {
     dfConfig.DFType = DF_COMPLEXSD;
     dfConfig.stepSize = STEP_SIZE;
@@ -24,11 +23,33 @@ AnalyserBeats::AnalyserBeats() :
     dfConfig.adaptiveWhitening = false;
     dfConfig.whiteningRelaxCoeff = -1;
     dfConfig.whiteningFloor = -1;
-    onsetAnalyser.reset(new DetectionFunction(dfConfig));
+    
+    downBeat.reset(new DownBeat(SUPPORTED_SAMPLERATE, DOWNBEAT_DECIMATION_FACTOR, STEP_SIZE));
+    downBeat->setBeatsPerBar(BEATS_PER_BAR);
 }
 
 
 void AnalyserBeats::analyse(juce::AudioBuffer<float> audio, int& bpm, int& beatPhase, int& downbeat)
+{
+    reset();
+    
+    // Find the number of onset detection frames for the provided audio
+    int numFrames = (audio.getNumSamples() - dfConfig.frameLength) / dfConfig.stepSize;
+    
+    getTempo(audio, numFrames, bpm, beatPhase);
+    getDownbeat(audio, numFrames, bpm, beatPhase, downbeat);
+}
+
+
+void AnalyserBeats::reset()
+{
+    // Reset the QM onset and downbeat analysers
+    onsetAnalyser.reset(new DetectionFunction(dfConfig));
+    downBeat->resetAudioBuffer();
+}
+
+
+void AnalyserBeats::getTempo(juce::AudioBuffer<float> audio, int numFrames, int& bpm, int& beatPhase)
 {
     juce::AudioBuffer<double> buffer;
     std::vector<double> onsets, onsetsTrim, beatPeriod, tempi, beats;
@@ -37,10 +58,9 @@ void AnalyserBeats::analyse(juce::AudioBuffer<float> audio, int& bpm, int& beatP
     buffer.setSize(1, audio.getNumSamples());
     for (int i = 0; i < audio.getNumSamples(); i++)
         buffer.setSample(0, i, (double)audio.getSample(0, i));
-
-    // Find the number of onset detection frames for the provided audio
-    int numFrames = (audio.getNumSamples() - dfConfig.frameLength) / dfConfig.stepSize;
-    onsets.reserve(numFrames); // Allocate buffer space for the onset results
+    
+    // Allocate buffer space for the onset results
+    onsets.reserve(numFrames);
 
     // Pass frames of audio to the QM onset detector, storing the returned results
     for (int i = 0; i < numFrames; i++)
@@ -76,14 +96,11 @@ void AnalyserBeats::analyse(juce::AudioBuffer<float> audio, int& bpm, int& beatP
         beats[i] *= STEP_SIZE;
     
     // Adjust the non-constant beat tracking results to get a constant BPM and beat phase
-    processBeats(beats, bpm, beatPhase, downbeat);
-    
-    // Reset the QM onset detector
-    onsetAnalyser.reset();
+    processBeats(beats, bpm, beatPhase);
 }
 
 
-void AnalyserBeats::processBeats(std::vector<double> beats, int& bpm, int& beatPhase, int& downbeat)
+void AnalyserBeats::processBeats(std::vector<double> beats, int& bpm, int& beatPhase)
 {
     std::vector<BeatUtils::ConstRegion> constantRegions = BeatUtils::retrieveConstRegions(beats, SUPPORTED_SAMPLERATE);
 
@@ -96,4 +113,53 @@ void AnalyserBeats::processBeats(std::vector<double> beats, int& bpm, int& beatP
     beatPhase = firstBeat - floor(firstBeat / beatLength) * beatLength;
     
     DBG("constBPM: " << bpm << " firstBeat: " << beatPhase);
+}
+
+
+void AnalyserBeats::getDownbeat(juce::AudioBuffer<float> audio, int numFrames, int bpm, int beatPhase, int& downbeat)
+{
+    std::vector<double> beats;
+    
+    DBG("Downbeat");
+    
+    for (int i = 0; i < numFrames; i++)
+    {
+        if (isBeat(i, bpm, beatPhase))
+        {
+            beats.push_back(i);
+        }
+    }
+    
+    for (int i = 0; i < numFrames; i++)
+        downBeat->pushAudioBlock(audio.getReadPointer(0, i*dfConfig.stepSize));
+    
+    vector<int> downbeats;
+    size_t downLength = 0;
+    const float *downsampled = downBeat->getBufferedAudio(downLength);
+    downBeat->findDownBeats(downsampled, downLength, beats, downbeats);
+    
+    downbeat = downbeats.front();
+
+    // The following can be used to fetch the spectral difference for each beat
+//    vector<double> beatsd;
+//    downBeat->getBeatSD(beatsd);
+    
+    DBG("First downbeat is beat " << downbeat << " at: " << round(60 * SUPPORTED_SAMPLERATE / bpm) * downbeat + beatPhase);
+}
+
+
+bool AnalyserBeats::isBeat(int frame, int bpm, int beatPhase)
+{
+    int frameStart = frame * STEP_SIZE;
+    int frameEnd = frameStart + STEP_SIZE - 1;
+    
+    double beatLength = round(60 * SUPPORTED_SAMPLERATE / bpm);
+    
+    frameStart -= beatPhase;
+    frameEnd -= beatPhase;
+    
+    if (abs(floor(frameEnd/beatLength) - floor(frameStart/beatLength)) > 0)
+        return true;
+    
+    return false;
 }

@@ -51,10 +51,14 @@
           <FILE id="MPhdsc" name="TempoTrackV2.cpp" compile="1" resource="0"
                 file="Source/ThirdParty/qm-dsp/dsp/tempotracking/TempoTrackV2.cpp"/>
           <FILE id="t5dVpQ" name="TempoTrackV2.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/tempotracking/TempoTrackV2.h"/>
+          <FILE id="O389lL" name="DownBeat.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/tempotracking/DownBeat.cpp"/>
+          <FILE id="AC15j3" name="DownBeat.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/tempotracking/DownBeat.h"/>
           <FILE id="IrUPSs" name="DetectionFunction.cpp" compile="1" resource="0"
                 file="Source/ThirdParty/qm-dsp/dsp/onsets/DetectionFunction.cpp"/>
           <FILE id="es2nsk" name="DetectionFunction.h" compile="0" resource="0"
                 file="Source/ThirdParty/qm-dsp/dsp/onsets/DetectionFunction.h"/>
+          <FILE id="WYdqCO" name="Decimator.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/rateconversion/Decimator.cpp"/>
+          <FILE id="eLOUEs" name="Decimator.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/rateconversion/Decimator.h"/>
           <FILE id="BLmVWs" name="MathUtilities.cpp" compile="1" resource="0"
                 file="Source/ThirdParty/qm-dsp/maths/MathUtilities.cpp"/>
           <FILE id="c1Xy26" name="MathUtilities.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/maths/MathUtilities.h"/>

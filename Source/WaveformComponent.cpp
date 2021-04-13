@@ -22,7 +22,7 @@ WaveformComponent::WaveformComponent(int width, TrackDataManager* dm) :
     filterMid.setCoefficients(juce::IIRCoefficients::makeBandPass(SUPPORTED_SAMPLERATE, 500, 1.0));
     filterHigh.setCoefficients(juce::IIRCoefficients::makeHighPass(SUPPORTED_SAMPLERATE, 10000, 1.0));
     
-    startTimerHz(60);
+//    startTimerHz(60);
 }
 
 
@@ -30,6 +30,7 @@ void WaveformComponent::paint(juce::Graphics& g)
 {
     int frame, barHeight = WAVEFORM_BAR_HEIGHT * getHeight();
     float magnitude;
+    bool downbeat;
     
     g.setColour(juce::Colours::black);
     g.fillAll();
@@ -46,11 +47,19 @@ void WaveformComponent::paint(juce::Graphics& g)
             g.drawVerticalLine(x, 0.5f * getHeight() - magnitude, 0.5f * getHeight() + magnitude);
         }
         
-        if (isBeat(frame))
+        if (isBeat(frame, downbeat))
         {
             g.setColour(juce::Colours::white);
-            g.drawVerticalLine(x, 0, barHeight);
-            g.drawVerticalLine(x, getHeight() - barHeight, getHeight());
+            
+            if (downbeat)
+            {
+                g.drawVerticalLine(x, 0, getHeight());
+            }
+            else
+            {
+                g.drawVerticalLine(x, 0, barHeight);
+                g.drawVerticalLine(x, getHeight() - barHeight, getHeight());
+            }
         }
     }
 }
@@ -164,9 +173,10 @@ void WaveformComponent::pushFrame(int index)
 }
 
 
-bool WaveformComponent::isBeat(int frameIndex)
+bool WaveformComponent::isBeat(int frameIndex, bool& downbeat)
 {
-    if (track.bpm == -1 || track.beatPhase == -1) return false;
+    downbeat = false;
+    if (track.bpm == -1) return false;
     
     int frameStart = frameIndex * WAVEFORM_FRAME_SIZE;
     int frameEnd = frameStart + WAVEFORM_FRAME_SIZE - 1;
@@ -177,7 +187,13 @@ bool WaveformComponent::isBeat(int frameIndex)
     frameEnd -= track.beatPhase;
     
     if (abs(floor(frameEnd/beatLength) - floor(frameStart/beatLength)) > 0)
+    {
+        if (frameIndex > 0 && frameIndex < numFrames)
+            if ((int(floor(frameEnd/beatLength)) - track.downbeat) % BEATS_PER_BAR == 0)
+                downbeat = true;
+        
         return true;
+    }
     
     return false;
 }

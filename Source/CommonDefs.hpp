@@ -13,6 +13,7 @@
 #define SUPPORTED_SAMPLERATE (44100)
 #define TRACK_LENGTH_SECS_MIN (60)
 #define TRACK_LENGTH_SECS_MAX (600)
+#define BEATS_PER_BAR (4)
 
 enum ComponentIDs : int
 {

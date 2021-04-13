@@ -39,7 +39,7 @@ private:
     
     void pushFrame(int index);
     
-    bool isBeat(int frameIndex);
+    bool isBeat(int frameIndex, bool& downbeat);
     
     TrackDataManager* dataManager;
     

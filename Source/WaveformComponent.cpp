@@ -10,7 +10,11 @@
 #include "CommonDefs.hpp"
 
 
-WaveformComponent::WaveformComponent(int width)
+#define WAVEFORM_BAR_HEIGHT (0.1f)
+
+
+WaveformComponent::WaveformComponent(int width, TrackDataManager* dm) :
+    dataManager(dm)
 {
     setSize(width, 300);
     
@@ -18,12 +22,13 @@ WaveformComponent::WaveformComponent(int width)
     filterMid.setCoefficients(juce::IIRCoefficients::makeBandPass(SUPPORTED_SAMPLERATE, 500, 1.0));
     filterHigh.setCoefficients(juce::IIRCoefficients::makeHighPass(SUPPORTED_SAMPLERATE, 10000, 1.0));
     
-    processBuffers.setSize(4, WAVEFORM_FRAME_SIZE);
+    startTimerHz(60);
 }
 
 
 void WaveformComponent::paint(juce::Graphics& g)
 {
+    int frame, barHeight = WAVEFORM_BAR_HEIGHT * getHeight();
     float magnitude;
     
     g.setColour(juce::Colours::black);
@@ -31,38 +36,91 @@ void WaveformComponent::paint(juce::Graphics& g)
     
     for (int x = 0; x < getWidth(); x++)
     {
-        magnitude = levels[x] * getHeight() * 0.5f;
+        frame = x + startFrame;
         
-        g.setColour(colours[x]);
-        g.drawVerticalLine(x, 0.5f * getHeight() - magnitude, 0.5f * getHeight() + magnitude);
+        if (frame > 0 && frame < numFrames)
+        {
+            magnitude = levels[frame] * getHeight() * 0.4f;
+            
+            g.setColour(colours[frame]);
+            g.drawVerticalLine(x, 0.5f * getHeight() - magnitude, 0.5f * getHeight() + magnitude);
+        }
         
-        if (isBeat(x))
+        if (isBeat(frame))
         {
             g.setColour(juce::Colours::white);
-            g.drawVerticalLine(x, 0, getHeight());
+            g.drawVerticalLine(x, 0, barHeight);
+            g.drawVerticalLine(x, getHeight() - barHeight, getHeight());
         }
     }
 }
 
 
-void WaveformComponent::prepare(TrackData t)
+void WaveformComponent::loadTrack(TrackData t, int startSample)
 {
-    reset();
-    track = t;
-}
-
-
-void WaveformComponent::pushBuffer(const float* audio, int numSamples)
-{
-    if (audio == nullptr) return;
+    juce::AudioBuffer<float> audio;
+    int numSamples;
     
-    int numFrames = numSamples / WAVEFORM_FRAME_SIZE;
+    reset();
+    
+    track = t;
+    startFrame = round(double(startSample) / WAVEFORM_FRAME_SIZE);
+    
+    dataManager->fetchAudio(track.filename, audio);
+    
+    numSamples = audio.getNumSamples();
+    
+    processBuffers.setSize(4, numSamples);
+    
+    // Copy frame data into filter buffers
+    memcpy(processBuffers.getWritePointer(0), audio.getReadPointer(0), numSamples * sizeof(float));
+    memcpy(processBuffers.getWritePointer(1), audio.getReadPointer(0), numSamples * sizeof(float));
+    memcpy(processBuffers.getWritePointer(2), audio.getReadPointer(0), numSamples * sizeof(float));
+    memcpy(processBuffers.getWritePointer(3), audio.getReadPointer(0), numSamples * sizeof(float));
+    
+    // Apply filters to buffers 1-3
+    filterLow.processSamples(processBuffers.getWritePointer(1), numSamples);
+    filterMid.processSamples(processBuffers.getWritePointer(2), numSamples);
+    filterHigh.processSamples(processBuffers.getWritePointer(3), numSamples);
+    
+    // Convert to absolute values
+    juce::FloatVectorOperations::abs(processBuffers.getWritePointer(0), processBuffers.getReadPointer(0), numSamples);
+    juce::FloatVectorOperations::abs(processBuffers.getWritePointer(1), processBuffers.getReadPointer(1), numSamples);
+    juce::FloatVectorOperations::abs(processBuffers.getWritePointer(2), processBuffers.getReadPointer(2), numSamples);
+    juce::FloatVectorOperations::abs(processBuffers.getWritePointer(3), processBuffers.getReadPointer(3), numSamples);
+    
+    numFrames = numSamples / WAVEFORM_FRAME_SIZE;
     
     for (int i = 0; i < numFrames; i++)
-        pushFrame(&audio[i*WAVEFORM_FRAME_SIZE]);
+        pushFrame(i);
+    
+    processBuffers.clear();
     
     repaint();
 }
+
+
+void WaveformComponent::scroll(int samples)
+{
+    int frames = round(double(samples + scrollRemainder) / WAVEFORM_FRAME_SIZE);
+    
+    startFrame += frames;
+    
+    scrollRemainder = (samples + scrollRemainder) - (frames * WAVEFORM_FRAME_SIZE);
+    
+    repaint();
+}
+
+
+//void WaveformComponent::analyse(juce::AudioBuffer<float> audio)
+//{
+//    int numFrames = audio.getNumSamples() / WAVEFORM_FRAME_SIZE;
+//    
+//    for (int i = 0; i < numFrames; i++)
+//        pushFrame(&audio.getReadPointer(0)[i*WAVEFORM_FRAME_SIZE]);
+//    
+//    repaint();
+//}
 
 
 void WaveformComponent::reset()
@@ -71,43 +129,22 @@ void WaveformComponent::reset()
     filterMid.reset();
     filterHigh.reset();
     
-    processBuffers.clear();
-    
     levels.clear();
     colours.clear();
+    
+    numFrames = startFrame = scrollRemainder = 0;
 }
 
 
-void WaveformComponent::pushFrame(const float* audio)
+void WaveformComponent::pushFrame(int index)
 {
-    if (levels.size() >= getWidth())
-    {
-        levels.remove(0);
-        colours.remove(0);
-    }
+    int startSample = index * WAVEFORM_FRAME_SIZE;
     
-    // Copy frame data into filter buffers
-    memcpy(processBuffers.getWritePointer(0), audio, WAVEFORM_FRAME_SIZE * sizeof(float));
-    memcpy(processBuffers.getWritePointer(1), audio, WAVEFORM_FRAME_SIZE * sizeof(float));
-    memcpy(processBuffers.getWritePointer(2), audio, WAVEFORM_FRAME_SIZE * sizeof(float));
-    memcpy(processBuffers.getWritePointer(3), audio, WAVEFORM_FRAME_SIZE * sizeof(float));
+    levels.add(juce::FloatVectorOperations::findMaximum(processBuffers.getReadPointer(0, startSample), WAVEFORM_FRAME_SIZE));
     
-    // Apply filters to buffers 1-3
-    filterLow.processSamples(processBuffers.getWritePointer(1), WAVEFORM_FRAME_SIZE);
-    filterMid.processSamples(processBuffers.getWritePointer(2), WAVEFORM_FRAME_SIZE);
-    filterHigh.processSamples(processBuffers.getWritePointer(3), WAVEFORM_FRAME_SIZE);
-    
-    // Convert to absolute values
-    juce::FloatVectorOperations::abs(processBuffers.getWritePointer(0), processBuffers.getReadPointer(0), WAVEFORM_FRAME_SIZE);
-    juce::FloatVectorOperations::abs(processBuffers.getWritePointer(1), processBuffers.getReadPointer(1), WAVEFORM_FRAME_SIZE);
-    juce::FloatVectorOperations::abs(processBuffers.getWritePointer(2), processBuffers.getReadPointer(2), WAVEFORM_FRAME_SIZE);
-    juce::FloatVectorOperations::abs(processBuffers.getWritePointer(3), processBuffers.getReadPointer(3), WAVEFORM_FRAME_SIZE);
-    
-    levels.add(juce::FloatVectorOperations::findMaximum(processBuffers.getReadPointer(0), WAVEFORM_FRAME_SIZE));
-    
-    float low = juce::FloatVectorOperations::findMaximum(processBuffers.getReadPointer(1), WAVEFORM_FRAME_SIZE);
-    float mid = juce::FloatVectorOperations::findMaximum(processBuffers.getReadPointer(2), WAVEFORM_FRAME_SIZE);
-    float high = juce::FloatVectorOperations::findMaximum(processBuffers.getReadPointer(3), WAVEFORM_FRAME_SIZE);
+    float low = juce::FloatVectorOperations::findMaximum(processBuffers.getReadPointer(1, startSample), WAVEFORM_FRAME_SIZE);
+    float mid = juce::FloatVectorOperations::findMaximum(processBuffers.getReadPointer(2, startSample), WAVEFORM_FRAME_SIZE);
+    float high = juce::FloatVectorOperations::findMaximum(processBuffers.getReadPointer(3, startSample), WAVEFORM_FRAME_SIZE);
     
     float multiplier = 2.f;
     
@@ -139,7 +176,7 @@ bool WaveformComponent::isBeat(int frameIndex)
     frameStart -= track.beatPhase;
     frameEnd -= track.beatPhase;
     
-    if (floor(frameEnd/beatLength) - floor(frameStart/beatLength) > 0)
+    if (abs(floor(frameEnd/beatLength) - floor(frameStart/beatLength)) > 0)
         return true;
     
     return false;

@@ -12,32 +12,40 @@
 
 #include <JuceHeader.h>
 
-#include "TrackData.hpp"
+#include "TrackDataManager.hpp"
 
 // NOTE: need a separate instance for each audio channel to be visualised, because the IIR filters depend on previous samples
-class WaveformComponent : public juce::Component
+class WaveformComponent : public juce::Component, juce::Timer
 {
 public:
     
-    WaveformComponent(int width);
+    WaveformComponent(int width, TrackDataManager* dataManager);
     
     ~WaveformComponent() {}
     
     void paint(juce::Graphics& g) override;
     
-    void prepare(TrackData track);
+    void loadTrack(TrackData track, int startSample);
     
-    void pushBuffer(const float* audio, int numSamples);
+    void scroll(int samples);
+    
+    void timerCallback() override { scroll(44100 / 60); }
+    
+//    void analyse(juce::AudioBuffer<float> audio);
     
 private:
     
     void reset();
     
-    void pushFrame(const float* audio);
+    void pushFrame(int index);
     
     bool isBeat(int frameIndex);
     
+    TrackDataManager* dataManager;
+    
     TrackData track;
+    
+    int numFrames = 0, startFrame, scrollRemainder = 0;
     
     juce::AudioBuffer<float> processBuffers;
     

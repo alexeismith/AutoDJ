@@ -24,7 +24,7 @@ LibraryComponent::LibraryComponent(AudioProcessor* p)
     chooseFolderBtn->setSize(120, 40);
     chooseFolderBtn->addListener(this);
     
-    waveform.reset(new WaveformComponent(800));
+    waveform.reset(new WaveformComponent(800, &dataManager));
     addAndMakeVisible(waveform.get());
     waveform->setVisible(false);
 }
@@ -61,7 +61,7 @@ void LibraryComponent::chooseFolder()
     {
         dataManager.initialise(chooser.getResult());
         
-        TrackData track = dataManager.getTracks()->getReference(1);
+        TrackData track = dataManager.getTracks()->getReference(6);
         
         analysisManager->analyse(track);
         
@@ -77,12 +77,11 @@ void LibraryComponent::chooseFolder()
 
         buffer.copyFrom(0, 0, buffer.getReadPointer(0, 540000), 801*WAVEFORM_FRAME_SIZE);
         buffer.setSize(1, 800*WAVEFORM_FRAME_SIZE, true);
-        waveform->prepare(track);
-        waveform->setVisible(true);
         DBG("Waveform");
-        waveform->pushBuffer(buffer.getReadPointer(0), buffer.getNumSamples());
+        waveform->loadTrack(track, 3150000);
         DBG("Waveform done");
+        waveform->setVisible(true);
 
-        audioProcessor->play(buffer);
+//        audioProcessor->play(buffer);
     }
 }

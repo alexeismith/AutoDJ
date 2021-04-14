@@ -50,7 +50,7 @@ void SqlDatabase::store(TrackData data)
     
     std::stringstream ss;
     ss << "REPLACE INTO Library VALUES('" \
-    << data.filename << "','" << data.hash << "','" << data.artist << "','" << data.title << "'," << data.length << "," << data.analysed << "," << data.bpm << "," << data.beatPhase << "," << data.downbeat << "," << data.key << "," << data.energy << ")";
+    << toSqlSafe(data.filename) << "','" << data.hash << "','" << toSqlSafe(data.artist) << "','" << toSqlSafe(data.title) << "'," << data.length << "," << data.analysed << "," << data.bpm << "," << data.beatPhase << "," << data.downbeat << "," << data.key << "," << data.energy << ")";
     
     execute(ss.str());
 }
@@ -66,7 +66,7 @@ TrackData SqlDatabase::read(juce::String filename)
     if (!initialised) jassert(false);
     
     std::stringstream ss;
-    ss << "SELECT * FROM Library WHERE Filename = '" << filename << "'";
+    ss << "SELECT * FROM Library WHERE Filename = '" << toSqlSafe(filename) << "'";
     
     execute(ss.str());
     
@@ -80,10 +80,10 @@ TrackData SqlDatabase::read(juce::String filename)
     errCode = sqlite3_step(statement);
     if (errCode == SQLITE_ROW)
     {
-        data.filename = juce::String(reinterpret_cast<const char*>(sqlite3_column_text(statement, 0)));
+        data.filename = fromSqlSafe(reinterpret_cast<const char*>(sqlite3_column_text(statement, 0)));
         data.hash = sqlite3_column_int(statement, 1);
-        data.artist = juce::String(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
-        data.title = juce::String(reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)));
+        data.artist = fromSqlSafe(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
+        data.title = fromSqlSafe(reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)));
         data.length = sqlite3_column_int(statement, 4);
         data.analysed = sqlite3_column_int(statement, 5);
         data.bpm = sqlite3_column_int(statement, 6);

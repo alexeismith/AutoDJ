@@ -33,9 +33,6 @@ void TrackDataManager::initialise(juce::File directory)
         jassert(false); // Database failed to initialise
     
     parseFiles();
-    
-    for (TrackData track : tracks)
-        printTrackData(track);
 }
 
 
@@ -109,7 +106,7 @@ void TrackDataManager::parseFiles()
         _mm_pause();
     }
     
-    DBG("Num WAV files in directory: " << dirContents->getNumFiles());
+    DBG("Num valid files in directory: " << dirContents->getNumFiles());
     
     for (int i = 0; i < dirContents->getNumFiles(); i++)
     {
@@ -147,7 +144,7 @@ void TrackDataManager::addToDatabase(juce::File file, int hash, TrackData& track
 
         delete reader;
         
-        DBG("Added to database: " << trackData.filename);
+//        DBG("Added to database: " << trackData.filename);
     }
 }
 

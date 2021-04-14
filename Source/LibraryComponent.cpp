@@ -14,7 +14,7 @@ LibraryComponent::LibraryComponent(AudioProcessor* p)
     
     analysisManager.reset(new AnalysisManager(&dataManager));
     
-    trackTable.reset(new QueueTableComponent());
+    trackTable.reset(new TrackTableComponent());
     addAndMakeVisible(trackTable.get());
     trackTable->setVisible(false);
     trackTable->addColumns();
@@ -61,18 +61,18 @@ void LibraryComponent::chooseFolder()
     {
         dataManager.initialise(chooser.getResult());
         
-        TrackData track = dataManager.getTracks()->getReference(7);
+        TrackData track = dataManager.getTracks()->getReference(0);
         
-        analysisManager->analyse(track);
+//        analysisManager->analyse(track);
         
         trackTable->populate(dataManager.getTracks());
         
         trackTable->setVisible(true);
         chooseFolderBtn->setVisible(false);
         
-        DBG("Waveform");
-        waveform->loadTrack(track, -80000);
-        DBG("Waveform done");
+//        DBG("Waveform");
+//        waveform->loadTrack(track, -80000);
+//        DBG("Waveform done");
 //        waveform->setVisible(true);
         
 //        juce::AudioBuffer<float> buffer;

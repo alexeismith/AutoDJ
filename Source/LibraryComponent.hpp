@@ -33,7 +33,7 @@ private:
     
     void chooseFolder();
     
-    std::unique_ptr<QueueTableComponent> trackTable;
+    std::unique_ptr<TrackTableComponent> trackTable;
     
     std::unique_ptr<juce::Button> chooseFolderBtn;
     

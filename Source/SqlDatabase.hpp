@@ -34,6 +34,10 @@ private:
     void execute(juce::String statement);
     
     void createTable();
+    
+    juce::String toSqlSafe(juce::String text) { return text.replace("'", "''", true); }
+    
+    juce::String fromSqlSafe(juce::String text) { return text.replace("''", "'", true); }
 
     bool initialised = false;
     void* database;

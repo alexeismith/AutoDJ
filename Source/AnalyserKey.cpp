@@ -32,25 +32,24 @@ void AnalyserKey::analyse(juce::AudioBuffer<float> audio, int& key)
     for (int i = 0; i < numFrames; i++)
     {
         currentKey = keyDetector->process(buffer.getWritePointer(0));
-        DBG(currentKey);
         
-        if (i > 0)
+        if (currentKey != prevKey || i == 0)
         {
-            if (currentKey != prevKey)
-            {
-                keys.add(currentKey);
-                changes.add(i * hopSize);
-            }
+            keys.add(currentKey);
+            changes.add(i * hopSize);
         }
         
         prevKey = currentKey;
     }
     
-    DBG("Num keys detected: " << keys.size());
+    key = AutoDJ::mostCommonValue(keys.data(), keys.size());
+    
+    DBG("Key: " << AutoDJ::getKeyName(key) << " (" << keys.size()-1 << " others detected)");
 }
 
 
 void AnalyserKey::reset()
 {
     keyDetector.reset(new GetKeyMode(SUPPORTED_SAMPLERATE, TUNING_FREQUENCY_HZ, 10, 10));
+    prevKey = -1;
 }

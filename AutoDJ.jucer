@@ -42,13 +42,13 @@
           <FILE id="bVlyVx" name="beatutils.cpp" compile="1" resource="0" file="Source/ThirdParty/beatutils.cpp"/>
           <FILE id="slkKII" name="beatutils.h" compile="0" resource="0" file="Source/ThirdParty/beatutils.h"/>
         </GROUP>
-        <GROUP id="{DC2B663B-90EE-4178-86AD-9F7A0D1DA85D}" name="KissFFT">
-          <FILE id="wFBZcc" name="kiss_fft.c" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/kiss_fft.c"/>
-          <FILE id="AirqQK" name="kiss_fft.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/kiss_fft.h"/>
-          <FILE id="g77Ma3" name="kiss_fftr.c" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/tools/kiss_fftr.c"/>
-          <FILE id="SudoEr" name="kiss_fftr.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/tools/kiss_fftr.h"/>
-        </GROUP>
         <GROUP id="{67C3EE80-C32F-A3A9-ECB3-95B86CB0C9D8}" name="QM DSP">
+          <GROUP id="{DC2B663B-90EE-4178-86AD-9F7A0D1DA85D}" name="KissFFT">
+            <FILE id="wFBZcc" name="kiss_fft.c" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/kiss_fft.c"/>
+            <FILE id="AirqQK" name="kiss_fft.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/kiss_fft.h"/>
+            <FILE id="g77Ma3" name="kiss_fftr.c" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/tools/kiss_fftr.c"/>
+            <FILE id="SudoEr" name="kiss_fftr.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/tools/kiss_fftr.h"/>
+          </GROUP>
           <GROUP id="{3DFC3318-9093-E5BE-AABA-16C62424D845}" name="Extras">
             <FILE id="Q2nnFi" name="Chromagram.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/chromagram/Chromagram.cpp"/>
             <FILE id="nHi7vj" name="Chromagram.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/chromagram/Chromagram.h"/>

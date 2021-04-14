@@ -105,7 +105,7 @@ juce::String TrackTableComponent::getValueForColumn(TrackData& track, int column
         case TrackTableColumns::bpm:
             return juce::String(track.bpm);
         case TrackTableColumns::key:
-            return juce::String(track.key);
+            return AutoDJ::getKeyName(track.key);
         case TrackTableColumns::energy:
             return juce::String(track.energy);
         default:

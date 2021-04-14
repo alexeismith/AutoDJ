@@ -23,7 +23,7 @@ void AnalysisManager::analyse(TrackData& track)
     
     dataManager->fetchAudio(track.filename, buffer, true);
 
-//    analyserBeats->analyse(buffer, track.bpm, track.beatPhase, track.downbeat);
+    analyserBeats->analyse(buffer, track.bpm, track.beatPhase, track.downbeat);
     
     analyserKey->analyse(buffer, track.key);
     

@@ -15,9 +15,10 @@ extern "C" {
 
 
 TrackDataManager::TrackDataManager() :
-    fileFilter(juce::WildcardFileFilter("*.wav", "*", "AudioFormats"))
+    fileFilter(juce::WildcardFileFilter("*.wav,*.mp3", "*", "AudioFormats"))
 {
     formatManager.registerFormat(new juce::WavAudioFormat(), false);
+    formatManager.registerFormat(new juce::MP3AudioFormat(), false);
     
     thread.startThread(3);
     dirContents.reset(new juce::DirectoryContentsList(&fileFilter, thread));

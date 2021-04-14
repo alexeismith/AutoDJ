@@ -3,7 +3,7 @@
 <JUCERPROJECT id="mliKgU" name="AutoDJ" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               headerPath="../../Source/ThirdParty/qm-dsp/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools/"
-              defines="kiss_fft_scalar=double" cppLanguageStandard="17">
+              defines="kiss_fft_scalar=double&#10;" cppLanguageStandard="17">
   <MAINGROUP id="r4tD07" name="AutoDJ">
     <GROUP id="{A84FEFF8-C709-ECFA-E10F-9FF3F5BBB565}" name="Source">
       <FILE id="gOh4WX" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
@@ -48,6 +48,26 @@
           <FILE id="SudoEr" name="kiss_fftr.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/tools/kiss_fftr.h"/>
         </GROUP>
         <GROUP id="{67C3EE80-C32F-A3A9-ECB3-95B86CB0C9D8}" name="QM DSP">
+          <GROUP id="{3DFC3318-9093-E5BE-AABA-16C62424D845}" name="Extras">
+            <FILE id="Q2nnFi" name="Chromagram.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/chromagram/Chromagram.cpp"/>
+            <FILE id="nHi7vj" name="Chromagram.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/chromagram/Chromagram.h"/>
+            <FILE id="obj1HG" name="ConstantQ.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/chromagram/ConstantQ.cpp"/>
+            <FILE id="ZqhXeI" name="ConstantQ.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/chromagram/ConstantQ.h"/>
+            <FILE id="hHYfRo" name="Pitch.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/base/Pitch.cpp"/>
+            <FILE id="jwcphL" name="Pitch.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/base/Pitch.h"/>
+            <FILE id="WYdqCO" name="Decimator.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/rateconversion/Decimator.cpp"/>
+            <FILE id="eLOUEs" name="Decimator.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/rateconversion/Decimator.h"/>
+            <FILE id="BLmVWs" name="MathUtilities.cpp" compile="1" resource="0"
+                  file="Source/ThirdParty/qm-dsp/maths/MathUtilities.cpp"/>
+            <FILE id="c1Xy26" name="MathUtilities.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/maths/MathUtilities.h"/>
+            <FILE id="N3z2EV" name="PhaseVocoder.cpp" compile="1" resource="0"
+                  file="Source/ThirdParty/qm-dsp/dsp/phasevocoder/PhaseVocoder.cpp"/>
+            <FILE id="wsdSTc" name="PhaseVocoder.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/phasevocoder/PhaseVocoder.h"/>
+            <FILE id="nrtPmp" name="FFT.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/transforms/FFT.cpp"/>
+            <FILE id="bU6ock" name="FFT.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/transforms/FFT.h"/>
+          </GROUP>
+          <FILE id="txqGN1" name="GetKeyMode.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/keydetection/GetKeyMode.cpp"/>
+          <FILE id="sTHBw6" name="GetKeyMode.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/keydetection/GetKeyMode.h"/>
           <FILE id="MPhdsc" name="TempoTrackV2.cpp" compile="1" resource="0"
                 file="Source/ThirdParty/qm-dsp/dsp/tempotracking/TempoTrackV2.cpp"/>
           <FILE id="t5dVpQ" name="TempoTrackV2.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/tempotracking/TempoTrackV2.h"/>
@@ -57,16 +77,6 @@
                 file="Source/ThirdParty/qm-dsp/dsp/onsets/DetectionFunction.cpp"/>
           <FILE id="es2nsk" name="DetectionFunction.h" compile="0" resource="0"
                 file="Source/ThirdParty/qm-dsp/dsp/onsets/DetectionFunction.h"/>
-          <FILE id="WYdqCO" name="Decimator.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/rateconversion/Decimator.cpp"/>
-          <FILE id="eLOUEs" name="Decimator.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/rateconversion/Decimator.h"/>
-          <FILE id="BLmVWs" name="MathUtilities.cpp" compile="1" resource="0"
-                file="Source/ThirdParty/qm-dsp/maths/MathUtilities.cpp"/>
-          <FILE id="c1Xy26" name="MathUtilities.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/maths/MathUtilities.h"/>
-          <FILE id="N3z2EV" name="PhaseVocoder.cpp" compile="1" resource="0"
-                file="Source/ThirdParty/qm-dsp/dsp/phasevocoder/PhaseVocoder.cpp"/>
-          <FILE id="wsdSTc" name="PhaseVocoder.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/phasevocoder/PhaseVocoder.h"/>
-          <FILE id="nrtPmp" name="FFT.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/transforms/FFT.cpp"/>
-          <FILE id="bU6ock" name="FFT.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/transforms/FFT.h"/>
         </GROUP>
       </GROUP>
       <FILE id="hbOA8G" name="AudioProcessor.cpp" compile="1" resource="0"

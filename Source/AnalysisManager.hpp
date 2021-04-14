@@ -12,6 +12,7 @@
 
 #include "TrackDataManager.hpp"
 #include "AnalyserBeats.hpp"
+#include "AnalyserKey.hpp"
 
 class AnalysisManager
 {
@@ -28,6 +29,7 @@ private:
     TrackDataManager* dataManager = nullptr;
     
     std::unique_ptr<AnalyserBeats> analyserBeats;
+    std::unique_ptr<AnalyserKey> analyserKey;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalysisManager)
 };

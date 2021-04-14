@@ -72,13 +72,13 @@ void AnalyserBeats::getTempo(juce::AudioBuffer<float> audio, int numFrames, int&
         --nonZeroCount; // For every zero at the back of the vector, decrement the counter
 
     // Allocate memory for the trimmed results
-    int required_size = std::max(0, nonZeroCount - 2);
+    int required_size = std::max(0, nonZeroCount - 0);
     onsetsTrim.reserve(required_size);
     beatPeriod.reserve(required_size);
     
     // Trim the onset results and prepare the beat period vector
     // We trim the first 2 elements (to account for unstable onset analysis at start), and the trailing zeros
-    for (int i = 2; i < nonZeroCount; ++i)
+    for (int i = 0; i < nonZeroCount; ++i)
     {
         onsetsTrim.push_back(onsets.at(i));
         beatPeriod.push_back(0.0);

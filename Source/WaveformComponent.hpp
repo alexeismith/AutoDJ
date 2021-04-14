@@ -25,15 +25,17 @@ public:
     
     void paint(juce::Graphics& g) override;
     
+    void resized() override { imageValid = false; }
+    
     void loadTrack(TrackData track, int startSample);
     
     void scroll(int samples);
     
-    void timerCallback() override { scroll(44100 / 60); }
-    
-//    void analyse(juce::AudioBuffer<float> audio);
+    void timerCallback() override { scroll(44100 / 30); }
     
 private:
+    
+    void updateImage();
     
     void reset();
     
@@ -45,7 +47,12 @@ private:
     
     TrackData track;
     
-    int numFrames = 0, startFrame, scrollRemainder = 0;
+    int numFrames = 0, startFrame, prevStartFrame, scrollRemainder = 0;
+    
+    bool initialised = false;
+    
+    juce::Image image, prevImage;
+    bool imageValid = false;
     
     juce::AudioBuffer<float> processBuffers;
     

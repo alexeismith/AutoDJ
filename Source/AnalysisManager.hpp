@@ -21,7 +21,7 @@ public:
     
     ~AnalysisManager() {}
     
-    void analyse(TrackData track);
+    void analyse(TrackData& track);
     
 private:
     

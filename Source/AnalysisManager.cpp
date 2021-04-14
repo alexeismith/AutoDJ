@@ -14,7 +14,7 @@ AnalysisManager::AnalysisManager(TrackDataManager* dm) :
 }
 
 
-void AnalysisManager::analyse(TrackData track)
+void AnalysisManager::analyse(TrackData& track)
 {
     juce::AudioBuffer<float> buffer;
     

@@ -22,46 +22,20 @@ WaveformComponent::WaveformComponent(int width, TrackDataManager* dm) :
     filterMid.setCoefficients(juce::IIRCoefficients::makeBandPass(SUPPORTED_SAMPLERATE, 500, 1.0));
     filterHigh.setCoefficients(juce::IIRCoefficients::makeHighPass(SUPPORTED_SAMPLERATE, 10000, 1.0));
     
-//    startTimerHz(60);
+    setBufferedToImage(true);
+    setOpaque(true);
+    
+    startTimerHz(30); // TODO: remove?
 }
 
 
 void WaveformComponent::paint(juce::Graphics& g)
 {
-    int frame, barHeight = WAVEFORM_BAR_HEIGHT * getHeight();
-    float magnitude;
-    bool downbeat;
+    if (!initialised) return;
     
-    g.setColour(juce::Colours::black);
-    g.fillAll();
+    if (!imageValid) updateImage();
     
-    for (int x = 0; x < getWidth(); x++)
-    {
-        frame = x + startFrame;
-        
-        if (frame > 0 && frame < numFrames)
-        {
-            magnitude = levels[frame] * getHeight() * 0.4f;
-            
-            g.setColour(colours[frame]);
-            g.drawVerticalLine(x, 0.5f * getHeight() - magnitude, 0.5f * getHeight() + magnitude);
-        }
-        
-        if (isBeat(frame, downbeat))
-        {
-            g.setColour(juce::Colours::white);
-            
-            if (downbeat)
-            {
-                g.drawVerticalLine(x, 0, getHeight());
-            }
-            else
-            {
-                g.drawVerticalLine(x, 0, barHeight);
-                g.drawVerticalLine(x, getHeight() - barHeight, getHeight());
-            }
-        }
-    }
+    g.drawImageAt(image, 0, 0);
 }
 
 
@@ -73,11 +47,14 @@ void WaveformComponent::loadTrack(TrackData t, int startSample)
     reset();
     
     track = t;
+    
     startFrame = round(double(startSample) / WAVEFORM_FRAME_SIZE);
+    prevStartFrame = startFrame;
     
     dataManager->fetchAudio(track.filename, audio);
     
     numSamples = audio.getNumSamples();
+    numFrames = numSamples / WAVEFORM_FRAME_SIZE;
     
     processBuffers.setSize(4, numSamples);
     
@@ -98,13 +75,16 @@ void WaveformComponent::loadTrack(TrackData t, int startSample)
     juce::FloatVectorOperations::abs(processBuffers.getWritePointer(2), processBuffers.getReadPointer(2), numSamples);
     juce::FloatVectorOperations::abs(processBuffers.getWritePointer(3), processBuffers.getReadPointer(3), numSamples);
     
-    numFrames = numSamples / WAVEFORM_FRAME_SIZE;
+    
     
     for (int i = 0; i < numFrames; i++)
         pushFrame(i);
     
     processBuffers.clear();
     
+    initialised = true;
+    
+    updateImage();
     repaint();
 }
 
@@ -117,23 +97,75 @@ void WaveformComponent::scroll(int samples)
     
     scrollRemainder = (samples + scrollRemainder) - (frames * WAVEFORM_FRAME_SIZE);
     
+    updateImage();
+    
     repaint();
 }
 
 
-//void WaveformComponent::analyse(juce::AudioBuffer<float> audio)
-//{
-//    int numFrames = audio.getNumSamples() / WAVEFORM_FRAME_SIZE;
-//    
-//    for (int i = 0; i < numFrames; i++)
-//        pushFrame(&audio.getReadPointer(0)[i*WAVEFORM_FRAME_SIZE]);
-//    
-//    repaint();
-//}
+void WaveformComponent::updateImage()
+{
+    int drawFrom = 0;
+    
+    prevImage = image;
+    image = juce::Image(juce::Image::RGB, getWidth(), getHeight(), true);
+    juce::Graphics g(image);
+    
+    int frame, barHeight = WAVEFORM_BAR_HEIGHT * getHeight();
+    float magnitude;
+    bool downbeat;
+    
+    g.setColour(juce::Colours::black);
+    g.fillAll();
+    
+    if (startFrame > prevStartFrame && imageValid)
+    {
+        g.drawImageAt(prevImage, prevStartFrame - startFrame, 0);
+        drawFrom = getWidth() + prevStartFrame - startFrame;
+        prevStartFrame = startFrame;
+    }
+    
+    for (int x = drawFrom; x < getWidth(); x++)
+    {
+        frame = x + startFrame;
+        
+        if (frame > 0 && frame < numFrames)
+        {
+            magnitude = levels[frame] * getHeight() * 0.4f;
+            
+            g.setColour(colours[frame]);
+            g.drawVerticalLine(x, 0.5f * getHeight() - magnitude, 0.5f * getHeight() + magnitude);
+        }
+        else
+        {
+            g.setColour(juce::Colours::darkgrey);
+            g.drawVerticalLine(x, 0, getHeight());
+        }
+        
+        if (isBeat(frame, downbeat))
+        {
+            g.setColour(juce::Colours::white);
+            
+            if (downbeat)
+            {
+                g.drawVerticalLine(x, 0, getHeight());
+            }
+            else
+            {
+                g.drawVerticalLine(x, 0, barHeight);
+                g.drawVerticalLine(x, getHeight() - barHeight, getHeight());
+            }
+        }
+    }
+    
+    imageValid = true;
+}
 
 
 void WaveformComponent::reset()
 {
+    initialised = false;
+    
     filterLow.reset();
     filterMid.reset();
     filterHigh.reset();
@@ -175,11 +207,14 @@ void WaveformComponent::pushFrame(int index)
 
 bool WaveformComponent::isBeat(int frameIndex, bool& downbeat)
 {
+    int remainder, frameStart, frameEnd;
+    
     downbeat = false;
+    
     if (track.bpm == -1) return false;
     
-    int frameStart = frameIndex * WAVEFORM_FRAME_SIZE;
-    int frameEnd = frameStart + WAVEFORM_FRAME_SIZE - 1;
+    frameStart = frameIndex * WAVEFORM_FRAME_SIZE;
+    frameEnd = frameStart + WAVEFORM_FRAME_SIZE - 1;
     
     double beatLength = 60 * SUPPORTED_SAMPLERATE / track.bpm;
     
@@ -188,9 +223,10 @@ bool WaveformComponent::isBeat(int frameIndex, bool& downbeat)
     
     if (abs(floor(frameEnd/beatLength) - floor(frameStart/beatLength)) > 0)
     {
-        if (frameIndex > 0 && frameIndex < numFrames)
-            if ((int(floor(frameEnd/beatLength)) - track.downbeat) % BEATS_PER_BAR == 0)
-                downbeat = true;
+        remainder = (int(floor(frameEnd/beatLength)) - track.downbeat) % BEATS_PER_BAR;
+        
+        if (remainder == 0 || remainder == BEATS_PER_BAR)
+            downbeat = true;
         
         return true;
     }

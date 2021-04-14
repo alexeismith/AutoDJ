@@ -103,7 +103,10 @@ void TrackDataManager::parseFiles()
     int hash;
     TrackData trackData;
     
-    while (dirContents->isStillLoading());
+    while (dirContents->isStillLoading())
+    {
+        _mm_pause();
+    }
     
     DBG("Num WAV files in directory: " << dirContents->getNumFiles());
     

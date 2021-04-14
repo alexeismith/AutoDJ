@@ -122,7 +122,6 @@ void WaveformComponent::updateImage()
     {
         g.drawImageAt(prevImage, prevStartFrame - startFrame, 0);
         drawFrom = getWidth() + prevStartFrame - startFrame;
-        prevStartFrame = startFrame;
     }
     
     for (int x = drawFrom; x < getWidth(); x++)
@@ -158,6 +157,7 @@ void WaveformComponent::updateImage()
         }
     }
     
+    prevStartFrame = startFrame;
     imageValid = true;
 }
 

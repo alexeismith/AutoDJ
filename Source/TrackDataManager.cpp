@@ -22,6 +22,10 @@ TrackDataManager::TrackDataManager() :
     
     thread.startThread(3);
     dirContents.reset(new juce::DirectoryContentsList(&fileFilter, thread));
+    
+    parser.reset(new FileParserThread(this));
+    
+    ready.store(false);
 }
 
 
@@ -32,7 +36,8 @@ void TrackDataManager::initialise(juce::File directory)
     if (!database.initialise(directory))
         jassert(false); // Database failed to initialise
     
-    parseFiles();
+    if (!parser->runThread())
+        jassert(false); // Failed to launch file parser thread
 }
 
 
@@ -95,33 +100,21 @@ void TrackDataManager::printTrackData(TrackData data)
 }
 
 
-void TrackDataManager::parseFiles()
+void TrackDataManager::parseFile(juce::File file)
 {
-    juce::File file;
     int hash;
     TrackData trackData;
     
-    while (dirContents->isStillLoading())
-    {
-        _mm_pause();
-    }
+    hash = getHash(file);
     
-    DBG("Num valid files in directory: " << dirContents->getNumFiles());
+    trackData = database.read(file.getFileName());
     
-    for (int i = 0; i < dirContents->getNumFiles(); i++)
-    {
-        file = dirContents->getFile(i);
-        hash = getHash(file);
-        
-        trackData = database.read(file.getFileName());
-        
-        // If the file has changed since the data was stored, or the file did not exist in the database, replace the database entry with a new one
-        // (If the existing hash is zero, the track hasn't been found in the database)
-        if (hash != trackData.hash)
-            addToDatabase(file, hash, trackData);
-        
-        tracks.add(trackData);
-    }
+    // If the file has changed since the data was stored, or the file did not exist in the database, replace the database entry with a new one
+    // (If the existing hash is zero, the track hasn't been found in the database)
+    if (hash != trackData.hash)
+        addToDatabase(file, hash, trackData);
+    
+    tracks.add(trackData);
 }
 
 
@@ -172,4 +165,26 @@ int TrackDataManager::getHash(juce::File file)
     rawFile.reset();
     
     return hash;
+}
+
+
+void FileParserThread::run()
+{
+    int numFiles;
+    
+    while (dataManager->dirContents->isStillLoading())
+    {
+        _mm_pause();
+    }
+    
+    numFiles = dataManager->dirContents->getNumFiles();
+    DBG("Num valid files in directory: " << numFiles);
+    
+    for (int i = 0; i < numFiles; i++)
+    {
+        setProgress(double(i) / numFiles);
+        dataManager->parseFile(dataManager->dirContents->getFile(i));
+    }
+    
+    dataManager->ready.store(true);
 }

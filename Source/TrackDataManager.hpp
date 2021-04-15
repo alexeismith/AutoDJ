@@ -31,7 +31,7 @@ public:
     
     void fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer, bool sumToMono = false);
     
-    bool isReady() { return ready.load(); }
+    bool isReady(double& progress);
       
 private:
     
@@ -64,20 +64,24 @@ private:
 };
 
 
-class FileParserThread : public juce::ThreadWithProgressWindow
+class FileParserThread : public juce::Thread
 {
 public:
     
     FileParserThread(TrackDataManager* dm) :
-        juce::ThreadWithProgressWindow("Loading Library", true, false), dataManager(dm) {}
+        juce::Thread("Parser"), dataManager(dm) {}
     
     ~FileParserThread() {}
     
     void run();
     
+    double getProgress() { return progress.load(); }
+    
 private:
     
     TrackDataManager* dataManager;
+    std::atomic<double> progress;
+    
 };
 
 #endif /* TrackDataManager_hpp */

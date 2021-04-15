@@ -36,8 +36,7 @@ void TrackDataManager::initialise(juce::File directory)
     if (!database.initialise(directory))
         jassert(false); // Database failed to initialise
     
-    if (!parser->runThread())
-        jassert(false); // Failed to launch file parser thread
+    parser->startThread();
 }
 
 
@@ -77,6 +76,13 @@ void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float
         
         delete reader;
     }
+}
+
+
+bool TrackDataManager::isReady(double& progress)
+{
+    progress = parser->getProgress();
+    return ready.load();
 }
 
 
@@ -182,7 +188,7 @@ void FileParserThread::run()
     
     for (int i = 0; i < numFiles; i++)
     {
-        setProgress(double(i) / numFiles);
+        progress.store(double(i) / numFiles);
         dataManager->parseFile(dataManager->dirContents->getFile(i));
     }
     

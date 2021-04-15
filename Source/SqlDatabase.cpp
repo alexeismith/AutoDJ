@@ -80,10 +80,10 @@ TrackData SqlDatabase::read(juce::String filename)
     errCode = sqlite3_step(statement);
     if (errCode == SQLITE_ROW)
     {
-        data.filename = fromSqlSafe(reinterpret_cast<const char*>(sqlite3_column_text(statement, 0)));
+        data.filename = fromSqlSafe(juce::CharPointer_UTF8(reinterpret_cast<const char*>(sqlite3_column_text(statement, 0))));
         data.hash = sqlite3_column_int(statement, 1);
-        data.artist = fromSqlSafe(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
-        data.title = fromSqlSafe(reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)));
+        data.artist = fromSqlSafe(juce::CharPointer_UTF8(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2))));
+        data.title = fromSqlSafe(juce::CharPointer_UTF8(reinterpret_cast<const char*>(sqlite3_column_text(statement, 3))));
         data.length = sqlite3_column_int(statement, 4);
         data.analysed = sqlite3_column_int(statement, 5);
         data.bpm = sqlite3_column_int(statement, 6);

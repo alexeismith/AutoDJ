@@ -11,11 +11,7 @@
 #include <JuceHeader.h>
 
 #include "TrackDataManager.hpp"
-#include "AnalyserBeats.hpp"
-#include "AnalyserKey.hpp"
-
-
-class AnalyserThread;
+#include "AnalysisThread.hpp"
 
 class AnalysisManager
 {
@@ -36,7 +32,7 @@ private:
     
     bool areThreadsFinished();
     
-    juce::OwnedArray<AnalyserThread> threads;
+    juce::OwnedArray<AnalysisThread> threads;
     
     juce::Array<TrackData> jobs;
     
@@ -47,30 +43,5 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalysisManager)
 };
 
-
-
-class AnalyserThread : public juce::Thread
-{
-public:
-    
-    AnalyserThread(int ID, AnalysisManager* am, TrackDataManager* dm);
-    
-    ~AnalyserThread() {}
-    
-    void run();
-    
-private:
-    
-    void analyse(TrackData& track);
-    
-    int id;
-    
-    AnalysisManager* analysisManager = nullptr;
-    TrackDataManager* dataManager = nullptr;
-    
-    std::unique_ptr<AnalyserBeats> analyserBeats;
-    std::unique_ptr<AnalyserKey> analyserKey;
-    
-};
 
 #endif /* AnalysisManager_hpp */

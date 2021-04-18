@@ -36,7 +36,13 @@
               file="Source/WaveformComponent.hpp"/>
       </GROUP>
     </GROUP>
-    <GROUP id="{9E0BB712-1FB6-4131-B7F6-FA3677F5C918}" name="Processing">
+    <GROUP id="{7A6526E7-D707-1DAA-1D55-8A76C42F1D9A}" name="Audio Processing">
+      <FILE id="hbOA8G" name="AudioProcessor.cpp" compile="1" resource="0"
+            file="Source/AudioProcessor.cpp"/>
+      <FILE id="OU8h9B" name="AudioProcessor.hpp" compile="0" resource="0"
+            file="Source/AudioProcessor.hpp"/>
+    </GROUP>
+    <GROUP id="{9E0BB712-1FB6-4131-B7F6-FA3677F5C918}" name="Audio Analysis">
       <GROUP id="{67C76829-2C6F-697A-3BEA-7FBFB680248E}" name="Third Party">
         <GROUP id="{2637A895-BA81-8947-F3CC-9ED9B67ADA9B}" name="Mixxx">
           <FILE id="bVlyVx" name="beatutils.cpp" compile="1" resource="0" file="Source/ThirdParty/beatutils.cpp"/>
@@ -80,14 +86,14 @@
                 file="Source/ThirdParty/qm-dsp/dsp/onsets/DetectionFunction.h"/>
         </GROUP>
       </GROUP>
-      <FILE id="hbOA8G" name="AudioProcessor.cpp" compile="1" resource="0"
-            file="Source/AudioProcessor.cpp"/>
-      <FILE id="OU8h9B" name="AudioProcessor.hpp" compile="0" resource="0"
-            file="Source/AudioProcessor.hpp"/>
       <FILE id="DrGG4w" name="AnalysisManager.cpp" compile="1" resource="0"
             file="Source/AnalysisManager.cpp"/>
       <FILE id="pZppWL" name="AnalysisManager.hpp" compile="0" resource="0"
             file="Source/AnalysisManager.hpp"/>
+      <FILE id="Qh8vAA" name="AnalysisThread.cpp" compile="1" resource="0"
+            file="Source/AnalysisThread.cpp"/>
+      <FILE id="BbWd26" name="AnalysisThread.hpp" compile="0" resource="0"
+            file="Source/AnalysisThread.hpp"/>
       <FILE id="UVzwDy" name="AnalyserBeats.cpp" compile="1" resource="0"
             file="Source/AnalyserBeats.cpp"/>
       <FILE id="oeQk5k" name="AnalyserBeats.hpp" compile="0" resource="0"

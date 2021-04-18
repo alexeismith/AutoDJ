@@ -34,7 +34,7 @@ void AnalysisManager::startAnalysis()
     
     for (int i = 0; i < numThreads; i++)
     {
-        threads.add(new AnalyserThread(i+1, this, dataManager));
+        threads.add(new AnalysisThread(i+1, this, dataManager));
         threads.getUnchecked(i)->startThread();
     }
 }
@@ -88,46 +88,4 @@ TrackData AnalysisManager::getNextJob(bool& finished)
         finished = false;
         return jobs.getUnchecked(job);
     }
-}
-
-
-AnalyserThread::AnalyserThread(int ID, AnalysisManager* am, TrackDataManager* dm) :
-    juce::Thread("Parser"), id(ID), analysisManager(am), dataManager(dm)
-{
-    analyserBeats.reset(new AnalyserBeats());
-    analyserKey.reset(new AnalyserKey());
-}
-
-
-void AnalyserThread::run()
-{
-    bool finished;
-    
-    TrackData track = analysisManager->getNextJob(finished);
-    
-    while (!finished)
-    {
-        analyse(track);
-        track = analysisManager->getNextJob(finished);
-    }
-    
-    DBG("Analysis Thread " << id << " Finished");
-}
-
-
-void AnalyserThread::analyse(TrackData& track)
-{
-    juce::AudioBuffer<float> buffer;
-    
-    DBG("Analysis Thread " << id << ": " << track.filename);
-    
-    dataManager->fetchAudio(track.filename, buffer, true);
-
-    analyserBeats->analyse(buffer, track.bpm, track.beatPhase, track.downbeat);
-    
-    analyserKey->analyse(buffer, track.key);
-    
-    track.analysed = true;
-    
-    dataManager->update(track);
 }

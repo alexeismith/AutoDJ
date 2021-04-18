@@ -8,7 +8,8 @@
 #include "LibraryComponent.hpp"
 
 
-LibraryComponent::LibraryComponent(AudioProcessor* p)
+LibraryComponent::LibraryComponent(AudioProcessor* p) :
+    dataManager(TrackDataManager(this))
 {
     audioProcessor = p;
     
@@ -33,11 +34,17 @@ LibraryComponent::LibraryComponent(AudioProcessor* p)
     loadingFilesProgress.reset(new juce::ProgressBar(loadingProgress));
     addAndMakeVisible(loadingFilesProgress.get());
     loadingFilesProgress->setVisible(false);
+    
+    analysisProgress.reset(new juce::ProgressBar(loadingProgress));
+    addAndMakeVisible(analysisProgress.get());
+    analysisProgress->setVisible(false);
+    
+    trackDataUpdate.store(false);
 }
 
 void LibraryComponent::resized()
 {
-    trackTable->setSize(getWidth(), getHeight());
+    trackTable->setSize(getWidth(), getHeight() - 40);
     trackTable->setTopLeftPosition(0, 0);
     
     chooseFolderBtn->setSize(120, 40);
@@ -45,6 +52,9 @@ void LibraryComponent::resized()
     
     loadingFilesProgress->setSize(200, 20);
     loadingFilesProgress->setCentrePosition(getWidth()/2, getHeight()/2);
+    
+    analysisProgress->setSize(200, 20);
+    analysisProgress->setTopLeftPosition(10, getHeight() - 30);
     
     waveform->setSize(getWidth(), getHeight());
 }
@@ -69,11 +79,25 @@ void LibraryComponent::timerCallback()
 {
     if (waitingForFiles)
     {
-        if (dataManager.isReady(loadingProgress))
+        if (dataManager.isLoaded(loadingProgress))
         {
             waitingForFiles = false;
             loadFiles();
         }
+    }
+    else if (waitingForAnalysis)
+    {
+        if (analysisManager->isFinished(loadingProgress))
+        {
+            waitingForAnalysis = false;
+            analysisProgress->setVisible(false);
+        }
+    }
+    
+    if (trackDataUpdate.load())
+    {
+        trackDataUpdate.store(false);
+        trackTable->refresh();
     }
 }
 
@@ -102,8 +126,13 @@ void LibraryComponent::loadFiles()
     trackTable->populate(dataManager.getTracks());
 
     loadingFilesProgress->setVisible(false);
+    analysisProgress->setVisible(true);
     trackTable->setVisible(true);
     
+    loadingProgress = 0.0;
+    
+    analysisManager->startAnalysis();
+    waitingForAnalysis = true;
         
 //    DBG("Waveform");
 //    waveform->loadTrack(track, -80000);

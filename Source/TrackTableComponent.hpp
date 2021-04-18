@@ -11,6 +11,23 @@
 #include <JuceHeader.h>
 #include "TrackData.hpp"
 
+
+class TrackTableSorter
+{
+public:
+    TrackTableSorter(int columnId, bool forwards)
+        : columnId(columnId),
+          direction(forwards ? 1 : -1) {}
+    
+    int compareElements(TrackData first, TrackData second);
+    
+private:
+    
+    int columnId;
+    int direction;
+};
+
+
 class TrackTableComponent : public juce::Component, public juce::TableListBoxModel
 {
 public:
@@ -31,6 +48,8 @@ public:
     
     void sortOrderChanged(int newSortColumnId, bool isForwards) override;
     
+    void refresh();
+    
     virtual void addColumns();
     
 protected:
@@ -44,6 +63,8 @@ protected:
     
 private:
     
+    std::unique_ptr<TrackTableSorter> sorter;
+    
     juce::String getValueForColumn(TrackData& track, int columnId);
     
     juce::Font font { 14.0f };
@@ -51,20 +72,5 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackTableComponent)
 };
 
-
-class TrackTableSorter
-{
-public:
-    TrackTableSorter(int columnId, bool forwards)
-        : columnId(columnId),
-          direction(forwards ? 1 : -1) {}
-    
-    int compareElements(TrackData first, TrackData second);
-    
-private:
-    
-    int columnId;
-    int direction;
-};
 
 #endif /* TrackTableComponent_hpp */

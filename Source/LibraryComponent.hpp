@@ -31,6 +31,8 @@ public:
     
     void timerCallback() override;
     
+    void updateData() { trackDataUpdate.store(true); }
+    
 private:
     
     void chooseFolder();
@@ -42,6 +44,7 @@ private:
     
     std::unique_ptr<juce::Button> chooseFolderBtn;
     std::unique_ptr<juce::ProgressBar> loadingFilesProgress;
+    std::unique_ptr<juce::ProgressBar> analysisProgress;
     
     TrackDataManager dataManager;
     std::unique_ptr<AnalysisManager> analysisManager;
@@ -51,6 +54,9 @@ private:
     AudioProcessor* audioProcessor;
     
     bool waitingForFiles = false;
+    bool waitingForAnalysis = false;
+    
+    std::atomic<bool> trackDataUpdate;
     
     double loadingProgress = 0.0;
     

@@ -86,8 +86,15 @@ void TrackTableComponent::resized()
 
 void TrackTableComponent::sortOrderChanged(int newSortColumnId, bool isForwards)
 {
-    TrackTableSorter sorter(newSortColumnId, isForwards);
-    tracks->sort(sorter);
+    sorter.reset(new TrackTableSorter(newSortColumnId, isForwards));
+    tracks->sort(*sorter.get());
+}
+
+
+void TrackTableComponent::refresh()
+{
+    tracks->sort(*sorter.get());
+    repaint();
 }
 
 

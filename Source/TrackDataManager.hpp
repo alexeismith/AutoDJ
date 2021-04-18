@@ -19,7 +19,7 @@ class TrackDataManager
 {
 public:
       
-    TrackDataManager();
+    TrackDataManager(juce::Component* library);
       
     ~TrackDataManager() {}
     
@@ -31,7 +31,7 @@ public:
     
     void fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer, bool sumToMono = false);
     
-    bool isReady(double& progress);
+    bool isLoaded(double& progress);
       
 private:
     
@@ -45,6 +45,8 @@ private:
     
     int getHash(juce::File file);
     
+    juce::Component* libraryComponent;
+    
     juce::AudioFormatManager formatManager;
     juce::WildcardFileFilter fileFilter;
     SqlDatabase database;
@@ -54,7 +56,7 @@ private:
     juce::TimeSliceThread thread {"BackgroundUpdateThread"};
     std::unique_ptr<juce::DirectoryContentsList> dirContents;
     
-    std::atomic<bool> ready;
+    juce::CriticalSection lock;
     
     friend class FileParserThread;
     

@@ -9,12 +9,15 @@
 #include "CommonDefs.hpp"
 #include "ThirdParty/xxhash32.h"
 
+#include "LibraryComponent.hpp"
+
 extern "C" {
   #include <sqlite3.h>
 }
 
 
-TrackDataManager::TrackDataManager() :
+TrackDataManager::TrackDataManager(juce::Component* library) :
+    libraryComponent(library),
     fileFilter(juce::WildcardFileFilter("*.wav,*.mp3", "*", "AudioFormats"))
 {
     formatManager.registerFormat(new juce::WavAudioFormat(), false);
@@ -24,8 +27,6 @@ TrackDataManager::TrackDataManager() :
     dirContents.reset(new juce::DirectoryContentsList(&fileFilter, thread));
     
     parser.reset(new FileParserThread(this));
-    
-    ready.store(false);
 }
 
 
@@ -42,21 +43,28 @@ void TrackDataManager::initialise(juce::File directory)
 
 void TrackDataManager::update(TrackData track)
 {
+    const juce::ScopedLock sl (lock);
+    
     database.store(track);
+    
     for (int i = 0; i < tracks.size(); i++)
     {
         if (tracks[i].hash == track.hash)
         {
             tracks.remove(i);
             tracks.add(track);
-            return;
+            break;
         }
     }
+    
+    ((LibraryComponent*)libraryComponent)->updateData();
 }
 
 
 void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer, bool sumToMono)
 {
+    const juce::ScopedLock sl (lock);
+    
     juce::String filePath = dirContents->getDirectory().getFullPathName() + "/" + filename;
     
     juce::AudioFormatReader* reader = formatManager.createReaderFor(filePath);
@@ -79,10 +87,10 @@ void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float
 }
 
 
-bool TrackDataManager::isReady(double& progress)
+bool TrackDataManager::isLoaded(double& progress)
 {
     progress = parser->getProgress();
-    return ready.load();
+    return (progress > 1.0);
 }
 
 
@@ -192,5 +200,5 @@ void FileParserThread::run()
         dataManager->parseFile(dataManager->dirContents->getFile(i));
     }
     
-    dataManager->ready.store(true);
+    progress.store(2.0);
 }

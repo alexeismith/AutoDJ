@@ -16,6 +16,7 @@ AnalysisThread::AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm
 {
     analyserBeats.reset(new AnalyserBeats());
     analyserKey.reset(new AnalyserKey());
+    progress.store(0.0);
 }
 
 
@@ -39,15 +40,25 @@ void AnalysisThread::analyse(TrackData& track)
 {
     juce::AudioBuffer<float> buffer;
     
+    progress.store(0.0);
+    
     DBG("Analysis Thread " << id << ": " << track.filename);
     
     dataManager->fetchAudio(track.filename, buffer, true);
+    
+    progress.store(0.1);
 
-    analyserBeats->analyse(buffer, track.bpm, track.beatPhase, track.downbeat);
+    analyserBeats->analyse(buffer, &progress, track.bpm, track.beatPhase, track.downbeat);
+    
+    progress.store(0.8);
     
     analyserKey->analyse(buffer, track.key);
+    
+    progress.store(0.9);
     
     track.analysed = true;
     
     dataManager->update(track);
+    
+    progress.store(1.0);
 }

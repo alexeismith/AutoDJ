@@ -32,13 +32,15 @@ private:
     
     bool areThreadsFinished();
     
+    juce::CriticalSection lock;
+    
     juce::OwnedArray<AnalysisThread> threads;
     
     juce::Array<TrackData> jobs;
     
     TrackDataManager* dataManager = nullptr;
     
-    std::atomic<int> jobProgress = 0;
+    int jobProgress = 0;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalysisManager)
 };

@@ -29,14 +29,17 @@ AnalyserBeats::AnalyserBeats()
 }
 
 
-void AnalyserBeats::analyse(juce::AudioBuffer<float> audio, int& bpm, int& beatPhase, int& downbeat)
+void AnalyserBeats::analyse(juce::AudioBuffer<float> audio, std::atomic<double>* progress, int& bpm, int& beatPhase, int& downbeat)
 {
     reset();
     
     // Find the number of onset detection frames for the provided audio
     int numFrames = (audio.getNumSamples() - dfConfig.frameLength) / dfConfig.stepSize;
     
-    getTempo(audio, numFrames, bpm, beatPhase);
+    getTempo(audio, progress, numFrames, bpm, beatPhase);
+    
+    progress->store(0.7);
+    
     getDownbeat(audio, numFrames, bpm, beatPhase, downbeat);
 }
 
@@ -49,7 +52,7 @@ void AnalyserBeats::reset()
 }
 
 
-void AnalyserBeats::getTempo(juce::AudioBuffer<float> audio, int numFrames, int& bpm, int& beatPhase)
+void AnalyserBeats::getTempo(juce::AudioBuffer<float> audio, std::atomic<double>* progress, int numFrames, int& bpm, int& beatPhase)
 {
     juce::AudioBuffer<double> buffer;
     std::vector<double> onsets, onsetsTrim, beatPeriod, tempi, beats;
@@ -64,7 +67,10 @@ void AnalyserBeats::getTempo(juce::AudioBuffer<float> audio, int numFrames, int&
 
     // Pass frames of audio to the QM onset detector, storing the returned results
     for (int i = 0; i < numFrames; i++)
+    {
         onsets.push_back(onsetAnalyser->processTimeDomain(buffer.getReadPointer(0, i*dfConfig.stepSize)));
+        progress->store(0.1 + 0.5 * (double(i) / numFrames));
+    }
     
     // Find the number of non-zero values in the onset results
     int nonZeroCount = int(onsets.size()); // Initialise count with the full vector length

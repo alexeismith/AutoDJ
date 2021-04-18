@@ -42,20 +42,20 @@ void AnalysisManager::startAnalysis()
 
 bool AnalysisManager::isFinished(double& progress)
 {
-    int job = jobProgress.load();
+    const juce::ScopedLock sl (lock);
     
-    progress = double(job) / jobs.size();
+    progress = double(jobProgress) / jobs.size();
     
-    if (job >= jobs.size())
+    if (jobProgress >= jobs.size())
     {
         if (areThreadsFinished())
             return true;
     }
     
-//    for (auto* thread : threads)
-//    {
-//        thread->
-//    }
+    for (auto* thread : threads)
+    {
+        progress -= (1.0 - thread->getProgress()) / jobs.size();
+    }
     
     return false;
 }
@@ -75,10 +75,11 @@ bool AnalysisManager::areThreadsFinished()
 
 TrackData AnalysisManager::getNextJob(bool& finished)
 {
-    int job = jobProgress.load();
-    jobProgress.store(job + 1);
+    const juce::ScopedLock sl (lock);
     
-    if (job >= jobs.size())
+    int job = jobProgress;
+    
+    if (job == jobs.size())
     {
         finished = true;
         return TrackData();
@@ -86,6 +87,7 @@ TrackData AnalysisManager::getNextJob(bool& finished)
     else
     {
         finished = false;
+        jobProgress += 1;
         return jobs.getUnchecked(job);
     }
 }

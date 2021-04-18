@@ -26,11 +26,15 @@ public:
     
     void run();
     
+    double getProgress() { return progress.load(); }
+    
 private:
     
     void analyse(TrackData& track);
     
     int id;
+    
+    std::atomic<double> progress;
     
     AnalysisManager* analysisManager = nullptr;
     TrackDataManager* dataManager = nullptr;

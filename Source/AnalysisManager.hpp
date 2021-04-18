@@ -53,7 +53,7 @@ class AnalyserThread : public juce::Thread
 {
 public:
     
-    AnalyserThread(AnalysisManager* am, TrackDataManager* dm);
+    AnalyserThread(int ID, AnalysisManager* am, TrackDataManager* dm);
     
     ~AnalyserThread() {}
     
@@ -62,6 +62,8 @@ public:
 private:
     
     void analyse(TrackData& track);
+    
+    int id;
     
     AnalysisManager* analysisManager = nullptr;
     TrackDataManager* dataManager = nullptr;

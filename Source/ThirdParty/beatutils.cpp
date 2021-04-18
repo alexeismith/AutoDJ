@@ -342,7 +342,7 @@ double BeatUtils::adjustPhase(double firstBeat, double bpm, int sampleRate, cons
         }
     }
     offsetAdjust /= offsetAdjustCount;
-    DBG("adjusting phase by " << offsetAdjust);
+//    DBG("adjusting phase by " << offsetAdjust);
     jassert(abs(offsetAdjust) < (kMaxSecsPhaseError * sampleRate));
 
     return firstBeat + offsetAdjust;

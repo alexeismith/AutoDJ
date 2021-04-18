@@ -43,8 +43,6 @@ void AnalyserKey::analyse(juce::AudioBuffer<float> audio, int& key)
     }
     
     key = AutoDJ::mostCommonValue(keys.data(), keys.size());
-    
-    DBG("Key: " << AutoDJ::getKeyName(key) << " (" << keys.size()-1 << " others detected)");
 }
 
 

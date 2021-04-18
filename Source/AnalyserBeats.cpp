@@ -111,16 +111,12 @@ void AnalyserBeats::processBeats(std::vector<double> beats, int& bpm, int& beatP
     // 'Rewind' firstBeat to start of track
     double beatLength = 60 * SUPPORTED_SAMPLERATE / bpm;
     beatPhase = firstBeat - floor(firstBeat / beatLength) * beatLength;
-    
-    DBG("constBPM: " << bpm << " firstBeat: " << beatPhase);
 }
 
 
 void AnalyserBeats::getDownbeat(juce::AudioBuffer<float> audio, int numFrames, int bpm, int beatPhase, int& downbeat)
 {
     std::vector<double> beats;
-    
-    DBG("Downbeat");
     
     for (int i = 0; i < numFrames; i++)
     {
@@ -143,8 +139,6 @@ void AnalyserBeats::getDownbeat(juce::AudioBuffer<float> audio, int numFrames, i
     // The following can be used to fetch the spectral difference for each beat
 //    vector<double> beatsd;
 //    downBeat->getBeatSD(beatsd);
-    
-    DBG("First downbeat is beat " << downbeat << " at: " << round(60 * SUPPORTED_SAMPLERATE / bpm) * downbeat + beatPhase);
 }
 
 

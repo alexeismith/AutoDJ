@@ -62,7 +62,7 @@ void TrackTableComponent::paintCell(juce::Graphics& g, int rowNumber, int column
 {
     if (rowIsSelected)
         g.setColour(juce::Colours::darkblue);
-    else if(columnId == TrackTableColumns::title && tracks->getReference(rowNumber).title.isEmpty())
+    else if(!tracks->getReference(rowNumber).analysed)
         g.setColour(juce::Colours::lightslategrey.brighter());
     else
         g.setColour(getLookAndFeel().findColour (juce::ListBox::textColourId));
@@ -163,6 +163,9 @@ int TrackTableSorter::compareElements(TrackData first, TrackData second)
     
     if (result == 0)
         result = first.title.compareIgnoreCase(second.title);
+    
+    if (result == 0)
+        result = first.filename.compareIgnoreCase(second.filename);
 
     return direction * result;
 }

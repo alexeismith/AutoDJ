@@ -32,6 +32,12 @@ void AnalysisManager::startAnalysis()
         return;
     }
     
+    if (jobs.size() < numThreads)
+    {
+        DBG("Reducing number of threads to match " << jobs.size() << " jobs");
+        numThreads = jobs.size();
+    }
+    
     for (int i = 0; i < numThreads; i++)
     {
         threads.add(new AnalysisThread(i+1, this, dataManager));

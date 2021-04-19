@@ -39,9 +39,8 @@ private:
     
     void parseFile(juce::File file);
     
-    void addToDatabase(juce::File file, int hash, TrackData& trackData);
-    
-    bool hasFileChanged(juce::File file, int existingHash);
+    // Returns whether the track is valid
+    bool getTrackData(juce::File file, TrackData& trackData);
     
     int getHash(juce::File file);
     
@@ -73,7 +72,7 @@ public:
     FileParserThread(TrackDataManager* dm) :
         juce::Thread("Parser"), dataManager(dm) {}
     
-    ~FileParserThread() {}
+    ~FileParserThread() { stopThread(1000); }
     
     void run();
     

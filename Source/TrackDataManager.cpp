@@ -116,56 +116,48 @@ void TrackDataManager::printTrackData(TrackData data)
 
 void TrackDataManager::parseFile(juce::File file)
 {
-    int hash;
-    TrackData trackData;
+    TrackData trackData, existingData;
     
-    hash = getHash(file);
+    trackData.hash = getHash(file);
     
-    trackData = database.read(file.getFileName());
+    existingData = database.read(file.getFileName());
     
-    // If the file has changed since the data was stored, or the file did not exist in the database, replace the database entry with a new one
-    // (If the existing hash is zero, the track hasn't been found in the database)
-    if (hash != trackData.hash)
-        addToDatabase(file, hash, trackData);
-    
-    tracks.add(trackData);
-}
-
-
-void TrackDataManager::addToDatabase(juce::File file, int hash, TrackData& trackData)
-{
-    trackData.filename = file.getFileName();
-    trackData.hash = hash;
-    
-    juce::AudioFormatReader* reader = formatManager.createReaderFor(file);
-
-    if (reader)
+    // Fetches metadata from file and returns whether it is valid
+    if (getTrackData(file, trackData))
     {
-        trackData.artist = reader->metadataValues.getValue("IART", "");
-        trackData.title = reader->metadataValues.getValue("INAM", "");
-        
-        trackData.length = round(reader->lengthInSamples / reader->sampleRate);
-        
-        if (trackData.length >= TRACK_LENGTH_SECS_MIN && trackData.length <= TRACK_LENGTH_SECS_MAX)
+        // If the file has changed since the data was stored, or the file did not exist in the database, replace the database entry with a new one
+        // (If the existing hash is zero, the track hasn't been found in the database)
+        if (trackData.hash != existingData.hash)
+        {
             database.store(trackData);
-
-        delete reader;
+        }
+        else
+        {
+            trackData = existingData;
+        }
         
-//        DBG("Added to database: " << trackData.filename);
+        tracks.add(trackData);
     }
 }
 
 
-bool TrackDataManager::hasFileChanged(juce::File file, int existingHash)
+bool TrackDataManager::getTrackData(juce::File file, TrackData& trackData)
 {
-    juce::MemoryBlock rawFile;
-    int newHash;
+    std::unique_ptr<juce::AudioFormatReader> reader(formatManager.createReaderFor(file));
 
-    file.loadFileAsData(rawFile);
-    newHash = XXHash32::hash(rawFile.getData(), rawFile.getSize(), 0);
-    rawFile.reset();
+    if (reader)
+    {
+        trackData.filename = file.getFileName();
+        trackData.artist = reader->metadataValues.getValue("IART", "");
+        trackData.title = reader->metadataValues.getValue("INAM", "");
+        trackData.length = round(reader->lengthInSamples / reader->sampleRate);
+
+        if (reader->numChannels > 0 && trackData.length >= TRACK_LENGTH_SECS_MIN && trackData.length <= TRACK_LENGTH_SECS_MAX)
+            return true;
+    }
     
-    return (newHash == existingHash);
+    DBG("Not valid: " << file.getFileName());
+    return false;
 }
 
 
@@ -192,7 +184,7 @@ void FileParserThread::run()
     }
     
     numFiles = dataManager->dirContents->getNumFiles();
-    DBG("Num valid files in directory: " << numFiles);
+    DBG("Num files in directory: " << numFiles);
     
     for (int i = 0; i < numFiles; i++)
     {

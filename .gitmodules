@@ -1,3 +1,6 @@
 [submodule "Source/ThirdParty/qm-dsp"]
 	path = Source/ThirdParty/qm-dsp
 	url = https://github.com/c4dm/qm-dsp.git
+[submodule "Source/ThirdParty/soundtouch"]
+	path = Source/ThirdParty/soundtouch
+	url = https://gitlab.com/soundtouch/soundtouch.git

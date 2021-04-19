@@ -18,10 +18,13 @@ MainComponent::MainComponent()
         setAudioChannels (2, 2);
     }
     
-    audioProcessor.reset(new AudioProcessor);
+    dataManager.reset(new TrackDataManager());
+    audioProcessor.reset(new AudioProcessor(dataManager.get()));
     
-    library.reset(new LibraryComponent(audioProcessor.get()));
+    library.reset(new LibraryComponent(audioProcessor.get(), dataManager.get()));
     addAndMakeVisible(library.get());
+    
+    dataManager->setLibrary(library.get());
     
 #ifdef SHOW_GRAPH
     graphWindow.reset(new juce::ResizableWindow("Data Graph", true));
@@ -35,7 +38,7 @@ MainComponent::MainComponent()
     
     // Make sure you set the size of the component after
     // you add any child components.
-    setSize (800, 200);
+    setSize (800, 100);
 }
 
 MainComponent::~MainComponent()

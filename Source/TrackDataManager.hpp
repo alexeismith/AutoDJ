@@ -19,9 +19,11 @@ class TrackDataManager
 {
 public:
       
-    TrackDataManager(juce::Component* library);
+    TrackDataManager();
       
     ~TrackDataManager() {}
+    
+    void setLibrary(juce::Component* library) { libraryComponent = library; }
     
     void initialise(juce::File directory);
     
@@ -29,11 +31,13 @@ public:
     
     void update(TrackData track);
     
-    void fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer, bool sumToMono = false);
-    
     bool isLoaded(double& progress);
+    
+    void fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer, bool mono = false);
       
 private:
+    
+    void adjustChannels(juce::AudioBuffer<float>& buffer, bool mono);
     
     void printTrackData(TrackData data);
     

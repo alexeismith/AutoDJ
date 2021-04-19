@@ -12,6 +12,7 @@
 
 #include <unordered_map>
 
+#define NUM_CONCURRENT_TRACKS (1) // TODO: change to 2!
 #define SUPPORTED_SAMPLERATE (44100)
 #define TRACK_LENGTH_SECS_MIN (60) // 1 minute minimum length
 #define TRACK_LENGTH_SECS_MAX (600) // 10 minutes maximum length

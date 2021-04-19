@@ -10,28 +10,24 @@
 
 #include <JuceHeader.h>
 
-#include "ThirdParty/soundtouch/include/SoundTouch.h"
+#include "TrackProcessor.hpp"
 
 class AudioProcessor
 {
 public:
     
-    AudioProcessor();
+    AudioProcessor(TrackDataManager* dataManager);
     
     ~AudioProcessor() {}
     
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);
     
-    void play(juce::AudioBuffer<float> audio);
+    void play(TrackData track);
     
     
 private:
     
-    std::atomic<bool> audioReady;
-    juce::AudioBuffer<float> audioBuffer;
-    int playhead = -1;
-    
-    soundtouch::SoundTouch shifter;
+    juce::OwnedArray<TrackProcessor> trackProcessors;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioProcessor)
 };

@@ -16,8 +16,7 @@ extern "C" {
 }
 
 
-TrackDataManager::TrackDataManager(juce::Component* library) :
-    libraryComponent(library),
+TrackDataManager::TrackDataManager() :
     fileFilter(juce::WildcardFileFilter("*.wav,*.mp3", "*", "AudioFormats"))
 {
     formatManager.registerFormat(new juce::WavAudioFormat(), false);
@@ -57,11 +56,19 @@ void TrackDataManager::update(TrackData track)
         }
     }
     
-    ((LibraryComponent*)libraryComponent)->updateData();
+    if (libraryComponent)
+        ((LibraryComponent*)libraryComponent)->updateData();
 }
 
 
-void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer, bool sumToMono)
+bool TrackDataManager::isLoaded(double& progress)
+{
+    progress = parser->getProgress();
+    return (progress > 1.0);
+}
+
+
+void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer, bool mono)
 {
     const juce::ScopedLock sl (lock);
     
@@ -71,26 +78,40 @@ void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float
     
     if (reader)
     {
+        buffer.clear();
         buffer.setSize(reader->numChannels, (int)reader->lengthInSamples);
         
         reader->read(buffer.getArrayOfWritePointers(), reader->numChannels, 0, (int)reader->lengthInSamples);
         
-        if (sumToMono && buffer.getNumChannels() == 2)
-        {
-            buffer.applyGain(0.5f);
-            buffer.addFrom(0, 0, buffer.getReadPointer(1), buffer.getNumSamples());
-            buffer.setSize(1, buffer.getNumSamples(), true);
-        }
+        adjustChannels(buffer, mono);
         
         delete reader;
+    }
+    else
+    {
+        jassert(false); // Failed to load track audio
+        // TODO: handle the case where files are deleted after parsing
     }
 }
 
 
-bool TrackDataManager::isLoaded(double& progress)
+void TrackDataManager::adjustChannels(juce::AudioBuffer<float>& buffer, bool mono)
 {
-    progress = parser->getProgress();
-    return (progress > 1.0);
+    if (mono && buffer.getNumChannels() == 2)
+    {
+        buffer.applyGain(0.5f);
+        buffer.addFrom(0, 0, buffer.getReadPointer(1), buffer.getNumSamples());
+        buffer.setSize(1, buffer.getNumSamples(), true);
+    }
+    else if (buffer.getNumChannels() == 1)
+    {
+        buffer.setSize(2, buffer.getNumSamples(), true);
+        buffer.addFrom(1, 0, buffer.getReadPointer(0), buffer.getNumSamples());
+    }
+    else if (buffer.getNumChannels() > 2)
+    {
+        buffer.setSize(2, buffer.getNumSamples(), true);
+    }
 }
 
 

@@ -8,14 +8,14 @@
 #include "LibraryComponent.hpp"
 
 
-LibraryComponent::LibraryComponent(AudioProcessor* p) :
-    dataManager(TrackDataManager(this))
+LibraryComponent::LibraryComponent(AudioProcessor* p, TrackDataManager* dm)
 {
     audioProcessor = p;
+    dataManager = dm;
     
     startTimerHz(30);
     
-    analysisManager.reset(new AnalysisManager(&dataManager));
+    analysisManager.reset(new AnalysisManager(dataManager));
     
     trackTable.reset(new TrackTableComponent());
     addAndMakeVisible(trackTable.get());
@@ -27,7 +27,7 @@ LibraryComponent::LibraryComponent(AudioProcessor* p) :
     
     chooseFolderBtn->addListener(this);
     
-    waveform.reset(new WaveformComponent(800, &dataManager));
+    waveform.reset(new WaveformComponent(800, dataManager));
     addAndMakeVisible(waveform.get());
     waveform->setVisible(false);
     
@@ -79,7 +79,7 @@ void LibraryComponent::timerCallback()
 {
     if (waitingForFiles)
     {
-        if (dataManager.isLoaded(loadingProgress))
+        if (dataManager->isLoaded(loadingProgress))
         {
             waitingForFiles = false;
             loadFiles();
@@ -107,7 +107,7 @@ void LibraryComponent::chooseFolder()
     juce::FileChooser chooser ("Choose Music Folder");
     if (chooser.browseForDirectory())
     {
-        dataManager.initialise(chooser.getResult());
+        dataManager->initialise(chooser.getResult());
         
         waitingForFiles = true;
         
@@ -119,7 +119,7 @@ void LibraryComponent::chooseFolder()
 
 void LibraryComponent::loadFiles()
 {
-    trackTable->populate(dataManager.getTracks());
+    trackTable->populate(dataManager->getTracks());
 
     loadingFilesProgress->setVisible(false);
     analysisProgress->setVisible(true);
@@ -134,16 +134,12 @@ void LibraryComponent::loadFiles()
     
     
     
-    TrackData track = dataManager.getTracks()->getReference(0);
+    TrackData track = dataManager->getTracks()->getReference(0);
 
-    DBG("Waveform: " << track.filename);
-    waveform->loadTrack(track);
-    waveform->setVisible(true);
-    DBG("Waveform Done");
+//    DBG("Waveform: " << track.filename);
+//    waveform->loadTrack(track);
+//    waveform->setVisible(true);
+//    DBG("Waveform Done");
     
-    juce::AudioBuffer<float> buffer;
-    dataManager.fetchAudio(track.filename, buffer, true);
-//    buffer.copyFrom(0, 0, buffer.getReadPointer(0, 540000), 801*WAVEFORM_FRAME_SIZE);
-    buffer.setSize(1, 800*WAVEFORM_FRAME_SIZE, true);
-    audioProcessor->play(buffer);
+    audioProcessor->play(track);
 }

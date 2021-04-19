@@ -7,10 +7,15 @@
 
 #include "AudioProcessor.hpp"
 
+#include "CommonDefs.hpp"
 
-AudioProcessor::AudioProcessor()
+
+AudioProcessor::AudioProcessor(TrackDataManager* dataManager)
 {
-    audioReady.store(false);
+    for (int i = 0; i < NUM_CONCURRENT_TRACKS; i++)
+    {
+        trackProcessors.add(new TrackProcessor(dataManager));
+    }
 }
 
 
@@ -18,31 +23,12 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
 {
     bufferToFill.clearActiveBufferRegion();
     
-    if (!audioReady.load()) return;
-    
-    int numSamples = bufferToFill.numSamples;
-    
-    if (playhead > -1 && playhead < (audioBuffer.getNumSamples() - numSamples))
-    {
-        memcpy(bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample), audioBuffer.getReadPointer(0, playhead), numSamples*sizeof(float));
-        memcpy(bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample), audioBuffer.getReadPointer(0, playhead), numSamples*sizeof(float));
-        
-        playhead += numSamples;
-    }
-    else
-    {
-        playhead = -1;
-    }
-    
+    for (auto* trackProcessor : trackProcessors)
+        trackProcessor->getNextAudioBlock(bufferToFill);
 }
 
 
-void AudioProcessor::play(juce::AudioBuffer<float> audio)
+void AudioProcessor::play(TrackData track)
 {
-    audioReady.store(false);
-    
-    audioBuffer = audio;
-    playhead = 0;
-    
-    audioReady.store(true);
+    trackProcessors.getFirst()->load(track);
 }

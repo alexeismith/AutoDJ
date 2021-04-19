@@ -34,6 +34,7 @@ private:
     juce::LookAndFeel_V4 customAppearance;
     
     std::unique_ptr<AudioProcessor> audioProcessor;
+    std::unique_ptr<TrackDataManager> dataManager;
     
     std::unique_ptr<LibraryComponent> library;
     

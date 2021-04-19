@@ -74,6 +74,10 @@
           <FILE id="WFTZu7" name="SoundTouch.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/include/SoundTouch.h"/>
         </GROUP>
       </GROUP>
+      <FILE id="qPJF0z" name="TrackProcessor.cpp" compile="1" resource="0"
+            file="Source/TrackProcessor.cpp"/>
+      <FILE id="UeV71s" name="TrackProcessor.hpp" compile="0" resource="0"
+            file="Source/TrackProcessor.hpp"/>
       <FILE id="hbOA8G" name="AudioProcessor.cpp" compile="1" resource="0"
             file="Source/AudioProcessor.cpp"/>
       <FILE id="OU8h9B" name="AudioProcessor.hpp" compile="0" resource="0"

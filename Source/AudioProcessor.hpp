@@ -10,6 +10,8 @@
 
 #include <JuceHeader.h>
 
+#include "ThirdParty/soundtouch/include/SoundTouch.h"
+
 class AudioProcessor
 {
 public:
@@ -29,7 +31,7 @@ private:
     juce::AudioBuffer<float> audioBuffer;
     int playhead = -1;
     
-    
+    soundtouch::SoundTouch shifter;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioProcessor)
 };

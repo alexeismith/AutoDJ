@@ -25,7 +25,7 @@ WaveformComponent::WaveformComponent(int width, TrackDataManager* dm) :
     setBufferedToImage(true);
     setOpaque(true);
     
-    startTimerHz(30); // TODO: remove?
+//    startTimerHz(30); // TODO: remove?
 }
 
 

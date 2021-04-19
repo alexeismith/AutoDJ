@@ -27,7 +27,7 @@ public:
     
     void resized() override { imageValid = false; }
     
-    void loadTrack(TrackData track, int startSample);
+    void loadTrack(TrackData track, int startSample = 0);
     
     void scroll(int samples);
     

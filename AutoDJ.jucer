@@ -2,8 +2,8 @@
 
 <JUCERPROJECT id="mliKgU" name="AutoDJ" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              headerPath="../../Source/ThirdParty/qm-dsp/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools/"
-              defines="kiss_fft_scalar=double&#10;JUCE_USE_MP3AUDIOFORMAT"
+              headerPath="../../Source/ThirdParty/qm-dsp/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools/&#10;../../Source/ThirdParty/soundtouch/include/&#10;../../Source/ThirdParty/soundtouch/source/SoundTouch/"
+              defines="kiss_fft_scalar=double&#10;JUCE_USE_MP3AUDIOFORMAT&#10;ANDROID"
               cppLanguageStandard="17">
   <MAINGROUP id="r4tD07" name="AutoDJ">
     <GROUP id="{A84FEFF8-C709-ECFA-E10F-9FF3F5BBB565}" name="Source">
@@ -37,6 +37,43 @@
       </GROUP>
     </GROUP>
     <GROUP id="{7A6526E7-D707-1DAA-1D55-8A76C42F1D9A}" name="Audio Processing">
+      <GROUP id="{A66A8812-B367-E47E-1059-6BAB0DF27951}" name="Third Party">
+        <GROUP id="{FB6635A0-8C1A-C16F-18A4-EA65E33210F3}" name="SoundTouch">
+          <GROUP id="{A8A73E3B-406D-0DDA-6C65-BF509F319C97}" name="Extras">
+            <FILE id="V6aiwu" name="AAFilter.cpp" compile="1" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/AAFilter.cpp"/>
+            <FILE id="Q2vVya" name="AAFilter.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/AAFilter.h"/>
+            <FILE id="kemGbz" name="cpu_detect_x86.cpp" compile="1" resource="0"
+                  file="Source/ThirdParty/soundtouch/source/SoundTouch/cpu_detect_x86.cpp"/>
+            <FILE id="nBANCT" name="cpu_detect.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/cpu_detect.h"/>
+            <FILE id="r1znzR" name="FIFOSampleBuffer.cpp" compile="1" resource="0"
+                  file="Source/ThirdParty/soundtouch/source/SoundTouch/FIFOSampleBuffer.cpp"/>
+            <FILE id="aYyOYI" name="FIRFilter.cpp" compile="1" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/FIRFilter.cpp"/>
+            <FILE id="wvQB1A" name="FIRFilter.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/FIRFilter.h"/>
+            <FILE id="kpWm9E" name="InterpolateCubic.cpp" compile="1" resource="0"
+                  file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateCubic.cpp"/>
+            <FILE id="AL5TCu" name="InterpolateCubic.h" compile="0" resource="0"
+                  file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateCubic.h"/>
+            <FILE id="PSuEZz" name="InterpolateLinear.cpp" compile="1" resource="0"
+                  file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateLinear.cpp"/>
+            <FILE id="FwNIy8" name="InterpolateLinear.h" compile="0" resource="0"
+                  file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateLinear.h"/>
+            <FILE id="vu9umB" name="InterpolateShannon.cpp" compile="1" resource="0"
+                  file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateShannon.cpp"/>
+            <FILE id="UmWZvJ" name="InterpolateShannon.h" compile="0" resource="0"
+                  file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateShannon.h"/>
+            <FILE id="o1v89U" name="RateTransposer.cpp" compile="1" resource="0"
+                  file="Source/ThirdParty/soundtouch/source/SoundTouch/RateTransposer.cpp"/>
+            <FILE id="ZPjeZF" name="RateTransposer.h" compile="0" resource="0"
+                  file="Source/ThirdParty/soundtouch/source/SoundTouch/RateTransposer.h"/>
+            <FILE id="rRkzdq" name="sse_optimized.cpp" compile="1" resource="0"
+                  file="Source/ThirdParty/soundtouch/source/SoundTouch/sse_optimized.cpp"/>
+            <FILE id="Pt6NTc" name="TDStretch.cpp" compile="1" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/TDStretch.cpp"/>
+            <FILE id="hsGW4x" name="TDStretch.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/TDStretch.h"/>
+          </GROUP>
+          <FILE id="IbKj2G" name="SoundTouch.cpp" compile="1" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/SoundTouch.cpp"/>
+          <FILE id="WFTZu7" name="SoundTouch.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/include/SoundTouch.h"/>
+        </GROUP>
+      </GROUP>
       <FILE id="hbOA8G" name="AudioProcessor.cpp" compile="1" resource="0"
             file="Source/AudioProcessor.cpp"/>
       <FILE id="OU8h9B" name="AudioProcessor.hpp" compile="0" resource="0"

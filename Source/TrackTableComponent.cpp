@@ -141,16 +141,16 @@ int TrackTableSorter::compareElements(TrackData first, TrackData second)
             else result = first.length > second.length ? 1 : -1;
             break;
         case TrackTableColumns::bpm:
-            if (first.bpm == first.bpm) result = 0;
+            if (first.bpm == second.bpm) result = 0;
             else result = first.bpm > second.bpm ? 1 : -1;
             break;
         case TrackTableColumns::key:
-            if (first.key == first.key) result = 0;
+            if (first.key == second.key) result = 0;
             else result = first.key > second.key ? 1 : -1;
             break;
         // TODO: Check this energy comparison is in line with scale
         case TrackTableColumns::energy:
-            if (first.energy == first.energy) result = 0;
+            if (first.energy == second.energy) result = 0;
             else result = first.energy > second.energy ? 1 : -1;
             break;
         default:

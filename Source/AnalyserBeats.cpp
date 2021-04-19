@@ -137,7 +137,7 @@ void AnalyserBeats::getDownbeat(juce::AudioBuffer<float> audio, int numFrames, i
     for (int i = 0; i < numFrames; i++)
         downBeat->pushAudioBlock(audio.getReadPointer(0, i*dfConfig.stepSize));
     
-    vector<int> downbeats;
+    std::vector<int> downbeats;
     size_t downLength = 0;
     const float *downsampled = downBeat->getBufferedAudio(downLength);
     downBeat->findDownBeats(downsampled, downLength, beats, downbeats);
@@ -145,7 +145,7 @@ void AnalyserBeats::getDownbeat(juce::AudioBuffer<float> audio, int numFrames, i
     downbeat = downbeats.front();
 
     // The following can be used to fetch the spectral difference for each beat
-//    vector<double> beatsd;
+//    std::vector<double> beatsd;
 //    downBeat->getBeatSD(beatsd);
 }
 

@@ -48,6 +48,6 @@ void AnalyserKey::analyse(juce::AudioBuffer<float> audio, int& key)
 
 void AnalyserKey::reset()
 {
-    keyDetector.reset(new GetKeyMode(SUPPORTED_SAMPLERATE, TUNING_FREQUENCY_HZ, 10, 10));
+    keyDetector.reset(new GetKeyMode(GetKeyMode::Config(SUPPORTED_SAMPLERATE, TUNING_FREQUENCY_HZ)));
     prevKey = -1;
 }

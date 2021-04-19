@@ -188,6 +188,7 @@ void FileParserThread::run()
     
     for (int i = 0; i < numFiles; i++)
     {
+        if (threadShouldExit()) return;
         progress.store(double(i) / numFiles);
         dataManager->parseFile(dataManager->dirContents->getFile(i));
     }

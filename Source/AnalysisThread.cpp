@@ -50,6 +50,8 @@ void AnalysisThread::analyse(TrackData& track)
 
     analyserBeats->analyse(buffer, &progress, track.bpm, track.beatPhase, track.downbeat);
     
+    if (threadShouldExit()) return;
+    
     progress.store(0.8);
     
     analyserKey->analyse(buffer, track.key);
@@ -57,6 +59,8 @@ void AnalysisThread::analyse(TrackData& track)
     progress.store(0.9);
     
     track.analysed = true;
+    
+    if (threadShouldExit()) return;
     
     dataManager->update(track);
     

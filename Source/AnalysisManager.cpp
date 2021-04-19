@@ -10,6 +10,18 @@
 #define MAX_NUM_THREADS (8)
 
 
+AnalysisManager::~AnalysisManager()
+{
+    // Set progress tracker to completion, so that no more jobs are given to analysis threads
+    jobProgress = jobs.size();
+    
+    for (auto* thread : threads)
+    {
+        thread->stopThread(10000);
+    }
+}
+
+
 void AnalysisManager::startAnalysis()
 {
     juce::Array<TrackData>* tracks = dataManager->getTracks();

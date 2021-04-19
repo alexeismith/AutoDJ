@@ -22,7 +22,7 @@ public:
     
     AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm);
     
-    ~AnalysisThread() { stopThread(1000); }
+    ~AnalysisThread() {}
     
     void run();
     

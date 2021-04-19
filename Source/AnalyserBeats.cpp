@@ -38,6 +38,7 @@ void AnalyserBeats::analyse(juce::AudioBuffer<float> audio, std::atomic<double>*
     
     getTempo(audio, progress, numFrames, bpm, beatPhase);
     
+    if (juce::Thread::currentThreadShouldExit()) return;
     progress->store(0.7);
     
     getDownbeat(audio, numFrames, bpm, beatPhase, downbeat);
@@ -69,6 +70,7 @@ void AnalyserBeats::getTempo(juce::AudioBuffer<float> audio, std::atomic<double>
     for (int i = 0; i < numFrames; i++)
     {
         onsets.push_back(onsetAnalyser->processTimeDomain(buffer.getReadPointer(0, i*dfConfig.stepSize)));
+        if (juce::Thread::currentThreadShouldExit()) return;
         progress->store(0.1 + 0.5 * (double(i) / numFrames));
     }
     

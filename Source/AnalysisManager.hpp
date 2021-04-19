@@ -20,7 +20,7 @@ public:
     AnalysisManager(TrackDataManager* dm) :
         dataManager(dm) {}
     
-    ~AnalysisManager() {}
+    ~AnalysisManager();
     
     void startAnalysis();
     

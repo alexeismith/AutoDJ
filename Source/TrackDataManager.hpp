@@ -72,7 +72,7 @@ public:
     FileParserThread(TrackDataManager* dm) :
         juce::Thread("Parser"), dataManager(dm) {}
     
-    ~FileParserThread() { stopThread(1000); }
+    ~FileParserThread() { stopThread(10000); }
     
     void run();
     

@@ -28,7 +28,9 @@ public:
     
 private:
     
-    void processShift();
+    void reset();
+    
+    void processShift(const juce::AudioSourceChannelInfo& bufferToFill);
     
     TrackDataManager* dataManager = nullptr;
     
@@ -37,10 +39,8 @@ private:
     TrackData currentTrack;
     
     juce::AudioBuffer<float> input;
-    juce::AudioBuffer<float> output;
     
     int inputPlayhead = -1;
-    int outputPlayhead = -1;
     
     soundtouch::SoundTouch shifter;
     

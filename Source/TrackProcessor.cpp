@@ -13,7 +13,7 @@
 TrackProcessor::TrackProcessor(TrackDataManager* dm) :
     dataManager(dm)
 {
-    ready.store(false);
+    ready = false;
     
     shifter.setSampleRate(SUPPORTED_SAMPLERATE);
     shifter.setChannels(1);
@@ -29,13 +29,13 @@ TrackProcessor::TrackProcessor(TrackDataManager* dm) :
 
 void TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    if (!ready.load()) return;
-    
     const juce::ScopedLock sl (lock);
+    
+    if (!ready) return;
 
     if (inputPlayhead > -1)
     {
-        processShift(bufferToFill);
+        processShifts(bufferToFill);
         bufferToFill.buffer->addFrom(1, bufferToFill.startSample, bufferToFill.buffer->getReadPointer(0, bufferToFill.startSample), bufferToFill.numSamples);
     }
 }
@@ -50,7 +50,7 @@ void TrackProcessor::load(TrackData track)
     inputLength = input.getNumSamples();
     inputPlayhead = 0;
     
-    ready.store(true);
+    ready = true;
 }
 
 
@@ -63,16 +63,23 @@ void TrackProcessor::seekClip(int sample, int length)
 
 void TrackProcessor::reset()
 {
-    ready.store(false);
+    ready = false;
     
     inputPlayhead = -1;
+    
+    shiftBpmCurrent = 0;
+    shiftPitchCurrent = 0;
+    shiftBpmSamplesRemaining = -1;
+    shiftPitchSamplesRemaining = -1;
     
     shifter.clear();
 }
 
 
-void TrackProcessor::processShift(const juce::AudioSourceChannelInfo& bufferToFill)
+void TrackProcessor::processShifts(const juce::AudioSourceChannelInfo& bufferToFill)
 {
+    int inputBufferCounter = 0;
+    
     double ratio = shifter.getInputOutputSampleRatio();
     int numInput = round(double(bufferToFill.numSamples) / ratio);
     
@@ -84,9 +91,66 @@ void TrackProcessor::processShift(const juce::AudioSourceChannelInfo& bufferToFi
             return;
         }
         
+        inputBufferCounter += 1;
+        
         shifter.putSamples(input.getReadPointer(0, inputPlayhead), numInput);
         inputPlayhead += numInput;
     }
     
     shifter.receiveSamples(bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample), bufferToFill.numSamples);
+    
+    updateShifts(numInput * inputBufferCounter);
+}
+
+
+void TrackProcessor::newTempoShift(double shiftBpm, int byInputSample)
+{
+    newShift(shiftBpm, byInputSample, shiftBpmCurrent, shiftBpmTarget, shiftBpmRate, shiftBpmSamplesRemaining);
+}
+
+void TrackProcessor::newPitchShift(double shiftSemitones, int byInputSample)
+{
+    newShift(shiftSemitones, byInputSample, shiftPitchCurrent, shiftPitchTarget, shiftPitchRate, shiftPitchSamplesRemaining);
+}
+
+void TrackProcessor::newShift(double shift, int byInputSample, double& current, double& target, double& rate, int& samplesRemaining)
+{
+    if (byInputSample == -1)
+    {
+        samplesRemaining = -1;
+        current = shift;
+    }
+    else
+    {
+        target = shift;
+        samplesRemaining = byInputSample - inputPlayhead;
+        rate = (target - current) / samplesRemaining;
+    }
+}
+
+void TrackProcessor::updateShifts(int samplesRequested)
+{
+    updateShift(shiftBpmCurrent, shiftBpmTarget, shiftBpmRate, shiftBpmSamplesRemaining, samplesRequested);
+    updateShift(shiftPitchCurrent, shiftPitchTarget, shiftPitchRate, shiftPitchSamplesRemaining, samplesRequested);
+    
+    shifter.setTempo(double(shiftBpmCurrent + currentTrack.bpm) / currentTrack.bpm);
+    shifter.setPitchSemiTones(shiftPitchCurrent);
+}
+
+
+void TrackProcessor::updateShift(double& current, double target, double rate, int& samplesRemaining, int samplesRequested)
+{
+    if (samplesRemaining < 0) return;
+    
+    samplesRemaining -= samplesRequested;
+    
+    if (samplesRemaining <= 0)
+    {
+        current = target;
+        samplesRemaining = -1;
+    }
+    else
+    {
+        current += rate * samplesRequested;
+    }
 }

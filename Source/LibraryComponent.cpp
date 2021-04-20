@@ -142,4 +142,15 @@ void LibraryComponent::loadFiles()
 //    DBG("Waveform Done");
     
     audioProcessor->play(track);
+    
+//    audioProcessor->getTrackProcessor()->newTempoShift(10, 44100 * 6);
+//    audioProcessor->getTrackProcessor()->newPitchShift(2, 44100 * 20);
+    
+//    juce::Thread::getCurrentThread()->sleep(3000);
+//
+//    audioProcessor->preview(dataManager->getTracks()->getReference(1), 0, 44100*2);
+//
+//    juce::Thread::getCurrentThread()->sleep(3000);
+//
+//    audioProcessor->play();
 }

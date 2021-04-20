@@ -30,17 +30,27 @@ public:
     
     void seekClip(int sample, int length);
     
+    void newTempoShift(double shiftBpm, int byInputSample = -1);
+    
+    void newPitchShift(double shiftSemitones, int byInputSample = -1);
+    
 private:
     
     void reset();
     
-    void processShift(const juce::AudioSourceChannelInfo& bufferToFill);
+    void processShifts(const juce::AudioSourceChannelInfo& bufferToFill);
+    
+    void newShift(double shift, int byInputSample, double& current, double& target, double& rate, int& samplesRemaining);
+    
+    void updateShifts(int samplesRequested);
+    
+    void updateShift(double& current, double target, double rate, int& samplesRemaining, int samplesRequested);
     
     juce::CriticalSection lock;
     
     TrackDataManager* dataManager = nullptr;
     
-    std::atomic<bool> ready;
+    bool ready;
     
     TrackData currentTrack;
     
@@ -50,6 +60,16 @@ private:
     int inputPlayhead = -1;
     
     soundtouch::SoundTouch shifter;
+    
+    double shiftBpmCurrent;
+    double shiftBpmTarget;
+    double shiftBpmRate;
+    int shiftBpmSamplesRemaining = -1;
+    
+    double shiftPitchCurrent;
+    double shiftPitchTarget;
+    double shiftPitchRate;
+    int shiftPitchSamplesRemaining = -1;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackProcessor)
 };

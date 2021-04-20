@@ -30,6 +30,7 @@ public:
     
     void preview(TrackData track, int startSample, int numSamples);
     
+    TrackProcessor* getTrackProcessor() { return trackProcessors.getFirst(); }
     
 private:
     

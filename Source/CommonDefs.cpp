@@ -12,7 +12,10 @@ namespace AutoDJ {
 
 juce::String getLengthString(int secs)
 {
-    return juce::String(floor(secs / 60)) + ":" + juce::String(secs % 60);
+    if (secs % 60 < 10)
+        return juce::String(floor(secs / 60)) + ":0" + juce::String(secs % 60);
+    else
+        return juce::String(floor(secs / 60)) + ":" + juce::String(secs % 60);
 }
 
 

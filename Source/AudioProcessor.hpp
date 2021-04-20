@@ -22,12 +22,22 @@ public:
     
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);
     
+    void play() { paused.store(false); }
+    
     void play(TrackData track);
+    
+    void pause() { paused.store(true); }
+    
+    void preview(TrackData track, int startSample, int numSamples);
     
     
 private:
     
+    std::atomic<bool> paused;
+    
     juce::OwnedArray<TrackProcessor> trackProcessors;
+    
+    std::unique_ptr<TrackProcessor> previewProcessor;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioProcessor)
 };

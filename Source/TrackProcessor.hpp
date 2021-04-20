@@ -26,11 +26,17 @@ public:
     
     void load(TrackData track);
     
+    void seek(int sample) { inputPlayhead = sample; }
+    
+    void seekClip(int sample, int length);
+    
 private:
     
     void reset();
     
     void processShift(const juce::AudioSourceChannelInfo& bufferToFill);
+    
+    juce::CriticalSection lock;
     
     TrackDataManager* dataManager = nullptr;
     
@@ -40,6 +46,7 @@ private:
     
     juce::AudioBuffer<float> input;
     
+    int inputLength;
     int inputPlayhead = -1;
     
     soundtouch::SoundTouch shifter;

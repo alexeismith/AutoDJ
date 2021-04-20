@@ -20,7 +20,7 @@ TrackProcessor::TrackProcessor(TrackDataManager* dm) :
     shifter.clear();
 //    shifter.setPitchSemiTones(2);
 //    shifter.setRate(1.2);
-    shifter.setTempoChange(10);
+//    shifter.setTempoChange(10);
     DBG("SoundTouch initial latency: " << shifter.getSetting(SETTING_INITIAL_LATENCY));
     DBG("Nominal input: " << shifter.getSetting(SETTING_NOMINAL_INPUT_SEQUENCE));
     DBG("Nominal output: " << shifter.getSetting(SETTING_NOMINAL_OUTPUT_SEQUENCE));
@@ -30,6 +30,8 @@ TrackProcessor::TrackProcessor(TrackDataManager* dm) :
 void TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
     if (!ready.load()) return;
+    
+    const juce::ScopedLock sl (lock);
 
     if (inputPlayhead > -1)
     {
@@ -45,9 +47,17 @@ void TrackProcessor::load(TrackData track)
     
     currentTrack = track;
     dataManager->fetchAudio(track.filename, input, true); // TODO: change to stereo
+    inputLength = input.getNumSamples();
     inputPlayhead = 0;
     
     ready.store(true);
+}
+
+
+void TrackProcessor::seekClip(int sample, int length)
+{
+    seek(sample);
+    inputLength = juce::jmin(sample+length, input.getNumSamples());
 }
 
 
@@ -68,7 +78,7 @@ void TrackProcessor::processShift(const juce::AudioSourceChannelInfo& bufferToFi
     
     while (shifter.numSamples() < bufferToFill.numSamples)
     {
-        if (inputPlayhead >= input.getNumSamples() - numInput)
+        if (inputPlayhead >= inputLength - numInput)
         {
             inputPlayhead = -1;
             return;

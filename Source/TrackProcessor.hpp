@@ -12,6 +12,10 @@
 
 #include "TrackDataManager.hpp"
 
+#include "TrackState.hpp"
+
+#include "ArtificialDJ.hpp"
+
 #include "ThirdParty/soundtouch/include/SoundTouch.h"
 
 class TrackProcessor
@@ -30,21 +34,15 @@ public:
     
     void seekClip(int sample, int length);
     
-    void newTempoShift(double shiftBpm, int byInputSample = -1);
-    
-    void newPitchShift(double shiftSemitones, int byInputSample = -1);
     
 private:
+    
+    void updateState();
     
     void reset();
     
     void processShifts(const juce::AudioSourceChannelInfo& bufferToFill);
     
-    void newShift(double shift, int byInputSample, double& current, double& target, double& rate, int& samplesRemaining);
-    
-    void updateShifts(int samplesRequested);
-    
-    void updateShift(double& current, double target, double rate, int& samplesRemaining, int samplesRequested);
     
     juce::CriticalSection lock;
     
@@ -53,6 +51,7 @@ private:
     bool ready;
     
     TrackData currentTrack;
+    std::unique_ptr<TrackState> trackState;
     
     juce::AudioBuffer<float> input;
     
@@ -60,16 +59,6 @@ private:
     int inputPlayhead = -1;
     
     soundtouch::SoundTouch shifter;
-    
-    double shiftBpmCurrent;
-    double shiftBpmTarget;
-    double shiftBpmRate;
-    int shiftBpmSamplesRemaining = -1;
-    
-    double shiftPitchCurrent;
-    double shiftPitchTarget;
-    double shiftPitchRate;
-    int shiftPitchSamplesRemaining = -1;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackProcessor)
 };

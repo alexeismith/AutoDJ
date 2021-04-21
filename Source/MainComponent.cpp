@@ -20,7 +20,7 @@ MainComponent::MainComponent()
     
     dataManager.reset(new TrackDataManager());
     audioProcessor.reset(new AudioProcessor(dataManager.get()));
-    dj.reset(new ArtificialDJ(audioProcessor.get(), dataManager.get()));
+    dj.reset(new ArtificialDJ(dataManager.get()));
     
     library.reset(new LibraryComponent(audioProcessor.get(), dataManager.get()));
     addAndMakeVisible(library.get());

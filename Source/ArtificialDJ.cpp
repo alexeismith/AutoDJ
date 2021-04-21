@@ -10,8 +10,8 @@
 #define MIX_QUEUE_LENGTH (3)
 
 
-ArtificialDJ::ArtificialDJ(AudioProcessor* p, TrackDataManager* dm) :
-    juce::Thread("ArtificialDJ"), audioProcessor(p), dataManager(dm)
+ArtificialDJ::ArtificialDJ(TrackDataManager* dm) :
+    juce::Thread("ArtificialDJ"), dataManager(dm)
 {
     
 }
@@ -29,25 +29,25 @@ void ArtificialDJ::run()
 }
 
 
-void ArtificialDJ::updateMix(MixState& state)
+bool ArtificialDJ::updateTrackState(TrackState* state)
 {
     const juce::ScopedLock sl (lock);
     
     MixData* mix = &mixQueue.getReference(0);
     
-    int mixEnd = state.leader ? mix->end : mix->endNext;
+    int mixEnd = state->leader ? mix->end : mix->endNext;
     
-    if (state.currentSample >= mixEnd)
+    if (state->currentSample >= mixEnd)
     {
-        if (state.leader)
-            state.finish = true;
+        if (state->leader)
+            return true;
         else
-            state.leader = true;
+            state->leader = true;
     }
     
+    // Start new interpolations here
     
-    
-    
+    return false;
 }
 
 TrackData ArtificialDJ::chooseTrack()

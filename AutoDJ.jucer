@@ -87,6 +87,12 @@
       <FILE id="COCtS0" name="ArtificialDJ.hpp" compile="0" resource="0"
             file="Source/ArtificialDJ.hpp"/>
       <FILE id="ioEmCV" name="MixData.hpp" compile="0" resource="0" file="Source/MixData.hpp"/>
+      <FILE id="MV9PCh" name="TrackState.cpp" compile="1" resource="0" file="Source/TrackState.cpp"/>
+      <FILE id="AQRPMf" name="TrackState.hpp" compile="0" resource="0" file="Source/TrackState.hpp"/>
+      <FILE id="MB7NHa" name="InterpolatedParameter.cpp" compile="1" resource="0"
+            file="Source/InterpolatedParameter.cpp"/>
+      <FILE id="dEicnh" name="InterpolatedParameter.hpp" compile="0" resource="0"
+            file="Source/InterpolatedParameter.hpp"/>
     </GROUP>
     <GROUP id="{9E0BB712-1FB6-4131-B7F6-FA3677F5C918}" name="Audio Analysis">
       <GROUP id="{67C76829-2C6F-697A-3BEA-7FBFB680248E}" name="Third Party">

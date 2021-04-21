@@ -10,25 +10,28 @@
 
 #include <JuceHeader.h>
 
-#include "AudioProcessor.hpp"
 #include "TrackDataManager.hpp"
 #include "MixData.hpp"
+#include "TrackState.hpp"
 
 // Need to keep reference to currently executing MixData
 
 // Calculate weighted BPM trajectory once there is already a queue?
 
+class TrackState;
+
 class ArtificialDJ : public juce::Thread
 {
 public:
     
-    ArtificialDJ(AudioProcessor* p, TrackDataManager* dm);
+    ArtificialDJ(TrackDataManager* dm);
     
     ~ArtificialDJ() {}
     
     void run();
     
-    void updateMix(MixState& state);
+    // Returns true if track should be stopped/ejected
+    bool updateTrackState(TrackState* state);
     
 private:
     
@@ -40,7 +43,6 @@ private:
     
     juce::Array<MixData> mixQueue;
     
-    AudioProcessor* audioProcessor = nullptr;
     TrackDataManager* dataManager = nullptr;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ArtificialDJ)

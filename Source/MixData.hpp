@@ -10,6 +10,7 @@
 
 #include "TrackData.hpp"
 
+
 typedef struct MixData {
     TrackData leadingTrack; // Existing trexack that is playing
     TrackData nextTrack; // New track to be mixed in
@@ -20,14 +21,5 @@ typedef struct MixData {
     double bpm; // Tempo that new and previous tracks must meet by the start of the mix
 } MixData;
 
-
-typedef struct MixState {
-    bool finish = false;
-    bool leader = false;
-    int currentSample;
-    double bpm;
-    double pitch;
-    double gain;
-} MixState;
 
 #endif /* MixData_hpp */

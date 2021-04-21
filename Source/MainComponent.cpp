@@ -20,6 +20,7 @@ MainComponent::MainComponent()
     
     dataManager.reset(new TrackDataManager());
     audioProcessor.reset(new AudioProcessor(dataManager.get()));
+    dj.reset(new ArtificialDJ(audioProcessor.get(), dataManager.get()));
     
     library.reset(new LibraryComponent(audioProcessor.get(), dataManager.get()));
     addAndMakeVisible(library.get());
@@ -38,7 +39,7 @@ MainComponent::MainComponent()
     
     // Make sure you set the size of the component after
     // you add any child components.
-    setSize (800, 100);
+    setSize (800, 600);
 }
 
 MainComponent::~MainComponent()

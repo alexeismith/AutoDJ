@@ -42,6 +42,7 @@ private:
     std::unique_ptr<AnalyserBeats> analyserBeats;
     std::unique_ptr<AnalyserKey> analyserKey;
     
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalysisThread)
 };
 
 #endif /* AnalysisThread_hpp */

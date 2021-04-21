@@ -141,7 +141,7 @@ void LibraryComponent::loadFiles()
 //    waveform->setVisible(true);
 //    DBG("Waveform Done");
     
-    audioProcessor->play(track);
+//    audioProcessor->play(track);
     
 //    audioProcessor->getTrackProcessor()->newTempoShift(10, 44100 * 6);
 //    audioProcessor->getTrackProcessor()->newPitchShift(2, 44100 * 20);

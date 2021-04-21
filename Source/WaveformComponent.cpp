@@ -25,7 +25,7 @@ WaveformComponent::WaveformComponent(int width, TrackDataManager* dm) :
     setBufferedToImage(true);
     setOpaque(true);
     
-//    startTimerHz(30); // TODO: remove?
+    startTimerHz(30); // TODO: remove?
 }
 
 
@@ -35,7 +35,8 @@ void WaveformComponent::paint(juce::Graphics& g)
     
     if (!imageValid) updateImage();
     
-    g.drawImageAt(image, 0, 0);
+//    g.drawImageAt(image, 0, 0);
+    g.drawImage(image, juce::Rectangle<float>(0, 0, getWidth() + stretch, getHeight()));
 }
 
 

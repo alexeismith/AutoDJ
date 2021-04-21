@@ -31,7 +31,7 @@ public:
     
     void scroll(int samples);
     
-    void timerCallback() override { scroll(44100 / 30); }
+    void timerCallback() override { stretch = -200 * (sin(juce::Time::getCurrentTime().toMilliseconds() * 0.001) + 1); repaint(); } //{ scroll(44100 / 30); }
     
 private:
     
@@ -60,6 +60,8 @@ private:
     juce::Array<float> levels;
     
     juce::IIRFilter filterLow, filterMid, filterHigh;
+    
+    int stretch = 0; //TODO: temp
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformComponent)
 };

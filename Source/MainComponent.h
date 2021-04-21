@@ -5,6 +5,7 @@
 #include "AudioProcessor.hpp"
 #include "LibraryComponent.hpp"
 #include "GraphComponent.hpp"
+#include "ArtificialDJ.hpp"
 
 //#define SHOW_GRAPH
 
@@ -35,6 +36,7 @@ private:
     
     std::unique_ptr<AudioProcessor> audioProcessor;
     std::unique_ptr<TrackDataManager> dataManager;
+    std::unique_ptr<ArtificialDJ> dj;
     
     std::unique_ptr<LibraryComponent> library;
     

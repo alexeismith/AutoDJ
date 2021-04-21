@@ -74,14 +74,19 @@
           <FILE id="WFTZu7" name="SoundTouch.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/include/SoundTouch.h"/>
         </GROUP>
       </GROUP>
-      <FILE id="qPJF0z" name="TrackProcessor.cpp" compile="1" resource="0"
-            file="Source/TrackProcessor.cpp"/>
-      <FILE id="UeV71s" name="TrackProcessor.hpp" compile="0" resource="0"
-            file="Source/TrackProcessor.hpp"/>
       <FILE id="hbOA8G" name="AudioProcessor.cpp" compile="1" resource="0"
             file="Source/AudioProcessor.cpp"/>
       <FILE id="OU8h9B" name="AudioProcessor.hpp" compile="0" resource="0"
             file="Source/AudioProcessor.hpp"/>
+      <FILE id="qPJF0z" name="TrackProcessor.cpp" compile="1" resource="0"
+            file="Source/TrackProcessor.cpp"/>
+      <FILE id="UeV71s" name="TrackProcessor.hpp" compile="0" resource="0"
+            file="Source/TrackProcessor.hpp"/>
+      <FILE id="v240v0" name="ArtificialDJ.cpp" compile="1" resource="0"
+            file="Source/ArtificialDJ.cpp"/>
+      <FILE id="COCtS0" name="ArtificialDJ.hpp" compile="0" resource="0"
+            file="Source/ArtificialDJ.hpp"/>
+      <FILE id="ioEmCV" name="MixData.hpp" compile="0" resource="0" file="Source/MixData.hpp"/>
     </GROUP>
     <GROUP id="{9E0BB712-1FB6-4131-B7F6-FA3677F5C918}" name="Audio Analysis">
       <GROUP id="{67C76829-2C6F-697A-3BEA-7FBFB680248E}" name="Third Party">
@@ -146,6 +151,7 @@
       <GROUP id="{864AE706-4D80-286D-4EE2-E6FFF4FBB695}" name="Third Party">
         <FILE id="TgJ3yC" name="xxhash32.h" compile="0" resource="0" file="Source/ThirdParty/xxhash32.h"/>
       </GROUP>
+      <FILE id="l8vBNf" name="TrackData.cpp" compile="1" resource="0" file="Source/TrackData.cpp"/>
       <FILE id="PZxFQ4" name="TrackData.hpp" compile="0" resource="0" file="Source/TrackData.hpp"/>
       <FILE id="kqk0eM" name="TrackDataManager.cpp" compile="1" resource="0"
             file="Source/TrackDataManager.cpp"/>

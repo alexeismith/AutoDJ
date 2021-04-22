@@ -31,7 +31,7 @@ public:
     
     void scroll(int samples);
     
-    void timerCallback() override { stretch = -200 * (sin(juce::Time::getCurrentTime().toMilliseconds() * 0.001) + 1); repaint(); } //{ scroll(44100 / 30); }
+    void timerCallback() override { }//stretch = -200 * (sin(juce::Time::getCurrentTime().toMilliseconds() * 0.001) + 1); repaint(); } //{ scroll(44100 / 30); }
     
 private:
     

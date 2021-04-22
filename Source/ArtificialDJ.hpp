@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 
 #include "TrackDataManager.hpp"
+#include "AudioProcessor.hpp"
 #include "MixData.hpp"
 #include "TrackState.hpp"
 
@@ -30,20 +31,33 @@ public:
     
     void run();
     
-    // Returns true if track should be stopped/ejected
-    bool updateTrackState(TrackState* state);
+    void setAudioProcessor(AudioProcessor* am) { audioProcessor = am; }
+    
+    // Returns true if new track should be loaded
+    bool checkMixState(TrackState* state);
+    
+    // Returns true if new track should be loaded
+    MixData* getNextMix(MixData* current);
+    
+    void playPause();
     
 private:
     
-    TrackData chooseTrack();
+    void initialise();
     
-    MixData generateMix(TrackData nextTrack);
+    std::atomic<bool> initialised;
+    bool playing = false;
+    
+    TrackData chooseTrack(bool random);
+    
+    void generateMix(TrackData leadingTrack, TrackData nextTrack);
     
     juce::CriticalSection lock;
     
     juce::Array<MixData> mixQueue;
     
     TrackDataManager* dataManager = nullptr;
+    AudioProcessor* audioProcessor = nullptr;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ArtificialDJ)
 };

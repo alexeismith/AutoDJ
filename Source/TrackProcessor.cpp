@@ -10,10 +10,12 @@
 #include "CommonDefs.hpp"
 
 
-TrackProcessor::TrackProcessor(TrackDataManager* dm) :
+TrackProcessor::TrackProcessor(TrackDataManager* dm, ArtificialDJ* dj) :
     dataManager(dm)
 {
     ready = false;
+    
+    state.reset(new TrackState(TrackData(), dj, nullptr, 0.0, 0.0, 0.0));
     
     shifter.setSampleRate(SUPPORTED_SAMPLERATE);
     shifter.setChannels(1);
@@ -27,29 +29,33 @@ TrackProcessor::TrackProcessor(TrackDataManager* dm) :
 }
 
 
-void TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
+bool TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill, bool play)
 {
     const juce::ScopedLock sl (lock);
-    
-    if (!ready) return;
 
-    if (inputPlayhead > -1)
+    if (ready)
     {
-        processShifts(bufferToFill);
-        bufferToFill.buffer->addFrom(1, bufferToFill.startSample, bufferToFill.buffer->getReadPointer(0, bufferToFill.startSample), bufferToFill.numSamples);
-        updateState();
+        if (play)
+        {
+            processShifts(bufferToFill);
+            bufferToFill.buffer->addFrom(1, bufferToFill.startSample, bufferToFill.buffer->getReadPointer(0, bufferToFill.startSample), bufferToFill.numSamples);
+            updateState();
+        }
+        
+        return inputPlayhead >= state->currentMix->start;
     }
+    
+    return false;
 }
 
 
-void TrackProcessor::load(TrackData track)
+void TrackProcessor::loadTrack()
 {
     reset();
     
-    currentTrack = track;
-    dataManager->fetchAudio(track.filename, input, true); // TODO: change to stereo
+    dataManager->fetchAudio(state->track.filename, input, true); // TODO: change to stereo
     inputLength = input.getNumSamples();
-    inputPlayhead = 0;
+    inputPlayhead = state->currentMix->startNext;
     
     ready = true;
 }
@@ -64,18 +70,19 @@ void TrackProcessor::seekClip(int sample, int length)
 
 void TrackProcessor::updateState()
 {
-    trackState->update(inputPlayhead);
+    if (state->update(inputPlayhead))
+        loadTrack();
     
-    shifter.setTempo(double(trackState->bpm.currentValue) / currentTrack.bpm);
-    shifter.setPitchSemiTones(trackState->pitch.currentValue);
+    // This processor needs to know when to start playing based on other processor - global clock?
+    
+    shifter.setTempo(double(state->bpm.currentValue) / state->track.bpm);
+    shifter.setPitchSemiTones(state->pitch.currentValue);
 }
 
 
 void TrackProcessor::reset()
 {
     ready = false;
-    
-    inputPlayhead = -1;
     
     shifter.clear();
 }
@@ -98,5 +105,6 @@ void TrackProcessor::processShifts(const juce::AudioSourceChannelInfo& bufferToF
         inputPlayhead += numInput;
     }
     
+    // TODO: don't overwrite bufferToFill
     shifter.receiveSamples(bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample), bufferToFill.numSamples);
 }

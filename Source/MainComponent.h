@@ -10,7 +10,7 @@
 //#define SHOW_GRAPH
 
 
-class MainComponent  : public juce::AudioAppComponent
+class MainComponent  : public juce::AudioAppComponent, public juce::Button::Listener
 {
 public:
     
@@ -27,6 +27,8 @@ public:
     void paint (juce::Graphics& g) override;
     
     void resized() override;
+    
+    void buttonClicked(juce::Button* button) override;
 
 private:
     
@@ -37,6 +39,8 @@ private:
     std::unique_ptr<AudioProcessor> audioProcessor;
     std::unique_ptr<TrackDataManager> dataManager;
     std::unique_ptr<ArtificialDJ> dj;
+    
+    std::unique_ptr<juce::Button> playBtn;
     
     std::unique_ptr<LibraryComponent> library;
     

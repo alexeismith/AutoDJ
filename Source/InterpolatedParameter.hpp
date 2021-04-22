@@ -12,15 +12,20 @@ class InterpolatedParameter
 {
 public:
     
-    InterpolatedParameter(double currentValue, double targetValue, int numSamples = -1);
+    InterpolatedParameter() {}
     
     ~InterpolatedParameter() {}
     
-    void update(int numSamples);
+    void update(int currentSample);
     
-    double currentValue;
-    double targetValue;
-    double rateOfChange;
+    // Set startSample < 0 for instant change now
+    // Set numSamples <= 0 for instant change at startSample
+    void moveTo(double targetValue, int startSample = -1, int numSamples = -1);
+    
+    double currentValue = 0.0;
+    double targetValue = 0.0;
+    double rateOfChange = 0.0;
+    int startSample = -1;
     int samplesRemaining = -1;
 };
 

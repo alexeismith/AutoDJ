@@ -19,13 +19,21 @@ MainComponent::MainComponent()
     }
     
     dataManager.reset(new TrackDataManager());
-    audioProcessor.reset(new AudioProcessor(dataManager.get()));
     dj.reset(new ArtificialDJ(dataManager.get()));
+    audioProcessor.reset(new AudioProcessor(dataManager.get(), dj.get()));
+    dj->setAudioProcessor(audioProcessor.get());
     
-    library.reset(new LibraryComponent(audioProcessor.get(), dataManager.get()));
+    playBtn.reset(new juce::TextButton(">"));
+    playBtn->setComponentID(juce::String(ComponentIDs::playBtn));
+    playBtn->addListener(this);
+    playBtn->setEnabled(false);
+    
+    library.reset(new LibraryComponent(audioProcessor.get(), dataManager.get(), playBtn.get()));
     addAndMakeVisible(library.get());
-    
     dataManager->setLibrary(library.get());
+    
+    addAndMakeVisible(playBtn.get());
+    playBtn->setVisible(false);
     
 #ifdef SHOW_GRAPH
     graphWindow.reset(new juce::ResizableWindow("Data Graph", true));
@@ -88,6 +96,9 @@ void MainComponent::resized()
 {
     library->setSize(getWidth(), getHeight());
     library->setTopLeftPosition(0, 0);
+    
+    playBtn->setSize(28, 28);
+    playBtn->setCentrePosition(getWidth()/2, getHeight() - 20);
 }
 
 
@@ -106,4 +117,19 @@ void MainComponent::setAppearance()
 //    customAppearance.setColourScheme(colourScheme);
     
     juce::LookAndFeel::setDefaultLookAndFeel(&customAppearance);
+}
+
+
+void MainComponent::buttonClicked(juce::Button* button)
+{
+    int id = button->getComponentID().getIntValue();
+    
+    switch (id)
+    {
+        case ComponentIDs::playBtn:
+            dj->playPause();
+            break;
+        default:
+            jassert(false); // Unrecognised button ID
+    }
 }

@@ -10,28 +10,41 @@
 
 #include "InterpolatedParameter.hpp"
 
+#include "MixData.hpp"
+
 class ArtificialDJ;
 
 class TrackState
 {
 public:
     
-    TrackState(ArtificialDJ* DJ, InterpolatedParameter bpm, InterpolatedParameter pitch, InterpolatedParameter gain);
+    TrackState(TrackData track, ArtificialDJ* DJ, MixData* currentMix, double initBpm, double initGain, double initPitch);
     
     ~TrackState() {}
     
     // Returns true if track should be stopped/ejected
-    bool update(int newSample);
+    bool update(int playhead);
+    
+    bool applyNextMix();
+    
+    TrackData track; // TODO: can get this from currentMix based on leader
     
     ArtificialDJ* dj = nullptr;
+    MixData* currentMix = nullptr;
     
     bool leader = false;
     
     int currentSample = 0;
     
     InterpolatedParameter bpm;
-    InterpolatedParameter pitch;
     InterpolatedParameter gain;
+    InterpolatedParameter pitch;
+    
+private:
+    
+    void reset(double initBpm = 0.0, double initGain = 0.0, double initPitch = 0.0);
+    
+    bool checkMixState();
 
 };
 

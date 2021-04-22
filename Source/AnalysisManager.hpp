@@ -12,6 +12,7 @@
 
 #include "TrackDataManager.hpp"
 #include "AnalysisThread.hpp"
+#include "CommonDefs.hpp"
 
 class AnalysisManager
 {
@@ -28,6 +29,10 @@ public:
     
     TrackData getNextJob(bool& finished);
     
+    void incrementNumAnalysed();
+    
+    bool minimumAnalysed() { return numAnalysed >= NUM_TRACKS_MIN; }
+    
 private:
     
     bool areThreadsFinished();
@@ -41,6 +46,8 @@ private:
     TrackDataManager* dataManager = nullptr;
     
     int jobProgress = 0;
+    
+    int numAnalysed = 0;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalysisManager)
 };

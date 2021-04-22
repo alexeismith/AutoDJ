@@ -14,11 +14,11 @@
 typedef struct MixData {
     TrackData leadingTrack; // Existing trexack that is playing
     TrackData nextTrack; // New track to be mixed in
-    int start; // Sample position in leading track where mix begins
-    int end; // Sample position in leading track where mix finishes
-    int startNext; // Sample position in next track where mix begins
-    int endNext; // Sample position in next track where mix finishes
-    double bpm; // Tempo that new and previous tracks must meet by the start of the mix
+    int start = 0; // Sample position in leading track where mix begins
+    int end = 0; // Sample position in leading track where mix finishes
+    int startNext = 0; // Sample position in next track where mix begins
+    int endNext = 0; // Sample position in next track where mix finishes
+    double bpm = 0.0; // Tempo that new and previous tracks must meet by the start of the mix
 } MixData;
 
 

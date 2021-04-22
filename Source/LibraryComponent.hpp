@@ -21,7 +21,7 @@ class LibraryComponent : public juce::Component, public juce::Button::Listener, 
 {
 public:
     
-    LibraryComponent(AudioProcessor* p, TrackDataManager* dm);
+    LibraryComponent(AudioProcessor* p, TrackDataManager* dm, juce::Button* play);
     
     ~LibraryComponent() {}
     
@@ -42,6 +42,7 @@ private:
     
     std::unique_ptr<TrackTableComponent> trackTable;
     
+    juce::Button* playBtn;
     std::unique_ptr<juce::Button> chooseFolderBtn;
     std::unique_ptr<juce::ProgressBar> loadingFilesProgress;
     std::unique_ptr<juce::ProgressBar> analysisProgress;

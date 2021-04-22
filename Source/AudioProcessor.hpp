@@ -16,7 +16,7 @@ class AudioProcessor
 {
 public:
     
-    AudioProcessor(TrackDataManager* dataManager);
+    AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj);
     
     ~AudioProcessor() {}
     
@@ -30,7 +30,9 @@ public:
     
     void preview(TrackData track, int startSample, int numSamples);
     
-    TrackProcessor* getTrackProcessor() { return trackProcessors.getFirst(); }
+    TrackProcessor* getProcessor(int index) { return trackProcessors.getUnchecked(index); }
+    
+    void getProcessors(TrackProcessor** leader, TrackProcessor** next);
     
 private:
     

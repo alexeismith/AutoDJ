@@ -10,21 +10,22 @@
 #include "CommonDefs.hpp"
 
 
-AudioProcessor::AudioProcessor(TrackDataManager* dataManager)
+AudioProcessor::AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj)
 {
     paused.store(true);
     
-    for (int i = 0; i < NUM_CONCURRENT_TRACKS; i++)
-    {
-        trackProcessors.add(new TrackProcessor(dataManager));
-    }
+    trackProcessors.add(new TrackProcessor(dataManager, dj));
+    trackProcessors.add(new TrackProcessor(dataManager, dj));
     
-    previewProcessor.reset(new TrackProcessor(dataManager));
+    previewProcessor.reset(new TrackProcessor(dataManager, dj));
 }
 
 
 void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
+    TrackProcessor* leader = nullptr;
+    TrackProcessor* next = nullptr;
+    
     bufferToFill.clearActiveBufferRegion();
     
     if (paused.load())
@@ -33,23 +34,45 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
     }
     else
     {
-        for (auto* trackProcessor : trackProcessors)
-            trackProcessor->getNextAudioBlock(bufferToFill);
+        getProcessors(&leader, &next);
+        
+        if (!leader)
+            DBG("NO LEADER");
+        if (!next)
+            DBG("NO NEXT");
+        
+        if (leader)
+        {
+            bool play = leader->getNextAudioBlock(bufferToFill);
+            next->getNextAudioBlock(bufferToFill, play);
+        }
     }
 }
 
 
 void AudioProcessor::play(TrackData track)
 {
-    trackProcessors.getFirst()->load(track);
+//    trackProcessors.getFirst()->load(track);
     play();
 }
 
 
 void AudioProcessor::preview(TrackData track, int startSample, int numSamples)
 {
-    previewProcessor->load(track);
-    previewProcessor->seekClip(startSample, numSamples);
+//    previewProcessor->load(track);
+//    previewProcessor->seekClip(startSample, numSamples);
     
     paused.store(true);
+}
+
+
+void AudioProcessor::getProcessors(TrackProcessor** leader, TrackProcessor** next)
+{
+    for (auto* processor : trackProcessors)
+    {
+        if (processor->isLeader())
+            *leader = processor;
+        else
+            *next = processor;
+    }
 }

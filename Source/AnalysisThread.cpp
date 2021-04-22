@@ -65,4 +65,6 @@ void AnalysisThread::analyse(TrackData& track)
     dataManager->update(track);
     
     progress.store(1.0);
+    
+    analysisManager->incrementNumAnalysed();
 }

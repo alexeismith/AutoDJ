@@ -35,8 +35,8 @@ void WaveformComponent::paint(juce::Graphics& g)
     
     if (!imageValid) updateImage();
     
-//    g.drawImageAt(image, 0, 0);
-    g.drawImage(image, juce::Rectangle<float>(0, 0, getWidth() + stretch, getHeight()));
+    g.drawImageAt(image, 0, 0);
+//    g.drawImage(image, juce::Rectangle<float>(0, 0, getWidth() + stretch, getHeight()));
 }
 
 

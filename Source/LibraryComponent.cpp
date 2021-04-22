@@ -8,10 +8,11 @@
 #include "LibraryComponent.hpp"
 
 
-LibraryComponent::LibraryComponent(AudioProcessor* p, TrackDataManager* dm)
+LibraryComponent::LibraryComponent(AudioProcessor* p, TrackDataManager* dm, juce::Button* play)
 {
     audioProcessor = p;
     dataManager = dm;
+    playBtn = play;
     
     startTimerHz(30);
     
@@ -23,8 +24,8 @@ LibraryComponent::LibraryComponent(AudioProcessor* p, TrackDataManager* dm)
     trackTable->addColumns();
     
     chooseFolderBtn.reset(new juce::TextButton("Choose Folder"));
+    chooseFolderBtn->setComponentID(juce::String(ComponentIDs::chooseFolderBtn));
     addAndMakeVisible(chooseFolderBtn.get());
-    
     chooseFolderBtn->addListener(this);
     
     waveform.reset(new WaveformComponent(800, dataManager));
@@ -66,7 +67,7 @@ void LibraryComponent::buttonClicked(juce::Button* button)
     
     switch (id)
     {
-        case ComponentIDs::chooseFolder:
+        case ComponentIDs::chooseFolderBtn:
             chooseFolder();
             break;
         default:
@@ -91,6 +92,11 @@ void LibraryComponent::timerCallback()
         {
             waitingForAnalysis = false;
             analysisProgress->setVisible(false);
+            playBtn->setEnabled(true);
+        }
+        else if (analysisManager->minimumAnalysed())
+        {
+            playBtn->setEnabled(true);
         }
     }
     
@@ -124,6 +130,7 @@ void LibraryComponent::loadFiles()
     loadingFilesProgress->setVisible(false);
     analysisProgress->setVisible(true);
     trackTable->setVisible(true);
+    playBtn->setVisible(true);
     
     loadingProgress = 0.0;
     
@@ -133,12 +140,12 @@ void LibraryComponent::loadFiles()
     
     
     
-    
-    TrackData track = dataManager->getTracks()->getReference(0);
-
+//    TrackData track = dataManager->getTracks()->getReference(0);
+//
 //    DBG("Waveform: " << track.filename);
 //    waveform->loadTrack(track);
 //    waveform->setVisible(true);
+//    waveform->scroll(1800000);
 //    DBG("Waveform Done");
     
 //    audioProcessor->play(track);

@@ -14,30 +14,33 @@
 
 #include "TrackState.hpp"
 
-#include "ArtificialDJ.hpp"
-
 #include "ThirdParty/soundtouch/include/SoundTouch.h"
+
+class ArtificialDJ;
 
 class TrackProcessor
 {
 public:
     
-    TrackProcessor(TrackDataManager* dm);
+    TrackProcessor(TrackDataManager* dm, ArtificialDJ* dj);
     
     ~TrackProcessor() {}
     
-    void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);
+    bool getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill, bool play = true);
     
-    void load(TrackData track);
+    void loadTrack();
     
     void seek(int sample) { inputPlayhead = sample; }
     
     void seekClip(int sample, int length);
     
+    TrackState* getState() { return state.get(); }
     
-private:
+    bool isLeader() { return getState()->leader; }
     
     void updateState();
+    
+private:
     
     void reset();
     
@@ -50,8 +53,7 @@ private:
     
     bool ready;
     
-    TrackData currentTrack;
-    std::unique_ptr<TrackState> trackState;
+    std::unique_ptr<TrackState> state;
     
     juce::AudioBuffer<float> input;
     

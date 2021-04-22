@@ -8,19 +8,11 @@
 #include "InterpolatedParameter.hpp"
 
 
-InterpolatedParameter::InterpolatedParameter(double currentVal, double targetVal, int numSamples)
+void InterpolatedParameter::update(int currentSample)
 {
-    currentValue = currentVal;
-    targetValue = targetVal;
-    samplesRemaining = numSamples;
+    if (startSample < 0 || currentSample < startSample) return;
     
-    rateOfChange = (targetValue - currentValue) / samplesRemaining;
-}
-
-
-void InterpolatedParameter::update(int numSamples)
-{
-    if (samplesRemaining < 0) return;
+    int numSamples = currentSample - startSample;
     
     samplesRemaining -= numSamples;
     
@@ -33,4 +25,18 @@ void InterpolatedParameter::update(int numSamples)
     {
         currentValue += rateOfChange * numSamples;
     }
+}
+
+
+void InterpolatedParameter::moveTo(double targetVal, int start, int numSamples)
+{
+    targetValue = targetVal;
+    startSample = start;
+    samplesRemaining = numSamples;
+    
+    if (startSample < 0)
+        currentValue = targetValue;
+    
+    if (samplesRemaining > 0)
+        rateOfChange = (targetValue - currentValue) / samplesRemaining;
 }

@@ -36,6 +36,8 @@ void AnalysisManager::startAnalysis()
     {
         if (tracks->getReference(i).analysed == false)
             jobs.add(tracks->getReference(i));
+        else
+            numAnalysed += 1;
     }
     
     if (jobs.size() == 0)
@@ -108,4 +110,12 @@ TrackData AnalysisManager::getNextJob(bool& finished)
         jobProgress += 1;
         return jobs.getUnchecked(job);
     }
+}
+
+
+void AnalysisManager::incrementNumAnalysed()
+{
+    const juce::ScopedLock sl (lock);
+    
+    numAnalysed += 1;
 }

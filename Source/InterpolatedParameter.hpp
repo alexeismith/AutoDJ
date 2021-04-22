@@ -16,7 +16,7 @@ public:
     
     ~InterpolatedParameter() {}
     
-    void update(int currentSample);
+    void update(int currentSample, int numSamples);
     
     // Set startSample < 0 for instant change now
     // Set numSamples <= 0 for instant change at startSample

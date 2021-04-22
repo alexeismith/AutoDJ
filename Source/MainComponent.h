@@ -33,6 +33,8 @@ public:
 private:
     
     void setAppearance();
+    
+    std::atomic<int> initBlockSize;
 
     juce::LookAndFeel_V4 customAppearance;
     

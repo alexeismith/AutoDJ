@@ -30,8 +30,8 @@ public:
     
     void loadTrack();
     
-    void seek(int sample) { inputPlayhead = sample; }
-    
+    // TODO: remove
+    void seek(int sample) { playhead = sample; }
     void seekClip(int sample, int length);
     
     TrackState* getState() { return state.get(); }
@@ -40,12 +40,15 @@ public:
     
     void updateState();
     
+    void initialise(TrackData track);
+    
+    void prepare(int blockSize);
+    
 private:
     
-    void reset();
+    void processShifts(int numSamples);
     
-    void processShifts(const juce::AudioSourceChannelInfo& bufferToFill);
-    
+    void simpleCopy(int numSamples);
     
     juce::CriticalSection lock;
     
@@ -56,9 +59,12 @@ private:
     std::unique_ptr<TrackState> state;
     
     juce::AudioBuffer<float> input;
-    
     int inputLength;
-    int inputPlayhead = -1;
+    int inputPlayhead = 0;
+    
+    juce::AudioBuffer<float> output;
+    
+    int playhead = 0;
     
     soundtouch::SoundTouch shifter;
     

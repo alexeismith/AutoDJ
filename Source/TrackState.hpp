@@ -40,11 +40,7 @@ public:
     InterpolatedParameter gain;
     InterpolatedParameter pitch;
     
-private:
-    
     void reset(double initBpm = 0.0, double initGain = 0.0, double initPitch = 0.0);
-    
-    bool checkMixState();
 
 };
 

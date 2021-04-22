@@ -20,7 +20,7 @@ MainComponent::MainComponent()
     
     dataManager.reset(new TrackDataManager());
     dj.reset(new ArtificialDJ(dataManager.get()));
-    audioProcessor.reset(new AudioProcessor(dataManager.get(), dj.get()));
+    audioProcessor.reset(new AudioProcessor(dataManager.get(), dj.get(), initBlockSize.load()));
     dj->setAudioProcessor(audioProcessor.get());
     
     playBtn.reset(new juce::TextButton(">"));
@@ -66,6 +66,11 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     // but be careful - it will be called on the audio thread, not the GUI thread.
 
     // For more details, see the help for AudioProcessor::prepareToPlay()
+    
+    if (audioProcessor.get())
+        audioProcessor->prepare(samplesPerBlockExpected);
+    else
+        initBlockSize.store(samplesPerBlockExpected);
 }
 
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)

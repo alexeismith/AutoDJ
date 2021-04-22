@@ -27,7 +27,7 @@ public:
     
     ArtificialDJ(TrackDataManager* dm);
     
-    ~ArtificialDJ() {}
+    ~ArtificialDJ() { stopThread(1000); }
     
     void run();
     
@@ -48,7 +48,7 @@ private:
     std::atomic<bool> initialised;
     bool playing = false;
     
-    TrackData chooseTrack(bool random);
+    TrackData* chooseTrack(bool random);
     
     void generateMix(TrackData leadingTrack, TrackData nextTrack);
     

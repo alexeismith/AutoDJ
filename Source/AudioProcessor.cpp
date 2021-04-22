@@ -10,7 +10,7 @@
 #include "CommonDefs.hpp"
 
 
-AudioProcessor::AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj)
+AudioProcessor::AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj, int initBlockSize)
 {
     paused.store(true);
     
@@ -18,6 +18,8 @@ AudioProcessor::AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj)
     trackProcessors.add(new TrackProcessor(dataManager, dj));
     
     previewProcessor.reset(new TrackProcessor(dataManager, dj));
+    
+    prepare(initBlockSize);
 }
 
 
@@ -74,5 +76,14 @@ void AudioProcessor::getProcessors(TrackProcessor** leader, TrackProcessor** nex
             *leader = processor;
         else
             *next = processor;
+    }
+}
+
+
+void AudioProcessor::prepare(int blockSize)
+{
+    for (auto* processor : trackProcessors)
+    {
+        processor->prepare(blockSize);
     }
 }

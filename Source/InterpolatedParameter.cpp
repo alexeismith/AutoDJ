@@ -7,12 +7,12 @@
 
 #include "InterpolatedParameter.hpp"
 
+#include <JuceHeader.h>
 
-void InterpolatedParameter::update(int currentSample)
+
+void InterpolatedParameter::update(int currentSample, int numSamples)
 {
     if (startSample < 0 || currentSample < startSample) return;
-    
-    int numSamples = currentSample - startSample;
     
     samplesRemaining -= numSamples;
     

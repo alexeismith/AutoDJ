@@ -25,11 +25,14 @@ bool TrackState::update(int playhead)
     
     currentSample = playhead;
     
-    bpm.update(numSamples);
-    pitch.update(numSamples);
-    gain.update(numSamples);
+    bpm.update(playhead, numSamples);
+    pitch.update(playhead, numSamples);
+    gain.update(playhead, numSamples);
     
-    return checkMixState();
+    if (!currentMix || (leader && (currentSample >= currentMix->end)))
+        return applyNextMix();
+    
+    return false;
 }
 
 
@@ -41,20 +44,6 @@ void TrackState::reset(double initBpm, double initGain, double initPitch)
     bpm.moveTo(currentMix->bpm);
     gain.moveTo(0.0);
     pitch.moveTo(0.0);
-}
-
-
-bool TrackState::checkMixState()
-{
-    int mixEnd = -1;
-    
-    if (currentMix)
-        mixEnd = leader ? currentMix->end : currentMix->endNext;
-    
-    if (currentSample >= mixEnd)
-        return applyNextMix();
-    
-    return false;
 }
 
 

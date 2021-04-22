@@ -16,7 +16,7 @@ class AudioProcessor
 {
 public:
     
-    AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj);
+    AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj, int initBlockSize);
     
     ~AudioProcessor() {}
     
@@ -33,6 +33,8 @@ public:
     TrackProcessor* getProcessor(int index) { return trackProcessors.getUnchecked(index); }
     
     void getProcessors(TrackProcessor** leader, TrackProcessor** next);
+    
+    void prepare(int blockSize);
     
 private:
     

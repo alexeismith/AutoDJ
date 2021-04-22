@@ -19,12 +19,14 @@ ArtificialDJ::ArtificialDJ(TrackDataManager* dm) :
 
 void ArtificialDJ::run()
 {
+    
+    
     while (!threadShouldExit())
     {
         // If no tracks loaded / mix queue empty, create a mix without referencing previous
         
         if (mixQueue.size() < MIX_QUEUE_LENGTH)
-            generateMix(mixQueue.getFirst().nextTrack, chooseTrack(true)); // TODO: not true
+            generateMix(mixQueue.getFirst().nextTrack, *chooseTrack(true)); // TODO: not true
     }
 }
 
@@ -62,27 +64,39 @@ void ArtificialDJ::playPause()
 
 void ArtificialDJ::initialise()
 {
-    generateMix(chooseTrack(true), chooseTrack(true));
+    // TODO: maybe don't need pointers?
+    TrackData* trackFirst = chooseTrack(true);
+    TrackData* trackSecond = chooseTrack(true);
+    generateMix(*trackFirst, *trackSecond);
+//    generateMix(*trackFirst, *trackSecond);
     
     TrackProcessor* leader = audioProcessor->getProcessor(0);
     TrackProcessor* next = audioProcessor->getProcessor(1);
     
-    TrackData leadingTrack = mixQueue.getFirst().leadingTrack;
-    leader->getState()->bpm.currentValue = mixQueue.getReference(0).bpm;
-    leader->getState()->gain.currentValue = 1.0;
-    leader->getState()->track = leadingTrack;
-    leader->updateState();
-    leader->loadTrack();
-    leader->seek(0);
+    leader->initialise(*trackFirst);
+    
+//    TrackData leadingTrack = mixQueue.getFirst().leadingTrack;
+//    leader->getState()->bpm.currentValue = mixQueue.getReference(0).bpm;
+//    leader->getState()->gain.currentValue = 1.0;
+//    leader->getState()->track = leadingTrack;
+//    leader->updateState();
+//    leader->loadTrack();
+//    leader->seek(0);
     
     next->getState()->leader = true;
     next->updateState();
+    
+    MixData mix = mixQueue.getReference(0);
+    DBG("start: " << mix.start);
+    DBG("end: " << mix.end);
+    DBG("startNext: " << mix.startNext);
+    DBG("endNext: " << mix.endNext);
     
     startThread();
 }
 
 
-TrackData ArtificialDJ::chooseTrack(bool random)
+TrackData* ArtificialDJ::chooseTrack(bool random)
 {
     int randomChoice;
     TrackData* track = nullptr;
@@ -106,7 +120,7 @@ TrackData ArtificialDJ::chooseTrack(bool random)
     DBG("QUEUED: " << track->filename);
     track->queued = true;
     
-    return *track;
+    return track;
 }
 
 void ArtificialDJ::generateMix(TrackData leadingTrack, TrackData nextTrack)
@@ -116,9 +130,9 @@ void ArtificialDJ::generateMix(TrackData leadingTrack, TrackData nextTrack)
     mix.leadingTrack = leadingTrack;
     mix.nextTrack = nextTrack;
     
-    int mixLengthBeats = 8;
+    int mixLengthBeats = 16;
     
-    int mixStartBeats = mix.leadingTrack.downbeat + 3 * mixLengthBeats;
+    int mixStartBeats = mix.leadingTrack.downbeat + 2 * mixLengthBeats;
     
     mix.start = mix.leadingTrack.getSampleOfBeat(mixStartBeats);
     mix.end = mix.leadingTrack.getSampleOfBeat(mixStartBeats + mixLengthBeats);

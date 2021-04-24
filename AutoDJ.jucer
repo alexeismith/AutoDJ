@@ -14,10 +14,10 @@
         <FILE id="OYsJkP" name="MainComponent.cpp" compile="1" resource="0"
               file="Source/MainComponent.cpp"/>
         <FILE id="MM3lb8" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
-        <FILE id="NwPWlb" name="LibraryComponent.cpp" compile="1" resource="0"
-              file="Source/LibraryComponent.cpp"/>
-        <FILE id="FNH2p5" name="LibraryComponent.hpp" compile="0" resource="0"
-              file="Source/LibraryComponent.hpp"/>
+        <FILE id="RfPn63" name="LibraryView.cpp" compile="1" resource="0" file="Source/LibraryView.cpp"/>
+        <FILE id="e9qGGt" name="LibraryView.hpp" compile="0" resource="0" file="Source/LibraryView.hpp"/>
+        <FILE id="DIho3U" name="MixView.cpp" compile="1" resource="0" file="Source/MixView.cpp"/>
+        <FILE id="pApJtk" name="MixView.hpp" compile="0" resource="0" file="Source/MixView.hpp"/>
         <FILE id="yV87zV" name="TrackTableComponent.cpp" compile="1" resource="0"
               file="Source/TrackTableComponent.cpp"/>
         <FILE id="S5dMOS" name="TrackTableComponent.hpp" compile="0" resource="0"

@@ -3,14 +3,15 @@
 #include <JuceHeader.h>
 
 #include "AudioProcessor.hpp"
-#include "LibraryComponent.hpp"
+#include "LibraryView.hpp"
+#include "MixView.hpp"
 #include "GraphComponent.hpp"
 #include "ArtificialDJ.hpp"
 
 //#define SHOW_GRAPH
 
 
-class MainComponent  : public juce::AudioAppComponent, public juce::Timer, public juce::Button::Listener
+class MainComponent : public juce::AudioAppComponent, public juce::Timer, public juce::Button::Listener
 {
 public:
     
@@ -46,9 +47,16 @@ private:
     std::unique_ptr<TrackDataManager> dataManager;
     std::unique_ptr<ArtificialDJ> dj;
     
-    std::unique_ptr<juce::Button> playBtn;
+    std::unique_ptr<juce::Button> libraryBtn;
+    std::unique_ptr<juce::Button> mixBtn;
     
-    std::unique_ptr<LibraryComponent> library;
+    std::unique_ptr<juce::Button> playPauseBtn;
+    
+
+    
+    std::unique_ptr<LibraryView> libraryView;
+
+    std::unique_ptr<MixView> mixView;
     
 #ifdef SHOW_GRAPH
     std::unique_ptr<juce::ResizableWindow> graphWindow;

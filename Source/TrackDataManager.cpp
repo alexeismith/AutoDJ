@@ -9,7 +9,7 @@
 #include "CommonDefs.hpp"
 #include "ThirdParty/xxhash32.h"
 
-#include "LibraryComponent.hpp"
+#include "LibraryView.hpp"
 
 extern "C" {
   #include <sqlite3.h>
@@ -57,7 +57,7 @@ void TrackDataManager::update(TrackInfo track)
     }
     
     if (libraryComponent)
-        ((LibraryComponent*)libraryComponent)->updateData();
+        ((LibraryView*)libraryComponent)->updateData();
 }
 
 
@@ -71,6 +71,8 @@ bool TrackDataManager::isLoaded(double& progress)
 juce::AudioBuffer<float>* TrackDataManager::loadAudio(juce::String filename, bool mono)
 {
     const juce::ScopedLock sl(lock);
+    
+    DBG("LOADING AUDIO");
     
     juce::AudioBuffer<float>* buffer = nullptr;
     

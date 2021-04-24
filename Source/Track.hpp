@@ -25,7 +25,7 @@ public:
     
     bool applyNextMix(MixInfo* mix);
     
-    TrackInfo info; // TODO: can get this from currentMix based on leader
+    TrackInfo info;
     juce::AudioBuffer<float>* audio;
     
     MixInfo* currentMix;

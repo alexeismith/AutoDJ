@@ -1,6 +1,7 @@
 #include "MainComponent.h"
 
-//==============================================================================
+#include "CommonDefs.hpp"
+
 MainComponent::MainComponent()
 {
     setAppearance();
@@ -23,17 +24,31 @@ MainComponent::MainComponent()
     audioProcessor.reset(new AudioProcessor(dataManager.get(), dj.get(), initBlockSize.load()));
     dj->setAudioProcessor(audioProcessor.get());
     
-    playBtn.reset(new juce::TextButton(">"));
-    playBtn->setComponentID(juce::String(ComponentIDs::playBtn));
-    playBtn->addListener(this);
-    playBtn->setEnabled(false);
+    libraryBtn.reset(new juce::TextButton("Library"));
+    libraryBtn->setComponentID(juce::String(ComponentIDs::libraryBtn));
+    addAndMakeVisible(libraryBtn.get());
+    libraryBtn->addListener(this);
     
-    library.reset(new LibraryComponent(audioProcessor.get(), dataManager.get(), playBtn.get()));
-    addAndMakeVisible(library.get());
-    dataManager->setLibrary(library.get());
+    mixBtn.reset(new juce::TextButton("Mix"));
+    mixBtn->setComponentID(juce::String(ComponentIDs::mixBtn));
+    addAndMakeVisible(mixBtn.get());
+    mixBtn->addListener(this);
     
-    addAndMakeVisible(playBtn.get());
-    playBtn->setVisible(false);
+    playPauseBtn.reset(new juce::TextButton(">"));
+    playPauseBtn->setComponentID(juce::String(ComponentIDs::playPauseBtn));
+    playPauseBtn->addListener(this);
+    playPauseBtn->setEnabled(false);
+    
+    libraryView.reset(new LibraryView(dataManager.get(), playPauseBtn.get()));
+    addAndMakeVisible(libraryView.get());
+    dataManager->setLibrary(libraryView.get());
+    
+    mixView.reset(new MixView(dataManager.get()));
+    addChildComponent(mixView.get());
+    
+    addChildComponent(playPauseBtn.get());
+    
+    
     
 #ifdef SHOW_GRAPH
     graphWindow.reset(new juce::ResizableWindow("Data Graph", true));
@@ -101,11 +116,20 @@ void MainComponent::paint (juce::Graphics& g)
 
 void MainComponent::resized()
 {
-    library->setSize(getWidth(), getHeight());
-    library->setTopLeftPosition(0, 0);
+    libraryView->setSize(getWidth(), getHeight() - TOOLBAR_HEIGHT);
+    libraryView->setTopLeftPosition(0, 0);
     
-    playBtn->setSize(28, 28);
-    playBtn->setCentrePosition(getWidth()/2, getHeight() - 20);
+    mixView->setSize(getWidth(), getHeight() - TOOLBAR_HEIGHT);
+    mixView->setTopLeftPosition(0, 0);
+    
+    libraryBtn->setSize(80, 30);
+    libraryBtn->setCentrePosition(libraryBtn->getWidth()/2 + 10, getHeight() - TOOLBAR_HEIGHT/2);
+    
+    mixBtn->setSize(50, 30);
+    mixBtn->setCentrePosition(mixBtn->getWidth()/2 + 100, getHeight() - TOOLBAR_HEIGHT/2);
+    
+    playPauseBtn->setSize(28, 28);
+    playPauseBtn->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT/2);
 }
 
 
@@ -116,7 +140,7 @@ void MainComponent::timerCallback()
         if (dj->isInitialised())
         {
             waitingForDJ = false;
-            playBtn->setEnabled(true);
+            playPauseBtn->setEnabled(true);
         }
     }
 }
@@ -146,10 +170,18 @@ void MainComponent::buttonClicked(juce::Button* button)
     
     switch (id)
     {
-        case ComponentIDs::playBtn:
+        case ComponentIDs::libraryBtn:
+            libraryView->setVisible(true);
+            mixView->setVisible(false);
+            break;
+        case ComponentIDs::mixBtn:
+            mixView->setVisible(true);
+            libraryView->setVisible(false);
+            break;
+        case ComponentIDs::playPauseBtn:
             if (!dj->playPause())
             {
-                playBtn->setEnabled(false);
+                playPauseBtn->setEnabled(false);
                 waitingForDJ = true;
             }
             break;

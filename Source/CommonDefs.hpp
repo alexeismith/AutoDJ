@@ -18,9 +18,13 @@
 #define BEATS_PER_BAR (4)
 #define NUM_TRACKS_MIN (2)
 
+#define TOOLBAR_HEIGHT (40)
+
 enum ComponentIDs : int
 {
-    playBtn,
+    libraryBtn,
+    mixBtn,
+    playPauseBtn,
     chooseFolderBtn
 };
 

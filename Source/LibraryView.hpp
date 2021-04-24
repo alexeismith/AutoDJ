@@ -12,18 +12,14 @@
 #include "AnalysisManager.hpp"
 #include "QueueTableComponent.hpp"
 #include "CommonDefs.hpp"
-#include "WaveformComponent.hpp"
 
-//TODO: temp?
-#include "AudioProcessor.hpp"
-
-class LibraryComponent : public juce::Component, public juce::Button::Listener, public juce::Timer
+class LibraryView : public juce::Component, public juce::Button::Listener, public juce::Timer
 {
 public:
     
-    LibraryComponent(AudioProcessor* p, TrackDataManager* dm, juce::Button* play);
+    LibraryView(TrackDataManager* dm, juce::Button* play);
     
-    ~LibraryComponent() {}
+    ~LibraryView() {}
     
     void resized() override;
     
@@ -33,12 +29,11 @@ public:
     
     void updateData() { trackDataUpdate.store(true); }
     
+    void loadFiles();
+    
 private:
     
     void chooseFolder();
-    
-    void loadFiles();
-    
     
     std::unique_ptr<TrackTableComponent> trackTable;
     
@@ -50,10 +45,6 @@ private:
     TrackDataManager* dataManager;
     std::unique_ptr<AnalysisManager> analysisManager;
     
-    std::unique_ptr<WaveformComponent> waveform;
-    
-    AudioProcessor* audioProcessor;
-    
     bool waitingForFiles = false;
     bool waitingForAnalysis = false;
     
@@ -61,7 +52,7 @@ private:
     
     double loadingProgress = 0.0;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LibraryComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LibraryView)
 };
 
 #endif /* LibraryComponent_hpp */

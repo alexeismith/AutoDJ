@@ -5,12 +5,11 @@
 //  Created by Alexei Smith on 24/02/2021.
 //
 
-#include "LibraryComponent.hpp"
+#include "LibraryView.hpp"
 
 
-LibraryComponent::LibraryComponent(AudioProcessor* p, TrackDataManager* dm, juce::Button* play)
+LibraryView::LibraryView(TrackDataManager* dm, juce::Button* play)
 {
-    audioProcessor = p;
     dataManager = dm;
     playBtn = play;
     
@@ -19,8 +18,7 @@ LibraryComponent::LibraryComponent(AudioProcessor* p, TrackDataManager* dm, juce
     analysisManager.reset(new AnalysisManager(dataManager));
     
     trackTable.reset(new TrackTableComponent());
-    addAndMakeVisible(trackTable.get());
-    trackTable->setVisible(false);
+    addChildComponent(trackTable.get());
     trackTable->addColumns();
     
     chooseFolderBtn.reset(new juce::TextButton("Choose Folder"));
@@ -28,40 +26,33 @@ LibraryComponent::LibraryComponent(AudioProcessor* p, TrackDataManager* dm, juce
     addAndMakeVisible(chooseFolderBtn.get());
     chooseFolderBtn->addListener(this);
     
-    waveform.reset(new WaveformComponent(800, dataManager));
-    addAndMakeVisible(waveform.get());
-    waveform->setVisible(false);
-    
     loadingFilesProgress.reset(new juce::ProgressBar(loadingProgress));
-    addAndMakeVisible(loadingFilesProgress.get());
-    loadingFilesProgress->setVisible(false);
+    addChildComponent(loadingFilesProgress.get());
     
     analysisProgress.reset(new juce::ProgressBar(loadingProgress));
-    addAndMakeVisible(analysisProgress.get());
-    analysisProgress->setVisible(false);
+    addChildComponent(analysisProgress.get());
+    analysisProgress->setColour(analysisProgress->backgroundColourId, juce::Colours::darkgrey);
     
     trackDataUpdate.store(false);
 }
 
-void LibraryComponent::resized()
+void LibraryView::resized()
 {
-    trackTable->setSize(getWidth(), getHeight() - 40);
+    trackTable->setSize(getWidth(), getHeight());
     trackTable->setTopLeftPosition(0, 0);
     
     chooseFolderBtn->setSize(120, 40);
-    chooseFolderBtn->setCentrePosition(getWidth()/2, getHeight()/2);
+    chooseFolderBtn->setCentrePosition(getWidth()/2, (getHeight() + TOOLBAR_HEIGHT)/2);
     
     loadingFilesProgress->setSize(200, 20);
     loadingFilesProgress->setCentrePosition(getWidth()/2, getHeight()/2);
     
     analysisProgress->setSize(200, 20);
     analysisProgress->setTopLeftPosition(10, getHeight() - 30);
-    
-    waveform->setSize(getWidth(), getHeight());
 }
 
 
-void LibraryComponent::buttonClicked(juce::Button* button)
+void LibraryView::buttonClicked(juce::Button* button)
 {
     int id = button->getComponentID().getIntValue();
     
@@ -76,7 +67,7 @@ void LibraryComponent::buttonClicked(juce::Button* button)
 }
 
 
-void LibraryComponent::timerCallback()
+void LibraryView::timerCallback()
 {
     if (waitingForFiles)
     {
@@ -108,7 +99,7 @@ void LibraryComponent::timerCallback()
 }
 
 
-void LibraryComponent::chooseFolder()
+void LibraryView::chooseFolder()
 {
     juce::FileChooser chooser ("Choose Music Folder");
     if (chooser.browseForDirectory())
@@ -123,7 +114,7 @@ void LibraryComponent::chooseFolder()
 }
 
 
-void LibraryComponent::loadFiles()
+void LibraryView::loadFiles()
 {
     trackTable->populate(dataManager->getTracks());
 

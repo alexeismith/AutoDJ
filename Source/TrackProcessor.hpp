@@ -38,6 +38,8 @@ public:
     
     bool isLeader() { return getState()->leader; }
     
+    bool isReady() { return ready; }
+    
     void updateState();
     
     void initialise(TrackData track);

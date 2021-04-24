@@ -32,7 +32,7 @@ TrackProcessor::TrackProcessor(TrackDataManager* dm, ArtificialDJ* dj) :
 bool TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill, bool play)
 {
     const juce::ScopedLock sl (lock);
-
+    
     if (ready)
     {
         if (play)
@@ -44,8 +44,8 @@ bool TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
             else
                 DBG("Next: " << playhead << " gain: " << state->gain.currentValue);
                 
-//            processShifts(bufferToFill.numSamples);
-            simpleCopy(bufferToFill.numSamples);
+            processShifts(bufferToFill.numSamples);
+//            simpleCopy(bufferToFill.numSamples);
             
             output.applyGain(std::sqrt(state->gain.currentValue));
             
@@ -121,7 +121,7 @@ void TrackProcessor::initialise(TrackData track)
     
     state->applyNextMix();
     
-    shifter.setTempo(state->track.bpm);
+    shifter.setTempo(1.0);
     shifter.setPitchSemiTones(0.0);
     
     ready = true;

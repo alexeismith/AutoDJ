@@ -17,6 +17,9 @@ AudioProcessor::AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj, 
     trackProcessors.add(new TrackProcessor(dataManager, dj));
     trackProcessors.add(new TrackProcessor(dataManager, dj));
     
+    getProcessor(0)->setPartner(getProcessor(1));
+    getProcessor(1)->setPartner(getProcessor(0));
+    
     prepare(initBlockSize);
 }
 
@@ -36,15 +39,14 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
     {
         getProcessors(&leader, &next);
         
-        if (!leader)
-            DBG("NO LEADER");
-        if (!next)
-            DBG("NO NEXT");
-        
         if (leader)
         {
             bool play = leader->getNextAudioBlock(bufferToFill);
             next->getNextAudioBlock(bufferToFill, play);
+        }
+        else
+        {
+            jassert(false); // No leader!
         }
     }
 }

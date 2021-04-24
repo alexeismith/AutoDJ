@@ -27,19 +27,18 @@ public:
     
     ArtificialDJ(TrackDataManager* dm);
     
-    ~ArtificialDJ() { stopThread(1000); }
+    ~ArtificialDJ() { stopThread(5000); }
     
     void run();
     
     void setAudioProcessor(AudioProcessor* am) { audioProcessor = am; }
     
     // Returns true if new track should be loaded
-    bool checkMixState(Track* state);
+    MixInfo getNextMix(MixInfo current);
     
-    // Returns true if new track should be loaded
-    MixInfo* getNextMix(MixInfo* current);
+    bool playPause();
     
-    void playPause();
+    bool isInitialised() { return initialised.load(); }
     
 private:
     
@@ -51,6 +50,8 @@ private:
     TrackInfo chooseTrack(bool random);
     
     void generateMix(TrackInfo leadingTrack, TrackInfo nextTrack);
+    
+    int mixIdCounter = 0;
     
     juce::CriticalSection lock;
     

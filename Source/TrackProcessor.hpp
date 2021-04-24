@@ -32,15 +32,19 @@ public:
     
     bool isLeader() { return getTrack()->leader; }
     
+    void nextMix();
+    
     bool isReady() { return ready; }
     
     void update();
     
     void loadNextTrack();
     
-    void loadFirstTrack(TrackInfo trackInfo);
+    void loadFirstTrack(TrackInfo trackInfo, bool leader);
     
     void prepare(int blockSize);
+    
+    void setPartner(TrackProcessor* p) { partner = p; }
     
 private:
     
@@ -52,12 +56,15 @@ private:
     
     juce::CriticalSection lock;
     
+    TrackProcessor* partner;
+    
     TrackDataManager* dataManager = nullptr;
     ArtificialDJ* dj = nullptr;
     
     bool ready;
     
     std::unique_ptr<Track> track;
+    MixInfo currentMix;
     
     int shifterPlayhead = 0;
     

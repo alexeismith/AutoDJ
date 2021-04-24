@@ -19,35 +19,45 @@ ArtificialDJ::ArtificialDJ(TrackDataManager* dm) :
 
 void ArtificialDJ::run()
 {
-    
+    initialise();
     
     while (!threadShouldExit())
     {
-        // If no tracks loaded / mix queue empty, create a mix without referencing previous
-        
         if (mixQueue.size() < MIX_QUEUE_LENGTH)
             generateMix(mixQueue.getFirst().nextTrack, chooseTrack(true)); // TODO: not true
+        
+        sleep(100);
     }
 }
 
 
-MixInfo* ArtificialDJ::getNextMix(MixInfo* current)
+MixInfo ArtificialDJ::getNextMix(MixInfo current)
 {
     const juce::ScopedLock sl(lock);
     
-    if (current)
+    if (mixQueue.getReference(0).id == current.id)
     {
-        mixQueue.remove(current);
+        mixQueue.remove(0);
     }
     
-    return &mixQueue.getReference(0);
+    if (mixQueue.size() == 0)
+    {
+        jassert(false); // Mix queue was empty!
+        generateMix(current.nextTrack, chooseTrack(true));
+    }
+    
+    return mixQueue.getUnchecked(0);
 }
 
 
-void ArtificialDJ::playPause()
+bool ArtificialDJ::playPause()
 {
     if (!initialised.load())
-        initialise();
+    {
+        startThread();
+        return false;
+    }
+        
     
     const juce::ScopedLock sl(lock);
     
@@ -61,6 +71,8 @@ void ArtificialDJ::playPause()
         audioProcessor->pause();
         playing = false;
     }
+    
+    return true;
 }
 
 
@@ -74,12 +86,12 @@ void ArtificialDJ::initialise()
     TrackProcessor* leader = audioProcessor->getProcessor(0);
     TrackProcessor* next = audioProcessor->getProcessor(1);
     
-    leader->loadFirstTrack(trackFirst);
+    leader->loadFirstTrack(trackFirst, true);
+    next->loadFirstTrack(trackSecond, false);
     
-    next->getTrack()->leader = true;
-    next->update();
+    initialised.store(true);
     
-    startThread();
+    playPause();
 }
 
 
@@ -114,13 +126,16 @@ void ArtificialDJ::generateMix(TrackInfo leadingTrack, TrackInfo nextTrack)
 {
     MixInfo mix;
     
+    mix.id = mixIdCounter;
+    mixIdCounter += 1;
+    
     mix.leadingTrack = leadingTrack;
     mix.nextTrack = nextTrack;
-    mix.nextTrackAudio = dataManager->loadAudio(nextTrack.filename);
+    mix.nextTrackAudio = dataManager->loadAudio(nextTrack.filename, true);
     
-    int mixLengthBeats = 16;
+    int mixLengthBeats = 8;
     
-    int mixStartBeats = mix.leadingTrack.downbeat + 2 * mixLengthBeats;
+    int mixStartBeats = mix.leadingTrack.downbeat + 3 * mixLengthBeats;
     
     mix.start = mix.leadingTrack.getSampleOfBeat(mixStartBeats);
     mix.end = mix.leadingTrack.getSampleOfBeat(mixStartBeats + mixLengthBeats);

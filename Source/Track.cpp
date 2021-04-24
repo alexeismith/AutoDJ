@@ -19,7 +19,7 @@ bool Track::update()
     pitch.update(playhead, numSamples);
     gain.update(playhead, numSamples);
     
-    if (!currentMix || (leader && (playhead >= currentMix->end)))
+    if ((leader && playhead >= currentMix->end) || (!leader && playhead >= currentMix->endNext))
         return true;
     
     return false;
@@ -31,9 +31,9 @@ void Track::reset(double initBpm, double initGain, double initPitch)
     leader = false;
     playhead = 0;
     
-    bpm.moveTo(currentMix->bpm);
-    gain.moveTo(0.0);
-    pitch.moveTo(0.0);
+    bpm.resetTo(initBpm);
+    gain.resetTo(initGain);
+    pitch.resetTo(initPitch);
 }
 
 
@@ -48,6 +48,9 @@ bool Track::applyNextMix(MixInfo* mix)
         info = currentMix->nextTrack;
         audio = currentMix->nextTrackAudio;
         
+        playhead = currentMix->startNext;
+        lastUpdate = playhead;
+        
         gain.moveTo(1.0, currentMix->startNext, currentMix->endNext - currentMix->startNext);
         
         return true;
@@ -55,6 +58,8 @@ bool Track::applyNextMix(MixInfo* mix)
     else
     {
         leader = true;
+        
+        gain.currentValue = 1.0;
         
         bpm.moveTo(currentMix->bpm, playhead, currentMix->start - playhead);
         

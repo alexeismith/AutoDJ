@@ -34,26 +34,19 @@ bool TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
         if (play)
         {
             if (output.getNumSamples() != bufferToFill.numSamples) jassert(false);
-            
-            if(isLeader())
-                DBG("Leader: " << track->playhead << " gain: " << track->gain.currentValue);
-            else
-                DBG("Next: " << track->playhead << " gain: " << track->gain.currentValue);
                 
             processShifts(bufferToFill.numSamples);
 //            simpleCopy(bufferToFill.numSamples);
             
             output.applyGain(std::sqrt(track->gain.currentValue));
             
-            if(isLeader())
-                bufferToFill.buffer->addFrom(0, bufferToFill.startSample, output.getReadPointer(0), bufferToFill.numSamples);
-            else
-                bufferToFill.buffer->addFrom(1, bufferToFill.startSample, output.getReadPointer(0), bufferToFill.numSamples);
+            bufferToFill.buffer->addFrom(0, bufferToFill.startSample, output.getReadPointer(0), bufferToFill.numSamples);
+            bufferToFill.buffer->addFrom(1, bufferToFill.startSample, output.getReadPointer(0), bufferToFill.numSamples);
             
             update();
         }
         
-        return track->playhead >= track->currentMix->start;
+        return track->playhead >= currentMix.start;
     }
     
     return false;
@@ -70,37 +63,52 @@ void TrackProcessor::update()
 }
 
 
+void TrackProcessor::nextMix()
+{
+    currentMix = dj->getNextMix(currentMix);
+    track->applyNextMix(&currentMix);
+}
+
+
 void TrackProcessor::loadNextTrack()
 {
     ready = false;
     shifter.clear();
     
-    DBG("loadTrack");
-    
-    MixInfo* newMix = dj->getNextMix(track->currentMix);
-    track->applyNextMix(newMix);
-    track->audio = dataManager->loadAudio(track->info.filename, true); // TODO: change to stereo
-    track->playhead = track->currentMix->startNext;
+    currentMix = dj->getNextMix(currentMix);
+    track->applyNextMix(&currentMix);
     shifterPlayhead = track->playhead;
+    
+    partner->nextMix();
     
     ready = true;
 }
 
 
-void TrackProcessor::loadFirstTrack(TrackInfo trackInfo)
+void TrackProcessor::loadFirstTrack(TrackInfo trackInfo, bool leader)
 {
     ready = false;
     
-    track->info = trackInfo;
-    track->bpm.moveTo(trackInfo.bpm);
-    track->gain.moveTo(1.0);
-    track->playhead = 0;
-    track->audio = dataManager->loadAudio(track->info.filename, true); // TODO: change to stereo
-    track->applyNextMix(dj->getNextMix(nullptr));
+    currentMix = dj->getNextMix(currentMix);
     
-    shifterPlayhead = 0;
-    shifter.setTempo(1.0);
-    shifter.setPitchSemiTones(0.0);
+    if (leader)
+    {
+        track->info = trackInfo;
+        track->bpm.moveTo(trackInfo.bpm);
+        track->gain.moveTo(1.0);
+        track->playhead = 0;
+        track->audio = dataManager->loadAudio(track->info.filename, true);
+        track->applyNextMix(&currentMix);
+    }
+    else
+    {
+        track->leader = true;
+        track->currentMix = &currentMix;
+        track->applyNextMix(&currentMix);
+    }
+    
+    shifter.setTempo(double(track->bpm.currentValue) / track->info.bpm);
+    shifter.setPitchSemiTones(track->pitch.currentValue);
     
     ready = true;
 }

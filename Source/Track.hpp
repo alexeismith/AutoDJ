@@ -28,7 +28,7 @@ public:
     TrackInfo info; // TODO: can get this from currentMix based on leader
     juce::AudioBuffer<float>* audio;
     
-    MixInfo* currentMix = nullptr;
+    MixInfo* currentMix;
     
     bool leader = false;
     
@@ -41,6 +41,7 @@ public:
     
     void reset(double initBpm = 0.0, double initGain = 0.0, double initPitch = 0.0);
 
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Track)
 };
 
 #endif /* Track_hpp */

@@ -10,7 +10,7 @@
 //#define SHOW_GRAPH
 
 
-class MainComponent  : public juce::AudioAppComponent, public juce::Button::Listener
+class MainComponent  : public juce::AudioAppComponent, public juce::Timer, public juce::Button::Listener
 {
 public:
     
@@ -28,6 +28,8 @@ public:
     
     void resized() override;
     
+    void timerCallback() override;
+    
     void buttonClicked(juce::Button* button) override;
 
 private:
@@ -35,6 +37,8 @@ private:
     void setAppearance();
     
     std::atomic<int> initBlockSize;
+    
+    bool waitingForDJ = false;
 
     juce::LookAndFeel_V4 customAppearance;
     

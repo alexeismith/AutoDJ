@@ -40,3 +40,13 @@ void InterpolatedParameter::moveTo(double targetVal, int start, int numSamples)
     if (samplesRemaining > 0)
         rateOfChange = (targetValue - currentValue) / samplesRemaining;
 }
+
+
+void InterpolatedParameter::resetTo(double value)
+{
+    currentValue = value;
+    targetValue = value;
+    rateOfChange = 0.0;
+    startSample = -1;
+    samplesRemaining = -1;
+}

@@ -48,6 +48,8 @@ MainComponent::MainComponent()
     // Make sure you set the size of the component after
     // you add any child components.
     setSize (800, 600);
+    
+    startTimerHz(20);
 }
 
 MainComponent::~MainComponent()
@@ -107,6 +109,19 @@ void MainComponent::resized()
 }
 
 
+void MainComponent::timerCallback()
+{
+    if (waitingForDJ)
+    {
+        if (dj->isInitialised())
+        {
+            waitingForDJ = false;
+            playBtn->setEnabled(true);
+        }
+    }
+}
+
+
 void MainComponent::setAppearance()
 {
 //    juce::LookAndFeel_V4::ColourScheme colourScheme = juce::LookAndFeel_V4::ColourScheme(juce::Colours::white,
@@ -132,7 +147,11 @@ void MainComponent::buttonClicked(juce::Button* button)
     switch (id)
     {
         case ComponentIDs::playBtn:
-            dj->playPause();
+            if (!dj->playPause())
+            {
+                playBtn->setEnabled(false);
+                waitingForDJ = true;
+            }
             break;
         default:
             jassert(false); // Unrecognised button ID

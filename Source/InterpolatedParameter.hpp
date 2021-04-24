@@ -22,6 +22,8 @@ public:
     // Set numSamples <= 0 for instant change at startSample
     void moveTo(double targetValue, int startSample = -1, int numSamples = -1);
     
+    void resetTo(double value);
+    
     double currentValue = 0.0;
     double targetValue = 0.0;
     double rateOfChange = 0.0;

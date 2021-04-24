@@ -30,7 +30,7 @@ public:
     
 private:
     
-    void analyse(TrackData& track);
+    void analyse(TrackInfo& track);
     
     int id;
     

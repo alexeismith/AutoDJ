@@ -26,17 +26,19 @@ void ArtificialDJ::run()
         // If no tracks loaded / mix queue empty, create a mix without referencing previous
         
         if (mixQueue.size() < MIX_QUEUE_LENGTH)
-            generateMix(mixQueue.getFirst().nextTrack, *chooseTrack(true)); // TODO: not true
+            generateMix(mixQueue.getFirst().nextTrack, chooseTrack(true)); // TODO: not true
     }
 }
 
 
-MixData* ArtificialDJ::getNextMix(MixData* current)
+MixInfo* ArtificialDJ::getNextMix(MixInfo* current)
 {
-    const juce::ScopedLock sl (lock);
+    const juce::ScopedLock sl(lock);
     
     if (current)
+    {
         mixQueue.remove(current);
+    }
     
     return &mixQueue.getReference(0);
 }
@@ -47,7 +49,7 @@ void ArtificialDJ::playPause()
     if (!initialised.load())
         initialise();
     
-    const juce::ScopedLock sl (lock);
+    const juce::ScopedLock sl(lock);
     
     if (!playing)
     {
@@ -65,41 +67,26 @@ void ArtificialDJ::playPause()
 void ArtificialDJ::initialise()
 {
     // TODO: maybe don't need pointers?
-    TrackData* trackFirst = chooseTrack(true);
-    TrackData* trackSecond = chooseTrack(true);
-    generateMix(*trackFirst, *trackSecond);
-//    generateMix(*trackFirst, *trackSecond);
+    TrackInfo trackFirst = chooseTrack(true);
+    TrackInfo trackSecond = chooseTrack(true);
+    generateMix(trackFirst, trackSecond);
     
     TrackProcessor* leader = audioProcessor->getProcessor(0);
     TrackProcessor* next = audioProcessor->getProcessor(1);
     
-    leader->initialise(*trackFirst);
+    leader->loadFirstTrack(trackFirst);
     
-//    TrackData leadingTrack = mixQueue.getFirst().leadingTrack;
-//    leader->getState()->bpm.currentValue = mixQueue.getReference(0).bpm;
-//    leader->getState()->gain.currentValue = 1.0;
-//    leader->getState()->track = leadingTrack;
-//    leader->updateState();
-//    leader->loadTrack();
-//    leader->seek(0);
-    
-    next->getState()->leader = true;
-    next->updateState();
-    
-    MixData mix = mixQueue.getReference(0);
-    DBG("start: " << mix.start);
-    DBG("end: " << mix.end);
-    DBG("startNext: " << mix.startNext);
-    DBG("endNext: " << mix.endNext);
+    next->getTrack()->leader = true;
+    next->update();
     
     startThread();
 }
 
 
-TrackData* ArtificialDJ::chooseTrack(bool random)
+TrackInfo ArtificialDJ::chooseTrack(bool random)
 {
     int randomChoice;
-    TrackData* track = nullptr;
+    TrackInfo* track = nullptr;
     
     // TODO: handle case where all tracks have been played, currrently infinite loop
     // Use separate unplayed list, which keeps updated with the normal one
@@ -120,15 +107,16 @@ TrackData* ArtificialDJ::chooseTrack(bool random)
     DBG("QUEUED: " << track->filename);
     track->queued = true;
     
-    return track;
+    return *track;
 }
 
-void ArtificialDJ::generateMix(TrackData leadingTrack, TrackData nextTrack)
+void ArtificialDJ::generateMix(TrackInfo leadingTrack, TrackInfo nextTrack)
 {
-    MixData mix;
+    MixInfo mix;
     
     mix.leadingTrack = leadingTrack;
     mix.nextTrack = nextTrack;
+    mix.nextTrackAudio = dataManager->loadAudio(nextTrack.filename);
     
     int mixLengthBeats = 16;
     

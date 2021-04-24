@@ -12,7 +12,7 @@
 
 #include "TrackDataManager.hpp"
 
-#include "TrackState.hpp"
+#include "Track.hpp"
 
 #include "ThirdParty/soundtouch/include/SoundTouch.h"
 
@@ -22,31 +22,29 @@ class TrackProcessor
 {
 public:
     
-    TrackProcessor(TrackDataManager* dm, ArtificialDJ* dj);
+    TrackProcessor(TrackDataManager* dm, ArtificialDJ* DJ);
     
     ~TrackProcessor() {}
     
     bool getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill, bool play = true);
     
-    void loadTrack();
+    Track* getTrack() { return track.get(); }
     
-    // TODO: remove
-    void seek(int sample) { playhead = sample; }
-    void seekClip(int sample, int length);
-    
-    TrackState* getState() { return state.get(); }
-    
-    bool isLeader() { return getState()->leader; }
+    bool isLeader() { return getTrack()->leader; }
     
     bool isReady() { return ready; }
     
-    void updateState();
+    void update();
     
-    void initialise(TrackData track);
+    void loadNextTrack();
+    
+    void loadFirstTrack(TrackInfo trackInfo);
     
     void prepare(int blockSize);
     
 private:
+    
+    int getAudioLength() { return track->audio->getNumSamples(); }
     
     void processShifts(int numSamples);
     
@@ -55,18 +53,15 @@ private:
     juce::CriticalSection lock;
     
     TrackDataManager* dataManager = nullptr;
+    ArtificialDJ* dj = nullptr;
     
     bool ready;
     
-    std::unique_ptr<TrackState> state;
+    std::unique_ptr<Track> track;
     
-    juce::AudioBuffer<float> input;
-    int inputLength;
-    int inputPlayhead = 0;
+    int shifterPlayhead = 0;
     
     juce::AudioBuffer<float> output;
-    
-    int playhead = 0;
     
     soundtouch::SoundTouch shifter;
     

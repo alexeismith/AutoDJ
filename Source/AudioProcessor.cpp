@@ -17,8 +17,6 @@ AudioProcessor::AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj, 
     trackProcessors.add(new TrackProcessor(dataManager, dj));
     trackProcessors.add(new TrackProcessor(dataManager, dj));
     
-    previewProcessor.reset(new TrackProcessor(dataManager, dj));
-    
     prepare(initBlockSize);
 }
 
@@ -32,7 +30,7 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
     
     if (paused.load())
     {
-        previewProcessor->getNextAudioBlock(bufferToFill);
+        // Preview
     }
     else
     {
@@ -52,14 +50,14 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
 }
 
 
-void AudioProcessor::play(TrackData track)
+void AudioProcessor::play(TrackInfo track)
 {
 //    trackProcessors.getFirst()->load(track);
     play();
 }
 
 
-void AudioProcessor::preview(TrackData track, int startSample, int numSamples)
+void AudioProcessor::preview(TrackInfo track, int startSample, int numSamples)
 {
 //    previewProcessor->load(track);
 //    previewProcessor->seekClip(startSample, numSamples);

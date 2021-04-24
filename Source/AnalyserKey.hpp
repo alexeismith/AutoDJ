@@ -20,7 +20,7 @@ public:
     
     ~AnalyserKey() {}
     
-    void analyse(juce::AudioBuffer<float> audio, int& key);
+    void analyse(juce::AudioBuffer<float>* audio, int& key);
     
 private:
     

@@ -24,7 +24,7 @@ void AnalysisThread::run()
 {
     bool finished;
     
-    TrackData track = analysisManager->getNextJob(finished);
+    TrackInfo track = analysisManager->getNextJob(finished);
     
     while (!finished)
     {
@@ -36,15 +36,15 @@ void AnalysisThread::run()
 }
 
 
-void AnalysisThread::analyse(TrackData& track)
+void AnalysisThread::analyse(TrackInfo& track)
 {
-    juce::AudioBuffer<float> buffer;
+    juce::AudioBuffer<float>* buffer;
     
     progress.store(0.0);
     
     DBG("Analysis Thread " << id << ": " << track.filename);
     
-    dataManager->fetchAudio(track.filename, buffer, true);
+    buffer = dataManager->loadAudio(track.filename, true);
     
     progress.store(0.1);
 
@@ -67,4 +67,6 @@ void AnalysisThread::analyse(TrackData& track)
     progress.store(1.0);
     
     analysisManager->incrementNumAnalysed();
+    
+    dataManager->releaseAudio(buffer);
 }

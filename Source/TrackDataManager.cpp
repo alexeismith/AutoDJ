@@ -40,9 +40,9 @@ void TrackDataManager::initialise(juce::File directory)
 }
 
 
-void TrackDataManager::update(TrackData track)
+void TrackDataManager::update(TrackInfo track)
 {
-    const juce::ScopedLock sl (lock);
+    const juce::ScopedLock sl(lock);
     
     database.store(track);
     
@@ -68,9 +68,11 @@ bool TrackDataManager::isLoaded(double& progress)
 }
 
 
-void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer, bool mono)
+juce::AudioBuffer<float>* TrackDataManager::loadAudio(juce::String filename, bool mono)
 {
-    const juce::ScopedLock sl (lock);
+    const juce::ScopedLock sl(lock);
+    
+    juce::AudioBuffer<float>* buffer = nullptr;
     
     juce::String filePath = dirContents->getDirectory().getFullPathName() + "/" + filename;
     
@@ -78,10 +80,13 @@ void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float
     
     if (reader)
     {
-        buffer.clear();
-        buffer.setSize(reader->numChannels, (int)reader->lengthInSamples);
+        buffer = new juce::AudioBuffer<float>();
+        audioBuffers.add(buffer);
         
-        reader->read(buffer.getArrayOfWritePointers(), reader->numChannels, 0, (int)reader->lengthInSamples);
+        buffer->clear();
+        buffer->setSize(reader->numChannels, (int)reader->lengthInSamples);
+        
+        reader->read(buffer->getArrayOfWritePointers(), reader->numChannels, 0, (int)reader->lengthInSamples);
         
         adjustChannels(buffer, mono);
         
@@ -92,44 +97,46 @@ void TrackDataManager::fetchAudio(juce::String filename, juce::AudioBuffer<float
         jassert(false); // Failed to load track audio
         // TODO: handle the case where files are deleted after parsing
     }
+    
+    return buffer;
 }
 
 
-void TrackDataManager::adjustChannels(juce::AudioBuffer<float>& buffer, bool mono)
+void TrackDataManager::adjustChannels(juce::AudioBuffer<float>* buffer, bool mono)
 {
-    if (mono && buffer.getNumChannels() == 2)
+    if (mono && buffer->getNumChannels() == 2)
     {
-        buffer.applyGain(0.5f);
-        buffer.addFrom(0, 0, buffer.getReadPointer(1), buffer.getNumSamples());
-        buffer.setSize(1, buffer.getNumSamples(), true);
+        buffer->applyGain(0.5f);
+        buffer->addFrom(0, 0, buffer->getReadPointer(1), buffer->getNumSamples());
+        buffer->setSize(1, buffer->getNumSamples(), true);
     }
-    else if (buffer.getNumChannels() == 1)
+    else if (buffer->getNumChannels() == 1)
     {
-        buffer.setSize(2, buffer.getNumSamples(), true);
-        buffer.addFrom(1, 0, buffer.getReadPointer(0), buffer.getNumSamples());
+        buffer->setSize(2, buffer->getNumSamples(), true);
+        buffer->addFrom(1, 0, buffer->getReadPointer(0), buffer->getNumSamples());
     }
-    else if (buffer.getNumChannels() > 2)
+    else if (buffer->getNumChannels() > 2)
     {
-        buffer.setSize(2, buffer.getNumSamples(), true);
+        buffer->setSize(2, buffer->getNumSamples(), true);
     }
 }
 
 
-void TrackDataManager::printTrackData(TrackData data)
+void TrackDataManager::printTrackInfo(TrackInfo info)
 {
     std::stringstream ss;
     ss << "\nTrack Data..." << \
-    "\nFilename: " << data.filename << \
-    "\nHash: " << data.hash << \
-    "\nArtist: " << data.artist << \
-    "\nTitle: " << data.title << \
-    "\nLength: " << data.length << \
-    "\nAnalysed: " << data.analysed << \
-    "\nBPM: " << data.bpm << \
-    "\nBeat Phase: " << data.beatPhase << \
-    "\nDownbeat: " << data.downbeat << \
-    "\nKey: " << data.key << \
-    "\nEnergy: " << data.energy << '\n';
+    "\nFilename: " << info.filename << \
+    "\nHash: " << info.hash << \
+    "\nArtist: " << info.artist << \
+    "\nTitle: " << info.title << \
+    "\nLength: " << info.length << \
+    "\nAnalysed: " << info.analysed << \
+    "\nBPM: " << info.bpm << \
+    "\nBeat Phase: " << info.beatPhase << \
+    "\nDownbeat: " << info.downbeat << \
+    "\nKey: " << info.key << \
+    "\nEnergy: " << info.energy << '\n';
     
     DBG(ss.str());
 }
@@ -137,43 +144,43 @@ void TrackDataManager::printTrackData(TrackData data)
 
 void TrackDataManager::parseFile(juce::File file)
 {
-    TrackData trackData, existingData;
+    TrackInfo trackInfo, existingInfo;
     
-    trackData.hash = getHash(file);
+    trackInfo.hash = getHash(file);
     
-    existingData = database.read(file.getFileName());
+    existingInfo = database.read(file.getFileName());
     
     // Fetches metadata from file and returns whether it is valid
-    if (getTrackData(file, trackData))
+    if (getTrackInfo(file, trackInfo))
     {
         // If the file has changed since the data was stored, or the file did not exist in the database, replace the database entry with a new one
         // (If the existing hash is zero, the track hasn't been found in the database)
-        if (trackData.hash != existingData.hash)
+        if (trackInfo.hash != existingInfo.hash)
         {
-            database.store(trackData);
+            database.store(trackInfo);
         }
         else
         {
-            trackData = existingData;
+            trackInfo = existingInfo;
         }
         
-        tracks.add(trackData);
+        tracks.add(trackInfo);
     }
 }
 
 
-bool TrackDataManager::getTrackData(juce::File file, TrackData& trackData)
+bool TrackDataManager::getTrackInfo(juce::File file, TrackInfo& trackInfo)
 {
     std::unique_ptr<juce::AudioFormatReader> reader(formatManager.createReaderFor(file));
 
     if (reader)
     {
-        trackData.filename = file.getFileName();
-        trackData.artist = reader->metadataValues.getValue("IART", "");
-        trackData.title = reader->metadataValues.getValue("INAM", "");
-        trackData.length = round(reader->lengthInSamples / reader->sampleRate);
+        trackInfo.filename = file.getFileName();
+        trackInfo.artist = reader->metadataValues.getValue("IART", "");
+        trackInfo.title = reader->metadataValues.getValue("INAM", "");
+        trackInfo.length = round(reader->lengthInSamples / reader->sampleRate);
 
-        if (reader->numChannels > 0 && trackData.length >= TRACK_LENGTH_SECS_MIN && trackData.length <= TRACK_LENGTH_SECS_MAX)
+        if (reader->numChannels > 0 && trackInfo.length >= TRACK_LENGTH_SECS_MIN && trackInfo.length <= TRACK_LENGTH_SECS_MAX)
             return true;
     }
     

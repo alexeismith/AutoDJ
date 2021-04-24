@@ -29,12 +29,12 @@ AnalyserBeats::AnalyserBeats()
 }
 
 
-void AnalyserBeats::analyse(juce::AudioBuffer<float> audio, std::atomic<double>* progress, int& bpm, int& beatPhase, int& downbeat)
+void AnalyserBeats::analyse(juce::AudioBuffer<float>* audio, std::atomic<double>* progress, int& bpm, int& beatPhase, int& downbeat)
 {
     reset();
     
     // Find the number of onset detection frames for the provided audio
-    int numFrames = (audio.getNumSamples() - dfConfig.frameLength) / dfConfig.stepSize;
+    int numFrames = (audio->getNumSamples() - dfConfig.frameLength) / dfConfig.stepSize;
     
     getTempo(audio, progress, numFrames, bpm, beatPhase);
     
@@ -53,15 +53,15 @@ void AnalyserBeats::reset()
 }
 
 
-void AnalyserBeats::getTempo(juce::AudioBuffer<float> audio, std::atomic<double>* progress, int numFrames, int& bpm, int& beatPhase)
+void AnalyserBeats::getTempo(juce::AudioBuffer<float>* audio, std::atomic<double>* progress, int numFrames, int& bpm, int& beatPhase)
 {
     juce::AudioBuffer<double> buffer;
     std::vector<double> onsets, onsetsTrim, beatPeriod, tempi, beats;
     
     // Analysis classes require double, so copy audio into a double buffer
-    buffer.setSize(1, audio.getNumSamples());
-    for (int i = 0; i < audio.getNumSamples(); i++)
-        buffer.setSample(0, i, (double)audio.getSample(0, i));
+    buffer.setSize(1, audio->getNumSamples());
+    for (int i = 0; i < audio->getNumSamples(); i++)
+        buffer.setSample(0, i, (double)audio->getSample(0, i));
     
     // Allocate buffer space for the onset results
     onsets.reserve(numFrames);
@@ -122,7 +122,7 @@ void AnalyserBeats::processBeats(std::vector<double> beats, int& bpm, int& beatP
 }
 
 
-void AnalyserBeats::getDownbeat(juce::AudioBuffer<float> audio, int numFrames, int bpm, int beatPhase, int& downbeat)
+void AnalyserBeats::getDownbeat(juce::AudioBuffer<float>* audio, int numFrames, int bpm, int beatPhase, int& downbeat)
 {
     std::vector<double> beats;
     
@@ -135,7 +135,7 @@ void AnalyserBeats::getDownbeat(juce::AudioBuffer<float> audio, int numFrames, i
     }
     
     for (int i = 0; i < numFrames; i++)
-        downBeat->pushAudioBlock(audio.getReadPointer(0, i*dfConfig.stepSize));
+        downBeat->pushAudioBlock(audio->getReadPointer(0, i*dfConfig.stepSize));
     
     std::vector<int> downbeats;
     size_t downLength = 0;

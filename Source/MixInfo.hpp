@@ -1,25 +1,28 @@
 //
-//  MixData.hpp
+//  MixInfo.hpp
 //  AutoDJ - App
 //
 //  Created by Alexei Smith on 21/04/2021.
 //
 
-#ifndef MixData_hpp
-#define MixData_hpp
+#ifndef MixInfo_hpp
+#define MixInfo_hpp
 
-#include "TrackData.hpp"
+#include "TrackInfo.hpp"
+
+#include <JuceHeader.h>
 
 
-typedef struct MixData {
-    TrackData leadingTrack; // Existing trexack that is playing
-    TrackData nextTrack; // New track to be mixed in
+typedef struct MixInfo {
+    TrackInfo leadingTrack; // Existing trexack that is playing
+    TrackInfo nextTrack; // New track to be mixed in
+    juce::AudioBuffer<float>* nextTrackAudio;
     int start = 0; // Sample position in leading track where mix begins
     int end = 0; // Sample position in leading track where mix finishes
     int startNext = 0; // Sample position in next track where mix begins
     int endNext = 0; // Sample position in next track where mix finishes
     double bpm = 0.0; // Tempo that new and previous tracks must meet by the start of the mix
-} MixData;
+} MixInfo;
 
 
-#endif /* MixData_hpp */
+#endif /* MixInfo_hpp */

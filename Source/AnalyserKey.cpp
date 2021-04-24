@@ -12,7 +12,7 @@
 #define TUNING_FREQUENCY_HZ (440)
 
 
-void AnalyserKey::analyse(juce::AudioBuffer<float> audio, int& key)
+void AnalyserKey::analyse(juce::AudioBuffer<float>* audio, int& key)
 {
     int currentKey, windowSize, hopSize, numFrames;
     juce::AudioBuffer<double> buffer;
@@ -22,12 +22,12 @@ void AnalyserKey::analyse(juce::AudioBuffer<float> audio, int& key)
     windowSize = keyDetector->getBlockSize();
     hopSize = keyDetector->getHopSize();
     
-    numFrames = (audio.getNumSamples() - windowSize) / hopSize;
+    numFrames = (audio->getNumSamples() - windowSize) / hopSize;
     
     // Analysis classes require double, so copy audio into a double buffer
-    buffer.setSize(1, audio.getNumSamples());
-    for (int i = 0; i < audio.getNumSamples(); i++)
-        buffer.setSample(0, i, (double)audio.getSample(0, i));
+    buffer.setSize(1, audio->getNumSamples());
+    for (int i = 0; i < audio->getNumSamples(); i++)
+        buffer.setSample(0, i, (double)audio->getSample(0, i));
     
     for (int i = 0; i < numFrames; i++)
     {

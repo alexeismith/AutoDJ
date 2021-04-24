@@ -9,7 +9,7 @@
 #define SqlDatabase_hpp
 
 #include <JuceHeader.h>
-#include "TrackData.hpp"
+#include "TrackInfo.hpp"
 
 #define DATABASE_FILENAME ("AutoDjData.db")
 
@@ -24,10 +24,10 @@ public:
     
     bool initialise(juce::File directory);
     
-    void store(TrackData data);
+    void store(TrackInfo data);
     
     // If returned track data contains hash == 0, the filename is not present in the database
-    TrackData read(juce::String filename);
+    TrackInfo read(juce::String filename);
       
 private:
     

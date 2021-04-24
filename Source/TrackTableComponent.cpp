@@ -39,7 +39,7 @@ void TrackTableComponent::addColumns()
 }
 
 
-void TrackTableComponent::populate(juce::Array<TrackData>* trackList)
+void TrackTableComponent::populate(juce::Array<TrackInfo>* trackList)
 {
     tracks = trackList;
     numRows = tracks->size();
@@ -98,7 +98,7 @@ void TrackTableComponent::refresh()
 }
 
 
-juce::String TrackTableComponent::getValueForColumn(TrackData& track, int columnId)
+juce::String TrackTableComponent::getValueForColumn(TrackInfo& track, int columnId)
 {
     switch(columnId)
     {
@@ -124,7 +124,7 @@ juce::String TrackTableComponent::getValueForColumn(TrackData& track, int column
 }
 
 
-int TrackTableSorter::compareElements(TrackData first, TrackData second)
+int TrackTableSorter::compareElements(TrackInfo first, TrackInfo second)
 {
     int result;
     

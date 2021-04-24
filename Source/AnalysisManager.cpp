@@ -24,7 +24,7 @@ AnalysisManager::~AnalysisManager()
 
 void AnalysisManager::startAnalysis()
 {
-    juce::Array<TrackData>* tracks = dataManager->getTracks();
+    juce::Array<TrackInfo>* tracks = dataManager->getTracks();
     
     int numThreads = juce::SystemStats::getNumCpus();
     DBG("Num logical CPU cores: " << numThreads);
@@ -62,7 +62,7 @@ void AnalysisManager::startAnalysis()
 
 bool AnalysisManager::isFinished(double& progress)
 {
-    const juce::ScopedLock sl (lock);
+    const juce::ScopedLock sl(lock);
     
     progress = double(jobProgress) / jobs.size();
     
@@ -93,16 +93,16 @@ bool AnalysisManager::areThreadsFinished()
 }
 
 
-TrackData AnalysisManager::getNextJob(bool& finished)
+TrackInfo AnalysisManager::getNextJob(bool& finished)
 {
-    const juce::ScopedLock sl (lock);
+    const juce::ScopedLock sl(lock);
     
     int job = jobProgress;
     
     if (job == jobs.size())
     {
         finished = true;
-        return TrackData();
+        return TrackInfo();
     }
     else
     {
@@ -115,7 +115,7 @@ TrackData AnalysisManager::getNextJob(bool& finished)
 
 void AnalysisManager::incrementNumAnalysed()
 {
-    const juce::ScopedLock sl (lock);
+    const juce::ScopedLock sl(lock);
     
     numAnalysed += 1;
 }

@@ -44,7 +44,7 @@ bool SqlDatabase::initialise(juce::File directory)
 }
 
 
-void SqlDatabase::store(TrackData data)
+void SqlDatabase::store(TrackInfo data)
 {
     if (!initialised) jassert(false);
     
@@ -56,9 +56,9 @@ void SqlDatabase::store(TrackData data)
 }
 
 
-TrackData SqlDatabase::read(juce::String filename)
+TrackInfo SqlDatabase::read(juce::String filename)
 {
-    TrackData data;
+    TrackInfo data;
     int errCode;
     char *zErrMsg = 0;
     sqlite3_stmt *statement;

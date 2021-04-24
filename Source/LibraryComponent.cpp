@@ -140,7 +140,7 @@ void LibraryComponent::loadFiles()
     
     
     
-//    TrackData track = dataManager->getTracks()->getReference(0);
+//    TrackInfo track = dataManager->getTracks()->getReference(0);
 //
 //    DBG("Waveform: " << track.filename);
 //    waveform->loadTrack(track);

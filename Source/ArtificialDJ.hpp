@@ -12,14 +12,14 @@
 
 #include "TrackDataManager.hpp"
 #include "AudioProcessor.hpp"
-#include "MixData.hpp"
-#include "TrackState.hpp"
+#include "MixInfo.hpp"
+#include "Track.hpp"
 
-// Need to keep reference to currently executing MixData
+// Need to keep reference to currently executing MixInfo
 
 // Calculate weighted BPM trajectory once there is already a queue?
 
-class TrackState;
+class Track;
 
 class ArtificialDJ : public juce::Thread
 {
@@ -34,10 +34,10 @@ public:
     void setAudioProcessor(AudioProcessor* am) { audioProcessor = am; }
     
     // Returns true if new track should be loaded
-    bool checkMixState(TrackState* state);
+    bool checkMixState(Track* state);
     
     // Returns true if new track should be loaded
-    MixData* getNextMix(MixData* current);
+    MixInfo* getNextMix(MixInfo* current);
     
     void playPause();
     
@@ -48,13 +48,13 @@ private:
     std::atomic<bool> initialised;
     bool playing = false;
     
-    TrackData* chooseTrack(bool random);
+    TrackInfo chooseTrack(bool random);
     
-    void generateMix(TrackData leadingTrack, TrackData nextTrack);
+    void generateMix(TrackInfo leadingTrack, TrackInfo nextTrack);
     
     juce::CriticalSection lock;
     
-    juce::Array<MixData> mixQueue;
+    juce::Array<MixInfo> mixQueue;
     
     TrackDataManager* dataManager = nullptr;
     AudioProcessor* audioProcessor = nullptr;

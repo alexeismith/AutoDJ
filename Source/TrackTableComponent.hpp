@@ -9,7 +9,7 @@
 #define TrackTableComponent_hpp
 
 #include <JuceHeader.h>
-#include "TrackData.hpp"
+#include "TrackInfo.hpp"
 
 
 class TrackTableSorter
@@ -19,7 +19,7 @@ public:
         : columnId(columnId),
           direction(forwards ? 1 : -1) {}
     
-    int compareElements(TrackData first, TrackData second);
+    int compareElements(TrackInfo first, TrackInfo second);
     
 private:
     
@@ -36,7 +36,7 @@ public:
     
     ~TrackTableComponent() {}
     
-    void populate(juce::Array<TrackData>* trackList);
+    void populate(juce::Array<TrackInfo>* trackList);
     
     int getNumRows() override { return numRows; }
     
@@ -56,7 +56,7 @@ protected:
     
     std::unique_ptr<juce::TableListBox> table;
     
-    juce::Array<TrackData>* tracks = nullptr;
+    juce::Array<TrackInfo>* tracks = nullptr;
     
     int numRows = 0;
     
@@ -65,7 +65,7 @@ private:
     
     std::unique_ptr<TrackTableSorter> sorter;
     
-    juce::String getValueForColumn(TrackData& track, int columnId);
+    juce::String getValueForColumn(TrackInfo& track, int columnId);
     
     juce::Font font { 14.0f };
     

@@ -27,7 +27,7 @@ public:
     
     bool isFinished(double& progress);
     
-    TrackData getNextJob(bool& finished);
+    TrackInfo getNextJob(bool& finished);
     
     void incrementNumAnalysed();
     
@@ -41,7 +41,7 @@ private:
     
     juce::OwnedArray<AnalysisThread> threads;
     
-    juce::Array<TrackData> jobs;
+    juce::Array<TrackInfo> jobs;
     
     TrackDataManager* dataManager = nullptr;
     

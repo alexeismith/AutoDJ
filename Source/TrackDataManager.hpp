@@ -27,26 +27,30 @@ public:
     
     void initialise(juce::File directory);
     
-    juce::Array<TrackData>* getTracks() { return &tracks; }
+    juce::Array<TrackInfo>* getTracks() { return &tracks; }
     
-    void update(TrackData track);
+    void update(TrackInfo track);
     
     bool isLoaded(double& progress);
     
-    void fetchAudio(juce::String filename, juce::AudioBuffer<float>& buffer, bool mono = false);
+    juce::AudioBuffer<float>* loadAudio(juce::String filename, bool mono = false);
+    
+    void releaseAudio(juce::AudioBuffer<float>* buffer) { const juce::ScopedLock sl(lock); audioBuffers.removeObject(buffer); }
       
 private:
     
-    void adjustChannels(juce::AudioBuffer<float>& buffer, bool mono);
+    void adjustChannels(juce::AudioBuffer<float>* buffer, bool mono);
     
-    void printTrackData(TrackData data);
+    void printTrackInfo(TrackInfo data);
     
     void parseFile(juce::File file);
     
     // Returns whether the track is valid
-    bool getTrackData(juce::File file, TrackData& trackData);
+    bool getTrackInfo(juce::File file, TrackInfo& trackInfo);
     
     int getHash(juce::File file);
+    
+    juce::OwnedArray<juce::AudioBuffer<float>> audioBuffers;
     
     juce::Component* libraryComponent;
     
@@ -54,7 +58,7 @@ private:
     juce::WildcardFileFilter fileFilter;
     SqlDatabase database;
     
-    juce::Array<TrackData> tracks;
+    juce::Array<TrackInfo> tracks;
     
     juce::TimeSliceThread thread {"BackgroundUpdateThread"};
     std::unique_ptr<juce::DirectoryContentsList> dirContents;

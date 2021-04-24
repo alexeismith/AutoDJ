@@ -82,13 +82,13 @@
             file="Source/TrackProcessor.cpp"/>
       <FILE id="UeV71s" name="TrackProcessor.hpp" compile="0" resource="0"
             file="Source/TrackProcessor.hpp"/>
+      <FILE id="i7eWR2" name="Track.cpp" compile="1" resource="0" file="Source/Track.cpp"/>
+      <FILE id="UcyA5w" name="Track.hpp" compile="0" resource="0" file="Source/Track.hpp"/>
       <FILE id="v240v0" name="ArtificialDJ.cpp" compile="1" resource="0"
             file="Source/ArtificialDJ.cpp"/>
       <FILE id="COCtS0" name="ArtificialDJ.hpp" compile="0" resource="0"
             file="Source/ArtificialDJ.hpp"/>
-      <FILE id="ioEmCV" name="MixData.hpp" compile="0" resource="0" file="Source/MixData.hpp"/>
-      <FILE id="MV9PCh" name="TrackState.cpp" compile="1" resource="0" file="Source/TrackState.cpp"/>
-      <FILE id="AQRPMf" name="TrackState.hpp" compile="0" resource="0" file="Source/TrackState.hpp"/>
+      <FILE id="IvwbWJ" name="MixInfo.hpp" compile="0" resource="0" file="Source/MixInfo.hpp"/>
       <FILE id="MB7NHa" name="InterpolatedParameter.cpp" compile="1" resource="0"
             file="Source/InterpolatedParameter.cpp"/>
       <FILE id="dEicnh" name="InterpolatedParameter.hpp" compile="0" resource="0"
@@ -157,12 +157,12 @@
       <GROUP id="{864AE706-4D80-286D-4EE2-E6FFF4FBB695}" name="Third Party">
         <FILE id="TgJ3yC" name="xxhash32.h" compile="0" resource="0" file="Source/ThirdParty/xxhash32.h"/>
       </GROUP>
-      <FILE id="l8vBNf" name="TrackData.cpp" compile="1" resource="0" file="Source/TrackData.cpp"/>
-      <FILE id="PZxFQ4" name="TrackData.hpp" compile="0" resource="0" file="Source/TrackData.hpp"/>
       <FILE id="kqk0eM" name="TrackDataManager.cpp" compile="1" resource="0"
             file="Source/TrackDataManager.cpp"/>
       <FILE id="lBTfyV" name="TrackDataManager.hpp" compile="0" resource="0"
             file="Source/TrackDataManager.hpp"/>
+      <FILE id="ut91i0" name="TrackInfo.cpp" compile="1" resource="0" file="Source/TrackInfo.cpp"/>
+      <FILE id="ElBeMd" name="TrackInfo.hpp" compile="0" resource="0" file="Source/TrackInfo.hpp"/>
       <FILE id="Fow9ik" name="SqlDatabase.cpp" compile="1" resource="0" file="Source/SqlDatabase.cpp"/>
       <FILE id="JVHSSv" name="SqlDatabase.hpp" compile="0" resource="0" file="Source/SqlDatabase.hpp"/>
     </GROUP>

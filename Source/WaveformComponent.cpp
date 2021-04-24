@@ -40,9 +40,9 @@ void WaveformComponent::paint(juce::Graphics& g)
 }
 
 
-void WaveformComponent::loadTrack(TrackData t, int startSample)
+void WaveformComponent::loadTrack(TrackInfo t, int startSample)
 {
-    juce::AudioBuffer<float> audio;
+    juce::AudioBuffer<float>* audio;
     int numSamples;
     
     reset();
@@ -52,18 +52,20 @@ void WaveformComponent::loadTrack(TrackData t, int startSample)
     startFrame = round(double(startSample) / WAVEFORM_FRAME_SIZE);
     prevStartFrame = startFrame;
     
-    dataManager->fetchAudio(track.filename, audio);
+    audio = dataManager->loadAudio(track.filename, true);
     
-    numSamples = audio.getNumSamples();
+    numSamples = audio->getNumSamples();
     numFrames = numSamples / WAVEFORM_FRAME_SIZE;
     
     processBuffers.setSize(4, numSamples);
     
     // Copy frame data into filter buffers
-    memcpy(processBuffers.getWritePointer(0), audio.getReadPointer(0), numSamples * sizeof(float));
-    memcpy(processBuffers.getWritePointer(1), audio.getReadPointer(0), numSamples * sizeof(float));
-    memcpy(processBuffers.getWritePointer(2), audio.getReadPointer(0), numSamples * sizeof(float));
-    memcpy(processBuffers.getWritePointer(3), audio.getReadPointer(0), numSamples * sizeof(float));
+    memcpy(processBuffers.getWritePointer(0), audio->getReadPointer(0), numSamples * sizeof(float));
+    memcpy(processBuffers.getWritePointer(1), audio->getReadPointer(0), numSamples * sizeof(float));
+    memcpy(processBuffers.getWritePointer(2), audio->getReadPointer(0), numSamples * sizeof(float));
+    memcpy(processBuffers.getWritePointer(3), audio->getReadPointer(0), numSamples * sizeof(float));
+    
+    dataManager->releaseAudio(audio);
     
     // Apply filters to buffers 1-3
     filterLow.processSamples(processBuffers.getWritePointer(1), numSamples);

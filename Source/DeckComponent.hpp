@@ -11,32 +11,40 @@
 #include <JuceHeader.h>
 
 #include "WaveformComponent.hpp"
-#include "TrackProcessor.hpp"
 
 #define WAVEFORM_HEIGHT (100)
 
 
-class DeckComponent : public juce::Component, public juce::Button::Listener
+class DeckComponent : public juce::Component, public juce::Button::Listener, public juce::HighResolutionTimer
 {
 public:
     
-    DeckComponent(TrackProcessor* processor, bool topDeck);
+    DeckComponent(int id);
     
-    ~DeckComponent() {}
+    ~DeckComponent() { stopTimer(); }
     
     void resized() override;
     
+    void hiResTimerCallback() override;
+    
     void buttonClicked(juce::Button* button) override;
     
-    void update();
+    void loadTrack();
+    
+    void update(Track* track, int playhead, double timeStretch, double gain);
+    
+    void animate();
     
 private:
     
-    int currentTrackHash = 0;
+    int deckId;
     
-    bool topDeck;
+    Track* track;
     
-    TrackProcessor* trackProcessor;
+    std::atomic<bool> newTrack = false;
+    std::atomic<int> playhead = 0;
+    std::atomic<double> timeStretch = 1.0;
+    std::atomic<double> gain = 0.0;
     
     std::unique_ptr<WaveformComponent> waveform;
     

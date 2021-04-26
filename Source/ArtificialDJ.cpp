@@ -109,7 +109,7 @@ TrackInfo ArtificialDJ::chooseTrack(bool random)
         {
             randomChoice = rand() % dataManager->getTracks()->size();
             track = &dataManager->getTracks()->getReference(randomChoice);
-        } while (!track->analysed || track->queued);
+        } while (!track->analysed);// || track->queued);
     }
     else
     {

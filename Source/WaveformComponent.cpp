@@ -21,6 +21,9 @@ WaveformComponent::WaveformComponent()
     filterMid.setCoefficients(juce::IIRCoefficients::makeBandPass(SUPPORTED_SAMPLERATE, 500, 1.0));
     filterHigh.setCoefficients(juce::IIRCoefficients::makeHighPass(SUPPORTED_SAMPLERATE, 10000, 1.0));
     
+    images.add(new juce::Image());
+    images.add(new juce::Image());
+    
     setBufferedToImage(true);
     setOpaque(true);
 }
@@ -34,10 +37,9 @@ void WaveformComponent::paint(juce::Graphics& g)
         g.fillAll();
         return;
     }
-    
-    updateImage();
 
-    g.drawImage(image, juce::Rectangle<float>(0, 0, getWidth(), getHeight()));
+//    g.drawImage(*images.getUnchecked(imageToPaint.load()), getBounds().toFloat());
+    g.drawImageAt(*images.getUnchecked(imageToPaint.load()), 0, 0);
 }
 
 
@@ -49,10 +51,13 @@ void WaveformComponent::resized()
 
 void WaveformComponent::loadTrack(Track* t, int startSample)
 {
-    track = t;
     int numSamples;
     
+    DBG("LOADING");
+    
     reset();
+    
+    track = t;
     
     startFrame = round(double(startSample) / WAVEFORM_FRAME_SIZE);
     
@@ -85,20 +90,23 @@ void WaveformComponent::loadTrack(Track* t, int startSample)
     
     processBuffers.clear();
     
-    ready.store(true);
+    DBG("READY");
     
-    updateImage();
-    repaint();
+    ready.store(true);
 }
 
 
-void WaveformComponent::update(int playhead, double timeStretch, double gain)
+void WaveformComponent::draw(int playhead, double timeStretch, double gain)
 {
     if (!ready.load()) return;
     
     fade = juce::jmax(float(1.0 - std::sqrt(gain)), 0.2f);
     
-    drawWidth = getWidth() * (1.0 / timeStretch);
+    #ifdef WAVEFORM_HALF_RESOLUTION
+        drawWidth = getWidth()/2 * (1.0 / timeStretch);
+    #else
+        drawWidth = getWidth() * (1.0 / timeStretch);
+    #endif
     
     double playheadAdjust = playhead - double(WAVEFORM_FRAME_SIZE * drawWidth)/2;
     
@@ -106,14 +114,16 @@ void WaveformComponent::update(int playhead, double timeStretch, double gain)
     
     updateImage();
     
-    repaint();
+    juce::MessageManager::callAsync(std::function<void()>([this]() { this->repaint(); }));
 }
 
 
 void WaveformComponent::updateImage()
 {
-    image = juce::Image(juce::Image::RGB, getWidth(), getHeight(), true);
-    juce::Graphics g(image);
+    int imageIndex = 1 - imageToPaint.load();
+    juce::Image* image = images.getUnchecked(imageIndex);
+    *image = juce::Image(juce::Image::RGB, drawWidth, getHeight(), true);
+    juce::Graphics g(*image);
     
     int frame;
     float magnitude;
@@ -157,6 +167,10 @@ void WaveformComponent::updateImage()
     
     g.setColour(juce::Colours::black.withAlpha(fade));
     g.fillAll();
+    
+    *image = image->rescaled(getWidth(), getHeight(), juce::Graphics::ResamplingQuality::lowResamplingQuality);
+    
+    imageToPaint.store(imageIndex);
 }
 
 

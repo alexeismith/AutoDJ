@@ -84,6 +84,8 @@ void TrackProcessor::loadNextTrack()
     track->applyNextMix(&currentMix);
     shifterPlayhead = track->playhead;
     
+    deckNeedsTrackUpdate = true;
+    
     partner->nextMix();
     
     ready.store(true);
@@ -119,6 +121,23 @@ void TrackProcessor::loadFirstTrack(TrackInfo trackInfo, bool leader)
 void TrackProcessor::prepare(int blockSize)
 {
     output.setSize(1, blockSize);
+}
+
+
+void TrackProcessor::updateDeck()
+{
+    if (deck)
+    {
+        if (deckNeedsTrackUpdate)
+        {
+            deck->update(getTrack(), track->playhead, timeStretch, track->gain.currentValue);
+            deckNeedsTrackUpdate = false;
+        }
+        else
+        {
+            deck->update(nullptr, track->playhead, timeStretch, track->gain.currentValue);
+        }
+    }
 }
 
 

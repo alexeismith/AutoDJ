@@ -8,7 +8,13 @@
 #ifndef WaveformComponent_hpp
 #define WaveformComponent_hpp
 
-#define WAVEFORM_FRAME_SIZE (380)
+#define WAVEFORM_HALF_RESOLUTION
+
+#ifdef WAVEFORM_HALF_RESOLUTION
+    #define WAVEFORM_FRAME_SIZE (760)
+#else
+    #define WAVEFORM_FRAME_SIZE (380)
+#endif
 
 #include <JuceHeader.h>
 
@@ -29,7 +35,7 @@ public:
     
     void loadTrack(Track* track, int startSample = 0);
     
-    void update(int playhead, double timeStretch, double gain);
+    void draw(int playhead, double timeStretch, double gain);
     
 private:
     
@@ -49,7 +55,8 @@ private:
     
     int numFrames = 0, startFrame, barHeight, drawWidth = 0;
     
-    juce::Image image;
+    juce::OwnedArray<juce::Image> images;
+    std::atomic<int> imageToPaint;
     
     juce::AudioBuffer<float> processBuffers;
     

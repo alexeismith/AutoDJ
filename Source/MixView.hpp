@@ -11,8 +11,9 @@
 #include <JuceHeader.h>
 
 #include "DeckComponent.hpp"
+#include "TrackProcessor.hpp"
 
-class MixView : public juce::Component, public juce::Button::Listener, public juce::Timer
+class MixView : public juce::Component, public juce::Button::Listener
 {
 public:
     
@@ -21,8 +22,6 @@ public:
     ~MixView() {}
     
     void resized() override;
-    
-    void timerCallback() override;
     
     void buttonClicked(juce::Button* button) override;
     

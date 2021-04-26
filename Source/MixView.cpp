@@ -12,12 +12,13 @@
 
 MixView::MixView(TrackProcessor** trackProcessors)
 {
-    decks.add(new DeckComponent(trackProcessors[0], true));
-    decks.add(new DeckComponent(trackProcessors[1], false));
+    decks.add(new DeckComponent(0));
+    decks.add(new DeckComponent(1));
     addAndMakeVisible(decks.getUnchecked(0));
     addAndMakeVisible(decks.getUnchecked(1));
     
-    startTimerHz(60);
+    trackProcessors[0]->setDeck(decks.getUnchecked(0));
+    trackProcessors[1]->setDeck(decks.getUnchecked(1));
 }
 
 
@@ -28,13 +29,6 @@ void MixView::resized()
     
     decks.getUnchecked(0)->setTopLeftPosition(0, 0);
     decks.getUnchecked(1)->setTopLeftPosition(0, getHeight()/2);
-}
-
-
-void MixView::timerCallback()
-{
-    decks.getUnchecked(0)->update();
-    decks.getUnchecked(1)->update();
 }
 
 

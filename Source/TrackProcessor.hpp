@@ -10,6 +10,8 @@
 
 #include <JuceHeader.h>
 
+#include "DeckComponent.hpp"
+
 #include "TrackDataManager.hpp"
 
 #include "Track.hpp"
@@ -48,6 +50,10 @@ public:
     
     double getTimeStretch() { return timeStretch; }
     
+    void setDeck(DeckComponent* d) { deck = d; }
+    
+    void updateDeck();
+    
 private:
     
     int getAudioLength() { return track->audio->getNumSamples(); }
@@ -60,10 +66,12 @@ private:
     
     juce::CriticalSection lock;
     
-    TrackProcessor* partner;
-    
+    DeckComponent* deck = nullptr;
+    TrackProcessor* partner = nullptr;
     TrackDataManager* dataManager = nullptr;
     ArtificialDJ* dj = nullptr;
+    
+    bool deckNeedsTrackUpdate = true;
     
     std::atomic<bool> ready;
     

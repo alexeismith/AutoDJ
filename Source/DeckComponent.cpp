@@ -8,21 +8,32 @@
 #include "DeckComponent.hpp"
 
 
-DeckComponent::DeckComponent(TrackProcessor* processor, bool top) :
-    topDeck(top), trackProcessor(processor)
+DeckComponent::DeckComponent(int id) :
+    deckId(id)
 {
     waveform.reset(new WaveformComponent());
     addAndMakeVisible(waveform.get());
+    
+    startTimer(33); // 10ms interval = 100Hz, 15ms = 66.7Hz, 33ms = 30.3Hz
 }
 
 
 void DeckComponent::resized()
 {
     waveform->setSize(getWidth(), WAVEFORM_HEIGHT);
-    if (topDeck)
+    if (deckId == 0)
         waveform->setTopLeftPosition(0, getHeight()-WAVEFORM_HEIGHT);
     else
         waveform->setTopLeftPosition(0, 0);
+}
+
+
+void DeckComponent::hiResTimerCallback()
+{
+    if (newTrack.load())
+        loadTrack();
+        
+    waveform->draw(playhead.load(), timeStretch.load(), gain.load());
 }
 
 
@@ -38,16 +49,25 @@ void DeckComponent::buttonClicked(juce::Button* button)
 }
 
 
-void DeckComponent::update()
+void DeckComponent::loadTrack()
 {
-    Track* track = trackProcessor->getTrack();
-    if (!track) return;
+    // TODO: show title, artist, etc
     
-    if (currentTrackHash != track->info.hash)
+    waveform->loadTrack(track);
+    
+    newTrack.store(false);
+}
+
+
+void DeckComponent::update(Track* trackPtr, int p, double t, double g)
+{
+    if (trackPtr)
     {
-        waveform->loadTrack(track);
-        currentTrackHash = track->info.hash;
+        track = trackPtr;
+        newTrack.store(true);
     }
-        
-    waveform->update(track->playhead, trackProcessor->getTimeStretch(), track->gain.currentValue);
+    
+    playhead.store(p);
+    timeStretch.store(t);
+    gain.store(g);
 }

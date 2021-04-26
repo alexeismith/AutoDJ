@@ -83,8 +83,8 @@ void ArtificialDJ::initialise()
     TrackInfo trackSecond = chooseTrack(true);
     generateMix(trackFirst, trackSecond);
     
-    TrackProcessor* leader = audioProcessor->getProcessor(0);
-    TrackProcessor* next = audioProcessor->getProcessor(1);
+    TrackProcessor* leader = audioProcessor->getTrackProcessor(0);
+    TrackProcessor* next = audioProcessor->getTrackProcessor(1);
     
     leader->loadFirstTrack(trackFirst, true);
     next->loadFirstTrack(trackSecond, false);
@@ -133,9 +133,9 @@ void ArtificialDJ::generateMix(TrackInfo leadingTrack, TrackInfo nextTrack)
     mix.nextTrack = nextTrack;
     mix.nextTrackAudio = dataManager->loadAudio(nextTrack.filename, true);
     
-    int mixLengthBeats = 8;
+    int mixLengthBeats = 16;
     
-    int mixStartBeats = mix.leadingTrack.downbeat + 3 * mixLengthBeats;
+    int mixStartBeats = mix.leadingTrack.downbeat + 2 * mixLengthBeats;
     
     mix.start = mix.leadingTrack.getSampleOfBeat(mixStartBeats);
     mix.end = mix.leadingTrack.getSampleOfBeat(mixStartBeats + mixLengthBeats);

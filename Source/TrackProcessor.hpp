@@ -28,7 +28,7 @@ public:
     
     bool getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill, bool play = true);
     
-    Track* getTrack() { return track.get(); }
+    Track* getTrack();
     
     bool isLeader() { return getTrack()->leader; }
     
@@ -46,6 +46,8 @@ public:
     
     void setPartner(TrackProcessor* p) { partner = p; }
     
+    double getTimeStretch() { return timeStretch; }
+    
 private:
     
     int getAudioLength() { return track->audio->getNumSamples(); }
@@ -54,6 +56,8 @@ private:
     
     void simpleCopy(int numSamples);
     
+    void updateShifts();
+    
     juce::CriticalSection lock;
     
     TrackProcessor* partner;
@@ -61,7 +65,7 @@ private:
     TrackDataManager* dataManager = nullptr;
     ArtificialDJ* dj = nullptr;
     
-    bool ready;
+    std::atomic<bool> ready;
     
     std::unique_ptr<Track> track;
     MixInfo currentMix;
@@ -71,6 +75,7 @@ private:
     juce::AudioBuffer<float> output;
     
     soundtouch::SoundTouch shifter;
+    double timeStretch = 1;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackProcessor)
 };

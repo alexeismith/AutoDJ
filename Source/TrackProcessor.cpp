@@ -15,7 +15,7 @@
 TrackProcessor::TrackProcessor(TrackDataManager* dm, ArtificialDJ* DJ) :
     dataManager(dm), dj(DJ)
 {
-    ready = false;
+    ready.store(false);
     
     track.reset(new Track());
     
@@ -27,29 +27,35 @@ TrackProcessor::TrackProcessor(TrackDataManager* dm, ArtificialDJ* DJ) :
 
 bool TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill, bool play)
 {
+    if (!ready.load()) return false;
+    
     const juce::ScopedLock sl(lock);
     
-    if (ready)
+    if (play)
     {
-        if (play)
-        {
-            if (output.getNumSamples() != bufferToFill.numSamples) jassert(false);
-                
-            processShifts(bufferToFill.numSamples);
+        if (output.getNumSamples() != bufferToFill.numSamples) jassert(false);
+            
+        processShifts(bufferToFill.numSamples);
 //            simpleCopy(bufferToFill.numSamples);
-            
-            output.applyGain(std::sqrt(track->gain.currentValue));
-            
-            bufferToFill.buffer->addFrom(0, bufferToFill.startSample, output.getReadPointer(0), bufferToFill.numSamples);
-            bufferToFill.buffer->addFrom(1, bufferToFill.startSample, output.getReadPointer(0), bufferToFill.numSamples);
-            
-            update();
-        }
         
-        return track->playhead >= currentMix.start;
+        output.applyGain(std::sqrt(track->gain.currentValue));
+        
+        bufferToFill.buffer->addFrom(0, bufferToFill.startSample, output.getReadPointer(0), bufferToFill.numSamples);
+        bufferToFill.buffer->addFrom(1, bufferToFill.startSample, output.getReadPointer(0), bufferToFill.numSamples);
+        
+        update();
     }
     
-    return false;
+    return track->playhead >= currentMix.start;
+}
+
+
+Track* TrackProcessor::getTrack()
+{
+    if (ready.load())
+        return track.get();
+    else
+        return nullptr;
 }
 
 
@@ -58,8 +64,7 @@ void TrackProcessor::update()
     if (track->update())
         loadNextTrack();
     
-    shifter.setTempo(double(track->bpm.currentValue) / track->info.bpm);
-    shifter.setPitchSemiTones(track->pitch.currentValue);
+    updateShifts();
 }
 
 
@@ -72,7 +77,7 @@ void TrackProcessor::nextMix()
 
 void TrackProcessor::loadNextTrack()
 {
-    ready = false;
+    ready.store(false);
     shifter.clear();
     
     currentMix = dj->getNextMix(currentMix);
@@ -81,13 +86,13 @@ void TrackProcessor::loadNextTrack()
     
     partner->nextMix();
     
-    ready = true;
+    ready.store(true);
 }
 
 
 void TrackProcessor::loadFirstTrack(TrackInfo trackInfo, bool leader)
 {
-    ready = false;
+    ready.store(false);
     
     currentMix = dj->getNextMix(currentMix);
     
@@ -107,10 +112,7 @@ void TrackProcessor::loadFirstTrack(TrackInfo trackInfo, bool leader)
         track->applyNextMix(&currentMix);
     }
     
-    shifter.setTempo(double(track->bpm.currentValue) / track->info.bpm);
-    shifter.setPitchSemiTones(track->pitch.currentValue);
-    
-    ready = true;
+    ready.store(true);
 }
 
 
@@ -147,4 +149,12 @@ void TrackProcessor::simpleCopy(int numSamples)
     output.copyFrom(0, 0, *track->audio, 0, shifterPlayhead, numSamples);
     shifterPlayhead += numSamples;
     track->playhead += numSamples;
+}
+
+
+void TrackProcessor::updateShifts()
+{
+    timeStretch = double(track->bpm.currentValue) / track->info.bpm;
+    shifter.setTempo(timeStretch);
+    shifter.setPitchSemiTones(track->pitch.currentValue);
 }

@@ -12,26 +12,24 @@
 
 #include <JuceHeader.h>
 
-#include "TrackDataManager.hpp"
+#include "Track.hpp"
 
 // NOTE: need a separate instance for each audio channel to be visualised, because the IIR filters depend on previous samples
-class WaveformComponent : public juce::Component, juce::Timer
+class WaveformComponent : public juce::Component
 {
 public:
     
-    WaveformComponent(int width, TrackDataManager* dataManager);
+    WaveformComponent();
     
     ~WaveformComponent() {}
     
     void paint(juce::Graphics& g) override;
     
-    void resized() override { imageValid = false; }
+    void resized() override;
     
-    void loadTrack(TrackInfo track, int startSample = 0);
+    void loadTrack(Track* track, int startSample = 0);
     
-    void scroll(int samples);
-    
-    void timerCallback() override { }//stretch = -200 * (sin(juce::Time::getCurrentTime().toMilliseconds() * 0.001) + 1); repaint(); } //{ scroll(44100 / 30); }
+    void update(int playhead, double timeStretch, double gain);
     
 private:
     
@@ -43,16 +41,15 @@ private:
     
     bool isBeat(int frameIndex, bool& downbeat);
     
-    TrackDataManager* dataManager;
+    Track* track;
     
-    TrackInfo track;
+    std::atomic<bool> ready;
     
-    int numFrames = 0, startFrame, prevStartFrame, scrollRemainder = 0;
+    float fade = 0.0;
     
-    bool initialised = false;
+    int numFrames = 0, startFrame, barHeight, drawWidth = 0;
     
-    juce::Image image, prevImage;
-    bool imageValid = false;
+    juce::Image image;
     
     juce::AudioBuffer<float> processBuffers;
     
@@ -60,8 +57,6 @@ private:
     juce::Array<float> levels;
     
     juce::IIRFilter filterLow, filterMid, filterHigh;
-    
-    int stretch = 0; //TODO: temp
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformComponent)
 };

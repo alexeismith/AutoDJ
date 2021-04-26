@@ -30,9 +30,11 @@ public:
     
     void preview(TrackInfo track, int startSample, int numSamples);
     
-    TrackProcessor* getProcessor(int index) { return trackProcessors.getUnchecked(index); }
+    TrackProcessor* getTrackProcessor(int index) { return trackProcessors.getUnchecked(index); }
     
-    void getProcessors(TrackProcessor** leader, TrackProcessor** next);
+    void getTrackProcessors(TrackProcessor** leader, TrackProcessor** next);
+    
+    TrackProcessor** getTrackProcessors() { return trackProcessors.data(); }
     
     void prepare(int blockSize);
     

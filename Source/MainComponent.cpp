@@ -43,7 +43,7 @@ MainComponent::MainComponent()
     addAndMakeVisible(libraryView.get());
     dataManager->setLibrary(libraryView.get());
     
-    mixView.reset(new MixView(dataManager.get()));
+    mixView.reset(new MixView(audioProcessor->getTrackProcessors()));
     addChildComponent(mixView.get());
     
     addChildComponent(playPauseBtn.get());

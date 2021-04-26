@@ -17,8 +17,8 @@ AudioProcessor::AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj, 
     trackProcessors.add(new TrackProcessor(dataManager, dj));
     trackProcessors.add(new TrackProcessor(dataManager, dj));
     
-    getProcessor(0)->setPartner(getProcessor(1));
-    getProcessor(1)->setPartner(getProcessor(0));
+    getTrackProcessor(0)->setPartner(getTrackProcessor(1));
+    getTrackProcessor(1)->setPartner(getTrackProcessor(0));
     
     prepare(initBlockSize);
 }
@@ -37,7 +37,7 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
     }
     else
     {
-        getProcessors(&leader, &next);
+        getTrackProcessors(&leader, &next);
         
         if (leader)
         {
@@ -68,7 +68,7 @@ void AudioProcessor::preview(TrackInfo track, int startSample, int numSamples)
 }
 
 
-void AudioProcessor::getProcessors(TrackProcessor** leader, TrackProcessor** next)
+void AudioProcessor::getTrackProcessors(TrackProcessor** leader, TrackProcessor** next)
 {
     for (auto* processor : trackProcessors)
     {

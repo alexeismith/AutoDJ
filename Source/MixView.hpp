@@ -10,26 +10,29 @@
 
 #include <JuceHeader.h>
 
-#include "TrackDataManager.hpp"
-#include "WaveformComponent.hpp"
+#include "DeckComponent.hpp"
 
-class MixView : public juce::Component, public juce::Button::Listener
+class MixView : public juce::Component, public juce::Button::Listener, public juce::Timer
 {
 public:
     
-    MixView(TrackDataManager* dm);
+    MixView(TrackProcessor** trackProcessors);
     
     ~MixView() {}
     
     void resized() override;
     
+    void timerCallback() override;
+    
     void buttonClicked(juce::Button* button) override;
+    
+//    void paint(juce::Graphics& g) override;
+    
+    void paintOverChildren(juce::Graphics &g) override;
     
 private:
     
-    TrackDataManager* dataManager;
-    
-    std::unique_ptr<WaveformComponent> waveform;
+    juce::OwnedArray<DeckComponent> decks;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MixView)
 };

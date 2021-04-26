@@ -12,7 +12,7 @@
 
 int TrackInfo::getSampleOfBeat(int beat)
 {
-    return beat * getBeatPeriod();
+    return beat * getBeatPeriod() + beatPhase;
 }
 
 

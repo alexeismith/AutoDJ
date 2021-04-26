@@ -35,8 +35,8 @@ bool TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
     {
         if (output.getNumSamples() != bufferToFill.numSamples) jassert(false);
             
-//        processShifts(bufferToFill.numSamples);
-        simpleCopy(bufferToFill.numSamples);
+        processShifts(bufferToFill.numSamples);
+//        simpleCopy(bufferToFill.numSamples);
         
         output.applyGain(std::sqrt(track->gain.currentValue));
         
@@ -114,6 +114,8 @@ void TrackProcessor::loadFirstTrack(TrackInfo trackInfo, bool leader)
         track->applyNextMix(&currentMix);
     }
     
+    shifterPlayhead = track->playhead;
+
     newTrack = true;
     
     ready.store(true);

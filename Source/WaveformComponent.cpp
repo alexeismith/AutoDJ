@@ -38,7 +38,6 @@ void WaveformComponent::paint(juce::Graphics& g)
         return;
     }
 
-//    g.drawImage(*images.getUnchecked(imageToPaint.load()), getBounds().toFloat());
     g.drawImageAt(*images.getUnchecked(imageToPaint.load()), 0, 0);
 }
 
@@ -49,17 +48,40 @@ void WaveformComponent::resized()
 }
 
 
-void WaveformComponent::loadTrack(Track* t, int startSample)
+void WaveformComponent::draw(int playhead, double timeStretch, double gain)
+{
+    if (!ready.load()) return;
+    
+    brightness = juce::jmax(float(std::sqrt(gain)), 0.3f);
+    
+    #ifdef WAVEFORM_HALF_RESOLUTION
+        drawWidth = getWidth()/2 * (1.0 / timeStretch);
+    #else
+        drawWidth = getWidth() * (1.0 / timeStretch);
+    #endif
+    
+    double playheadAdjust = playhead - double(WAVEFORM_FRAME_SIZE * drawWidth)/2;
+    
+    startFrame = round(playheadAdjust / WAVEFORM_FRAME_SIZE);
+    
+    updateImage();
+}
+
+
+void WaveformComponent::flipImage()
+{
+    imageToPaint.store(1 - imageToPaint.load());
+    getCachedComponentImage()->invalidateAll();
+}
+
+
+void WaveformComponent::loadTrack(Track* t)
 {
     int numSamples;
-    
-    DBG("LOADING");
     
     reset();
     
     track = t;
-    
-    startFrame = round(double(startSample) / WAVEFORM_FRAME_SIZE);
     
     numSamples = track->audio->getNumSamples();
     numFrames = numSamples / WAVEFORM_FRAME_SIZE;
@@ -90,31 +112,7 @@ void WaveformComponent::loadTrack(Track* t, int startSample)
     
     processBuffers.clear();
     
-    DBG("READY");
-    
     ready.store(true);
-}
-
-
-void WaveformComponent::draw(int playhead, double timeStretch, double gain)
-{
-    if (!ready.load()) return;
-    
-    fade = juce::jmax(float(1.0 - std::sqrt(gain)), 0.2f);
-    
-    #ifdef WAVEFORM_HALF_RESOLUTION
-        drawWidth = getWidth()/2 * (1.0 / timeStretch);
-    #else
-        drawWidth = getWidth() * (1.0 / timeStretch);
-    #endif
-    
-    double playheadAdjust = playhead - double(WAVEFORM_FRAME_SIZE * drawWidth)/2;
-    
-    startFrame = round(playheadAdjust / WAVEFORM_FRAME_SIZE);
-    
-    updateImage();
-    
-    juce::MessageManager::callAsync(std::function<void()>([this]() { this->repaint(); }));
 }
 
 
@@ -140,7 +138,7 @@ void WaveformComponent::updateImage()
         {
             magnitude = levels[frame] * getHeight() * 0.4f;
             
-            g.setColour(colours[frame]);
+            g.setColour(colours[frame].withAlpha(brightness));
             g.drawVerticalLine(x, 0.5f * getHeight() - magnitude, 0.5f * getHeight() + magnitude);
         }
         else
@@ -165,12 +163,7 @@ void WaveformComponent::updateImage()
         }
     }
     
-    g.setColour(juce::Colours::black.withAlpha(fade));
-    g.fillAll();
-    
     *image = image->rescaled(getWidth(), getHeight(), juce::Graphics::ResamplingQuality::lowResamplingQuality);
-    
-    imageToPaint.store(imageIndex);
 }
 
 

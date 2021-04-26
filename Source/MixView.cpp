@@ -10,15 +10,30 @@
 #include "CommonDefs.hpp"
 
 
-MixView::MixView(TrackProcessor** trackProcessors)
+MixView::MixView(TrackProcessor** processors)
 {
-    decks.add(new DeckComponent(0));
-    decks.add(new DeckComponent(1));
+    decks.add(new DeckComponent(0, processors[0]));
+    decks.add(new DeckComponent(1, processors[1]));
     addAndMakeVisible(decks.getUnchecked(0));
     addAndMakeVisible(decks.getUnchecked(1));
     
-    trackProcessors[0]->setDeck(decks.getUnchecked(0));
-    trackProcessors[1]->setDeck(decks.getUnchecked(1));
+    startTimer(33); // 10ms interval = 100Hz, 15ms = 66.7Hz, 33ms = 30.3Hz
+}
+
+
+void MixView::hiResTimerCallback()
+{
+    decks.getUnchecked(0)->update();
+    decks.getUnchecked(1)->update();
+    
+    decks.getUnchecked(0)->flipWaveform();
+    decks.getUnchecked(1)->flipWaveform();
+    
+    juce::MessageManager::callAsync(std::function<void()>([this]() {
+        this->repaint();
+//        this->decks.getUnchecked(0)->waveform->repaint();
+//        this->decks.getUnchecked(1)->waveform->repaint();
+    }));
 }
 
 

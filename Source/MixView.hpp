@@ -11,15 +11,16 @@
 #include <JuceHeader.h>
 
 #include "DeckComponent.hpp"
-#include "TrackProcessor.hpp"
 
-class MixView : public juce::Component, public juce::Button::Listener
+class MixView : public juce::Component, public juce::Button::Listener, public juce::HighResolutionTimer
 {
 public:
     
     MixView(TrackProcessor** trackProcessors);
     
-    ~MixView() {}
+    ~MixView() { stopTimer(); }
+    
+    void hiResTimerCallback() override;
     
     void resized() override;
     

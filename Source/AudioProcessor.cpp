@@ -43,9 +43,6 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
         {
             bool play = leader->getNextAudioBlock(bufferToFill);
             next->getNextAudioBlock(bufferToFill, play);
-            
-            leader->updateDeck();
-            next->updateDeck();
         }
         else
         {
@@ -57,7 +54,6 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
 
 void AudioProcessor::play(TrackInfo track)
 {
-//    trackProcessors.getFirst()->load(track);
     play();
 }
 

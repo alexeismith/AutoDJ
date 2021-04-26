@@ -8,7 +8,7 @@
 #ifndef WaveformComponent_hpp
 #define WaveformComponent_hpp
 
-#define WAVEFORM_HALF_RESOLUTION
+//#define WAVEFORM_HALF_RESOLUTION
 
 #ifdef WAVEFORM_HALF_RESOLUTION
     #define WAVEFORM_FRAME_SIZE (760)
@@ -33,11 +33,13 @@ public:
     
     void resized() override;
     
-    void loadTrack(Track* track, int startSample = 0);
-    
     void draw(int playhead, double timeStretch, double gain);
     
+    void flipImage();
+    
 private:
+    
+    void loadTrack(Track* track);
     
     void updateImage();
     
@@ -47,11 +49,13 @@ private:
     
     bool isBeat(int frameIndex, bool& downbeat);
     
+    friend class WaveformLoadThread;
+    
     Track* track;
     
     std::atomic<bool> ready;
     
-    float fade = 0.0;
+    float brightness = 0.0;
     
     int numFrames = 0, startFrame, barHeight, drawWidth = 0;
     
@@ -66,6 +70,28 @@ private:
     juce::IIRFilter filterLow, filterMid, filterHigh;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformComponent)
+};
+
+
+class WaveformLoadThread : public juce::Thread
+{
+public:
+    
+    WaveformLoadThread(WaveformComponent* wave) :
+        juce::Thread("WaveformLoad"), waveform(wave) {}
+    
+    ~WaveformLoadThread() { stopThread(3000); }
+    
+    void load(Track* t) { track = t; startThread(); }
+    
+    void run() { waveform->loadTrack(track); }
+    
+private:
+    
+    WaveformComponent* waveform = nullptr;
+    
+    Track* track = nullptr;
+    
 };
 
 #endif /* WaveformComponent_hpp */

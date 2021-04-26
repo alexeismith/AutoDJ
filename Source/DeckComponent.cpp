@@ -8,13 +8,13 @@
 #include "DeckComponent.hpp"
 
 
-DeckComponent::DeckComponent(int id) :
-    deckId(id)
+DeckComponent::DeckComponent(int id, TrackProcessor* processor) :
+    deckId(id), trackProcessor(processor)
 {
     waveform.reset(new WaveformComponent());
     addAndMakeVisible(waveform.get());
     
-    startTimer(33); // 10ms interval = 100Hz, 15ms = 66.7Hz, 33ms = 30.3Hz
+    waveformLoader.reset(new WaveformLoadThread(waveform.get()));
 }
 
 
@@ -25,15 +25,6 @@ void DeckComponent::resized()
         waveform->setTopLeftPosition(0, getHeight()-WAVEFORM_HEIGHT);
     else
         waveform->setTopLeftPosition(0, 0);
-}
-
-
-void DeckComponent::hiResTimerCallback()
-{
-    if (newTrack.load())
-        loadTrack();
-        
-    waveform->draw(playhead.load(), timeStretch.load(), gain.load());
 }
 
 
@@ -49,25 +40,23 @@ void DeckComponent::buttonClicked(juce::Button* button)
 }
 
 
-void DeckComponent::loadTrack()
+void DeckComponent::load(Track* trackPtr)
 {
+    track = trackPtr;
+    
+    waveformLoader->load(track);
+    
     // TODO: show title, artist, etc
-    
-    waveform->loadTrack(track);
-    
-    newTrack.store(false);
 }
 
 
-void DeckComponent::update(Track* trackPtr, int p, double t, double g)
+void DeckComponent::update()
 {
-    if (trackPtr)
-    {
-        track = trackPtr;
-        newTrack.store(true);
-    }
+    if (!trackProcessor->isReady()) return;
     
-    playhead.store(p);
-    timeStretch.store(t);
-    gain.store(g);
+    Track* t = trackProcessor->getNewTrack();
+    if (t)
+        load(t);
+    
+    waveform->draw(trackProcessor->getTrack()->playhead, trackProcessor->getTimeStretch(), trackProcessor->getTrack()->gain.currentValue);
 }

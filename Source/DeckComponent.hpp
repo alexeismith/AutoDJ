@@ -10,43 +10,41 @@
 
 #include <JuceHeader.h>
 
+#include "TrackProcessor.hpp"
+
 #include "WaveformComponent.hpp"
 
 #define WAVEFORM_HEIGHT (100)
 
 
-class DeckComponent : public juce::Component, public juce::Button::Listener, public juce::HighResolutionTimer
+class DeckComponent : public juce::Component, public juce::Button::Listener
 {
 public:
     
-    DeckComponent(int id);
+    DeckComponent(int id, TrackProcessor* processor);
     
-    ~DeckComponent() { stopTimer(); }
+    ~DeckComponent() {}
     
     void resized() override;
     
-    void hiResTimerCallback() override;
-    
     void buttonClicked(juce::Button* button) override;
     
-    void loadTrack();
+    void load(Track* track);
     
-    void update(Track* track, int playhead, double timeStretch, double gain);
+    void update();
     
-    void animate();
+    void flipWaveform() { waveform->flipImage(); }
     
 private:
     
     int deckId;
     
-    Track* track;
-    
-    std::atomic<bool> newTrack = false;
-    std::atomic<int> playhead = 0;
-    std::atomic<double> timeStretch = 1.0;
-    std::atomic<double> gain = 0.0;
+    TrackProcessor* trackProcessor = nullptr;
     
     std::unique_ptr<WaveformComponent> waveform;
+    std::unique_ptr<WaveformLoadThread> waveformLoader;
+
+    Track* track;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeckComponent)
 };

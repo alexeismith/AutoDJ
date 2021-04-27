@@ -11,13 +11,17 @@
       <FILE id="HUgRlp" name="CommonDefs.cpp" compile="1" resource="0" file="Source/CommonDefs.cpp"/>
       <FILE id="WCmtkz" name="CommonDefs.hpp" compile="0" resource="0" file="Source/CommonDefs.hpp"/>
       <GROUP id="{98CFD4F3-7539-9CFE-F3AC-DBA7432077B9}" name="UI">
+        <GROUP id="{68EB337B-5089-D071-06F9-1610714ADC61}" name="Utils">
+          <FILE id="spnqLR" name="GraphComponent.cpp" compile="1" resource="0"
+                file="Source/GraphComponent.cpp"/>
+          <FILE id="tPEz81" name="GraphComponent.hpp" compile="0" resource="0"
+                file="Source/GraphComponent.hpp"/>
+        </GROUP>
         <FILE id="OYsJkP" name="MainComponent.cpp" compile="1" resource="0"
               file="Source/MainComponent.cpp"/>
         <FILE id="MM3lb8" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
         <FILE id="RfPn63" name="LibraryView.cpp" compile="1" resource="0" file="Source/LibraryView.cpp"/>
         <FILE id="e9qGGt" name="LibraryView.hpp" compile="0" resource="0" file="Source/LibraryView.hpp"/>
-        <FILE id="DIho3U" name="MixView.cpp" compile="1" resource="0" file="Source/MixView.cpp"/>
-        <FILE id="pApJtk" name="MixView.hpp" compile="0" resource="0" file="Source/MixView.hpp"/>
         <FILE id="yV87zV" name="TrackTableComponent.cpp" compile="1" resource="0"
               file="Source/TrackTableComponent.cpp"/>
         <FILE id="S5dMOS" name="TrackTableComponent.hpp" compile="0" resource="0"
@@ -26,10 +30,12 @@
               file="Source/QueueTableComponent.cpp"/>
         <FILE id="L9LHSC" name="QueueTableComponent.hpp" compile="0" resource="0"
               file="Source/QueueTableComponent.hpp"/>
-        <FILE id="spnqLR" name="GraphComponent.cpp" compile="1" resource="0"
-              file="Source/GraphComponent.cpp"/>
-        <FILE id="tPEz81" name="GraphComponent.hpp" compile="0" resource="0"
-              file="Source/GraphComponent.hpp"/>
+        <FILE id="DIho3U" name="MixView.cpp" compile="1" resource="0" file="Source/MixView.cpp"/>
+        <FILE id="pApJtk" name="MixView.hpp" compile="0" resource="0" file="Source/MixView.hpp"/>
+        <FILE id="XYauoi" name="DeckComponent.cpp" compile="1" resource="0"
+              file="Source/DeckComponent.cpp"/>
+        <FILE id="CvBTHD" name="DeckComponent.hpp" compile="0" resource="0"
+              file="Source/DeckComponent.hpp"/>
         <FILE id="Ugyo69" name="WaveformComponent.cpp" compile="1" resource="0"
               file="Source/WaveformComponent.cpp"/>
         <FILE id="luYtIx" name="WaveformComponent.hpp" compile="0" resource="0"
@@ -161,6 +167,8 @@
             file="Source/TrackDataManager.cpp"/>
       <FILE id="lBTfyV" name="TrackDataManager.hpp" compile="0" resource="0"
             file="Source/TrackDataManager.hpp"/>
+      <FILE id="Exu3LO" name="TrackSorter.cpp" compile="1" resource="0" file="Source/TrackSorter.cpp"/>
+      <FILE id="EJfg8Y" name="TrackSorter.hpp" compile="0" resource="0" file="Source/TrackSorter.hpp"/>
       <FILE id="ut91i0" name="TrackInfo.cpp" compile="1" resource="0" file="Source/TrackInfo.cpp"/>
       <FILE id="ElBeMd" name="TrackInfo.hpp" compile="0" resource="0" file="Source/TrackInfo.hpp"/>
       <FILE id="Fow9ik" name="SqlDatabase.cpp" compile="1" resource="0" file="Source/SqlDatabase.cpp"/>

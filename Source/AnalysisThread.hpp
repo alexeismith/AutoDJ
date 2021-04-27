@@ -35,7 +35,7 @@ private:
     
     int id;
     
-    std::atomic<double> progress;
+    std::atomic<double> progress = 0.0;
     
     AnalysisManager* analysisManager = nullptr;
     TrackDataManager* dataManager = nullptr;

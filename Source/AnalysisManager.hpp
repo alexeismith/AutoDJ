@@ -31,9 +31,9 @@ public:
     
     TrackInfo* getNextJob();
     
-private:
+    void incrementProgress();
     
-    bool areThreadsFinished();
+private:
     
     juce::CriticalSection lock;
     
@@ -41,7 +41,8 @@ private:
     
     juce::Array<TrackInfo*> jobs;
     
-    int jobProgress = 0;
+    int jobProgress = 0; // Keeps track of how many jobs have been completed
+    int nextJob = 0; // Because of multi-threading we also need to keep track of what job is next (not simply jobProgress+1)
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalysisManager)
 };

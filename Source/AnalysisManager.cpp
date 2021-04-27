@@ -14,7 +14,7 @@
 AnalysisManager::~AnalysisManager()
 {
     // Set progress tracker to completion, so that no more jobs are given to analysis threads
-    jobProgress = jobs.size();
+    nextJob = jobs.size();
     
     for (auto* thread : threads)
     {
@@ -55,32 +55,17 @@ bool AnalysisManager::isFinished(double& progress)
 {
     const juce::ScopedLock sl(lock);
     
-    progress = double(jobProgress) / jobs.size();
-    
     if (jobProgress >= jobs.size())
-    {
-        if (areThreadsFinished())
-            return true;
-    }
+        return true;
+    
+    progress = double(jobProgress) / jobs.size();
     
     for (auto* thread : threads)
     {
-        progress -= (1.0 - thread->getProgress()) / jobs.size();
+        progress += thread->getProgress() / jobs.size();
     }
     
     return false;
-}
-
-
-bool AnalysisManager::areThreadsFinished()
-{
-    for (int i = 0; i < threads.size(); i++)
-    {
-        if (threads.getUnchecked(i)->isThreadRunning())
-            return false;
-    }
-    
-    return true;
 }
 
 
@@ -88,15 +73,23 @@ TrackInfo* AnalysisManager::getNextJob()
 {
     const juce::ScopedLock sl(lock);
     
-    int job = jobProgress;
+    int job = nextJob;
     
-    if (job == jobs.size())
+    if (job >= jobs.size())
     {
         return nullptr;
     }
     else
     {
-        jobProgress += 1;
+        nextJob += 1;
         return jobs.getUnchecked(job);
     }
+}
+
+
+void AnalysisManager::incrementProgress()
+{
+    const juce::ScopedLock sl(lock);
+    
+    jobProgress += 1;
 }

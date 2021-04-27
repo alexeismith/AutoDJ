@@ -28,6 +28,8 @@ void AnalysisThread::run()
     while (track)
     {
         analyse(*track);
+        progress.store(0.0);
+        analysisManager->incrementProgress();
         track = analysisManager->getNextJob();
     }
     
@@ -38,8 +40,6 @@ void AnalysisThread::run()
 void AnalysisThread::analyse(TrackInfo& track)
 {
     juce::AudioBuffer<float>* buffer;
-    
-    progress.store(0.0);
     
     DBG("Analysis Thread " << id << ": " << track.filename);
     

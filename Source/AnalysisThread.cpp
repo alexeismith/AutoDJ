@@ -8,11 +8,12 @@
 
 #include "AnalysisThread.hpp"
 
+#include "TrackDataManager.hpp"
 #include "AnalysisManager.hpp"
 
 
 AnalysisThread::AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm) :
-    juce::Thread("Parser"), id(ID), analysisManager(am), dataManager(dm)
+    juce::Thread("AnalysisThread"), id(ID), analysisManager(am), dataManager(dm)
 {
     analyserBeats.reset(new AnalyserBeats());
     analyserKey.reset(new AnalyserKey());
@@ -22,14 +23,12 @@ AnalysisThread::AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm
 
 void AnalysisThread::run()
 {
-    bool finished;
+    TrackInfo* track = analysisManager->getNextJob();
     
-    TrackInfo track = analysisManager->getNextJob(finished);
-    
-    while (!finished)
+    while (track)
     {
-        analyse(track);
-        track = analysisManager->getNextJob(finished);
+        analyse(*track);
+        track = analysisManager->getNextJob();
     }
     
     DBG("Analysis Thread " << id << " Finished");
@@ -62,11 +61,8 @@ void AnalysisThread::analyse(TrackInfo& track)
     
     if (threadShouldExit()) return;
     
-    dataManager->update(track);
+    dataManager->storeAnalysis(&track);
+    dataManager->releaseAudio(buffer);
     
     progress.store(1.0);
-    
-    analysisManager->incrementNumAnalysed();
-    
-    dataManager->releaseAudio(buffer);
 }

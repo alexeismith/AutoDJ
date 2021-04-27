@@ -62,14 +62,14 @@ void TrackTableComponent::paintCell(juce::Graphics& g, int rowNumber, int column
 {
     if (rowIsSelected)
         g.setColour(juce::Colours::darkblue);
-    else if(!tracks->getReference(rowNumber).analysed)
+    else if(!tracksSorted.getReference(rowNumber).analysed)
         g.setColour(juce::Colours::lightslategrey.brighter());
     else
         g.setColour(getLookAndFeel().findColour (juce::ListBox::textColourId));
         
     g.setFont (font);
 
-    juce::String text = getValueForColumn(tracks->getReference(rowNumber), columnId);
+    juce::String text = getValueForColumn(tracksSorted.getReference(rowNumber), columnId);
 
     g.drawText (text, 2, 0, width - 4, height, juce::Justification::centredLeft, true);
 
@@ -87,13 +87,14 @@ void TrackTableComponent::resized()
 void TrackTableComponent::sortOrderChanged(int newSortColumnId, bool isForwards)
 {
     sorter.reset(new TrackTableSorter(newSortColumnId, isForwards));
-    tracks->sort(*sorter.get());
+    sort();
 }
 
 
-void TrackTableComponent::refresh()
+void TrackTableComponent::sort()
 {
-    tracks->sort(*sorter.get());
+    tracksSorted = juce::Array<TrackInfo>(*tracks);
+    tracksSorted.sort(*sorter.get());
     repaint();
 }
 

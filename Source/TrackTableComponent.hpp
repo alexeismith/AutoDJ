@@ -48,7 +48,7 @@ public:
     
     void sortOrderChanged(int newSortColumnId, bool isForwards) override;
     
-    void refresh();
+    void sort();
     
     virtual void addColumns();
     
@@ -56,7 +56,8 @@ protected:
     
     std::unique_ptr<juce::TableListBox> table;
     
-    juce::Array<TrackInfo>* tracks = nullptr;
+    juce::Array<TrackInfo>* tracks;
+    juce::Array<TrackInfo> tracksSorted;
     
     int numRows = 0;
     

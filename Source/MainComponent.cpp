@@ -41,7 +41,6 @@ MainComponent::MainComponent()
     
     libraryView.reset(new LibraryView(dataManager.get(), playPauseBtn.get()));
     addAndMakeVisible(libraryView.get());
-    dataManager->setLibrary(libraryView.get());
     
     mixView.reset(new MixView(audioProcessor->getTrackProcessors()));
     addChildComponent(mixView.get());

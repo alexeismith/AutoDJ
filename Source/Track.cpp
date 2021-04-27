@@ -18,10 +18,7 @@ bool Track::update(int numSamples)
     pitch.update(playhead, numSamples);
     gain.update(playhead, numSamples);
     
-    if (!leader && playhead >= currentMix->endNext)
-        jassert(false);
-    
-    if ((leader && playhead >= currentMix->end) || (!leader && playhead >= currentMix->endNext))
+    if (leader && playhead >= currentMix->end)
         return true;
     
     return false;

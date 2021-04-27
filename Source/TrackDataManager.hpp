@@ -9,7 +9,10 @@
 #define DataManager_hpp
 
 #include <JuceHeader.h>
+
 #include "SqlDatabase.hpp"
+#include "TrackSorter.hpp"
+#include "AnalysisManager.hpp"
 
 #define DATABASE_FILENAME ("AutoDjData.db")
 
@@ -23,19 +26,21 @@ public:
       
     ~TrackDataManager() {}
     
-    void setLibrary(juce::Component* library) { libraryComponent = library; }
-    
-    void initialise(juce::File directory);
+    void initialise(juce::Component* library, juce::File directory);
     
     juce::Array<TrackInfo>* getTracks() { return &tracks; }
     
-    void update(TrackInfo track);
+    void storeAnalysis(TrackInfo* track);
     
     bool isLoaded(double& progress);
+    
+    bool analysisProgress(double& progress, bool& canStartPlaying);
     
     juce::AudioBuffer<float>* loadAudio(juce::String filename, bool mono = false);
     
     void releaseAudio(juce::AudioBuffer<float>* buffer) { const juce::ScopedLock sl(lock); audioBuffers.removeObject(buffer); }
+    
+    TrackInfo chooseTrack(MixDirection direction) { return sorter.chooseTrack(direction); }
       
 private:
     
@@ -54,11 +59,17 @@ private:
     
     juce::Component* libraryComponent;
     
+    AnalysisManager analysisManager;
+    
     juce::AudioFormatManager formatManager;
     juce::WildcardFileFilter fileFilter;
     SqlDatabase database;
     
+    TrackSorter sorter;
+    
     juce::Array<TrackInfo> tracks;
+    
+    int numTracksAnalysed = 0;
     
     juce::TimeSliceThread thread {"BackgroundUpdateThread"};
     std::unique_ptr<juce::DirectoryContentsList> dirContents;
@@ -78,7 +89,7 @@ class FileParserThread : public juce::Thread
 public:
     
     FileParserThread(TrackDataManager* dm) :
-        juce::Thread("Parser"), dataManager(dm) {}
+        juce::Thread("FileParser"), dataManager(dm) {}
     
     ~FileParserThread() { stopThread(10000); }
     

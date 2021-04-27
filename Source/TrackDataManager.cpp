@@ -6,10 +6,11 @@
 //
 
 #include "TrackDataManager.hpp"
-#include "CommonDefs.hpp"
-#include "ThirdParty/xxhash32.h"
 
+#include "CommonDefs.hpp"
 #include "LibraryView.hpp"
+
+#include "ThirdParty/xxhash32.h"
 
 extern "C" {
   #include <sqlite3.h>
@@ -29,8 +30,10 @@ TrackDataManager::TrackDataManager() :
 }
 
 
-void TrackDataManager::initialise(juce::File directory)
+void TrackDataManager::initialise(juce::Component* library, juce::File directory)
 {
+    libraryComponent = library;
+    
     dirContents->setDirectory(directory, true, true);
     
     if (!database.initialise(directory))
@@ -40,22 +43,19 @@ void TrackDataManager::initialise(juce::File directory)
 }
 
 
-void TrackDataManager::update(TrackInfo track)
+void TrackDataManager::storeAnalysis(TrackInfo* track)
 {
     const juce::ScopedLock sl(lock);
     
-    database.store(track);
+    // Update the database with the new track info (this replaces the existing track record if present)
+    database.store(*track);
+
+    // Pass the track to the sorter
+    sorter.addAnalysed(track);
+    // Increment the counter
+    numTracksAnalysed += 1;
     
-    for (int i = 0; i < tracks.size(); i++)
-    {
-        if (tracks[i].hash == track.hash)
-        {
-            tracks.remove(i);
-            tracks.add(track);
-            break;
-        }
-    }
-    
+    // If the library UI is set, tell it to update
     if (libraryComponent)
         ((LibraryView*)libraryComponent)->updateData();
 }
@@ -64,7 +64,14 @@ void TrackDataManager::update(TrackInfo track)
 bool TrackDataManager::isLoaded(double& progress)
 {
     progress = parser->getProgress();
-    return (progress > 1.0);
+    return (!parser->isThreadRunning());
+}
+
+
+bool TrackDataManager::analysisProgress(double& progress, bool& canStartPlaying)
+{
+    canStartPlaying = numTracksAnalysed >= NUM_TRACKS_MIN;
+    return analysisManager.isFinished(progress);
 }
 
 
@@ -167,6 +174,18 @@ void TrackDataManager::parseFile(juce::File file)
         }
         
         tracks.add(trackInfo);
+        
+        TrackInfo* trackPtr = &tracks.getReference(tracks.size()-1);
+        
+        if (trackInfo.analysed)
+        {
+            sorter.addAnalysed(trackPtr);
+            numTracksAnalysed += 1;
+        }
+        else
+        {
+            analysisManager.addJob(trackPtr);
+        }
     }
 }
 
@@ -223,5 +242,6 @@ void FileParserThread::run()
         dataManager->parseFile(dataManager->dirContents->getFile(i));
     }
     
-    progress.store(2.0);
+    dataManager->sorter.sort();
+    dataManager->analysisManager.startAnalysis(dataManager);
 }

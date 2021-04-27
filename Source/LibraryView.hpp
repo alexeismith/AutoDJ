@@ -9,7 +9,6 @@
 #define LibraryComponent_hpp
 
 #include "TrackDataManager.hpp"
-#include "AnalysisManager.hpp"
 #include "QueueTableComponent.hpp"
 #include "CommonDefs.hpp"
 
@@ -43,7 +42,6 @@ private:
     std::unique_ptr<juce::ProgressBar> analysisProgress;
     
     TrackDataManager* dataManager;
-    std::unique_ptr<AnalysisManager> analysisManager;
     
     bool waitingForFiles = false;
     bool waitingForAnalysis = false;

@@ -39,6 +39,8 @@ private:
     
     int deckId;
     
+    bool trackLoaded = false;
+    
     TrackProcessor* trackProcessor = nullptr;
     
     std::unique_ptr<WaveformComponent> waveform;

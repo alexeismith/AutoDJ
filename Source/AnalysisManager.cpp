@@ -7,8 +7,9 @@
 
 #include "AnalysisManager.hpp"
 
-#define MAX_NUM_THREADS (8)
+#include "TrackDataManager.hpp"
 
+#define MAX_NUM_THREADS (8)
 
 AnalysisManager::~AnalysisManager()
 {
@@ -22,23 +23,13 @@ AnalysisManager::~AnalysisManager()
 }
 
 
-void AnalysisManager::startAnalysis()
+void AnalysisManager::startAnalysis(TrackDataManager* dataManager)
 {
-    juce::Array<TrackInfo>* tracks = dataManager->getTracks();
-    
     int numThreads = juce::SystemStats::getNumCpus();
     DBG("Num logical CPU cores: " << numThreads);
     numThreads -= 2;
     numThreads = juce::jmin(numThreads, MAX_NUM_THREADS);
     DBG("Using " << numThreads << " analysis threads");
-    
-    for (int i = 0; i < tracks->size(); i++)
-    {
-        if (tracks->getReference(i).analysed == false)
-            jobs.add(tracks->getReference(i));
-        else
-            numAnalysed += 1;
-    }
     
     if (jobs.size() == 0)
     {
@@ -93,7 +84,7 @@ bool AnalysisManager::areThreadsFinished()
 }
 
 
-TrackInfo AnalysisManager::getNextJob(bool& finished)
+TrackInfo* AnalysisManager::getNextJob()
 {
     const juce::ScopedLock sl(lock);
     
@@ -101,21 +92,11 @@ TrackInfo AnalysisManager::getNextJob(bool& finished)
     
     if (job == jobs.size())
     {
-        finished = true;
-        return TrackInfo();
+        return nullptr;
     }
     else
     {
-        finished = false;
         jobProgress += 1;
         return jobs.getUnchecked(job);
     }
-}
-
-
-void AnalysisManager::incrementNumAnalysed()
-{
-    const juce::ScopedLock sl(lock);
-    
-    numAnalysed += 1;
 }

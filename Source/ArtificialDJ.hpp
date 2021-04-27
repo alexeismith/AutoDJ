@@ -55,6 +55,8 @@ private:
     
     juce::CriticalSection lock;
     
+    juce::Array<Track> Unplayed;
+    
     juce::Array<MixInfo> mixQueue;
     
     TrackDataManager* dataManager = nullptr;

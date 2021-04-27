@@ -78,6 +78,8 @@ bool ArtificialDJ::playPause()
 
 void ArtificialDJ::initialise()
 {
+    
+    
     // TODO: maybe don't need pointers?
     TrackInfo trackFirst = chooseTrack(true);
     TrackInfo trackSecond = chooseTrack(true);

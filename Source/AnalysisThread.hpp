@@ -10,10 +10,11 @@
 
 #include <JuceHeader.h>
 
-#include "TrackDataManager.hpp"
+#include "TrackInfo.hpp"
 #include "AnalyserBeats.hpp"
 #include "AnalyserKey.hpp"
 
+class TrackDataManager;
 class AnalysisManager;
 
 class AnalysisThread : public juce::Thread

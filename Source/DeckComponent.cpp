@@ -48,6 +48,8 @@ void DeckComponent::load(Track* trackPtr)
     
     waveformLoader->load(&track);
     
+    trackLoaded = true;
+    
     // TODO: show title, artist, etc
 }
 
@@ -60,5 +62,6 @@ void DeckComponent::update()
     if (t)
         load(t);
     
-    waveform->draw(trackProcessor->getTrack()->getPlayhead(), trackProcessor->getTimeStretch(), trackProcessor->getTrack()->gain.currentValue);
+    if (trackLoaded)
+        waveform->draw(trackProcessor->getTrack()->getPlayhead(), trackProcessor->getTimeStretch(), trackProcessor->getTrack()->gain.currentValue);
 }

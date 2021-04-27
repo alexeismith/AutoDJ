@@ -154,11 +154,14 @@ void WaveformComponent::updateImage()
             if (downbeat)
             {
                 g.drawVerticalLine(x, 0, getHeight());
+                g.drawVerticalLine(x+1, 0, getHeight());
             }
             else
             {
                 g.drawVerticalLine(x, 0, barHeight);
                 g.drawVerticalLine(x, getHeight() - barHeight, getHeight());
+                g.drawVerticalLine(x+1, 0, barHeight);
+                g.drawVerticalLine(x+1, getHeight() - barHeight, getHeight());
             }
         }
     }

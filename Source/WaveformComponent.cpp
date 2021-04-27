@@ -55,9 +55,9 @@ void WaveformComponent::draw(int playhead, double timeStretch, double gain)
     brightness = juce::jmax(float(std::sqrt(gain)), 0.3f);
     
     #ifdef WAVEFORM_HALF_RESOLUTION
-        drawWidth = getWidth()/2 * (1.0 / timeStretch);
+        drawWidth = getWidth()/2 * (timeStretch);
     #else
-        drawWidth = getWidth() * (1.0 / timeStretch);
+        drawWidth = getWidth() * (timeStretch);
     #endif
     
     double playheadAdjust = playhead - double(WAVEFORM_FRAME_SIZE * drawWidth)/2;

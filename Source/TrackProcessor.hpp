@@ -18,6 +18,8 @@
 
 class ArtificialDJ;
 
+class TrackLoadThread;
+
 class TrackProcessor
 {
 public:
@@ -26,7 +28,7 @@ public:
     
     ~TrackProcessor() {}
     
-    bool getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill, bool play = true);
+    int getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);
     
     Track* getTrack();
     
@@ -35,8 +37,6 @@ public:
     void nextMix();
     
     bool isReady() { return ready; }
-    
-    void update();
     
     void loadNextTrack();
     
@@ -50,7 +50,13 @@ public:
     
     Track* getNewTrack();
     
+    void syncWithLeader(int leaderPlayhead);
+    
 private:
+    
+    void update(int numSamples);
+    
+    void resetPlayhead(int sample = 0);
     
     int getAudioLength() { return track->audio->getNumSamples(); }
     
@@ -61,12 +67,16 @@ private:
     void updateShifts();
     
     juce::CriticalSection lock;
+    
+    std::unique_ptr<TrackLoadThread> trackLoader;
 
     TrackProcessor* partner = nullptr;
     TrackDataManager* dataManager = nullptr;
     ArtificialDJ* dj = nullptr;
     
+    bool trackEnd = false;
     bool newTrack = true;
+    bool play = false;
     
     std::atomic<bool> ready;
     
@@ -81,6 +91,24 @@ private:
     double timeStretch = 1;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackProcessor)
+};
+
+
+class TrackLoadThread : public juce::Thread
+{
+public:
+    
+    TrackLoadThread(TrackProcessor* processor) :
+        juce::Thread("TrackLoad"), trackProcessor(processor) {}
+    
+    ~TrackLoadThread() { stopThread(1000); }
+    
+    void run() { trackProcessor->loadNextTrack(); }
+    
+private:
+    
+    TrackProcessor* trackProcessor = nullptr;
+    
 };
 
 #endif /* TrackProcessor_hpp */

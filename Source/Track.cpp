@@ -10,14 +10,16 @@
 #include "ArtificialDJ.hpp"
 
 
-bool Track::update()
+bool Track::update(int numSamples)
 {
-    int numSamples = playhead - lastUpdate;
-    lastUpdate = playhead;
+    playhead += numSamples;
     
     bpm.update(playhead, numSamples);
     pitch.update(playhead, numSamples);
     gain.update(playhead, numSamples);
+    
+    if (!leader && playhead >= currentMix->endNext)
+        jassert(false);
     
     if ((leader && playhead >= currentMix->end) || (!leader && playhead >= currentMix->endNext))
         return true;
@@ -49,7 +51,6 @@ bool Track::applyNextMix(MixInfo* mix)
         audio = currentMix->nextTrackAudio;
         
         playhead = currentMix->startNext;
-        lastUpdate = playhead;
         
         gain.moveTo(1.0, currentMix->startNext, currentMix->endNext - currentMix->startNext);
         

@@ -44,7 +44,7 @@ private:
     std::unique_ptr<WaveformComponent> waveform;
     std::unique_ptr<WaveformLoadThread> waveformLoader;
 
-    Track* track;
+    Track track;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeckComponent)
 };

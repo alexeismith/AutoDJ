@@ -163,7 +163,7 @@ void WaveformComponent::updateImage()
         }
     }
     
-    *image = image->rescaled(getWidth(), getHeight(), juce::Graphics::ResamplingQuality::lowResamplingQuality);
+    *image = image->rescaled(getWidth(), getHeight(), juce::Graphics::ResamplingQuality::mediumResamplingQuality);
 }
 
 

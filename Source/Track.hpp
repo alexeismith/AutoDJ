@@ -21,27 +21,34 @@ public:
     ~Track() {}
     
     // Returns true if current mix has finished
-    bool update();
+    bool update(int numSamples);
     
     bool applyNextMix(MixInfo* mix);
     
-    TrackInfo info;
-    juce::AudioBuffer<float>* audio;
+    int getPlayhead() { return playhead; }
     
-    MixInfo* currentMix;
+    void resetPlayhead(int sample) { playhead = sample; }
+    
+    void reset(double initBpm = 0.0, double initGain = 0.0, double initPitch = 0.0);
+    
+    void setCurrentMix(MixInfo* mix) { currentMix = mix; }
+    
+    TrackInfo info;
     
     bool leader = false;
     
-    int playhead = 0;
-    int lastUpdate = 0;
+    juce::AudioBuffer<float>* audio;
     
     InterpolatedParameter bpm;
     InterpolatedParameter gain;
     InterpolatedParameter pitch;
     
-    void reset(double initBpm = 0.0, double initGain = 0.0, double initPitch = 0.0);
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Track)
+private:
+    
+    MixInfo* currentMix;
+    
+    int playhead = 0;
+    
 };
 
 #endif /* Track_hpp */

@@ -41,8 +41,9 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
         
         if (leader)
         {
-            bool play = leader->getNextAudioBlock(bufferToFill);
-            next->getNextAudioBlock(bufferToFill, play);
+            int playhead = leader->getNextAudioBlock(bufferToFill);
+            next->syncWithLeader(playhead - bufferToFill.numSamples);
+            next->getNextAudioBlock(bufferToFill);
         }
         else
         {

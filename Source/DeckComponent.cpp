@@ -42,9 +42,11 @@ void DeckComponent::buttonClicked(juce::Button* button)
 
 void DeckComponent::load(Track* trackPtr)
 {
-    track = trackPtr;
+    track = *trackPtr;
     
-    waveformLoader->load(track);
+    DBG("Deck " << deckId+1 << " playing: " << track.info.filename);
+    
+    waveformLoader->load(&track);
     
     // TODO: show title, artist, etc
 }
@@ -58,5 +60,5 @@ void DeckComponent::update()
     if (t)
         load(t);
     
-    waveform->draw(trackProcessor->getTrack()->playhead, trackProcessor->getTimeStretch(), trackProcessor->getTrack()->gain.currentValue);
+    waveform->draw(trackProcessor->getTrack()->getPlayhead(), trackProcessor->getTimeStretch(), trackProcessor->getTrack()->gain.currentValue);
 }

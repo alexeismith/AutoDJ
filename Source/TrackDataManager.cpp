@@ -72,7 +72,7 @@ juce::AudioBuffer<float>* TrackDataManager::loadAudio(juce::String filename, boo
 {
     const juce::ScopedLock sl(lock);
     
-    DBG("LOADING AUDIO");
+//    DBG("LOADING AUDIO");
     
     juce::AudioBuffer<float>* buffer = nullptr;
     

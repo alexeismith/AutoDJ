@@ -7,7 +7,6 @@
 
 #include "TrackSorter.hpp"
 
-#include <random>
 
 enum SortCategory : int
 {
@@ -23,25 +22,6 @@ void TrackSorter::sort()
     
     sortCategory = SortCategory::key;
     sortedKey.sort(*this);
-    
-    DBG("BPM...");
-    for (auto* track : sortedBpm)
-        DBG(track->bpm);
-
-    DBG("Key...");
-    for (auto* track : sortedKey)
-        DBG(track->key);
-    
-//    DBG("");
-//
-//    std::default_random_engine generator;
-//    std::normal_distribution<double> distribution;
-//
-//    DBG(distribution(generator));
-//    DBG(distribution(generator));
-//    DBG(distribution(generator));
-//    DBG(distribution(generator));
-//    DBG(distribution(generator));
     
     sorted = true;
 }
@@ -85,14 +65,12 @@ void TrackSorter::addIntoSortedArray(juce::Array<TrackInfo*>& sortedArray, int c
 {
     int result;
     sortCategory = category;
+    
     int index = findIndexOf(sortedArray, category, getSortValue(track), result);
+    
     if (result == 1)
         index += 1;
     sortedArray.insert(index, track);
-    
-    DBG("Array...");
-    for (auto* track : sortedArray)
-        DBG(getSortValue(track));
 }
 
 

@@ -26,7 +26,7 @@ void ArtificialDJ::run()
     while (!threadShouldExit())
     {
         if (mixQueue.size() < MIX_QUEUE_LENGTH)
-            generateMix(mixQueue.getFirst().nextTrack, chooser->chooseTrack(MixDirection())); // TODO: not true
+            generateMix(mixQueue.getFirst().nextTrack, chooser->chooseTrack());
         
         sleep(100);
     }
@@ -45,7 +45,7 @@ MixInfo ArtificialDJ::getNextMix(MixInfo current)
     if (mixQueue.size() == 0)
     {
         jassert(false); // Mix queue was empty!
-        generateMix(current.nextTrack, chooser->chooseTrack(MixDirection()));
+        generateMix(current.nextTrack, chooser->chooseTrack());
     }
     
     return mixQueue.getUnchecked(0);
@@ -80,11 +80,8 @@ bool ArtificialDJ::playPause()
 
 void ArtificialDJ::initialise()
 {
-    
-    
-    // TODO: maybe don't need pointers?
-    TrackInfo trackFirst = chooser->chooseTrack(MixDirection());
-    TrackInfo trackSecond = chooser->chooseTrack(MixDirection());
+    TrackInfo trackFirst = chooser->chooseTrack();
+    TrackInfo trackSecond = chooser->chooseTrack();
     generateMix(trackFirst, trackSecond);
     
     TrackProcessor* leader = audioProcessor->getTrackProcessor(0);

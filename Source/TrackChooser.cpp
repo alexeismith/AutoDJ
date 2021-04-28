@@ -12,10 +12,19 @@ TrackChooser::TrackChooser(TrackDataManager* dm)
 {
     dataManager = dm;
     sorter = dataManager->getSorter();
+    
+    for (int i = 0; i < 1000; i++)
+        updateVelocity();
 }
 
 
-TrackInfo TrackChooser::chooseTrack(MixDirection direction)
+TrackInfo TrackChooser::chooseTrackComplex()
+{
+    
+}
+
+
+TrackInfo TrackChooser::chooseTrackRandom()
 {
     bool random = true;
     
@@ -43,4 +52,25 @@ TrackInfo TrackChooser::chooseTrack(MixDirection direction)
     track->queued = true;
     
     return *track;
+}
+
+
+void TrackChooser::updateVelocity()
+{
+    const double momentum = 0.9;
+    std::normal_distribution<double> distribution(0, 0.5);
+    
+    accelerationBpm = accelerationBpm*momentum + distribution(randomGenerator)*(1.0 - momentum);
+    accelerationKey = accelerationKey*momentum + distribution(randomGenerator)*(1.0 - momentum);
+    
+    velocityBpm += accelerationBpm;
+    velocityKey += accelerationKey;
+
+    velocityBpm = juce::jmin(velocityBpm, 1.0);
+    velocityKey = juce::jmin(velocityKey, 1.0);
+    
+    velocityBpm = juce::jmax(velocityBpm, -1.0);
+    velocityKey = juce::jmax(velocityKey, -1.0);
+    
+    DBG("velocityBpm: " << velocityBpm << " velocityKey: " << velocityKey);
 }

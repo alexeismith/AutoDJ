@@ -10,17 +10,9 @@
 
 #include <JuceHeader.h>
 
+#include <random>
+
 #include "TrackDataManager.hpp"
-
-
-typedef struct MixDirection
-{
-    double tempoCurrent;
-    double tempoChange;
-    double energyCurrent;
-    double energyChange;
-    int keyCurrent = 0;
-} MixDirection;
 
 
 class TrackChooser
@@ -31,12 +23,30 @@ public:
     
     ~TrackChooser() {}
     
-    TrackInfo chooseTrack(MixDirection direction);
+    TrackInfo chooseTrack() { return chooseTrackRandom(); }
+    
+    TrackInfo chooseTrackComplex();
+    
+    TrackInfo chooseTrackRandom();
     
 private:
-
+    
+    void updateVelocity();
+    
     TrackDataManager* dataManager = nullptr;
     TrackSorter* sorter = nullptr;
+    
+    double currentBpm = -1.0;
+    double currentKey = -1.0;
+    
+    double velocityBpm = 0.0;
+    double velocityKey = 0.0;
+    
+    double accelerationBpm = 0.0;
+    double accelerationKey = 0.0;
+    
+    std::default_random_engine randomGenerator;
+
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackChooser)
 };

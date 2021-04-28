@@ -58,13 +58,13 @@ void QueueTableComponent::mouseDrag(const juce::MouseEvent& e)
     int rowShift = floor(distance / table->getRowHeight());
     
     newRow = row + rowShift;
-    newRow = juce::jmin(newRow, numRows - 1);
+    newRow = juce::jmin(newRow, getNumRows() - 1);
     newRow = juce::jmax(newRow, 0);
     rowShift = newRow - row;
     rowInitialY += rowShift * table->getRowHeight();
     
 //    DBG(newRow);
-    tracks->move(row, newRow);
+    tracksSorted.move(row, newRow);
     table->selectRow(newRow);
     table->repaint();
     

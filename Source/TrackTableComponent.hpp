@@ -19,7 +19,7 @@ public:
         : columnId(columnId),
           direction(forwards ? 1 : -1) {}
     
-    int compareElements(TrackInfo first, TrackInfo second);
+    int compareElements(TrackInfo* first, TrackInfo* second);
     
 private:
     
@@ -36,9 +36,9 @@ public:
     
     ~TrackTableComponent() {}
     
-    void populate(juce::Array<TrackInfo>* trackList);
+    void populate(TrackInfo* track, int numTracks);
     
-    int getNumRows() override { return numRows; }
+    int getNumRows() override { return tracksSorted.size(); }
     
     void paintRowBackground(juce::Graphics& g, int rowNumber, int /*width*/, int /*height*/, bool rowIsSelected) override;
     
@@ -56,17 +56,14 @@ protected:
     
     std::unique_ptr<juce::TableListBox> table;
     
-    juce::Array<TrackInfo>* tracks;
-    juce::Array<TrackInfo> tracksSorted;
-    
-    int numRows = 0;
+    juce::Array<TrackInfo*> tracksSorted;
     
     
 private:
     
     std::unique_ptr<TrackTableSorter> sorter;
     
-    juce::String getValueForColumn(TrackInfo& track, int columnId);
+    juce::String getValueForColumn(TrackInfo* track, int columnId);
     
     juce::Font font { 14.0f };
     

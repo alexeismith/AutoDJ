@@ -39,12 +39,19 @@ public:
     
     int getLengthSamples(); // TODO: make sure this is used where possible
     
+    juce::String getFilename() { return juce::String(juce::CharPointer_UTF8(filename)); }
+    juce::String getArtist() { return juce::String(juce::CharPointer_UTF8(artist)); }
+    juce::String getTitle() { return juce::String(juce::CharPointer_UTF8(title)); }
+    
+    void setFilename(juce::String text) { strcpy(filename, text.getCharPointer()); }
+    void setArtist(juce::String text) { strcpy(artist, text.getCharPointer()); }
+    void setTitle(juce::String text) { strcpy(title, text.getCharPointer()); }
+    
 //    int getLastDownbeat(); // TODO: if useful, make sure this works
     
-    juce::String filename;
+    
     int hash = 0; // Hash of the raw data, computed using XXHash32 algorithm
-    juce::String artist = "";
-    juce::String title = "";
+
     int length = 0; // Total length in seconds
     bool analysed = false; // Indicates whether analysis has been performed to extract bpm, key and energy
     bool queued = false; // Indicates whether the track has been queue/played this session
@@ -53,6 +60,13 @@ public:
     int downbeat = -1;
     int key = -1; // Musical key signature TODO: how to represent camelot?
     int energy = -1; // Overall energy level TODO: how to represent energy? thinking about track distribution screen, maybe a numeric scale is best
+    
+    
+private:
+    
+    char filename[FILENAME_MAX];
+    char artist[FILENAME_MAX];
+    char title[FILENAME_MAX];
 };
 
 #endif /* TrackInfo_h */

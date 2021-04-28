@@ -41,6 +41,9 @@ void TrackSorter::addAnalysed(TrackInfo* track)
         addIntoSortedArray(sortedBpm, SortCategory::bpm, track);
         addIntoSortedArray(sortedKey, SortCategory::key, track);
     }
+    
+//    for (auto* track : sortedBpm)
+//        DBG(track->getFilename() << " " << track->bpm);
 }
 
 

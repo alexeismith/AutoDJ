@@ -44,7 +44,7 @@ void DeckComponent::load(Track* trackPtr)
 {
     track = *trackPtr;
     
-    DBG("Deck " << deckId+1 << " playing: " << track.info.filename);
+    DBG("Deck " << deckId+1 << " playing: " << track.info.getFilename());
     
     waveformLoader->load(&track);
     

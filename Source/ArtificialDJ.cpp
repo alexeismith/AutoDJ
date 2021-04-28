@@ -108,7 +108,7 @@ void ArtificialDJ::generateMix(TrackInfo leadingTrack, TrackInfo nextTrack)
     
     mix.leadingTrack = leadingTrack;
     mix.nextTrack = nextTrack;
-    mix.nextTrackAudio = dataManager->loadAudio(nextTrack.filename, true);
+    mix.nextTrackAudio = dataManager->loadAudio(nextTrack.getFilename(), true);
     
     int mixLengthBeats = 16;
     

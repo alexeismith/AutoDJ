@@ -25,8 +25,8 @@ void TrackChooser::initialise()
     int sizeBpm = sorter->getSortedBpm().size();
     int sizeKey = sorter->getSortedKey().size();
     
-    int indexBpm = round(sizeBpm * getRandomGaussian(0.2, true, 0.5));
-    int indexKey = round(sizeKey * getRandomGaussian(0.2, true, 0.5));
+    int indexBpm = round(sizeBpm * getRandomGaussian(0.2, 0.5, 0.5));
+    int indexKey = round(sizeKey * getRandomGaussian(0.2, 0.5, 0.5));
     
     indexBpm = juce::jmin(indexBpm, sizeBpm-1);
     indexKey = juce::jmin(indexKey, sizeKey-1);
@@ -60,8 +60,8 @@ TrackInfo TrackChooser::chooseTrackRandom()
     {
         do
         {
-            randomChoice = rand() % dataManager->getTracks()->size();
-            track = dataManager->getTracks()->getUnchecked(randomChoice);
+            randomChoice = rand() % dataManager->getNumTracks();
+            track = &dataManager->getTracks()[randomChoice];
         } while (!track->analysed || track->queued);
 //        } while (!track->analysed); TODO: remove
     }
@@ -70,20 +70,20 @@ TrackInfo TrackChooser::chooseTrackRandom()
         // TODO: Take into account BPM, Key, Energy
     }
     
-//    DBG("QUEUED: " << track->filename);
+//    DBG("QUEUED: " << track->getFilename());
     track->queued = true;
     
     return *track;
 }
 
 
-double TrackChooser::getRandomGaussian(double stdDev, bool limit, double shift)
+double TrackChooser::getRandomGaussian(double stdDev, double rangeLimit, double shift)
 {
     std::normal_distribution<double> distribution(0, stdDev);
     double value = distribution(randomGenerator);
     
-    if (limit)
-        value = juce::jlimit(-1.0, 1.0, value);
+    if (rangeLimit > 0.0)
+        value = juce::jlimit(-rangeLimit, rangeLimit, value);
     
     return value + shift;
 }
@@ -93,8 +93,8 @@ void TrackChooser::updatePosition()
 {
     const double momentum = 0.9;
     
-    accelerationBpm = accelerationBpm*momentum + getRandomGaussian(0.5, false)*(1.0 - momentum);
-    accelerationKey = accelerationKey*momentum + getRandomGaussian(0.5, false)*(1.0 - momentum);
+    accelerationBpm = accelerationBpm*momentum + getRandomGaussian(0.5)*(1.0 - momentum);
+    accelerationKey = accelerationKey*momentum + getRandomGaussian(0.5)*(1.0 - momentum);
     
     velocityBpm += accelerationBpm;
     velocityKey += accelerationKey;

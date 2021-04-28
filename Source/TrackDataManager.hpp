@@ -24,11 +24,13 @@ public:
       
     TrackDataManager();
       
-    ~TrackDataManager() {}
+    ~TrackDataManager();
     
     void initialise(juce::Component* library, juce::File directory);
     
-    juce::Array<TrackInfo>* getTracks() { return &tracks; }
+    TrackInfo* getTracks() { return tracks; }
+    
+    int getNumTracks() { return numTracks; }
     
     void storeAnalysis(TrackInfo* track);
     
@@ -59,7 +61,7 @@ private:
     
     juce::Component* libraryComponent;
     
-    AnalysisManager analysisManager;
+    std::unique_ptr<AnalysisManager> analysisManager;
     
     juce::AudioFormatManager formatManager;
     juce::WildcardFileFilter fileFilter;
@@ -67,7 +69,8 @@ private:
     
     TrackSorter sorter;
     
-    juce::Array<TrackInfo> tracks;
+    TrackInfo* tracks;
+    int numTracks = 0;
     
     int numTracksAnalysed = 0;
     

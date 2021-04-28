@@ -26,7 +26,17 @@ TrackDataManager::TrackDataManager() :
     thread.startThread(3);
     dirContents.reset(new juce::DirectoryContentsList(&fileFilter, thread));
     
+    analysisManager.reset(new AnalysisManager());
+    
     parser.reset(new FileParserThread(this));
+}
+
+
+TrackDataManager::~TrackDataManager()
+{
+    // Must delete analysisManager before dirContents because the analysis threads might try to access dirContents
+    analysisManager.reset();
+    dirContents.reset();
 }
 
 
@@ -71,7 +81,7 @@ bool TrackDataManager::isLoaded(double& progress)
 bool TrackDataManager::analysisProgress(double& progress, bool& canStartPlaying)
 {
     canStartPlaying = numTracksAnalysed >= NUM_TRACKS_MIN;
-    return analysisManager.isFinished(progress);
+    return analysisManager->isFinished(progress);
 }
 
 
@@ -135,10 +145,10 @@ void TrackDataManager::printTrackInfo(TrackInfo info)
 {
     std::stringstream ss;
     ss << "\nTrack Data..." << \
-    "\nFilename: " << info.filename << \
+    "\nFilename: " << info.getFilename() << \
     "\nHash: " << info.hash << \
-    "\nArtist: " << info.artist << \
-    "\nTitle: " << info.title << \
+    "\nArtist: " << info.getArtist() << \
+    "\nTitle: " << info.getTitle() << \
     "\nLength: " << info.length << \
     "\nAnalysed: " << info.analysed << \
     "\nBPM: " << info.bpm << \
@@ -173,9 +183,9 @@ void TrackDataManager::parseFile(juce::File file)
             trackInfo = existingInfo;
         }
         
-        tracks.add(trackInfo);
-        
-        TrackInfo* trackPtr = &tracks.getReference(tracks.size()-1);
+        tracks[numTracks] = trackInfo;
+        TrackInfo* trackPtr = &tracks[numTracks];
+        numTracks += 1;
         
         if (trackInfo.analysed)
         {
@@ -184,7 +194,7 @@ void TrackDataManager::parseFile(juce::File file)
         }
         else
         {
-            analysisManager.addJob(trackPtr);
+            analysisManager->addJob(trackPtr);
         }
     }
 }
@@ -196,9 +206,9 @@ bool TrackDataManager::getTrackInfo(juce::File file, TrackInfo& trackInfo)
 
     if (reader)
     {
-        trackInfo.filename = file.getFileName();
-        trackInfo.artist = reader->metadataValues.getValue("IART", "");
-        trackInfo.title = reader->metadataValues.getValue("INAM", "");
+        trackInfo.setFilename(file.getFileName());
+        trackInfo.setArtist(reader->metadataValues.getValue("IART", ""));
+        trackInfo.setTitle(reader->metadataValues.getValue("INAM", ""));
         trackInfo.length = round(reader->lengthInSamples / reader->sampleRate);
 
         if (reader->numChannels > 0 && trackInfo.length >= TRACK_LENGTH_SECS_MIN && trackInfo.length <= TRACK_LENGTH_SECS_MAX)
@@ -235,6 +245,8 @@ void FileParserThread::run()
     numFiles = dataManager->dirContents->getNumFiles();
     DBG("Num files in directory: " << numFiles);
     
+    dataManager->tracks = (TrackInfo*)malloc(sizeof(TrackInfo) * numFiles);
+    
     for (int i = 0; i < numFiles; i++)
     {
         if (threadShouldExit()) return;
@@ -243,5 +255,5 @@ void FileParserThread::run()
     }
     
     dataManager->sorter.sort();
-    dataManager->analysisManager.startAnalysis(dataManager);
+    dataManager->analysisManager->startAnalysis(dataManager);
 }

@@ -115,7 +115,7 @@ void LibraryView::chooseFolder()
 
 void LibraryView::loadFiles()
 {
-    trackTable->populate(dataManager->getTracks());
+    trackTable->populate(dataManager->getTracks(), dataManager->getNumTracks());
 
     loadingFilesProgress->setVisible(false);
     analysisProgress->setVisible(true);

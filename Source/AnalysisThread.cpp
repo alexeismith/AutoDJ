@@ -41,9 +41,9 @@ void AnalysisThread::analyse(TrackInfo& track)
 {
     juce::AudioBuffer<float>* buffer;
     
-    DBG("Analysis Thread " << id << ": " << track.filename);
+    DBG("Analysis Thread " << id << ": " << track.getFilename());
     
-    buffer = dataManager->loadAudio(track.filename, true);
+    buffer = dataManager->loadAudio(track.getFilename(), true);
     
     progress.store(0.1);
 

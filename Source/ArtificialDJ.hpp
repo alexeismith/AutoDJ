@@ -10,10 +10,10 @@
 
 #include <JuceHeader.h>
 
-#include "TrackDataManager.hpp"
 #include "AudioProcessor.hpp"
 #include "MixInfo.hpp"
 #include "Track.hpp"
+#include "TrackChooser.hpp"
 
 // Need to keep reference to currently executing MixInfo
 
@@ -44,12 +44,13 @@ private:
     
     void initialise();
     
-    std::atomic<bool> initialised;
-    bool playing = false;
-    
-    TrackInfo chooseTrack(bool random);
-    
     void generateMix(TrackInfo leadingTrack, TrackInfo nextTrack);
+    
+    std::unique_ptr<TrackChooser> chooser;
+    
+    std::atomic<bool> initialised;
+    
+    bool playing = false;
     
     int mixIdCounter = 0;
     

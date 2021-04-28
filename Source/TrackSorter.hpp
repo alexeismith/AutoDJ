@@ -13,16 +13,6 @@
 #include "TrackInfo.hpp"
 
 
-typedef struct MixDirection
-{
-    double tempoCurrent;
-    double tempoChange;
-    double energyCurrent;
-    double energyChange;
-    int keyCurrent = 0;
-} MixDirection;
-
-
 class TrackSorter
 {
 public:
@@ -32,8 +22,6 @@ public:
     ~TrackSorter() {}
     
     void sort();
-    
-    TrackInfo chooseTrack(MixDirection direction);
     
     void addAnalysed(TrackInfo* track);
     

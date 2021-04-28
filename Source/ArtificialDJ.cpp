@@ -14,6 +14,8 @@ ArtificialDJ::ArtificialDJ(TrackDataManager* dm) :
     juce::Thread("ArtificialDJ"), dataManager(dm)
 {
     initialised.store(false);
+    
+    chooser.reset(new TrackChooser(dataManager));
 }
 
 
@@ -24,7 +26,7 @@ void ArtificialDJ::run()
     while (!threadShouldExit())
     {
         if (mixQueue.size() < MIX_QUEUE_LENGTH)
-            generateMix(mixQueue.getFirst().nextTrack, chooseTrack(true)); // TODO: not true
+            generateMix(mixQueue.getFirst().nextTrack, chooser->chooseTrack(MixDirection())); // TODO: not true
         
         sleep(100);
     }
@@ -43,7 +45,7 @@ MixInfo ArtificialDJ::getNextMix(MixInfo current)
     if (mixQueue.size() == 0)
     {
         jassert(false); // Mix queue was empty!
-        generateMix(current.nextTrack, chooseTrack(true));
+        generateMix(current.nextTrack, chooser->chooseTrack(MixDirection()));
     }
     
     return mixQueue.getUnchecked(0);
@@ -81,8 +83,8 @@ void ArtificialDJ::initialise()
     
     
     // TODO: maybe don't need pointers?
-    TrackInfo trackFirst = chooseTrack(true);
-    TrackInfo trackSecond = chooseTrack(true);
+    TrackInfo trackFirst = chooser->chooseTrack(MixDirection());
+    TrackInfo trackSecond = chooser->chooseTrack(MixDirection());
     generateMix(trackFirst, trackSecond);
     
     TrackProcessor* leader = audioProcessor->getTrackProcessor(0);
@@ -96,34 +98,6 @@ void ArtificialDJ::initialise()
     playPause();
 }
 
-
-TrackInfo ArtificialDJ::chooseTrack(bool random)
-{
-    int randomChoice;
-    TrackInfo* track = nullptr;
-    
-    // TODO: handle case where all tracks have been played, currrently infinite loop
-    // Use separate unplayed list, which keeps updated with the normal one
-    
-    if (random)
-    {
-        do
-        {
-            randomChoice = rand() % dataManager->getTracks()->size();
-            track = &dataManager->getTracks()->getReference(randomChoice);
-        } while (!track->analysed || track->queued);
-//        } while (!track->analysed); TODO: remove
-    }
-    else
-    {
-        // TODO: Take into account BPM, Key, Energy
-    }
-    
-//    DBG("QUEUED: " << track->filename);
-    track->queued = true;
-    
-    return *track;
-}
 
 void ArtificialDJ::generateMix(TrackInfo leadingTrack, TrackInfo nextTrack)
 {

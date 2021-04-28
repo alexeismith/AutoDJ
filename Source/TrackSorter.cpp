@@ -47,14 +47,6 @@ void TrackSorter::sort()
 }
 
 
-TrackInfo TrackSorter::chooseTrack(MixDirection direction)
-{
-    const juce::ScopedLock sl(lock);
-    
-    return TrackInfo();
-}
-
-
 void TrackSorter::addAnalysed(TrackInfo* track)
 {
     const juce::ScopedLock sl(lock);

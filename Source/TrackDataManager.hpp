@@ -40,7 +40,7 @@ public:
     
     void releaseAudio(juce::AudioBuffer<float>* buffer) { const juce::ScopedLock sl(lock); audioBuffers.removeObject(buffer); }
     
-    TrackInfo chooseTrack(MixDirection direction) { return sorter.chooseTrack(direction); }
+    TrackSorter* getSorter() { return &sorter; }
       
 private:
     

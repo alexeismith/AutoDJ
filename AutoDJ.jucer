@@ -41,138 +41,144 @@
         <FILE id="luYtIx" name="WaveformComponent.hpp" compile="0" resource="0"
               file="Source/WaveformComponent.hpp"/>
       </GROUP>
-    </GROUP>
-    <GROUP id="{7A6526E7-D707-1DAA-1D55-8A76C42F1D9A}" name="Audio Processing">
-      <GROUP id="{A66A8812-B367-E47E-1059-6BAB0DF27951}" name="Third Party">
-        <GROUP id="{FB6635A0-8C1A-C16F-18A4-EA65E33210F3}" name="SoundTouch">
-          <GROUP id="{A8A73E3B-406D-0DDA-6C65-BF509F319C97}" name="Extras">
-            <FILE id="V6aiwu" name="AAFilter.cpp" compile="1" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/AAFilter.cpp"/>
-            <FILE id="Q2vVya" name="AAFilter.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/AAFilter.h"/>
-            <FILE id="kemGbz" name="cpu_detect_x86.cpp" compile="1" resource="0"
-                  file="Source/ThirdParty/soundtouch/source/SoundTouch/cpu_detect_x86.cpp"/>
-            <FILE id="nBANCT" name="cpu_detect.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/cpu_detect.h"/>
-            <FILE id="r1znzR" name="FIFOSampleBuffer.cpp" compile="1" resource="0"
-                  file="Source/ThirdParty/soundtouch/source/SoundTouch/FIFOSampleBuffer.cpp"/>
-            <FILE id="aYyOYI" name="FIRFilter.cpp" compile="1" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/FIRFilter.cpp"/>
-            <FILE id="wvQB1A" name="FIRFilter.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/FIRFilter.h"/>
-            <FILE id="kpWm9E" name="InterpolateCubic.cpp" compile="1" resource="0"
-                  file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateCubic.cpp"/>
-            <FILE id="AL5TCu" name="InterpolateCubic.h" compile="0" resource="0"
-                  file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateCubic.h"/>
-            <FILE id="PSuEZz" name="InterpolateLinear.cpp" compile="1" resource="0"
-                  file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateLinear.cpp"/>
-            <FILE id="FwNIy8" name="InterpolateLinear.h" compile="0" resource="0"
-                  file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateLinear.h"/>
-            <FILE id="vu9umB" name="InterpolateShannon.cpp" compile="1" resource="0"
-                  file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateShannon.cpp"/>
-            <FILE id="UmWZvJ" name="InterpolateShannon.h" compile="0" resource="0"
-                  file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateShannon.h"/>
-            <FILE id="o1v89U" name="RateTransposer.cpp" compile="1" resource="0"
-                  file="Source/ThirdParty/soundtouch/source/SoundTouch/RateTransposer.cpp"/>
-            <FILE id="ZPjeZF" name="RateTransposer.h" compile="0" resource="0"
-                  file="Source/ThirdParty/soundtouch/source/SoundTouch/RateTransposer.h"/>
-            <FILE id="rRkzdq" name="sse_optimized.cpp" compile="1" resource="0"
-                  file="Source/ThirdParty/soundtouch/source/SoundTouch/sse_optimized.cpp"/>
-            <FILE id="Pt6NTc" name="TDStretch.cpp" compile="1" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/TDStretch.cpp"/>
-            <FILE id="hsGW4x" name="TDStretch.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/TDStretch.h"/>
-          </GROUP>
-          <FILE id="IbKj2G" name="SoundTouch.cpp" compile="1" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/SoundTouch.cpp"/>
-          <FILE id="WFTZu7" name="SoundTouch.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/include/SoundTouch.h"/>
-        </GROUP>
+      <GROUP id="{289DA10E-433A-F192-2AB7-9034E7C7833C}" name="AI DJ">
+        <FILE id="v240v0" name="ArtificialDJ.cpp" compile="1" resource="0"
+              file="Source/ArtificialDJ.cpp"/>
+        <FILE id="COCtS0" name="ArtificialDJ.hpp" compile="0" resource="0"
+              file="Source/ArtificialDJ.hpp"/>
+        <FILE id="gtNtNZ" name="TrackChooser.cpp" compile="1" resource="0"
+              file="Source/TrackChooser.cpp"/>
+        <FILE id="CuoVYU" name="TrackChooser.hpp" compile="0" resource="0"
+              file="Source/TrackChooser.hpp"/>
+        <FILE id="IvwbWJ" name="MixInfo.hpp" compile="0" resource="0" file="Source/MixInfo.hpp"/>
       </GROUP>
-      <FILE id="hbOA8G" name="AudioProcessor.cpp" compile="1" resource="0"
-            file="Source/AudioProcessor.cpp"/>
-      <FILE id="OU8h9B" name="AudioProcessor.hpp" compile="0" resource="0"
-            file="Source/AudioProcessor.hpp"/>
-      <FILE id="qPJF0z" name="TrackProcessor.cpp" compile="1" resource="0"
-            file="Source/TrackProcessor.cpp"/>
-      <FILE id="UeV71s" name="TrackProcessor.hpp" compile="0" resource="0"
-            file="Source/TrackProcessor.hpp"/>
-      <FILE id="i7eWR2" name="Track.cpp" compile="1" resource="0" file="Source/Track.cpp"/>
-      <FILE id="UcyA5w" name="Track.hpp" compile="0" resource="0" file="Source/Track.hpp"/>
-      <FILE id="v240v0" name="ArtificialDJ.cpp" compile="1" resource="0"
-            file="Source/ArtificialDJ.cpp"/>
-      <FILE id="COCtS0" name="ArtificialDJ.hpp" compile="0" resource="0"
-            file="Source/ArtificialDJ.hpp"/>
-      <FILE id="IvwbWJ" name="MixInfo.hpp" compile="0" resource="0" file="Source/MixInfo.hpp"/>
-      <FILE id="MB7NHa" name="InterpolatedParameter.cpp" compile="1" resource="0"
-            file="Source/InterpolatedParameter.cpp"/>
-      <FILE id="dEicnh" name="InterpolatedParameter.hpp" compile="0" resource="0"
-            file="Source/InterpolatedParameter.hpp"/>
-    </GROUP>
-    <GROUP id="{9E0BB712-1FB6-4131-B7F6-FA3677F5C918}" name="Audio Analysis">
-      <GROUP id="{67C76829-2C6F-697A-3BEA-7FBFB680248E}" name="Third Party">
-        <GROUP id="{2637A895-BA81-8947-F3CC-9ED9B67ADA9B}" name="Mixxx">
-          <FILE id="bVlyVx" name="beatutils.cpp" compile="1" resource="0" file="Source/ThirdParty/beatutils.cpp"/>
-          <FILE id="slkKII" name="beatutils.h" compile="0" resource="0" file="Source/ThirdParty/beatutils.h"/>
-        </GROUP>
-        <GROUP id="{67C3EE80-C32F-A3A9-ECB3-95B86CB0C9D8}" name="QM DSP">
-          <GROUP id="{DC2B663B-90EE-4178-86AD-9F7A0D1DA85D}" name="KissFFT">
-            <FILE id="wFBZcc" name="kiss_fft.c" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/kiss_fft.c"/>
-            <FILE id="AirqQK" name="kiss_fft.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/kiss_fft.h"/>
-            <FILE id="g77Ma3" name="kiss_fftr.c" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/tools/kiss_fftr.c"/>
-            <FILE id="SudoEr" name="kiss_fftr.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/tools/kiss_fftr.h"/>
+      <GROUP id="{7A6526E7-D707-1DAA-1D55-8A76C42F1D9A}" name="Audio Processing">
+        <GROUP id="{A66A8812-B367-E47E-1059-6BAB0DF27951}" name="Third Party">
+          <GROUP id="{FB6635A0-8C1A-C16F-18A4-EA65E33210F3}" name="SoundTouch">
+            <GROUP id="{A8A73E3B-406D-0DDA-6C65-BF509F319C97}" name="Extras">
+              <FILE id="V6aiwu" name="AAFilter.cpp" compile="1" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/AAFilter.cpp"/>
+              <FILE id="Q2vVya" name="AAFilter.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/AAFilter.h"/>
+              <FILE id="kemGbz" name="cpu_detect_x86.cpp" compile="1" resource="0"
+                    file="Source/ThirdParty/soundtouch/source/SoundTouch/cpu_detect_x86.cpp"/>
+              <FILE id="nBANCT" name="cpu_detect.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/cpu_detect.h"/>
+              <FILE id="r1znzR" name="FIFOSampleBuffer.cpp" compile="1" resource="0"
+                    file="Source/ThirdParty/soundtouch/source/SoundTouch/FIFOSampleBuffer.cpp"/>
+              <FILE id="aYyOYI" name="FIRFilter.cpp" compile="1" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/FIRFilter.cpp"/>
+              <FILE id="wvQB1A" name="FIRFilter.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/FIRFilter.h"/>
+              <FILE id="kpWm9E" name="InterpolateCubic.cpp" compile="1" resource="0"
+                    file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateCubic.cpp"/>
+              <FILE id="AL5TCu" name="InterpolateCubic.h" compile="0" resource="0"
+                    file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateCubic.h"/>
+              <FILE id="PSuEZz" name="InterpolateLinear.cpp" compile="1" resource="0"
+                    file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateLinear.cpp"/>
+              <FILE id="FwNIy8" name="InterpolateLinear.h" compile="0" resource="0"
+                    file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateLinear.h"/>
+              <FILE id="vu9umB" name="InterpolateShannon.cpp" compile="1" resource="0"
+                    file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateShannon.cpp"/>
+              <FILE id="UmWZvJ" name="InterpolateShannon.h" compile="0" resource="0"
+                    file="Source/ThirdParty/soundtouch/source/SoundTouch/InterpolateShannon.h"/>
+              <FILE id="o1v89U" name="RateTransposer.cpp" compile="1" resource="0"
+                    file="Source/ThirdParty/soundtouch/source/SoundTouch/RateTransposer.cpp"/>
+              <FILE id="ZPjeZF" name="RateTransposer.h" compile="0" resource="0"
+                    file="Source/ThirdParty/soundtouch/source/SoundTouch/RateTransposer.h"/>
+              <FILE id="rRkzdq" name="sse_optimized.cpp" compile="1" resource="0"
+                    file="Source/ThirdParty/soundtouch/source/SoundTouch/sse_optimized.cpp"/>
+              <FILE id="Pt6NTc" name="TDStretch.cpp" compile="1" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/TDStretch.cpp"/>
+              <FILE id="hsGW4x" name="TDStretch.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/TDStretch.h"/>
+            </GROUP>
+            <FILE id="IbKj2G" name="SoundTouch.cpp" compile="1" resource="0" file="Source/ThirdParty/soundtouch/source/SoundTouch/SoundTouch.cpp"/>
+            <FILE id="WFTZu7" name="SoundTouch.h" compile="0" resource="0" file="Source/ThirdParty/soundtouch/include/SoundTouch.h"/>
           </GROUP>
-          <GROUP id="{3DFC3318-9093-E5BE-AABA-16C62424D845}" name="Extras">
-            <FILE id="Q2nnFi" name="Chromagram.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/chromagram/Chromagram.cpp"/>
-            <FILE id="nHi7vj" name="Chromagram.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/chromagram/Chromagram.h"/>
-            <FILE id="obj1HG" name="ConstantQ.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/chromagram/ConstantQ.cpp"/>
-            <FILE id="ZqhXeI" name="ConstantQ.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/chromagram/ConstantQ.h"/>
-            <FILE id="hHYfRo" name="Pitch.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/base/Pitch.cpp"/>
-            <FILE id="jwcphL" name="Pitch.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/base/Pitch.h"/>
-            <FILE id="WYdqCO" name="Decimator.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/rateconversion/Decimator.cpp"/>
-            <FILE id="eLOUEs" name="Decimator.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/rateconversion/Decimator.h"/>
-            <FILE id="BLmVWs" name="MathUtilities.cpp" compile="1" resource="0"
-                  file="Source/ThirdParty/qm-dsp/maths/MathUtilities.cpp"/>
-            <FILE id="c1Xy26" name="MathUtilities.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/maths/MathUtilities.h"/>
-            <FILE id="N3z2EV" name="PhaseVocoder.cpp" compile="1" resource="0"
-                  file="Source/ThirdParty/qm-dsp/dsp/phasevocoder/PhaseVocoder.cpp"/>
-            <FILE id="wsdSTc" name="PhaseVocoder.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/phasevocoder/PhaseVocoder.h"/>
-            <FILE id="nrtPmp" name="FFT.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/transforms/FFT.cpp"/>
-            <FILE id="bU6ock" name="FFT.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/transforms/FFT.h"/>
-          </GROUP>
-          <FILE id="txqGN1" name="GetKeyMode.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/keydetection/GetKeyMode.cpp"/>
-          <FILE id="sTHBw6" name="GetKeyMode.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/keydetection/GetKeyMode.h"/>
-          <FILE id="MPhdsc" name="TempoTrackV2.cpp" compile="1" resource="0"
-                file="Source/ThirdParty/qm-dsp/dsp/tempotracking/TempoTrackV2.cpp"/>
-          <FILE id="t5dVpQ" name="TempoTrackV2.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/tempotracking/TempoTrackV2.h"/>
-          <FILE id="O389lL" name="DownBeat.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/tempotracking/DownBeat.cpp"/>
-          <FILE id="AC15j3" name="DownBeat.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/tempotracking/DownBeat.h"/>
-          <FILE id="IrUPSs" name="DetectionFunction.cpp" compile="1" resource="0"
-                file="Source/ThirdParty/qm-dsp/dsp/onsets/DetectionFunction.cpp"/>
-          <FILE id="es2nsk" name="DetectionFunction.h" compile="0" resource="0"
-                file="Source/ThirdParty/qm-dsp/dsp/onsets/DetectionFunction.h"/>
         </GROUP>
+        <FILE id="hbOA8G" name="AudioProcessor.cpp" compile="1" resource="0"
+              file="Source/AudioProcessor.cpp"/>
+        <FILE id="OU8h9B" name="AudioProcessor.hpp" compile="0" resource="0"
+              file="Source/AudioProcessor.hpp"/>
+        <FILE id="qPJF0z" name="TrackProcessor.cpp" compile="1" resource="0"
+              file="Source/TrackProcessor.cpp"/>
+        <FILE id="UeV71s" name="TrackProcessor.hpp" compile="0" resource="0"
+              file="Source/TrackProcessor.hpp"/>
+        <FILE id="i7eWR2" name="Track.cpp" compile="1" resource="0" file="Source/Track.cpp"/>
+        <FILE id="UcyA5w" name="Track.hpp" compile="0" resource="0" file="Source/Track.hpp"/>
+        <FILE id="MB7NHa" name="InterpolatedParameter.cpp" compile="1" resource="0"
+              file="Source/InterpolatedParameter.cpp"/>
+        <FILE id="dEicnh" name="InterpolatedParameter.hpp" compile="0" resource="0"
+              file="Source/InterpolatedParameter.hpp"/>
       </GROUP>
-      <FILE id="DrGG4w" name="AnalysisManager.cpp" compile="1" resource="0"
-            file="Source/AnalysisManager.cpp"/>
-      <FILE id="pZppWL" name="AnalysisManager.hpp" compile="0" resource="0"
-            file="Source/AnalysisManager.hpp"/>
-      <FILE id="Qh8vAA" name="AnalysisThread.cpp" compile="1" resource="0"
-            file="Source/AnalysisThread.cpp"/>
-      <FILE id="BbWd26" name="AnalysisThread.hpp" compile="0" resource="0"
-            file="Source/AnalysisThread.hpp"/>
-      <FILE id="UVzwDy" name="AnalyserBeats.cpp" compile="1" resource="0"
-            file="Source/AnalyserBeats.cpp"/>
-      <FILE id="oeQk5k" name="AnalyserBeats.hpp" compile="0" resource="0"
-            file="Source/AnalyserBeats.hpp"/>
-      <FILE id="m2NH4S" name="AnalyserKey.cpp" compile="1" resource="0" file="Source/AnalyserKey.cpp"/>
-      <FILE id="GaaLbC" name="AnalyserKey.hpp" compile="0" resource="0" file="Source/AnalyserKey.hpp"/>
-    </GROUP>
-    <GROUP id="{9D7FECDF-8952-8FC4-090E-52526F978CD8}" name="Database">
-      <GROUP id="{864AE706-4D80-286D-4EE2-E6FFF4FBB695}" name="Third Party">
-        <FILE id="TgJ3yC" name="xxhash32.h" compile="0" resource="0" file="Source/ThirdParty/xxhash32.h"/>
+      <GROUP id="{9E0BB712-1FB6-4131-B7F6-FA3677F5C918}" name="Audio Analysis">
+        <GROUP id="{67C76829-2C6F-697A-3BEA-7FBFB680248E}" name="Third Party">
+          <GROUP id="{2637A895-BA81-8947-F3CC-9ED9B67ADA9B}" name="Mixxx">
+            <FILE id="bVlyVx" name="beatutils.cpp" compile="1" resource="0" file="Source/ThirdParty/beatutils.cpp"/>
+            <FILE id="slkKII" name="beatutils.h" compile="0" resource="0" file="Source/ThirdParty/beatutils.h"/>
+          </GROUP>
+          <GROUP id="{67C3EE80-C32F-A3A9-ECB3-95B86CB0C9D8}" name="QM DSP">
+            <GROUP id="{DC2B663B-90EE-4178-86AD-9F7A0D1DA85D}" name="KissFFT">
+              <FILE id="wFBZcc" name="kiss_fft.c" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/kiss_fft.c"/>
+              <FILE id="AirqQK" name="kiss_fft.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/kiss_fft.h"/>
+              <FILE id="g77Ma3" name="kiss_fftr.c" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/tools/kiss_fftr.c"/>
+              <FILE id="SudoEr" name="kiss_fftr.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/ext/kissfft/tools/kiss_fftr.h"/>
+            </GROUP>
+            <GROUP id="{3DFC3318-9093-E5BE-AABA-16C62424D845}" name="Extras">
+              <FILE id="Q2nnFi" name="Chromagram.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/chromagram/Chromagram.cpp"/>
+              <FILE id="nHi7vj" name="Chromagram.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/chromagram/Chromagram.h"/>
+              <FILE id="obj1HG" name="ConstantQ.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/chromagram/ConstantQ.cpp"/>
+              <FILE id="ZqhXeI" name="ConstantQ.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/chromagram/ConstantQ.h"/>
+              <FILE id="hHYfRo" name="Pitch.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/base/Pitch.cpp"/>
+              <FILE id="jwcphL" name="Pitch.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/base/Pitch.h"/>
+              <FILE id="WYdqCO" name="Decimator.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/rateconversion/Decimator.cpp"/>
+              <FILE id="eLOUEs" name="Decimator.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/rateconversion/Decimator.h"/>
+              <FILE id="BLmVWs" name="MathUtilities.cpp" compile="1" resource="0"
+                    file="Source/ThirdParty/qm-dsp/maths/MathUtilities.cpp"/>
+              <FILE id="c1Xy26" name="MathUtilities.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/maths/MathUtilities.h"/>
+              <FILE id="N3z2EV" name="PhaseVocoder.cpp" compile="1" resource="0"
+                    file="Source/ThirdParty/qm-dsp/dsp/phasevocoder/PhaseVocoder.cpp"/>
+              <FILE id="wsdSTc" name="PhaseVocoder.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/phasevocoder/PhaseVocoder.h"/>
+              <FILE id="nrtPmp" name="FFT.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/transforms/FFT.cpp"/>
+              <FILE id="bU6ock" name="FFT.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/transforms/FFT.h"/>
+            </GROUP>
+            <FILE id="txqGN1" name="GetKeyMode.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/keydetection/GetKeyMode.cpp"/>
+            <FILE id="sTHBw6" name="GetKeyMode.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/keydetection/GetKeyMode.h"/>
+            <FILE id="MPhdsc" name="TempoTrackV2.cpp" compile="1" resource="0"
+                  file="Source/ThirdParty/qm-dsp/dsp/tempotracking/TempoTrackV2.cpp"/>
+            <FILE id="t5dVpQ" name="TempoTrackV2.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/tempotracking/TempoTrackV2.h"/>
+            <FILE id="O389lL" name="DownBeat.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/tempotracking/DownBeat.cpp"/>
+            <FILE id="AC15j3" name="DownBeat.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/tempotracking/DownBeat.h"/>
+            <FILE id="IrUPSs" name="DetectionFunction.cpp" compile="1" resource="0"
+                  file="Source/ThirdParty/qm-dsp/dsp/onsets/DetectionFunction.cpp"/>
+            <FILE id="es2nsk" name="DetectionFunction.h" compile="0" resource="0"
+                  file="Source/ThirdParty/qm-dsp/dsp/onsets/DetectionFunction.h"/>
+          </GROUP>
+        </GROUP>
+        <FILE id="DrGG4w" name="AnalysisManager.cpp" compile="1" resource="0"
+              file="Source/AnalysisManager.cpp"/>
+        <FILE id="pZppWL" name="AnalysisManager.hpp" compile="0" resource="0"
+              file="Source/AnalysisManager.hpp"/>
+        <FILE id="Qh8vAA" name="AnalysisThread.cpp" compile="1" resource="0"
+              file="Source/AnalysisThread.cpp"/>
+        <FILE id="BbWd26" name="AnalysisThread.hpp" compile="0" resource="0"
+              file="Source/AnalysisThread.hpp"/>
+        <FILE id="UVzwDy" name="AnalyserBeats.cpp" compile="1" resource="0"
+              file="Source/AnalyserBeats.cpp"/>
+        <FILE id="oeQk5k" name="AnalyserBeats.hpp" compile="0" resource="0"
+              file="Source/AnalyserBeats.hpp"/>
+        <FILE id="m2NH4S" name="AnalyserKey.cpp" compile="1" resource="0" file="Source/AnalyserKey.cpp"/>
+        <FILE id="GaaLbC" name="AnalyserKey.hpp" compile="0" resource="0" file="Source/AnalyserKey.hpp"/>
       </GROUP>
-      <FILE id="kqk0eM" name="TrackDataManager.cpp" compile="1" resource="0"
-            file="Source/TrackDataManager.cpp"/>
-      <FILE id="lBTfyV" name="TrackDataManager.hpp" compile="0" resource="0"
-            file="Source/TrackDataManager.hpp"/>
-      <FILE id="Exu3LO" name="TrackSorter.cpp" compile="1" resource="0" file="Source/TrackSorter.cpp"/>
-      <FILE id="EJfg8Y" name="TrackSorter.hpp" compile="0" resource="0" file="Source/TrackSorter.hpp"/>
-      <FILE id="ut91i0" name="TrackInfo.cpp" compile="1" resource="0" file="Source/TrackInfo.cpp"/>
-      <FILE id="ElBeMd" name="TrackInfo.hpp" compile="0" resource="0" file="Source/TrackInfo.hpp"/>
-      <FILE id="Fow9ik" name="SqlDatabase.cpp" compile="1" resource="0" file="Source/SqlDatabase.cpp"/>
-      <FILE id="JVHSSv" name="SqlDatabase.hpp" compile="0" resource="0" file="Source/SqlDatabase.hpp"/>
+      <GROUP id="{9D7FECDF-8952-8FC4-090E-52526F978CD8}" name="Database">
+        <GROUP id="{864AE706-4D80-286D-4EE2-E6FFF4FBB695}" name="Third Party">
+          <FILE id="TgJ3yC" name="xxhash32.h" compile="0" resource="0" file="Source/ThirdParty/xxhash32.h"/>
+        </GROUP>
+        <FILE id="kqk0eM" name="TrackDataManager.cpp" compile="1" resource="0"
+              file="Source/TrackDataManager.cpp"/>
+        <FILE id="lBTfyV" name="TrackDataManager.hpp" compile="0" resource="0"
+              file="Source/TrackDataManager.hpp"/>
+        <FILE id="Exu3LO" name="TrackSorter.cpp" compile="1" resource="0" file="Source/TrackSorter.cpp"/>
+        <FILE id="EJfg8Y" name="TrackSorter.hpp" compile="0" resource="0" file="Source/TrackSorter.hpp"/>
+        <FILE id="ut91i0" name="TrackInfo.cpp" compile="1" resource="0" file="Source/TrackInfo.cpp"/>
+        <FILE id="ElBeMd" name="TrackInfo.hpp" compile="0" resource="0" file="Source/TrackInfo.hpp"/>
+        <FILE id="Fow9ik" name="SqlDatabase.cpp" compile="1" resource="0" file="Source/SqlDatabase.cpp"/>
+        <FILE id="JVHSSv" name="SqlDatabase.hpp" compile="0" resource="0" file="Source/SqlDatabase.hpp"/>
+      </GROUP>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>

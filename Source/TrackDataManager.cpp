@@ -62,12 +62,20 @@ void TrackDataManager::storeAnalysis(TrackInfo* track)
 
     // Pass the track to the sorter
     sorter.addAnalysed(track);
-    // Increment the counter
+    // Increment the counters
     numTracksAnalysed += 1;
+    numTracksAnalysedUnplayed += 1;
     
     // If the library UI is set, tell it to update
     if (libraryComponent)
         ((LibraryView*)libraryComponent)->updateData();
+}
+
+
+void TrackDataManager::markTrackQueued(TrackInfo* track)
+{
+    sorter.remove(track);
+    numTracksAnalysedUnplayed -= 1;
 }
 
 
@@ -191,6 +199,7 @@ void TrackDataManager::parseFile(juce::File file)
         {
             sorter.addAnalysed(trackPtr);
             numTracksAnalysed += 1;
+            numTracksAnalysedUnplayed += 1;
         }
         else
         {

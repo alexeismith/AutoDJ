@@ -33,7 +33,7 @@ public:
     
 private:
     
-    double getRandomGaussian(double stdDev, double rangeLimit = -1.0, double shift = 0.0);
+    double getRandomGaussian(double stdDev = 1.0, double rangeLimit = -1.0, double shift = 0.0);
     
     void updatePosition();
     

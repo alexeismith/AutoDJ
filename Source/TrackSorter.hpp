@@ -25,6 +25,12 @@ public:
     
     void addAnalysed(TrackInfo* track);
     
+    void remove(TrackInfo* track);
+    
+    // TODO: remove?
+//    double getRangeBpm() { return abs(sortedBpm.getLast()->bpm - sortedBpm.getFirst()->bpm); }
+//    double getRangeKey() { return abs(sortedKey.getLast()->key - sortedKey.getFirst()->key); }
+    
     const juce::Array<TrackInfo*>& getSortedBpm() { return sortedBpm; }
     const juce::Array<TrackInfo*>& getSortedKey() { return sortedKey; }
     
@@ -39,8 +45,6 @@ private:
     int findIndexOf(const juce::Array<TrackInfo*>& sortedArray, int category, double value);
     
     int findIndexOf(const juce::Array<TrackInfo*>& sortedArray, int category, double value, int& result);
-    
-    void remove(TrackInfo* const* track);
     
     double getSortValue(TrackInfo* track);
     

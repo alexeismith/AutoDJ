@@ -47,6 +47,20 @@ void TrackSorter::addAnalysed(TrackInfo* track)
 }
 
 
+void TrackSorter::remove(TrackInfo* t)
+{
+    for (auto* track : sortedBpm)
+        if (track->hash == t->hash)
+            sortedBpm.remove(&track);
+    
+    for (auto* track : sortedKey)
+        if (track->hash == t->hash)
+            sortedKey.remove(&track);
+    
+    // TODO: add energy array here!!!
+}
+
+
 int TrackSorter::compareElements(TrackInfo* first, TrackInfo* second)
 {
     double firstValue = getSortValue(first);
@@ -140,12 +154,6 @@ int TrackSorter::findIndexOf(const juce::Array<TrackInfo*>& sortedArray, int cat
     result = compare(value, valueAtIndex);
         
     return index;
-}
-
-
-void TrackSorter::remove(TrackInfo* const* track)
-{
-    sortedBpm.remove(track);
 }
 
 

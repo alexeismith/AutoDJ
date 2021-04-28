@@ -7,16 +7,13 @@
 
 #include "TrackChooser.hpp"
 
+#define NUM_CANDIDATES (10)
+
 
 TrackChooser::TrackChooser(TrackDataManager* dm)
 {
     dataManager = dm;
     sorter = dataManager->getSorter();
-    
-//    for (int i = 0; i < 100; i++)
-//        DBG(getRandomGaussian(0.2));
-    
-    
 }
 
 
@@ -34,15 +31,45 @@ void TrackChooser::initialise()
     currentBpm = sorter->getSortedBpm().getUnchecked(indexBpm)->bpm;
     currentKey = sorter->getSortedKey().getUnchecked(indexKey)->key;
     
-    DBG("Init BPM: " << currentBpm << " Key: " << currentKey);
+    for (int i = 0; i < 100; i++)
+        DBG(getRandomGaussian());
 }
 
 
 TrackInfo TrackChooser::chooseTrackComplex()
 {
+    TrackInfo* result;
+    
+    juce::Array<double> bpms;
+    juce::Array<double> keys;
+    double offsetBpm;
+    double offsetKey;
+    
+    int numCandidates = NUM_CANDIDATES;
+    
+    numCandidates = juce::jmin(numCandidates, dataManager->getNumTracks(true)); // TODO: limit to num UNPLAYED tracks
+    
     updatePosition();
     
+    for (int i = 0; i < numCandidates; i++)
+    {
+        offsetBpm = getRandomGaussian();
+        offsetKey = getRandomGaussian();
+        
+        bpms.add(currentBpm + offsetBpm);
+        keys.add(currentKey + offsetKey);
+    }
     
+    // Find UNQUEUED tracks nearest these points
+    
+    
+    
+    // Find one with the same key, or related key, or random
+    
+    
+    dataManager->markTrackQueued(result);
+    
+    return *result;
 }
 
 

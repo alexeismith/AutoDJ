@@ -30,9 +30,11 @@ public:
     
     TrackInfo* getTracks() { return tracks; }
     
-    int getNumTracks() { return numTracks; }
+    int getNumTracks(bool unplayedOnly = false) { return unplayedOnly ? numTracks : numTracksAnalysedUnplayed; }
     
     void storeAnalysis(TrackInfo* track);
+    
+    void markTrackQueued(TrackInfo* track);
     
     bool isLoaded(double& progress);
     
@@ -71,8 +73,8 @@ private:
     
     TrackInfo* tracks;
     int numTracks = 0;
-    
     int numTracksAnalysed = 0;
+    int numTracksAnalysedUnplayed = 0;
     
     juce::TimeSliceThread thread {"BackgroundUpdateThread"};
     std::unique_ptr<juce::DirectoryContentsList> dirContents;

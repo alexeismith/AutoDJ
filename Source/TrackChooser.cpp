@@ -13,13 +13,35 @@ TrackChooser::TrackChooser(TrackDataManager* dm)
     dataManager = dm;
     sorter = dataManager->getSorter();
     
-    for (int i = 0; i < 1000; i++)
-        updateVelocity();
+//    for (int i = 0; i < 100; i++)
+//        DBG(getRandomGaussian(0.2));
+    
+    
+}
+
+
+void TrackChooser::initialise()
+{
+    int sizeBpm = sorter->getSortedBpm().size();
+    int sizeKey = sorter->getSortedKey().size();
+    
+    int indexBpm = round(sizeBpm * getRandomGaussian(0.2, true, 0.5));
+    int indexKey = round(sizeKey * getRandomGaussian(0.2, true, 0.5));
+    
+    indexBpm = juce::jmin(indexBpm, sizeBpm-1);
+    indexKey = juce::jmin(indexKey, sizeKey-1);
+    
+    currentBpm = sorter->getSortedBpm().getUnchecked(indexBpm)->bpm;
+    currentKey = sorter->getSortedKey().getUnchecked(indexKey)->key;
+    
+    DBG("Init BPM: " << currentBpm << " Key: " << currentKey);
 }
 
 
 TrackInfo TrackChooser::chooseTrackComplex()
 {
+    updatePosition();
+    
     
 }
 
@@ -39,7 +61,7 @@ TrackInfo TrackChooser::chooseTrackRandom()
         do
         {
             randomChoice = rand() % dataManager->getTracks()->size();
-            track = &dataManager->getTracks()->getReference(randomChoice);
+            track = dataManager->getTracks()->getUnchecked(randomChoice);
         } while (!track->analysed || track->queued);
 //        } while (!track->analysed); TODO: remove
     }
@@ -55,22 +77,33 @@ TrackInfo TrackChooser::chooseTrackRandom()
 }
 
 
-void TrackChooser::updateVelocity()
+double TrackChooser::getRandomGaussian(double stdDev, bool limit, double shift)
+{
+    std::normal_distribution<double> distribution(0, stdDev);
+    double value = distribution(randomGenerator);
+    
+    if (limit)
+        value = juce::jlimit(-1.0, 1.0, value);
+    
+    return value + shift;
+}
+
+
+void TrackChooser::updatePosition()
 {
     const double momentum = 0.9;
-    std::normal_distribution<double> distribution(0, 0.5);
     
-    accelerationBpm = accelerationBpm*momentum + distribution(randomGenerator)*(1.0 - momentum);
-    accelerationKey = accelerationKey*momentum + distribution(randomGenerator)*(1.0 - momentum);
+    accelerationBpm = accelerationBpm*momentum + getRandomGaussian(0.5, false)*(1.0 - momentum);
+    accelerationKey = accelerationKey*momentum + getRandomGaussian(0.5, false)*(1.0 - momentum);
     
     velocityBpm += accelerationBpm;
     velocityKey += accelerationKey;
-
-    velocityBpm = juce::jmin(velocityBpm, 1.0);
-    velocityKey = juce::jmin(velocityKey, 1.0);
     
-    velocityBpm = juce::jmax(velocityBpm, -1.0);
-    velocityKey = juce::jmax(velocityKey, -1.0);
+    velocityBpm = juce::jlimit(-1.0, 1.0, velocityBpm);
+    velocityKey = juce::jlimit(-1.0, 1.0, velocityKey);
+    
+    currentBpm += velocityBpm;
+    currentKey += velocityKey;
     
     DBG("velocityBpm: " << velocityBpm << " velocityKey: " << velocityKey);
 }

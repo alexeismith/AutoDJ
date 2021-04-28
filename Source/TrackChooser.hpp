@@ -23,6 +23,8 @@ public:
     
     ~TrackChooser() {}
     
+    void initialise();
+    
     TrackInfo chooseTrack() { return chooseTrackRandom(); }
     
     TrackInfo chooseTrackComplex();
@@ -31,7 +33,9 @@ public:
     
 private:
     
-    void updateVelocity();
+    double getRandomGaussian(double stdDev, bool limit = true, double shift = 0.0);
+    
+    void updatePosition();
     
     TrackDataManager* dataManager = nullptr;
     TrackSorter* sorter = nullptr;

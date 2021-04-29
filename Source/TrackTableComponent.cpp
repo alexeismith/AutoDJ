@@ -114,7 +114,7 @@ juce::String TrackTableComponent::getValueForColumn(TrackInfo* track, int column
             if (track->bpm == -1) return juce::String("-");
             return juce::String(track->bpm);
         case TrackTableColumns::key:
-            return AutoDJ::getKeyName(track->key);
+            return juce::String(track->key);//AutoDJ::getKeyName(track->key); TODO: temp
         case TrackTableColumns::energy:
             if (track->energy == -1) return juce::String("-");
             return juce::String(track->energy);

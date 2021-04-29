@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="mliKgU" name="AutoDJ" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              headerPath="../../Source/ThirdParty/qm-dsp/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools/&#10;../../Source/ThirdParty/soundtouch/include/&#10;../../Source/ThirdParty/soundtouch/source/SoundTouch/"
+              headerPath="../../Source/ThirdParty/qm-dsp/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools/&#10;../../Source/ThirdParty/soundtouch/include/&#10;../../Source/ThirdParty/soundtouch/source/SoundTouch/&#10;../../Source/ThirdParty/Quadtree/include"
               defines="kiss_fft_scalar=double&#10;JUCE_USE_MP3AUDIOFORMAT&#10;ANDROID&#10;SOUNDTOUCH_ALLOW_X86_OPTIMIZATIONS"
               cppLanguageStandard="17">
   <MAINGROUP id="r4tD07" name="AutoDJ">
@@ -166,6 +166,11 @@
       </GROUP>
       <GROUP id="{9D7FECDF-8952-8FC4-090E-52526F978CD8}" name="Database">
         <GROUP id="{864AE706-4D80-286D-4EE2-E6FFF4FBB695}" name="Third Party">
+          <GROUP id="{E5EC673F-0737-F945-5235-1260B0EF444B}" name="Quadtree">
+            <FILE id="StqUn1" name="Box.h" compile="0" resource="0" file="Source/ThirdParty/Quadtree/include/Box.h"/>
+            <FILE id="ECqvZd" name="Quadtree.h" compile="0" resource="0" file="Source/ThirdParty/Quadtree/include/Quadtree.h"/>
+            <FILE id="v3x5y8" name="Vector2.h" compile="0" resource="0" file="Source/ThirdParty/Quadtree/include/Vector2.h"/>
+          </GROUP>
           <FILE id="TgJ3yC" name="xxhash32.h" compile="0" resource="0" file="Source/ThirdParty/xxhash32.h"/>
         </GROUP>
         <FILE id="kqk0eM" name="TrackDataManager.cpp" compile="1" resource="0"

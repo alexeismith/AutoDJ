@@ -4,3 +4,6 @@
 [submodule "Source/ThirdParty/soundtouch"]
 	path = Source/ThirdParty/soundtouch
 	url = https://gitlab.com/soundtouch/soundtouch.git
+[submodule "Source/ThirdParty/Quadtree"]
+	path = Source/ThirdParty/Quadtree
+	url = https://github.com/MoonCollider/Quadtree.git

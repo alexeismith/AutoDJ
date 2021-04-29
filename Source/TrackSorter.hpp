@@ -12,12 +12,27 @@
 
 #include "TrackInfo.hpp"
 
+#include "ThirdParty/Quadtree/include/Quadtree.h"
+
+#define Y_MULTIPLIER (0.25f)
+
+
+struct GetBoxObj {
+    quadtree::Box<float> operator()(TrackInfo* track) const
+    {
+        return quadtree::Box<float>(track->bpm, float(track->key)*Y_MULTIPLIER, 0.f, 0.f);
+    }
+};
+
+
+using Quadtree = quadtree::Quadtree<TrackInfo*, GetBoxObj>;
+
 
 class TrackSorter
 {
 public:
     
-    TrackSorter() {}
+    TrackSorter();
     
     ~TrackSorter() {}
     
@@ -34,6 +49,10 @@ public:
     const juce::Array<TrackInfo*>& getSortedBpm() { return sortedBpm; }
     const juce::Array<TrackInfo*>& getSortedKey() { return sortedKey; }
     
+    void testTree(double bpm, double key);
+    
+    TrackInfo* findClosest(float bpm, float key);
+    
     int compareElements(TrackInfo* first, TrackInfo* second);
     
 private:
@@ -49,6 +68,10 @@ private:
     double getSortValue(TrackInfo* track);
     
     juce::CriticalSection lock;
+    
+    GetBoxObj getBoxObj;
+    
+    std::unique_ptr<Quadtree> tree;
     
     bool sorted = false;
     int sortCategory;

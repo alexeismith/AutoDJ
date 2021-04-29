@@ -53,15 +53,6 @@ int TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
 }
 
 
-Track* TrackProcessor::getTrack()
-{
-    if (ready.load())
-        return track.get();
-    else
-        return nullptr;
-}
-
-
 void TrackProcessor::nextMix()
 {
     currentMix = dj->getNextMix(currentMix);
@@ -75,15 +66,16 @@ void TrackProcessor::loadNextTrack()
     shifter.clear();
     
     currentMix = dj->getNextMix(currentMix);
-    track->applyNextMix(&currentMix);
-    
-    play = false;
-    trackEnd = false;
-    newTrack = true;
+    if (track->applyNextMix(&currentMix))
+    {
+        play = false;
+        trackEnd = false;
+        newTrack = true;
+        
+        ready.store(true);
+    }
     
     partner->nextMix();
-    
-    ready.store(true);
 }
 
 

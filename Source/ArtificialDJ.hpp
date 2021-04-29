@@ -42,23 +42,26 @@ public:
     
 private:
     
+    void removeMix(MixInfo mix);
+    
     void initialise();
     
-    void generateMix(TrackInfo leadingTrack, TrackInfo nextTrack);
+    void generateMix();
     
     std::unique_ptr<TrackChooser> chooser;
     
     std::atomic<bool> initialised;
     
     bool playing = false;
+    bool ending = false;
     
     int mixIdCounter = 0;
     
     juce::CriticalSection lock;
     
-    juce::Array<Track> Unplayed;
-    
     juce::Array<MixInfo> mixQueue;
+    
+    TrackInfo* prevTrack = nullptr;
     
     TrackDataManager* dataManager = nullptr;
     AudioProcessor* audioProcessor = nullptr;

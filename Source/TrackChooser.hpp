@@ -25,7 +25,7 @@ public:
     
     void initialise();
     
-    TrackInfo chooseTrack();
+    TrackInfo* chooseTrack();
     
 private:
     

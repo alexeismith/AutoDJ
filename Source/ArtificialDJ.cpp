@@ -7,7 +7,7 @@
 
 #include "ArtificialDJ.hpp"
 
-#define MIX_QUEUE_LENGTH (3)
+#define MIX_QUEUE_LENGTH (5)
 
 
 ArtificialDJ::ArtificialDJ(TrackDataManager* dm) :
@@ -23,10 +23,10 @@ void ArtificialDJ::run()
 {
     initialise();
     
-    while (!threadShouldExit())
+    while (!threadShouldExit() && !ending)
     {
         if (mixQueue.size() < MIX_QUEUE_LENGTH)
-            generateMix(mixQueue.getFirst().nextTrack, chooser->chooseTrack());
+            generateMix();
         
         sleep(100);
     }
@@ -37,15 +37,15 @@ MixInfo ArtificialDJ::getNextMix(MixInfo current)
 {
     const juce::ScopedLock sl(lock);
     
-    if (mixQueue.getReference(0).id == current.id)
-    {
-        mixQueue.remove(0);
-    }
+    removeMix(current);
     
     if (mixQueue.size() == 0)
     {
+        if (ending == true)
+            return MixInfo();
+        
         jassert(false); // Mix queue was empty!
-        generateMix(current.nextTrack, chooser->chooseTrack());
+        generateMix();
     }
     
     return mixQueue.getUnchecked(0);
@@ -78,20 +78,32 @@ bool ArtificialDJ::playPause()
 }
 
 
+void ArtificialDJ::removeMix(MixInfo mix)
+{
+    if (mixQueue.size() > 0)
+    {
+        if (mixQueue.getUnchecked(0).id == mix.id)
+        {
+            mixQueue.remove(0);
+        }
+    }
+}
+
+
 void ArtificialDJ::initialise()
 {
-    chooser->initialise();
-    
-    TrackInfo trackFirst = chooser->chooseTrack();
-    TrackInfo trackSecond = chooser->chooseTrack();
-    
-    generateMix(trackFirst, trackSecond);
-    
     TrackProcessor* leader = audioProcessor->getTrackProcessor(0);
     TrackProcessor* next = audioProcessor->getTrackProcessor(1);
     
-    leader->loadFirstTrack(trackFirst, true);
-    next->loadFirstTrack(trackSecond, false);
+    chooser->initialise();
+    
+    TrackInfo* firstTrack = chooser->chooseTrack();
+    prevTrack = firstTrack;
+    
+    generateMix();
+    
+    leader->loadFirstTrack(*firstTrack, true);
+    next->loadFirstTrack(*prevTrack, false);
     
     initialised.store(true);
     
@@ -99,16 +111,27 @@ void ArtificialDJ::initialise()
 }
 
 
-void ArtificialDJ::generateMix(TrackInfo leadingTrack, TrackInfo nextTrack)
+void ArtificialDJ::generateMix()
 {
     MixInfo mix;
     
     mix.id = mixIdCounter;
     mixIdCounter += 1;
     
-    mix.leadingTrack = leadingTrack;
-    mix.nextTrack = nextTrack;
-    mix.nextTrackAudio = dataManager->loadAudio(nextTrack.getFilename(), true);
+    TrackInfo* nextTrack = chooser->chooseTrack();
+    
+    mix.leadingTrack = *prevTrack;
+    
+    if (nextTrack == nullptr)
+    {
+        mix.nextTrack.bpm = mix.leadingTrack.bpm;
+        ending = true;
+    }
+    else
+    {
+        mix.nextTrack = *nextTrack;
+        mix.nextTrackAudio = dataManager->loadAudio(nextTrack->getFilename(), true);
+    }
     
     int mixLengthBeats = 16;
     
@@ -125,4 +148,6 @@ void ArtificialDJ::generateMix(TrackInfo leadingTrack, TrackInfo nextTrack)
     mix.bpm = double(mix.leadingTrack.bpm + mix.nextTrack.bpm) / 2;
     
     mixQueue.add(mix);
+    
+    prevTrack = nextTrack;
 }

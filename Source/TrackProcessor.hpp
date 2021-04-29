@@ -30,7 +30,7 @@ public:
     
     int getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);
     
-    Track* getTrack();
+    Track* getTrack() { return track.get(); }
     
     bool isLeader() { return getTrack()->leader; }
     

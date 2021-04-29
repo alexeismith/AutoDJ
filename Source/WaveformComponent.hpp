@@ -37,13 +37,13 @@ public:
     
     void flipImage();
     
+    void reset();
+    
 private:
     
     void loadTrack(Track* track);
     
     void updateImage();
-    
-    void reset();
     
     void pushFrame(int index);
     

@@ -23,6 +23,7 @@ public:
     // Returns true if current mix has finished
     bool update(int numSamples);
     
+    // Returns false if there is no next track
     bool applyNextMix(MixInfo* mix);
     
     int getPlayhead() { return playhead; }

@@ -56,7 +56,11 @@ void DeckComponent::load(Track* trackPtr)
 
 void DeckComponent::update()
 {
-    if (!trackProcessor->isReady()) return;
+    if (!trackProcessor->isReady())
+    {
+        waveform->reset();
+        return;
+    }
     
     Track* t = trackProcessor->getNewTrack();
     if (t)

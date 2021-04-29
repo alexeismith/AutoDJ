@@ -44,14 +44,15 @@ bool Track::applyNextMix(MixInfo* mix)
     {
         reset(currentMix->bpm);
         
-        info = currentMix->nextTrack;
         audio = currentMix->nextTrackAudio;
+        if (audio == nullptr)
+            return false;
+        
+        info = currentMix->nextTrack;
         
         playhead = currentMix->startNext;
         
         gain.moveTo(1.0, currentMix->startNext, currentMix->endNext - currentMix->startNext);
-        
-        return true;
     }
     else
     {
@@ -62,7 +63,7 @@ bool Track::applyNextMix(MixInfo* mix)
         bpm.moveTo(currentMix->bpm, playhead, currentMix->start - playhead);
         
         gain.moveTo(0, currentMix->start, currentMix->end - currentMix->start);
-        
-        return false;
     }
+    
+    return true;
 }

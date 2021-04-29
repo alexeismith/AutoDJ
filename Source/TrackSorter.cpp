@@ -25,14 +25,6 @@ TrackSorter::TrackSorter()
 }
 
 
-void TrackSorter::testTree(double bpm, double key)
-{
-    TrackInfo* track = findClosest(bpm, key*Y_MULTIPLIER);
-    DBG("Closest to (" << bpm << ", " << key << ") is (" << track->bpm << ", " << track->key << ") " << track->getFilename());
-    DBG("");
-}
-
-
 void TrackSorter::sort()
 {
     sortCategory = SortCategory::bpm;
@@ -41,13 +33,13 @@ void TrackSorter::sort()
     sortCategory = SortCategory::key;
     sortedKey.sort(*this);
     
-    testTree(130, 7);
-    testTree(130, 7);
-    testTree(127, 13);
-    testTree(127, 1);
-    testTree(132, 12);
-    testTree(100, 3);
-    testTree(200, 0);
+//    testTree(130, 7);
+//    testTree(130, 7);
+//    testTree(127, 13);
+//    testTree(127, 1);
+//    testTree(132, 12);
+//    testTree(100, 3);
+//    testTree(200, 0);
     
     sorted = true;
 }
@@ -68,28 +60,15 @@ void TrackSorter::addAnalysed(TrackInfo* track)
         addIntoSortedArray(sortedKey, SortCategory::key, track);
     }
     
-    for (auto* track : sortedBpm)
-        tree->add(track);
+    tree->add(track);
 }
 
 
-void TrackSorter::remove(TrackInfo* t)
+TrackInfo* TrackSorter::findClosestAndRemove(float bpm, float key)
 {
-    for (auto* track : sortedBpm)
-        if (track->hash == t->hash)
-            sortedBpm.remove(&track);
-    
-    for (auto* track : sortedKey)
-        if (track->hash == t->hash)
-            sortedKey.remove(&track);
-    
-    // TODO: add energy array here!!!
-}
-
-
-TrackInfo* TrackSorter::findClosest(float bpm, float key)
-{
-    return *tree->findClosest(quadtree::Box<float>(bpm, key, 0.f, 0.f));
+    TrackInfo* result = *tree->findClosest(quadtree::Box<float>(bpm, key*Y_MULTIPLIER, 0.f, 0.f));
+    tree->remove(result);
+    return result;
 }
 
 

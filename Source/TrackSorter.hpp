@@ -40,8 +40,6 @@ public:
     
     void addAnalysed(TrackInfo* track);
     
-    void remove(TrackInfo* track);
-    
     // TODO: remove?
 //    double getRangeBpm() { return abs(sortedBpm.getLast()->bpm - sortedBpm.getFirst()->bpm); }
 //    double getRangeKey() { return abs(sortedKey.getLast()->key - sortedKey.getFirst()->key); }
@@ -49,9 +47,7 @@ public:
     const juce::Array<TrackInfo*>& getSortedBpm() { return sortedBpm; }
     const juce::Array<TrackInfo*>& getSortedKey() { return sortedKey; }
     
-    void testTree(double bpm, double key);
-    
-    TrackInfo* findClosest(float bpm, float key);
+    TrackInfo* findClosestAndRemove(float bpm, float key);
     
     int compareElements(TrackInfo* first, TrackInfo* second);
     

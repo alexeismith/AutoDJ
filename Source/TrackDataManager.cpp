@@ -72,13 +72,6 @@ void TrackDataManager::storeAnalysis(TrackInfo* track)
 }
 
 
-void TrackDataManager::markTrackQueued(TrackInfo* track)
-{
-    sorter.remove(track);
-    numTracksAnalysedUnplayed -= 1;
-}
-
-
 bool TrackDataManager::isLoaded(double& progress)
 {
     progress = parser->getProgress();
@@ -266,5 +259,5 @@ void FileParserThread::run()
     DBG("Num already analysed: " << dataManager->numTracksAnalysed);
     
     dataManager->sorter.sort();
-//    dataManager->analysisManager->startAnalysis(dataManager);
+    dataManager->analysisManager->startAnalysis(dataManager);
 }

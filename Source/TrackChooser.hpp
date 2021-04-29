@@ -25,11 +25,7 @@ public:
     
     void initialise();
     
-    TrackInfo chooseTrack() { return chooseTrackRandom(); }
-    
-    TrackInfo chooseTrackComplex();
-    
-    TrackInfo chooseTrackRandom();
+    TrackInfo chooseTrack();
     
 private:
     
@@ -49,8 +45,8 @@ private:
     double accelerationBpm = 0.0;
     double accelerationKey = 0.0;
     
-    std::default_random_engine randomGenerator;
-
+    std::mt19937 randomGenerator;
+    
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackChooser)
 };

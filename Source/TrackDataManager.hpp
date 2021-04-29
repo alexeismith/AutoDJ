@@ -30,11 +30,13 @@ public:
     
     TrackInfo* getTracks() { return tracks; }
     
-    int getNumTracks(bool unplayedOnly = false) { return unplayedOnly ? numTracks : numTracksAnalysedUnplayed; }
+    int getNumTracks() { return numTracks; }
+    
+    int getNumTracksReady() { return numTracksAnalysedUnplayed; }
     
     void storeAnalysis(TrackInfo* track);
     
-    void markTrackQueued(TrackInfo* track);
+    void trackQueued() { numTracksAnalysedUnplayed -= 1; }
     
     bool isLoaded(double& progress);
     

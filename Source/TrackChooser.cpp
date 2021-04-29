@@ -14,6 +14,8 @@ TrackChooser::TrackChooser(TrackDataManager* dm)
 {
     dataManager = dm;
     sorter = dataManager->getSorter();
+    
+    randomGenerator.seed((unsigned int)juce::Time::currentTimeMillis());
 }
 
 
@@ -22,85 +24,47 @@ void TrackChooser::initialise()
     int sizeBpm = sorter->getSortedBpm().size();
     int sizeKey = sorter->getSortedKey().size();
     
-    int indexBpm = round(sizeBpm * getRandomGaussian(0.2, 0.5, 0.5));
-    int indexKey = round(sizeKey * getRandomGaussian(0.2, 0.5, 0.5));
+    int indexBpm = round(float(sizeBpm) * getRandomGaussian(0.2, 0.5, 0.5));
+    int indexKey = round(float(sizeKey) * getRandomGaussian(0.2, 0.5, 0.5));
     
     indexBpm = juce::jmin(indexBpm, sizeBpm-1);
     indexKey = juce::jmin(indexKey, sizeKey-1);
     
     currentBpm = sorter->getSortedBpm().getUnchecked(indexBpm)->bpm;
     currentKey = sorter->getSortedKey().getUnchecked(indexKey)->key;
-    
-    for (int i = 0; i < 100; i++)
-        DBG(getRandomGaussian());
 }
 
 
-TrackInfo TrackChooser::chooseTrackComplex()
+TrackInfo TrackChooser::chooseTrack()
 {
-    TrackInfo* result;
+    juce::Array<TrackInfo*> candidates;
+    TrackInfo result;
     
-    juce::Array<double> bpms;
-    juce::Array<double> keys;
-    double offsetBpm;
-    double offsetKey;
-    
-    int numCandidates = NUM_CANDIDATES;
-    
-    numCandidates = juce::jmin(numCandidates, dataManager->getNumTracks(true)); // TODO: limit to num UNPLAYED tracks
+    int numCandidates = juce::jmin(NUM_CANDIDATES, dataManager->getNumTracksReady());
     
     updatePosition();
     
     for (int i = 0; i < numCandidates; i++)
-    {
-        offsetBpm = getRandomGaussian();
-        offsetKey = getRandomGaussian();
-        
-        bpms.add(currentBpm + offsetBpm);
-        keys.add(currentKey + offsetKey);
-    }
-    
-    // Find UNQUEUED tracks nearest these points
-    
-    
+        candidates.add(sorter->findClosestAndRemove(currentBpm, currentKey));
     
     // Find one with the same key, or related key, or random
+    // Either sort array or iterate through it and remove the result
     
+    result = *candidates.getUnchecked(0);
     
-    dataManager->markTrackQueued(result);
+    DBG("QUEUED " << result.getFilename() << " bpm: " << result.bpm << " key: " << result.key);
     
-    return *result;
-}
-
-
-TrackInfo TrackChooser::chooseTrackRandom()
-{
-    bool random = true;
+    currentBpm = result.bpm;
+    currentKey = result.key;
     
-    int randomChoice;
-    TrackInfo* track = nullptr;
-    
-    // TODO: handle case where all tracks have been played, currrently infinite loop
-    // Use separate unplayed list, which keeps updated with the normal one
-    
-    if (random)
+    for (int i = 1; i < candidates.size(); i++)
     {
-        do
-        {
-            randomChoice = rand() % dataManager->getNumTracks();
-            track = &dataManager->getTracks()[randomChoice];
-        } while (!track->analysed || track->queued);
-//        } while (!track->analysed); TODO: remove
-    }
-    else
-    {
-        // TODO: Take into account BPM, Key, Energy
+        sorter->addAnalysed(candidates.getUnchecked(i));
     }
     
-//    DBG("QUEUED: " << track->getFilename());
-    track->queued = true;
+    dataManager->trackQueued();
     
-    return *track;
+    return result;
 }
 
 
@@ -132,5 +96,5 @@ void TrackChooser::updatePosition()
     currentBpm += velocityBpm;
     currentKey += velocityKey;
     
-    DBG("velocityBpm: " << velocityBpm << " velocityKey: " << velocityKey);
+//    DBG("velocityBpm: " << velocityBpm << " velocityKey: " << velocityKey);
 }

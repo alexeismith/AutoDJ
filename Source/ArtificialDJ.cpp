@@ -80,11 +80,11 @@ bool ArtificialDJ::playPause()
 
 void ArtificialDJ::initialise()
 {
-    for (int i = 0; i < 100; i++)
-        chooser->initialise();
+    chooser->initialise();
     
     TrackInfo trackFirst = chooser->chooseTrack();
     TrackInfo trackSecond = chooser->chooseTrack();
+    
     generateMix(trackFirst, trackSecond);
     
     TrackProcessor* leader = audioProcessor->getTrackProcessor(0);

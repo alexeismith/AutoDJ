@@ -30,8 +30,6 @@ LibraryView::LibraryView(TrackDataManager* dm, juce::Button* play)
     analysisProgress.reset(new juce::ProgressBar(loadingProgress));
     addChildComponent(analysisProgress.get());
     analysisProgress->setColour(analysisProgress->backgroundColourId, juce::Colours::darkgrey);
-    
-    trackDataUpdate.store(false);
 }
 
 void LibraryView::resized()
@@ -90,9 +88,9 @@ void LibraryView::timerCallback()
             playBtn->setEnabled(true);
     }
     
-    if (trackDataUpdate.load())
+    if (dataManager->trackDataUpdate.load())
     {
-        trackDataUpdate.store(false);
+        dataManager->trackDataUpdate.store(false);
         trackTable->sort();
     }
 }
@@ -103,7 +101,7 @@ void LibraryView::chooseFolder()
     juce::FileChooser chooser ("Choose Music Folder");
     if (chooser.browseForDirectory())
     {
-        dataManager->initialise(this, chooser.getResult());
+        dataManager->initialise(chooser.getResult());
         
         waitingForFiles = true;
         

@@ -8,7 +8,6 @@
 #include "TrackDataManager.hpp"
 
 #include "CommonDefs.hpp"
-#include "LibraryView.hpp"
 
 #include "ThirdParty/xxhash32.h"
 
@@ -40,10 +39,8 @@ TrackDataManager::~TrackDataManager()
 }
 
 
-void TrackDataManager::initialise(juce::Component* library, juce::File directory)
+void TrackDataManager::initialise(juce::File directory)
 {
-    libraryComponent = library;
-    
     dirContents->setDirectory(directory, true, true);
     
     if (!database.initialise(directory))
@@ -66,9 +63,7 @@ void TrackDataManager::storeAnalysis(TrackInfo* track)
     numTracksAnalysed += 1;
     numTracksAnalysedUnplayed += 1;
     
-    // If the library UI is set, tell it to update
-    if (libraryComponent)
-        ((LibraryView*)libraryComponent)->updateData();
+    trackDataUpdate.store(true);
 }
 
 

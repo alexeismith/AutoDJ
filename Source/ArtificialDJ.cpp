@@ -102,8 +102,8 @@ void ArtificialDJ::initialise()
     
     generateMix();
     
-    leader->loadFirstTrack(*firstTrack, true);
-    next->loadFirstTrack(*prevTrack, false);
+    leader->loadFirstTrack(firstTrack, true);
+    next->loadFirstTrack(prevTrack, false);
     
     initialised.store(true);
     
@@ -120,32 +120,32 @@ void ArtificialDJ::generateMix()
     
     TrackInfo* nextTrack = chooser->chooseTrack();
     
-    mix.leadingTrack = *prevTrack;
+    mix.leadingTrack = prevTrack;
     
     if (nextTrack == nullptr)
     {
-        mix.nextTrack.bpm = mix.leadingTrack.bpm;
+        mix.nextTrack->bpm = mix.leadingTrack->bpm;
         ending = true;
     }
     else
     {
-        mix.nextTrack = *nextTrack;
+        mix.nextTrack = nextTrack;
         mix.nextTrackAudio = dataManager->loadAudio(nextTrack->getFilename(), true);
     }
     
     int mixLengthBeats = 16;
     
-    int mixStartBeats = mix.leadingTrack.downbeat + 2 * mixLengthBeats;
+    int mixStartBeats = mix.leadingTrack->downbeat + 2 * mixLengthBeats;
     
-    mix.start = mix.leadingTrack.getSampleOfBeat(mixStartBeats);
-    mix.end = mix.leadingTrack.getSampleOfBeat(mixStartBeats + mixLengthBeats);
+    mix.start = mix.leadingTrack->getSampleOfBeat(mixStartBeats);
+    mix.end = mix.leadingTrack->getSampleOfBeat(mixStartBeats + mixLengthBeats);
     
-    mixStartBeats = mix.nextTrack.downbeat;
+    mixStartBeats = mix.nextTrack->downbeat;
     
-    mix.startNext = mix.nextTrack.getSampleOfBeat(mixStartBeats);
-    mix.endNext = mix.nextTrack.getSampleOfBeat(mixStartBeats + mixLengthBeats);
+    mix.startNext = mix.nextTrack->getSampleOfBeat(mixStartBeats);
+    mix.endNext = mix.nextTrack->getSampleOfBeat(mixStartBeats + mixLengthBeats);
     
-    mix.bpm = double(mix.leadingTrack.bpm + mix.nextTrack.bpm) / 2;
+    mix.bpm = double(mix.leadingTrack->bpm + mix.nextTrack->bpm) / 2;
     
     mixQueue.add(mix);
     

@@ -219,19 +219,19 @@ bool WaveformComponent::isBeat(int frameIndex, bool& downbeat)
     
     downbeat = false;
     
-    if (track->info.bpm == -1) return false;
+    if (track->info->bpm == -1) return false;
     
     frameStart = frameIndex * WAVEFORM_FRAME_SIZE;
     frameEnd = frameStart + WAVEFORM_FRAME_SIZE - 1;
     
-    double beatLength = 60 * SUPPORTED_SAMPLERATE / track->info.bpm;
+    double beatLength = 60 * SUPPORTED_SAMPLERATE / track->info->bpm;
     
-    frameStart -= track->info.beatPhase;
-    frameEnd -= track->info.beatPhase;
+    frameStart -= track->info->beatPhase;
+    frameEnd -= track->info->beatPhase;
     
     if (abs(floor(frameEnd/beatLength) - floor(frameStart/beatLength)) > 0)
     {
-        remainder = (int(floor(frameEnd/beatLength)) - track->info.downbeat) % BEATS_PER_BAR;
+        remainder = (int(floor(frameEnd/beatLength)) - track->info->downbeat) % BEATS_PER_BAR;
         
         if (remainder == 0 || remainder == BEATS_PER_BAR)
             downbeat = true;

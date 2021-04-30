@@ -40,7 +40,7 @@ public:
 
     int length = 0; // Total length in seconds
     bool analysed = false; // Indicates whether analysis has been performed
-    bool queued = false; // Indicates whether the track has been queue/played this session
+    bool played = false; // Indicates whether the track has been played this session
     int bpm = -1; // Tempo in beats per minute
     int beatPhase = -1;
     int downbeat = -1;

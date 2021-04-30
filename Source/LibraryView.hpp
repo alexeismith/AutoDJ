@@ -26,8 +26,6 @@ public:
     
     void timerCallback() override;
     
-    void updateData() { trackDataUpdate.store(true); }
-    
     void loadFiles();
     
 private:
@@ -45,8 +43,6 @@ private:
     
     bool waitingForFiles = false;
     bool waitingForAnalysis = false;
-    
-    std::atomic<bool> trackDataUpdate;
     
     double loadingProgress = 0.0;
     

@@ -26,7 +26,7 @@ public:
       
     ~TrackDataManager();
     
-    void initialise(juce::Component* library, juce::File directory);
+    void initialise(juce::File directory);
     
     TrackInfo* getTracks() { return tracks; }
     
@@ -49,6 +49,8 @@ public:
     TrackSorter* getSorter() { return &sorter; }
     
     AnalysisResults getAnalysisResults() { return analysisManager->getResults(); }
+    
+    std::atomic<bool> trackDataUpdate = false;
       
 private:
     
@@ -64,8 +66,6 @@ private:
     int getHash(juce::File file);
     
     juce::OwnedArray<juce::AudioBuffer<float>> audioBuffers;
-    
-    juce::Component* libraryComponent;
     
     std::unique_ptr<AnalysisManager> analysisManager;
     

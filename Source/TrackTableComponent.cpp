@@ -63,19 +63,21 @@ void TrackTableComponent::paintCell(juce::Graphics& g, int rowNumber, int column
 {
     if (rowIsSelected)
         g.setColour(juce::Colours::darkblue);
-    else if(!tracksSorted.getReference(rowNumber)->analysed)
+    else if (!tracksSorted.getReference(rowNumber)->analysed)
         g.setColour(juce::Colours::lightslategrey.brighter());
+    else if (tracksSorted.getReference(rowNumber)->played)
+        g.setColour(juce::Colours::lightgreen.darker());
     else
-        g.setColour(getLookAndFeel().findColour (juce::ListBox::textColourId));
+        g.setColour(getLookAndFeel().findColour(juce::ListBox::textColourId));
         
-    g.setFont (font);
+    g.setFont(font);
 
     juce::String text = getValueForColumn(tracksSorted.getReference(rowNumber), columnId);
 
-    g.drawText (text, 2, 0, width - 4, height, juce::Justification::centredLeft, true);
+    g.drawText(text, 2, 0, width - 4, height, juce::Justification::centredLeft, true);
 
-    g.setColour (getLookAndFeel().findColour (juce::ListBox::backgroundColourId));
-    g.fillRect (width - 1, 0, 1, height);
+    g.setColour(getLookAndFeel().findColour(juce::ListBox::backgroundColourId));
+    g.fillRect(width - 1, 0, 1, height);
 }
 
 

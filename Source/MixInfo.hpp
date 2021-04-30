@@ -15,8 +15,8 @@
 
 typedef struct MixInfo {
     int id = -1;
-    TrackInfo leadingTrack; // Existing trexack that is playing
-    TrackInfo nextTrack; // New track to be mixed in
+    TrackInfo* leadingTrack; // Existing trexack that is playing
+    TrackInfo* nextTrack; // New track to be mixed in
     juce::AudioBuffer<float>* nextTrackAudio = nullptr;
     int start = 0; // Sample position in leading track where mix begins
     int end = 0; // Sample position in leading track where mix finishes

@@ -79,7 +79,7 @@ void TrackProcessor::loadNextTrack()
 }
 
 
-void TrackProcessor::loadFirstTrack(TrackInfo trackInfo, bool leader)
+void TrackProcessor::loadFirstTrack(TrackInfo* trackInfo, bool leader)
 {
     ready.store(false);
     
@@ -88,9 +88,9 @@ void TrackProcessor::loadFirstTrack(TrackInfo trackInfo, bool leader)
     if (leader)
     {
         track->info = trackInfo;
-        track->bpm.moveTo(trackInfo.bpm);
+        track->bpm.moveTo(trackInfo->bpm);
         track->gain.moveTo(1.0);
-        track->audio = dataManager->loadAudio(track->info.getFilename(), true);
+        track->audio = dataManager->loadAudio(track->info->getFilename(), true);
         resetPlayhead();
         track->applyNextMix(&currentMix);
         play = true;
@@ -101,6 +101,9 @@ void TrackProcessor::loadFirstTrack(TrackInfo trackInfo, bool leader)
         track->applyNextMix(&currentMix);
     }
 
+    track->info->played = true;
+    dataManager->trackDataUpdate.store(true);
+    
     newTrack = true;
     
     ready.store(true);
@@ -140,7 +143,7 @@ void TrackProcessor::update(int numSamples)
     trackEnd = track->update(numSamples);
     
     // Update time & pitch shifts
-    timeStretch = double(track->bpm.currentValue) / track->info.bpm;
+    timeStretch = double(track->bpm.currentValue) / track->info->bpm;
     shifter.setTempo(timeStretch);
     shifter.setPitchSemiTones(track->pitch.currentValue);
 }

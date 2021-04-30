@@ -34,7 +34,7 @@ public:
     
     void setCurrentMix(MixInfo* mix) { currentMix = mix; }
     
-    TrackInfo info;
+    TrackInfo* info;
     
     bool leader = false;
     

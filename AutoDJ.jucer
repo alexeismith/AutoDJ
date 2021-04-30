@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="mliKgU" name="AutoDJ" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              headerPath="../../Source/ThirdParty/qm-dsp&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools&#10;../../Source/ThirdParty/soundtouch/include&#10;../../Source/ThirdParty/soundtouch/source/SoundTouch&#10;../../Source/ThirdParty/Quadtree/include&#10;../../Source/ThirdParty/essentia"
+              headerPath="../../Source/ThirdParty/qm-dsp&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools&#10;../../Source/ThirdParty/soundtouch/include&#10;../../Source/ThirdParty/soundtouch/source/SoundTouch&#10;../../Source/ThirdParty/Quadtree/include&#10;../../Source/ThirdParty/essentia&#10;/usr/local/include/eigen3"
               defines="kiss_fft_scalar=double&#10;JUCE_USE_MP3AUDIOFORMAT&#10;ANDROID&#10;SOUNDTOUCH_ALLOW_X86_OPTIMIZATIONS"
               cppLanguageStandard="17">
   <MAINGROUP id="r4tD07" name="AutoDJ">
@@ -323,6 +323,10 @@
               file="Source/AnalyserBeats.hpp"/>
         <FILE id="m2NH4S" name="AnalyserKey.cpp" compile="1" resource="0" file="Source/AnalyserKey.cpp"/>
         <FILE id="GaaLbC" name="AnalyserKey.hpp" compile="0" resource="0" file="Source/AnalyserKey.hpp"/>
+        <FILE id="obWy6T" name="AnalyserEnergy.cpp" compile="1" resource="0"
+              file="Source/AnalyserEnergy.cpp"/>
+        <FILE id="olL0Q7" name="AnalyserEnergy.hpp" compile="0" resource="0"
+              file="Source/AnalyserEnergy.hpp"/>
       </GROUP>
       <GROUP id="{9D7FECDF-8952-8FC4-090E-52526F978CD8}" name="Database">
         <GROUP id="{864AE706-4D80-286D-4EE2-E6FFF4FBB695}" name="Third Party">
@@ -368,7 +372,8 @@
         <MODULEPATH id="juce_gui_extra" path="../../../../../JUCE/modules"/>
       </MODULEPATHS>
     </VS2019>
-    <XCODE_MAC targetFolder="Builds/MacOSX" externalLibraries="sqlite3&#10;essentia&#10;fftw3&#10;yaml&#10;avcodec&#10;avformat&#10;samplerate&#10;tag&#10;fftw3f">
+    <XCODE_MAC targetFolder="Builds/MacOSX" externalLibraries="sqlite3&#10;essentia&#10;fftw3&#10;yaml&#10;avcodec&#10;avformat&#10;avutil&#10;samplerate&#10;tag&#10;fftw3f&#10;chromaprint&#10;avresample"
+               extraLinkerFlags="-I/usr/local/include/essentia/ -I/usr/local/include/essentia/scheduler/ -I/usr/local/include/essentia/streaming/  -I/usr/local/include/essentia/utils&#10;-I/usr/include/taglib&#10;-I/usr/include/eigen3&#10;-L/usr/local/lib">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="AutoDJ"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="AutoDJ"/>

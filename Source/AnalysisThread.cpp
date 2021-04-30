@@ -17,6 +17,7 @@ AnalysisThread::AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm
 {
     analyserBeats.reset(new AnalyserBeats());
     analyserKey.reset(new AnalyserKey());
+    analyserEnergy.reset(new AnalyserEnergy());
     progress.store(0.0);
 }
 

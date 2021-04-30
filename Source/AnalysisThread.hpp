@@ -13,6 +13,7 @@
 #include "TrackInfo.hpp"
 #include "AnalyserBeats.hpp"
 #include "AnalyserKey.hpp"
+#include "AnalyserEnergy.hpp"
 
 class TrackDataManager;
 class AnalysisManager;
@@ -42,6 +43,7 @@ private:
     
     std::unique_ptr<AnalyserBeats> analyserBeats;
     std::unique_ptr<AnalyserKey> analyserKey;
+    std::unique_ptr<AnalyserEnergy> analyserEnergy;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalysisThread)
 };

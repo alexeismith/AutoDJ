@@ -61,9 +61,11 @@ protected:
     
 private:
     
-    std::unique_ptr<TrackTableSorter> sorter;
-    
     juce::String getValueForColumn(TrackInfo* track, int columnId);
+    
+    juce::String getGrooveString(float groove);
+    
+    std::unique_ptr<TrackTableSorter> sorter;
     
     juce::Font font { 14.0f };
     

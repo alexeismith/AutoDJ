@@ -99,32 +99,6 @@ void TrackTableComponent::sort()
 }
 
 
-juce::String TrackTableComponent::getValueForColumn(TrackInfo* track, int columnId)
-{
-    switch(columnId)
-    {
-        case TrackTableColumns::artist:
-            return track->getArtist();
-        case TrackTableColumns::title:
-            if (track->getTitle().isEmpty()) return track->getFilename();
-            else return track->getTitle();
-        case TrackTableColumns::length:
-            return AutoDJ::getLengthString(track->length);
-        case TrackTableColumns::bpm:
-            if (track->bpm == -1) return juce::String("-");
-            return juce::String(track->bpm);
-        case TrackTableColumns::key:
-            return juce::String(track->key);//AutoDJ::getKeyName(track->key); TODO: temp
-        case TrackTableColumns::groove:
-            if (track->groove < 0.f) return juce::String("-");
-            return juce::String(track->groove);
-        default:
-            jassert(false); // Unrecognised column ID
-            return juce::String();
-    }
-}
-
-
 int TrackTableSorter::compareElements(TrackInfo* first, TrackInfo* second)
 {
     int result;
@@ -168,4 +142,41 @@ int TrackTableSorter::compareElements(TrackInfo* first, TrackInfo* second)
         result = first->getFilename().compareIgnoreCase(second->getFilename());
 
     return direction * result;
+}
+
+
+juce::String TrackTableComponent::getValueForColumn(TrackInfo* track, int columnId)
+{
+    switch(columnId)
+    {
+        case TrackTableColumns::artist:
+            return track->getArtist();
+        case TrackTableColumns::title:
+            if (track->getTitle().isEmpty()) return track->getFilename();
+            else return track->getTitle();
+        case TrackTableColumns::length:
+            return AutoDJ::getLengthString(track->length);
+        case TrackTableColumns::bpm:
+            if (track->bpm == -1) return juce::String("-");
+            return juce::String(track->bpm);
+        case TrackTableColumns::key:
+            return juce::String(track->key);//AutoDJ::getKeyName(track->key); TODO: temp
+        case TrackTableColumns::groove:
+            if (track->groove < 0.f) return juce::String("-");
+            return getGrooveString(track->groove);
+        default:
+            jassert(false); // Unrecognised column ID
+            return juce::String();
+    }
+}
+
+
+juce::String TrackTableComponent::getGrooveString(float groove)
+{
+    if (groove < 1.2)
+        return "Low";
+    else if (groove < 1.5)
+        return "Med";
+    else
+        return "High";
 }

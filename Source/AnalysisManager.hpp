@@ -15,6 +15,16 @@
 
 class TrackDataManager;
 
+typedef struct AnalysisResults
+{
+    bool initialised = false;
+    int minBpm;
+    int maxBpm;
+    float minGroove;
+    float maxGroove;
+} AnalysisResults;
+
+
 class AnalysisManager
 {
 public:
@@ -31,7 +41,9 @@ public:
     
     TrackInfo* getNextJob();
     
-    void incrementProgress();
+    void storeAnalysis(TrackInfo* track);
+    
+    void processResults(TrackInfo* track);
     
 private:
     
@@ -40,6 +52,10 @@ private:
     juce::OwnedArray<AnalysisThread> threads;
     
     juce::Array<TrackInfo*> jobs;
+    
+    TrackDataManager* dataManager;
+    
+    AnalysisResults results;
     
     int jobProgress = 0; // Keeps track of how many jobs have been completed
     int nextJob = 0; // Because of multi-threading we also need to keep track of what job is next (not simply jobProgress+1)

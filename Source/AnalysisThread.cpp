@@ -17,7 +17,7 @@ AnalysisThread::AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm
 {
     analyserBeats.reset(new AnalyserBeats());
     analyserKey.reset(new AnalyserKey());
-    analyserEnergy.reset(new AnalyserEnergy(factory));
+    analyserGroove.reset(new AnalyserGroove(factory));
     progress.store(0.0);
 }
 
@@ -30,7 +30,6 @@ void AnalysisThread::run()
     {
         analyse(*track);
         progress.store(0.0);
-        analysisManager->incrementProgress();
         track = analysisManager->getNextJob();
     }
     
@@ -58,11 +57,7 @@ void AnalysisThread::analyse(TrackInfo& track)
     
     progress.store(0.8);
     
-    DBG(id << ": energy");
-    
-    analyserEnergy->analyse(buffer, track.energy);
-    
-    DBG(id << ": finished");
+    analyserGroove->analyse(buffer, track.groove);
     
     progress.store(0.9);
     
@@ -70,8 +65,9 @@ void AnalysisThread::analyse(TrackInfo& track)
     
     if (threadShouldExit()) return;
     
-    dataManager->storeAnalysis(&track);
     dataManager->releaseAudio(buffer);
+    
+    analysisManager->storeAnalysis(&track);
     
     progress.store(1.0);
 }

@@ -156,7 +156,7 @@ void TrackDataManager::printTrackInfo(TrackInfo info)
     "\nBeat Phase: " << info.beatPhase << \
     "\nDownbeat: " << info.downbeat << \
     "\nKey: " << info.key << \
-    "\nEnergy: " << info.energy << '\n';
+    "\nGroove: " << info.groove << '\n';
     
     DBG(ss.str());
 }
@@ -190,6 +190,7 @@ void TrackDataManager::parseFile(juce::File file)
         
         if (trackInfo.analysed)
         {
+            analysisManager->processResults(trackPtr);
             sorter.addAnalysed(trackPtr);
             numTracksAnalysed += 1;
             numTracksAnalysedUnplayed += 1;

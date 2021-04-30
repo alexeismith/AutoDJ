@@ -30,8 +30,10 @@ AnalysisManager::~AnalysisManager()
 }
 
 
-void AnalysisManager::startAnalysis(TrackDataManager* dataManager)
+void AnalysisManager::startAnalysis(TrackDataManager* dm)
 {
+    dataManager = dm;
+    
     int numThreads = juce::SystemStats::getNumCpus();
     DBG("Num logical CPU cores: " << numThreads);
     numThreads -= 2;
@@ -65,7 +67,10 @@ bool AnalysisManager::isFinished(double& progress)
     const juce::ScopedLock sl(lock);
     
     if (jobProgress >= jobs.size())
+    {
+        DBG("Analysis finished. minBpm: " << results.minBpm << " maxBpm: " << results.maxBpm << " minGroove: " << results.minGroove << " maxGroove: " << results.maxGroove);
         return true;
+    }
     
     progress = double(jobProgress) / jobs.size();
     
@@ -96,9 +101,37 @@ TrackInfo* AnalysisManager::getNextJob()
 }
 
 
-void AnalysisManager::incrementProgress()
+void AnalysisManager::storeAnalysis(TrackInfo* track)
 {
     const juce::ScopedLock sl(lock);
     
     jobProgress += 1;
+    
+    dataManager->storeAnalysis(track);
+    
+    processResults(track);
+}
+
+
+void AnalysisManager::processResults(TrackInfo* track)
+{
+    if (!results.initialised)
+    {
+        results.minBpm = track->bpm;
+        results.maxBpm = track->bpm;
+        results.minGroove = track->groove;
+        results.maxGroove = track->groove;
+        results.initialised = true;
+        return;
+    }
+    
+    if (track->bpm < results.minBpm)
+        results.minBpm = track->bpm;
+    else if (track->bpm > results.maxBpm)
+        results.maxBpm = track->bpm;
+    
+    if (track->groove < results.minGroove)
+        results.minGroove = track->groove;
+    else if (track->groove > results.maxGroove)
+        results.maxGroove = track->groove;
 }

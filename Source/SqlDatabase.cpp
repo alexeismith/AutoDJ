@@ -50,7 +50,7 @@ void SqlDatabase::store(TrackInfo data)
     
     std::stringstream ss;
     ss << "REPLACE INTO Library VALUES('" \
-    << toSqlSafe(data.getFilename()) << "','" << data.hash << "','" << toSqlSafe(data.getArtist()) << "','" << toSqlSafe(data.getTitle()) << "'," << data.length << "," << data.analysed << "," << data.bpm << "," << data.beatPhase << "," << data.downbeat << "," << data.key << "," << data.energy << ")";
+    << toSqlSafe(data.getFilename()) << "','" << data.hash << "','" << toSqlSafe(data.getArtist()) << "','" << toSqlSafe(data.getTitle()) << "'," << data.length << "," << data.analysed << "," << data.bpm << "," << data.beatPhase << "," << data.downbeat << "," << data.key << "," << data.groove << ")";
     
     execute(ss.str());
 }
@@ -90,7 +90,7 @@ TrackInfo SqlDatabase::read(juce::String filename)
         data.beatPhase = sqlite3_column_int(statement, 7);
         data.downbeat = sqlite3_column_int(statement, 8);
         data.key = sqlite3_column_int(statement, 9);
-        data.energy = sqlite3_column_double(statement, 10);
+        data.groove = sqlite3_column_double(statement, 10);
     }
     
     sqlite3_finalize(statement);
@@ -112,7 +112,7 @@ void SqlDatabase::createTable()
                            "beatPhase INT," \
                            "downbeat INT," \
                            "key INT," \
-                           "energy REAL)");
+                           "groove REAL)");
 }
 
 

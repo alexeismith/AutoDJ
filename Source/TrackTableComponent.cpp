@@ -14,7 +14,7 @@ enum TrackTableColumns {
     length,
     bpm,
     key,
-    energy
+    groove
 };
 
 
@@ -35,7 +35,7 @@ void TrackTableComponent::addColumns()
     table->getHeader().addColumn("Length", 3, 80, 0, 0, columnFlags);
     table->getHeader().addColumn("BPM", 4, 60, 0, 0, columnFlags);
     table->getHeader().addColumn("Key", 5, 60, 0, 0, columnFlags);
-    table->getHeader().addColumn("Energy", 6, 80, 0, 0, columnFlags);
+    table->getHeader().addColumn("Groove", 6, 80, 0, 0, columnFlags);
 }
 
 
@@ -115,9 +115,9 @@ juce::String TrackTableComponent::getValueForColumn(TrackInfo* track, int column
             return juce::String(track->bpm);
         case TrackTableColumns::key:
             return juce::String(track->key);//AutoDJ::getKeyName(track->key); TODO: temp
-        case TrackTableColumns::energy:
-            if (track->energy < 0.f) return juce::String("-");
-            return juce::String(track->energy);
+        case TrackTableColumns::groove:
+            if (track->groove < 0.f) return juce::String("-");
+            return juce::String(track->groove);
         default:
             jassert(false); // Unrecognised column ID
             return juce::String();
@@ -149,10 +149,9 @@ int TrackTableSorter::compareElements(TrackInfo* first, TrackInfo* second)
             if (first->key == second->key) result = 0;
             else result = first->key > second->key ? 1 : -1;
             break;
-        // TODO: Check this energy comparison is in line with scale
-        case TrackTableColumns::energy:
-            if (first->energy == second->energy) result = 0;
-            else result = first->energy > second->energy ? 1 : -1;
+        case TrackTableColumns::groove:
+            if (first->groove == second->groove) result = 0;
+            else result = first->groove > second->groove ? 1 : -1;
             break;
         default:
             jassert(false); // Unrecognised column ID

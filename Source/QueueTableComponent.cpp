@@ -24,7 +24,7 @@ void QueueTableComponent::addColumns()
     table->getHeader().addColumn("Length", 3, 80, 0, 0, columnFlags);
     table->getHeader().addColumn("BPM", 4, 60, 0, 0, columnFlags);
     table->getHeader().addColumn("Key", 5, 60, 0, 0, columnFlags);
-    table->getHeader().addColumn("Energy", 6, 80, 0, 0, columnFlags);
+    table->getHeader().addColumn("Groove", 6, 80, 0, 0, columnFlags);
 }
 
 

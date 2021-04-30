@@ -47,6 +47,8 @@ public:
     void releaseAudio(juce::AudioBuffer<float>* buffer) { const juce::ScopedLock sl(lock); audioBuffers.removeObject(buffer); }
     
     TrackSorter* getSorter() { return &sorter; }
+    
+    AnalysisResults getAnalysisResults() { return analysisManager->getResults(); }
       
 private:
     

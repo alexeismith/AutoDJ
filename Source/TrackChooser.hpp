@@ -37,13 +37,13 @@ private:
     TrackSorter* sorter = nullptr;
     
     double currentBpm = -1.0;
-    double currentKey = -1.0;
+    double currentGroove = -1.0;
     
     double velocityBpm = 0.0;
-    double velocityKey = 0.0;
+    double velocityGroove = 0.0;
     
     double accelerationBpm = 0.0;
-    double accelerationKey = 0.0;
+    double accelerationGroove = 0.0;
     
     std::mt19937 randomGenerator;
     

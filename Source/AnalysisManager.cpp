@@ -135,3 +135,10 @@ void AnalysisManager::processResults(TrackInfo* track)
     else if (track->groove > results.maxGroove)
         results.maxGroove = track->groove;
 }
+
+
+AnalysisResults AnalysisManager::getResults()
+{
+    const juce::ScopedLock sl(lock);
+    return results;
+}

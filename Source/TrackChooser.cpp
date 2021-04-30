@@ -7,7 +7,9 @@
 
 #include "TrackChooser.hpp"
 
-#define NUM_CANDIDATES (10)
+#include "CommonDefs.hpp"
+
+#define NUM_CANDIDATES (1)
 
 
 TrackChooser::TrackChooser(TrackDataManager* dm)
@@ -21,17 +23,15 @@ TrackChooser::TrackChooser(TrackDataManager* dm)
 
 void TrackChooser::initialise()
 {
-    int sizeBpm = sorter->getSortedBpm().size();
-    int sizeKey = sorter->getSortedKey().size();
+    // TODO: This method is prone to picking an extreme starting BPM of there are outlier tracks
     
-    int indexBpm = round(float(sizeBpm) * getRandomGaussian(0.2, 0.5, 0.5));
-    int indexKey = round(float(sizeKey) * getRandomGaussian(0.2, 0.5, 0.5));
+    AnalysisResults analysisResults = dataManager->getAnalysisResults();
     
-    indexBpm = juce::jmin(indexBpm, sizeBpm-1);
-    indexKey = juce::jmin(indexKey, sizeKey-1);
+    float bpmMultiplier = analysisResults.maxBpm - analysisResults.minBpm;
+    float grooveMultiplier = analysisResults.maxGroove - analysisResults.minGroove;
     
-    currentBpm = sorter->getSortedBpm().getUnchecked(indexBpm)->bpm;
-    currentKey = sorter->getSortedKey().getUnchecked(indexKey)->key;
+    currentBpm = analysisResults.minBpm + bpmMultiplier * getRandomGaussian(0.2, 0.5, 0.5);
+    currentGroove = analysisResults.minGroove +grooveMultiplier * getRandomGaussian(0.2, 0.5, 0.5);
 }
 
 
@@ -48,17 +48,18 @@ TrackInfo* TrackChooser::chooseTrack()
     updatePosition();
     
     for (int i = 0; i < numCandidates; i++)
-        candidates.add(sorter->findClosestAndRemove(currentBpm, currentKey));
+        candidates.add(sorter->findClosestAndRemove(currentBpm, currentGroove));
     
     // Find one with the same key, or related key, or random
     // Either sort array or iterate through it and remove the result
     
     result = candidates.getUnchecked(0);
     
-    DBG("QUEUED " << result->getFilename() << " bpm: " << result->bpm << " key: " << result->key);
+//    DBG("QUEUED " << result->getFilename() << " bpm: " << result->bpm << " groove: " << result->groove);
+    DBG("QUEUED bpm: " << result->bpm << " groove: " << result->groove);
     
     currentBpm = result->bpm;
-    currentKey = result->key;
+    currentGroove = result->groove;
     
     // Add the other candidates back into the tree, so they are present for future choices
     for (int i = 1; i < candidates.size(); i++)
@@ -89,16 +90,16 @@ void TrackChooser::updatePosition()
     const double momentum = 0.9;
     
     accelerationBpm = accelerationBpm*momentum + getRandomGaussian(0.5)*(1.0 - momentum);
-    accelerationKey = accelerationKey*momentum + getRandomGaussian(0.5)*(1.0 - momentum);
+    accelerationGroove = accelerationGroove*momentum + getRandomGaussian(0.5)*(1.0 - momentum);
     
     velocityBpm += accelerationBpm;
-    velocityKey += accelerationKey;
+    velocityGroove += accelerationGroove;
     
     velocityBpm = juce::jlimit(-1.0, 1.0, velocityBpm);
-    velocityKey = juce::jlimit(-1.0, 1.0, velocityKey);
+    velocityGroove = juce::jlimit(-1.0, 1.0, velocityGroove);
     
     currentBpm += velocityBpm;
-    currentKey += velocityKey;
+    currentGroove += velocityGroove;
     
-//    DBG("velocityBpm: " << velocityBpm << " velocityKey: " << velocityKey);
+//    DBG("velocityBpm: " << velocityBpm << " velocityGroove: " << velocityGroove);
 }

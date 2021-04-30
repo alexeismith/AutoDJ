@@ -15,15 +15,6 @@
 
 class TrackDataManager;
 
-typedef struct AnalysisResults
-{
-    bool initialised = false;
-    int minBpm;
-    int maxBpm;
-    float minGroove;
-    float maxGroove;
-} AnalysisResults;
-
 
 class AnalysisManager
 {
@@ -44,6 +35,8 @@ public:
     void storeAnalysis(TrackInfo* track);
     
     void processResults(TrackInfo* track);
+    
+    AnalysisResults getResults();
     
 private:
     

@@ -20,6 +20,7 @@
 
 #define TOOLBAR_HEIGHT (40)
 
+
 enum ComponentIDs : int
 {
     libraryBtn,
@@ -27,6 +28,17 @@ enum ComponentIDs : int
     playPauseBtn,
     chooseFolderBtn
 };
+
+
+typedef struct AnalysisResults
+{
+    bool initialised = false;
+    int minBpm;
+    int maxBpm;
+    float minGroove;
+    float maxGroove;
+} AnalysisResults;
+
 
 namespace AutoDJ {
 

@@ -259,6 +259,5 @@ void FileParserThread::run()
     
     DBG("Num already analysed: " << dataManager->numTracksAnalysed);
     
-    dataManager->sorter.sort();
     dataManager->analysisManager->startAnalysis(dataManager);
 }

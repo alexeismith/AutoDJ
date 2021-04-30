@@ -7,7 +7,7 @@
 
 #include "ArtificialDJ.hpp"
 
-#define MIX_QUEUE_LENGTH (5)
+#define MIX_QUEUE_LENGTH (20)
 
 
 ArtificialDJ::ArtificialDJ(TrackDataManager* dm) :

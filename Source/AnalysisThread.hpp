@@ -22,7 +22,7 @@ class AnalysisThread : public juce::Thread
 {
 public:
     
-    AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm);
+    AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm, essentia::standard::AlgorithmFactory& factory);
     
     ~AnalysisThread() {}
     

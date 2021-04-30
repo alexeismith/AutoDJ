@@ -7,16 +7,16 @@
 
 #include "AnalyserEnergy.hpp"
 
+#include "CommonDefs.hpp"
 
-AnalyserEnergy::AnalyserEnergy()
+
+AnalyserEnergy::AnalyserEnergy(essentia::standard::AlgorithmFactory& factory)
 {
-    // register the algorithms in the factory(ies)
-    essentia::init();
+    danceability.reset(factory.create("Danceability", "sampleRate", SUPPORTED_SAMPLERATE));
+}
 
-//    essentia::standard::Pool pool;
 
-    /////// PARAMS //////////////
-    int sampleRate = 44100;
-    int frameSize = 2048;
-    int hopSize = 1024;
+void AnalyserEnergy::analyse(juce::AudioBuffer<float>* audio, int& energy)
+{
+    
 }

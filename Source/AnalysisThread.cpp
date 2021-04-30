@@ -12,12 +12,12 @@
 #include "AnalysisManager.hpp"
 
 
-AnalysisThread::AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm) :
+AnalysisThread::AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm, essentia::standard::AlgorithmFactory& factory) :
     juce::Thread("AnalysisThread"), id(ID), analysisManager(am), dataManager(dm)
 {
     analyserBeats.reset(new AnalyserBeats());
     analyserKey.reset(new AnalyserKey());
-    analyserEnergy.reset(new AnalyserEnergy());
+    analyserEnergy.reset(new AnalyserEnergy(factory));
     progress.store(0.0);
 }
 

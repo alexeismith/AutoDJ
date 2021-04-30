@@ -11,6 +11,13 @@
 
 #define MAX_NUM_THREADS (8)
 
+
+AnalysisManager::AnalysisManager()
+{
+    essentia::init();
+}
+
+
 AnalysisManager::~AnalysisManager()
 {
     // Set progress tracker to completion, so that no more jobs are given to analysis threads
@@ -43,9 +50,11 @@ void AnalysisManager::startAnalysis(TrackDataManager* dataManager)
         numThreads = jobs.size();
     }
     
+    essentia::standard::AlgorithmFactory& factory = essentia::standard::AlgorithmFactory::instance();
+    
     for (int i = 0; i < numThreads; i++)
     {
-        threads.add(new AnalysisThread(i+1, this, dataManager));
+        threads.add(new AnalysisThread(i+1, this, dataManager, factory));
         threads.getUnchecked(i)->startThread();
     }
 }

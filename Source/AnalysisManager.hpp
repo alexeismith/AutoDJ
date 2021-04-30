@@ -19,7 +19,7 @@ class AnalysisManager
 {
 public:
     
-    AnalysisManager() {}
+    AnalysisManager();
     
     ~AnalysisManager();
     

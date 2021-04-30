@@ -11,12 +11,14 @@
 #include <JuceHeader.h>
 
 #include <essentia.h>
+#include <algorithmfactory.h>
+
 
 class AnalyserEnergy
 {
 public:
     
-    AnalyserEnergy();
+    AnalyserEnergy(essentia::standard::AlgorithmFactory& factory);
     
     ~AnalyserEnergy() {}
     
@@ -25,6 +27,8 @@ public:
 private:
     
     void reset();
+    
+    std::unique_ptr<essentia::standard::Algorithm> danceability;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalyserEnergy)
 };

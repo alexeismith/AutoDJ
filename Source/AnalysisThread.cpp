@@ -13,7 +13,7 @@
 
 
 AnalysisThread::AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm, essentia::standard::AlgorithmFactory& factory) :
-    juce::Thread("AnalysisThread"), id(ID), analysisManager(am), dataManager(dm)
+    juce::Thread("AnalysisThread" + juce::String(ID)), id(ID), analysisManager(am), dataManager(dm)
 {
     analyserBeats.reset(new AnalyserBeats());
     analyserKey.reset(new AnalyserKey());
@@ -52,9 +52,17 @@ void AnalysisThread::analyse(TrackInfo& track)
     
     if (threadShouldExit()) return;
     
-    progress.store(0.8);
+    progress.store(0.7);
     
     analyserKey->analyse(buffer, track.key);
+    
+    progress.store(0.8);
+    
+    DBG(id << ": energy");
+    
+    analyserEnergy->analyse(buffer, track.energy);
+    
+    DBG(id << ": finished");
     
     progress.store(0.9);
     

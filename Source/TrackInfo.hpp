@@ -59,7 +59,7 @@ public:
     int beatPhase = -1;
     int downbeat = -1;
     int key = -1; // Musical key signature TODO: how to represent camelot?
-    int energy = -1; // Overall energy level TODO: how to represent energy? thinking about track distribution screen, maybe a numeric scale is best
+    float energy = -1.f; // Overall energy level TODO: how to represent energy? thinking about track distribution screen, maybe a numeric scale is best
     
     
 private:

@@ -116,7 +116,7 @@ juce::String TrackTableComponent::getValueForColumn(TrackInfo* track, int column
         case TrackTableColumns::key:
             return juce::String(track->key);//AutoDJ::getKeyName(track->key); TODO: temp
         case TrackTableColumns::energy:
-            if (track->energy == -1) return juce::String("-");
+            if (track->energy < 0.f) return juce::String("-");
             return juce::String(track->energy);
         default:
             jassert(false); // Unrecognised column ID

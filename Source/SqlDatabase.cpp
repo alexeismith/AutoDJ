@@ -90,7 +90,7 @@ TrackInfo SqlDatabase::read(juce::String filename)
         data.beatPhase = sqlite3_column_int(statement, 7);
         data.downbeat = sqlite3_column_int(statement, 8);
         data.key = sqlite3_column_int(statement, 9);
-        data.energy = sqlite3_column_int(statement, 10);
+        data.energy = sqlite3_column_double(statement, 10);
     }
     
     sqlite3_finalize(statement);
@@ -112,7 +112,7 @@ void SqlDatabase::createTable()
                            "beatPhase INT," \
                            "downbeat INT," \
                            "key INT," \
-                           "energy INT)");
+                           "energy REAL)");
 }
 
 

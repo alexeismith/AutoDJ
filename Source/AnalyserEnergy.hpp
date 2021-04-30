@@ -22,7 +22,7 @@ public:
     
     ~AnalyserEnergy() {}
     
-    void analyse(juce::AudioBuffer<float>* audio, int& energy);
+    void analyse(juce::AudioBuffer<float>* audio, float& energy);
     
 private:
     

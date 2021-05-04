@@ -83,35 +83,36 @@ bool TrackDataManager::analysisProgress(double& progress, bool& canStartPlaying)
 
 juce::AudioBuffer<float>* TrackDataManager::loadAudio(juce::String filename, bool mono)
 {
-    const juce::ScopedLock sl(lock);
+    juce::AudioBuffer<float>* buffer;
+    juce::AudioFormatReader* reader = nullptr;
+    juce::String filePath;
     
-//    DBG("LOADING AUDIO");
-    
-    juce::AudioBuffer<float>* buffer = nullptr;
-    
-    juce::String filePath = dirContents->getDirectory().getFullPathName() + "/" + filename;
-    
-    juce::AudioFormatReader* reader = formatManager.createReaderFor(filePath);
-    
-    if (reader)
     {
-        buffer = new juce::AudioBuffer<float>();
-        audioBuffers.add(buffer);
+        const juce::ScopedLock sl(lock);
+        juce::String filePath = dirContents->getDirectory().getFullPathName() + "/" + filename;
+        reader = formatManager.createReaderFor(filePath);
         
-        buffer->clear();
-        buffer->setSize(reader->numChannels, (int)reader->lengthInSamples);
-        
-        reader->read(buffer->getArrayOfWritePointers(), reader->numChannels, 0, (int)reader->lengthInSamples);
-        
-        adjustChannels(buffer, mono);
-        
-        delete reader;
+        if (reader)
+        {
+            audioBuffers.add(new juce::AudioBuffer<float>());
+            buffer = audioBuffers.getLast();
+        }
+        else
+        {
+            jassert(false); // Failed to load track audio
+            return nullptr;
+            // TODO: handle the case where an audio file has been deleted when this request arrives
+        }
     }
-    else
-    {
-        jassert(false); // Failed to load track audio
-        // TODO: handle the case where files are deleted after parsing
-    }
+        
+    buffer->clear();
+    buffer->setSize(reader->numChannels, (int)reader->lengthInSamples);
+    
+    reader->read(buffer->getArrayOfWritePointers(), reader->numChannels, 0, (int)reader->lengthInSamples);
+    
+    adjustChannels(buffer, mono);
+    
+    delete reader;
     
     return buffer;
 }

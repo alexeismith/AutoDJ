@@ -79,4 +79,10 @@ juce::String getKeyName(int chromaKey)
 }
 
 
+int getBeatPeriod(int bpm)
+{
+    return round((60.0 * SUPPORTED_SAMPLERATE) / bpm);
+}
+
+
 } /* namespace AutoDJ */

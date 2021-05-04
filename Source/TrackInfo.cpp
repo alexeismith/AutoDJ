@@ -18,7 +18,7 @@ int TrackInfo::getSampleOfBeat(int beat)
 
 int TrackInfo::getBeatPeriod()
 {
-    return round((60.0 * SUPPORTED_SAMPLERATE) / bpm);
+    return AutoDJ::getBeatPeriod(bpm);
 }
 
 

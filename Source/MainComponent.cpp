@@ -140,6 +140,7 @@ void MainComponent::timerCallback()
         {
             waitingForDJ = false;
             playPauseBtn->setEnabled(true);
+            stopTimer();
         }
     }
 }

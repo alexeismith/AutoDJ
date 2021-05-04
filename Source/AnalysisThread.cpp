@@ -16,6 +16,7 @@ AnalysisThread::AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm
     juce::Thread("AnalysisThread" + juce::String(ID)), id(ID), analysisManager(am), dataManager(dm)
 {
     analyserBeats.reset(new AnalyserBeats());
+    analyserBeatsEssentia.reset(new AnalyserBeatsEssentia(factory));
     analyserKey.reset(new AnalyserKey());
     analyserGroove.reset(new AnalyserGroove(factory));
     progress.store(0.0);

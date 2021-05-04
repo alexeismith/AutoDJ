@@ -24,7 +24,9 @@ void AnalyserGroove::analyse(juce::AudioBuffer<float>* audio, float& groove)
     danceability->reset();
     
     danceability->input("signal").set(buffer);
+    
     danceability->output("danceability").set(groove);
     danceability->output("dfa").set(tempBuffer);
+    
     danceability->compute();
 }

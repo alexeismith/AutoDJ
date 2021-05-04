@@ -12,6 +12,7 @@
 
 #include "TrackInfo.hpp"
 #include "AnalyserBeats.hpp"
+#include "AnalyserBeatsEssentia.hpp"
 #include "AnalyserKey.hpp"
 #include "AnalyserGroove.hpp"
 
@@ -42,6 +43,7 @@ private:
     TrackDataManager* dataManager = nullptr;
     
     std::unique_ptr<AnalyserBeats> analyserBeats;
+    std::unique_ptr<AnalyserBeatsEssentia> analyserBeatsEssentia;
     std::unique_ptr<AnalyserKey> analyserKey;
     std::unique_ptr<AnalyserGroove> analyserGroove;
     

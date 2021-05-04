@@ -21,6 +21,18 @@ DeckComponent::DeckComponent(int id, TrackProcessor* processor) :
 }
 
 
+void DeckComponent::paint(juce::Graphics& g)
+{
+    if (!ready.load()) return;
+    
+    g.setColour(juce::Colours::white);
+    g.setFont(juce::Font(24));
+    g.drawText(title, 20, titlePosY, getWidth(), 1, juce::Justification::left);
+    g.setFont(juce::Font(18));
+    g.drawText(info, 20, infoPosY, getWidth(), 1, juce::Justification::left);
+}
+
+
 void DeckComponent::resized()
 {
     waveform->setSize(getWidth(), WAVEFORM_HEIGHT);
@@ -30,11 +42,17 @@ void DeckComponent::resized()
     {
         waveform->setTopLeftPosition(0, getHeight()-WAVEFORM_HEIGHT);
         waveformBar->setTopLeftPosition(0, waveform->getY()-WAVEFORM_BAR_HEIGHT);
+        
+        titlePosY = waveformBar->getY() - 30;
+        infoPosY = titlePosY - 30;
     }
     else
     {
         waveform->setTopLeftPosition(0, 0);
         waveformBar->setTopLeftPosition(0, waveform->getY()+WAVEFORM_HEIGHT);
+        
+        titlePosY = waveformBar->getY() + WAVEFORM_BAR_HEIGHT + 30;
+        infoPosY = titlePosY + 30;
     }
 }
 
@@ -53,15 +71,16 @@ void DeckComponent::buttonClicked(juce::Button* button)
 
 void DeckComponent::load(Track* trackPtr)
 {
+    ready.store(false);
+    
     track = *trackPtr;
     
-//    DBG("Deck " << deckId+1 << " playing: " << track.info.getFilename());
+    title = track.info->getArtistTitle();
+    info = "Length: " + AutoDJ::getLengthString(track.info->length) +  "    BPM: " + juce::String(track.info->bpm) +  "    Key: " + juce::String(track.info->key) +  "    Groove: " + AutoDJ::getGrooveString(track.info->groove);
     
     waveformLoader->load(waveform.get(), waveformBar.get(), &track);
     
-    trackLoaded = true;
-    
-    // TODO: show title, artist, etc
+    ready.store(true);
 }
 
 
@@ -77,17 +96,16 @@ void DeckComponent::update()
     if (t)
         load(t);
     
-    if (trackLoaded)
+    if (ready.load())
     {
         waveform->update(playhead, trackProcessor->getTimeStretch(), trackProcessor->getTrack()->gain.currentValue);
         waveformBar->update(playhead, trackProcessor->getTimeStretch());
     }
-       
 }
 
 
 void DeckComponent::logPlayheadPosition()
 {
-    if (trackLoaded)
+    if (ready.load())
         playhead = trackProcessor->getTrack()->getPlayhead();
 }

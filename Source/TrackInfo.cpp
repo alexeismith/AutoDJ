@@ -37,3 +37,15 @@ juce::String TrackInfo::getTitle()
     
     return titleStr;
 }
+
+
+juce::String TrackInfo::getArtistTitle()
+{
+    juce::String artistStr = juce::String(juce::CharPointer_UTF8(artist));
+    juce::String titleStr = juce::String(juce::CharPointer_UTF8(title));
+    
+    if (artistStr.isEmpty() || titleStr.isEmpty())
+        return getFilename();
+    
+    return artistStr + " - " + titleStr;
+}

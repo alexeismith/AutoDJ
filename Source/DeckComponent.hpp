@@ -22,6 +22,8 @@ public:
     
     ~DeckComponent() {}
     
+    void paint(juce::Graphics& g) override;
+    
     void resized() override;
     
     void buttonClicked(juce::Button* button) override;
@@ -38,7 +40,11 @@ private:
     
     int playhead = 0;
     
-    bool trackLoaded = false;
+    juce::String title;
+    juce::String info;
+    int titlePosY, infoPosY;
+    
+    std::atomic<bool> ready = false;
     
     TrackProcessor* trackProcessor = nullptr;
     

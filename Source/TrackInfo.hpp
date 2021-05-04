@@ -28,6 +28,7 @@ public:
     juce::String getFilename() { return juce::String(juce::CharPointer_UTF8(filename)); }
     juce::String getArtist() { return juce::String(juce::CharPointer_UTF8(artist)); }
     juce::String getTitle();
+    juce::String getArtistTitle();
     
     void setFilename(juce::String text) { strcpy(filename, text.getCharPointer()); }
     void setArtist(juce::String text) { strcpy(artist, text.getCharPointer()); }

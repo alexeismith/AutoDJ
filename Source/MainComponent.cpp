@@ -61,7 +61,7 @@ MainComponent::MainComponent()
     
     // Make sure you set the size of the component after
     // you add any child components.
-    setSize (800, 600);
+    setSize (800, 550);
     
     startTimerHz(20);
 }

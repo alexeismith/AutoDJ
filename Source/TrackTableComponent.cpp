@@ -150,31 +150,26 @@ juce::String TrackTableComponent::getValueForColumn(TrackInfo* track, int column
     {
         case TrackTableColumns::artist:
             return track->getArtist();
+            
         case TrackTableColumns::title:
             return track->getTitle();
+            
         case TrackTableColumns::length:
             return AutoDJ::getLengthString(track->length);
+            
         case TrackTableColumns::bpm:
             if (track->bpm == -1) return juce::String("-");
             return juce::String(track->bpm);
+            
         case TrackTableColumns::key:
             return juce::String(track->key);//AutoDJ::getKeyName(track->key); TODO: temp
+            
         case TrackTableColumns::groove:
             if (track->groove < 0.f) return juce::String("-");
-            return getGrooveString(track->groove);
+            return AutoDJ::getGrooveString(track->groove);
+            
         default:
             jassert(false); // Unrecognised column ID
             return juce::String();
     }
-}
-
-
-juce::String TrackTableComponent::getGrooveString(float groove)
-{
-    if (groove < 1.2)
-        return "Low";
-    else if (groove < 1.5)
-        return "Med";
-    else
-        return "High";
 }

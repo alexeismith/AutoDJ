@@ -79,6 +79,17 @@ juce::String getKeyName(int chromaKey)
 }
 
 
+juce::String getGrooveString(float groove)
+{
+    if (groove < 1.2)
+        return "Low";
+    else if (groove < 1.5)
+        return "Med";
+    else
+        return "High";
+}
+
+
 int getBeatPeriod(int bpm)
 {
     return round((60.0 * SUPPORTED_SAMPLERATE) / bpm);

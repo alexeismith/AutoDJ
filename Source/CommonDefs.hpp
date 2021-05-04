@@ -46,6 +46,8 @@ juce::String getLengthString(int secs);
 
 juce::String getKeyName(int chromaKey);
 
+juce::String getGrooveString(float groove);
+
 int getBeatPeriod(int bpm);
 
 // ============== Code taken from: https://www.geeksforgeeks.org/frequent-element-array/ ==============

@@ -79,8 +79,15 @@ void DeckComponent::update()
     
     if (trackLoaded)
     {
-        waveform->draw(trackProcessor->getTrack()->getPlayhead(), trackProcessor->getTimeStretch(), trackProcessor->getTrack()->gain.currentValue);
-        waveformBar->draw(trackProcessor->getTrack()->getPlayhead(), trackProcessor->getTimeStretch(), trackProcessor->getTrack()->gain.currentValue);
+        waveform->update(playhead, trackProcessor->getTimeStretch(), trackProcessor->getTrack()->gain.currentValue);
+        waveformBar->update(playhead, trackProcessor->getTimeStretch());
     }
        
+}
+
+
+void DeckComponent::logPlayheadPosition()
+{
+    if (trackLoaded)
+        playhead = trackProcessor->getTrack()->getPlayhead();
 }

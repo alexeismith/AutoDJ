@@ -21,11 +21,13 @@ public:
     
     ~WaveformBarComponent() {}
     
-//    void paint(juce::Graphics& g) override;
+    void paint(juce::Graphics& g) override;
     
-    void draw(int playhead, double timeStretch = 1.0, double gain = 1.0) override;
+    void update(int playhead, double timeStretch = 1.0, double gain = 1.0) override;
     
 private:
+    
+    void draw() override;
     
     bool isBeat(int frameIndex, bool& downbeat) override;
     

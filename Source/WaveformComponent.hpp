@@ -29,24 +29,24 @@ public:
     
     void resized() override;
     
-    virtual void draw(int playhead, double timeStretch, double gain);
-    
-    void flipImage();
+    virtual void update(int playhead, double timeStretch, double gain);
     
     void reset();
     
     
 protected:
     
-    void updateImage();
+    virtual void draw();
     
     virtual bool isBeat(int frameIndex, bool& downbeat);
     
     std::atomic<bool> ready;
     
-    float brightness = 0.0;
+    int frameSize, numFrames = 0, startFrame = 0;
     
-    int frameSize, numFrames = 0, startFrame = 0, drawWidth = 0;
+    int beatMarkerHeight;
+    
+    juce::Image image, imageScaled;
     
 private:
     
@@ -58,10 +58,9 @@ private:
     
     Track* track;
     
-    int barHeight;
+    int imageOffset;
     
-    juce::OwnedArray<juce::Image> images;
-    std::atomic<int> imageToPaint;
+    float brightness = 0.0;
     
     juce::AudioBuffer<float> processBuffers;
     

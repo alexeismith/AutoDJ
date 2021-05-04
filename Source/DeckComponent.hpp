@@ -30,11 +30,13 @@ public:
     
     void update();
     
-    void flipWaveform() { waveform->flipImage(); waveformBar->flipImage(); }
+    void logPlayheadPosition();
     
 private:
     
     int deckId;
+    
+    int playhead = 0;
     
     bool trackLoaded = false;
     

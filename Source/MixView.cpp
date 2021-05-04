@@ -23,16 +23,18 @@ MixView::MixView(TrackProcessor** processors)
 
 void MixView::hiResTimerCallback()
 {
+    // Tell each deck to fetch the playhead position before updating
+    // This is so that the decks are as synchronised as possible
+    // (If this was done in the update() function, the audio thread playhead would
+    // have moved by the time the second deck updates)
+    decks.getUnchecked(0)->logPlayheadPosition();
+    decks.getUnchecked(1)->logPlayheadPosition();
+    
     decks.getUnchecked(0)->update();
     decks.getUnchecked(1)->update();
     
-    decks.getUnchecked(0)->flipWaveform();
-    decks.getUnchecked(1)->flipWaveform();
-    
     juce::MessageManager::callAsync(std::function<void()>([this]() {
         this->repaint();
-//        this->decks.getUnchecked(0)->waveform->repaint();
-//        this->decks.getUnchecked(1)->waveform->repaint();
     }));
 }
 

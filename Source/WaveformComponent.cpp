@@ -9,7 +9,7 @@
 
 #include "CommonDefs.hpp"
 
-#define WAVEFORM_BAR_HEIGHT (0.1f)
+#define WAVEFORM_BEAT_MARKER_SIZE (0.1f)
 
 
 WaveformComponent::WaveformComponent()
@@ -20,11 +20,10 @@ WaveformComponent::WaveformComponent()
     filterMid.setCoefficients(juce::IIRCoefficients::makeBandPass(SUPPORTED_SAMPLERATE, 500, 1.0));
     filterHigh.setCoefficients(juce::IIRCoefficients::makeHighPass(SUPPORTED_SAMPLERATE, 10000, 1.0));
     
-    images.add(new juce::Image());
-    images.add(new juce::Image());
-    
     setBufferedToImage(true);
     setOpaque(true);
+    
+    setSize(0, WAVEFORM_HEIGHT);
     
     frameSize = WAVEFORM_FRAME_SIZE;
 }
@@ -32,42 +31,42 @@ WaveformComponent::WaveformComponent()
 
 void WaveformComponent::paint(juce::Graphics& g)
 {
-    if (!ready.load())
-    {
-        g.setColour(juce::Colours::black);
-        g.fillAll();
-        return;
-    }
+    g.setColour(juce::Colours::darkgrey);
+    g.fillAll();
+    
+    if (!ready.load()) return;
 
-    g.drawImageAt(*images.getUnchecked(imageToPaint.load()), 0, 0);
+    g.drawImageAt(imageScaled, imageOffset, 0);
+    
+    g.setColour(juce::Colours::black.withAlpha(1.f - brightness));
+    g.fillAll();
 }
 
 
 void WaveformComponent::resized()
 {
-    barHeight = WAVEFORM_BAR_HEIGHT * getHeight();
+    beatMarkerHeight = WAVEFORM_BEAT_MARKER_SIZE * getHeight();
 }
 
 
-void WaveformComponent::draw(int playhead, double timeStretch, double gain)
+void WaveformComponent::update(int playhead, double timeStretch, double gain)
 {
     if (!ready.load()) return;
     
     brightness = juce::jmax(float(std::sqrt(gain)), 0.3f);
     
-    drawWidth = getWidth() * (timeStretch);
+    int visibleWidth = getWidth() * timeStretch;
     
-    double playheadAdjust = playhead - double(WAVEFORM_FRAME_SIZE * drawWidth)/2;
+    double playheadAdjust = playhead - double(WAVEFORM_FRAME_SIZE * visibleWidth)/2;
     
     startFrame = round(playheadAdjust / WAVEFORM_FRAME_SIZE);
     
-    updateImage();
-}
-
-
-void WaveformComponent::flipImage()
-{
-    imageToPaint.store(1 - imageToPaint.load());
+    imageScaled = image.getClippedImage(juce::Rectangle<int>(startFrame, 0, visibleWidth, getHeight()));
+    
+    imageOffset = round(double(visibleWidth - imageScaled.getWidth()) / timeStretch);
+    
+    imageScaled = imageScaled.rescaled(getWidth() - imageOffset, getHeight(), juce::Graphics::ResamplingQuality::mediumResamplingQuality);
+    
     getCachedComponentImage()->invalidateAll();
 }
 
@@ -102,46 +101,39 @@ void WaveformComponent::loadTrack(Track* t)
     juce::FloatVectorOperations::abs(processBuffers.getWritePointer(2), processBuffers.getReadPointer(2), numSamples);
     juce::FloatVectorOperations::abs(processBuffers.getWritePointer(3), processBuffers.getReadPointer(3), numSamples);
     
-    
-    
     for (int i = 0; i < numFrames; i++)
         pushFrame(i);
     
-    processBuffers.clear();
+    draw();
     
     ready.store(true);
 }
 
 
-void WaveformComponent::updateImage()
+void WaveformComponent::draw()
 {
-    int imageIndex = 1 - imageToPaint.load();
-    juce::Image* image = images.getUnchecked(imageIndex);
-    *image = juce::Image(juce::Image::RGB, drawWidth, getHeight(), true);
-    juce::Graphics g(*image);
+    image = juce::Image(juce::Image::RGB, numFrames, getHeight(), true);
+    juce::Graphics g(image);
     
-    int frame;
     float magnitude;
     bool downbeat;
     
     g.setColour(juce::Colours::black);
     g.fillAll();
     
-    for (int x = 0; x < drawWidth; x++)
+    for (int frame = 0; frame < numFrames; frame++)
     {
-        frame = x + startFrame;
-        
         if (frame > 0 && frame < numFrames)
         {
             magnitude = levels[frame] * getHeight() * 0.4f;
             
-            g.setColour(colours[frame].withAlpha(brightness));
-            g.drawVerticalLine(x, 0.5f * getHeight() - magnitude, 0.5f * getHeight() + magnitude);
+            g.setColour(colours[frame]);
+            g.drawVerticalLine(frame, 0.5f * getHeight() - magnitude, 0.5f * getHeight() + magnitude);
         }
         else
         {
             g.setColour(juce::Colours::darkgrey);
-            g.drawVerticalLine(x, 0, getHeight());
+            g.drawVerticalLine(frame, 0, getHeight());
         }
         
         if (isBeat(frame, downbeat))
@@ -150,20 +142,18 @@ void WaveformComponent::updateImage()
             
             if (downbeat)
             {
-                g.drawVerticalLine(x, 0, getHeight());
-                g.drawVerticalLine(x+1, 0, getHeight());
+                g.drawVerticalLine(frame, 0, getHeight());
+                g.drawVerticalLine(frame+1, 0, getHeight());
             }
             else
             {
-                g.drawVerticalLine(x, 0, barHeight);
-                g.drawVerticalLine(x, getHeight() - barHeight, getHeight());
-                g.drawVerticalLine(x+1, 0, barHeight);
-                g.drawVerticalLine(x+1, getHeight() - barHeight, getHeight());
+                g.drawVerticalLine(frame, 0, beatMarkerHeight);
+                g.drawVerticalLine(frame, getHeight() - beatMarkerHeight, getHeight());
+                g.drawVerticalLine(frame+1, 0, beatMarkerHeight);
+                g.drawVerticalLine(frame+1, getHeight() - beatMarkerHeight, getHeight());
             }
         }
     }
-    
-    *image = image->rescaled(getWidth(), getHeight(), juce::Graphics::ResamplingQuality::lowResamplingQuality);
 }
 
 

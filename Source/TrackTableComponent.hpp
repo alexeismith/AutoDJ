@@ -65,6 +65,8 @@ private:
     
     std::unique_ptr<TrackTableSorter> sorter;
     
+    int fixedColumnWidth;
+    
     juce::Font font { 14.0f };
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackTableComponent)

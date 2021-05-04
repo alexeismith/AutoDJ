@@ -43,6 +43,8 @@ private:
 
     juce::LookAndFeel_V4 customAppearance;
     
+    juce::ComponentBoundsConstrainer sizeLimits;
+    
     std::unique_ptr<AudioProcessor> audioProcessor;
     std::unique_ptr<TrackDataManager> dataManager;
     std::unique_ptr<ArtificialDJ> dj;

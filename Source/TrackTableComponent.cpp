@@ -30,12 +30,14 @@ void TrackTableComponent::addColumns()
 {
     uint8_t columnFlags = juce::TableHeaderComponent::visible | juce::TableHeaderComponent::sortable;
     
-    table->getHeader().addColumn("Artist", 1, 210, 0, 0, columnFlags);
-    table->getHeader().addColumn("Title", 2, 310, 0, 0, columnFlags);
-    table->getHeader().addColumn("Length", 3, 80, 0, 0, columnFlags);
-    table->getHeader().addColumn("BPM", 4, 60, 0, 0, columnFlags);
-    table->getHeader().addColumn("Key", 5, 60, 0, 0, columnFlags);
-    table->getHeader().addColumn("Groove", 6, 80, 0, 0, columnFlags);
+    table->getHeader().addColumn("Artist", 1, 210, 0, 1000, columnFlags);
+    table->getHeader().addColumn("Title", 2, 310, 0, 1000, columnFlags);
+    table->getHeader().addColumn("Length", 3, 80, 0, 1000, columnFlags);
+    table->getHeader().addColumn("BPM", 4, 60, 0, 1000, columnFlags);
+    table->getHeader().addColumn("Key", 5, 60, 0, 1000, columnFlags);
+    table->getHeader().addColumn("Groove", 6, 100, 0, 1000, columnFlags);
+    
+    fixedColumnWidth = table->getHeader().getColumnWidth(3) + table->getHeader().getColumnWidth(4) + table->getHeader().getColumnWidth(5) + table->getHeader().getColumnWidth(6);
 }
 
 
@@ -84,6 +86,11 @@ void TrackTableComponent::paintCell(juce::Graphics& g, int rowNumber, int column
 void TrackTableComponent::resized()
 {
     table->setSize(getWidth(), getHeight());
+    
+    int availableWidth = (getWidth() - fixedColumnWidth);
+
+    table->getHeader().setColumnWidth(1, availableWidth*0.4);
+    table->getHeader().setColumnWidth(2, availableWidth*0.6);
 }
 
 

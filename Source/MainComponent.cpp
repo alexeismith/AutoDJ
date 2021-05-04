@@ -59,9 +59,11 @@ MainComponent::MainComponent()
     graphWindow->setContentOwned(new GraphComponent(), false);
 #endif
     
-    // Make sure you set the size of the component after
-    // you add any child components.
+    // This needs to be done AFTER all the components are created, so that their resize() method can be called
     setSize (800, 550);
+    
+    // Set resize limits
+    sizeLimits.setSizeLimits(800, 475, 1200, 700);
     
     startTimerHz(20);
 }
@@ -115,6 +117,8 @@ void MainComponent::paint (juce::Graphics& g)
 
 void MainComponent::resized()
 {
+    sizeLimits.checkComponentBounds(this);
+    
     libraryView->setSize(getWidth(), getHeight() - TOOLBAR_HEIGHT);
     libraryView->setTopLeftPosition(0, 0);
     

@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="mliKgU" name="AutoDJ" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              headerPath="../../Source/ThirdParty/qm-dsp&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools&#10;../../Source/ThirdParty/soundtouch/include&#10;../../Source/ThirdParty/soundtouch/source/SoundTouch&#10;../../Source/ThirdParty/Quadtree/include&#10;../../Source/ThirdParty/essentia&#10;/usr/local/include/eigen3"
+              headerPath="../../Source/ThirdParty/qm-dsp&#10;../../Source/ThirdParty/qm-dsp/include&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools&#10;../../Source/ThirdParty/soundtouch/include&#10;../../Source/ThirdParty/soundtouch/source/SoundTouch&#10;../../Source/ThirdParty/Quadtree/include&#10;../../Source/ThirdParty/essentia&#10;/usr/local/include/eigen3"
               defines="kiss_fft_scalar=double&#10;JUCE_USE_MP3AUDIOFORMAT&#10;ANDROID&#10;SOUNDTOUCH_ALLOW_X86_OPTIMIZATIONS"
               cppLanguageStandard="17">
   <MAINGROUP id="r4tD07" name="AutoDJ">
@@ -293,9 +293,28 @@
               <FILE id="N3z2EV" name="PhaseVocoder.cpp" compile="1" resource="0"
                     file="Source/ThirdParty/qm-dsp/dsp/phasevocoder/PhaseVocoder.cpp"/>
               <FILE id="wsdSTc" name="PhaseVocoder.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/phasevocoder/PhaseVocoder.h"/>
+              <FILE id="FsZuKU" name="MFCC.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/mfcc/MFCC.cpp"/>
+              <FILE id="gNTLZA" name="MFCC.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/mfcc/MFCC.h"/>
               <FILE id="nrtPmp" name="FFT.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/transforms/FFT.cpp"/>
               <FILE id="bU6ock" name="FFT.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/transforms/FFT.h"/>
+              <FILE id="lDXbPi" name="hmm.c" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/hmm/hmm.c"/>
+              <FILE id="gGZy7K" name="hmm.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/hmm/hmm.h"/>
+              <FILE id="zJCdX5" name="cluster_melt.c" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/segmentation/cluster_melt.c"/>
+              <FILE id="AnWzML" name="cluster_melt.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/segmentation/cluster_melt.h"/>
+              <FILE id="aOJLMJ" name="cluster_segmenter.c" compile="1" resource="0"
+                    file="Source/ThirdParty/qm-dsp/dsp/segmentation/cluster_segmenter.c"/>
+              <FILE id="RaUG7b" name="cluster_segmenter.h" compile="0" resource="0"
+                    file="Source/ThirdParty/qm-dsp/dsp/segmentation/cluster_segmenter.h"/>
+              <FILE id="Iv3IEz" name="ClusterMeltSegmenter.cpp" compile="1" resource="0"
+                    file="Source/ThirdParty/qm-dsp/dsp/segmentation/ClusterMeltSegmenter.cpp"/>
+              <FILE id="JjCzwY" name="ClusterMeltSegmenter.h" compile="0" resource="0"
+                    file="Source/ThirdParty/qm-dsp/dsp/segmentation/ClusterMeltSegmenter.h"/>
+              <FILE id="B2LsKx" name="pca.c" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/maths/pca/pca.c"/>
+              <FILE id="UxiOKY" name="pca.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/maths/pca/pca.h"/>
             </GROUP>
+            <FILE id="Yxt5Ug" name="Segmenter.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/segmentation/Segmenter.cpp"/>
+            <FILE id="UaYDtx" name="Segmenter.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/segmentation/Segmenter.h"/>
+            <FILE id="JtaWEY" name="segment.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/segmentation/segment.h"/>
             <FILE id="txqGN1" name="GetKeyMode.cpp" compile="1" resource="0" file="Source/ThirdParty/qm-dsp/dsp/keydetection/GetKeyMode.cpp"/>
             <FILE id="sTHBw6" name="GetKeyMode.h" compile="0" resource="0" file="Source/ThirdParty/qm-dsp/dsp/keydetection/GetKeyMode.h"/>
             <FILE id="MPhdsc" name="TempoTrackV2.cpp" compile="1" resource="0"
@@ -321,6 +340,10 @@
               file="Source/AnalyserBeats.cpp"/>
         <FILE id="oeQk5k" name="AnalyserBeats.hpp" compile="0" resource="0"
               file="Source/AnalyserBeats.hpp"/>
+        <FILE id="r3Cqtg" name="AnalyserBeatsEssentia.cpp" compile="1" resource="0"
+              file="Source/AnalyserBeatsEssentia.cpp"/>
+        <FILE id="uTUSms" name="AnalyserBeatsEssentia.hpp" compile="0" resource="0"
+              file="Source/AnalyserBeatsEssentia.hpp"/>
         <FILE id="m2NH4S" name="AnalyserKey.cpp" compile="1" resource="0" file="Source/AnalyserKey.cpp"/>
         <FILE id="GaaLbC" name="AnalyserKey.hpp" compile="0" resource="0" file="Source/AnalyserKey.hpp"/>
         <FILE id="xhtZXG" name="AnalyserGroove.cpp" compile="1" resource="0"

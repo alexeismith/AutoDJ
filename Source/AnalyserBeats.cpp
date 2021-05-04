@@ -114,6 +114,9 @@ void AnalyserBeats::processBeats(std::vector<double> beats, int& bpm, int& beatP
 
     double firstBeat = 0;
     bpm = BeatUtils::makeConstBpm(constantRegions, SUPPORTED_SAMPLERATE, &firstBeat);
+    
+    // Use Mixxx function to adjust the phase alignment of firstBeat
+    // This ensures the phase of firstBeat lines up with as many points in the beats array as possible
     firstBeat = BeatUtils::adjustPhase(firstBeat, bpm, SUPPORTED_SAMPLERATE, beats);
     
     // 'Rewind' firstBeat to start of track

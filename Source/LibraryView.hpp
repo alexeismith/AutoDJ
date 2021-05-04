@@ -10,6 +10,7 @@
 
 #include "TrackDataManager.hpp"
 #include "QueueTableComponent.hpp"
+#include "AnalysisProgressBar.hpp"
 #include "CommonDefs.hpp"
 
 // TODO: temp
@@ -19,7 +20,7 @@ class LibraryView : public juce::Component, public juce::Button::Listener, publi
 {
 public:
     
-    LibraryView(TrackDataManager* dm, juce::Button* play);
+    LibraryView(TrackDataManager* dataManager, juce::Button* play);
     
     ~LibraryView() {}
     
@@ -40,7 +41,7 @@ private:
     juce::Button* playBtn;
     std::unique_ptr<juce::Button> chooseFolderBtn;
     std::unique_ptr<juce::ProgressBar> loadingFilesProgress;
-    std::unique_ptr<juce::ProgressBar> analysisProgress;
+    std::unique_ptr<AnalysisProgressBar> analysisProgress;
     
     TrackDataManager* dataManager;
     

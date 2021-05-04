@@ -46,11 +46,13 @@ void AnalysisThread::analyse(TrackInfo& track)
     
     buffer = dataManager->loadAudio(track.getFilename(), true);
     
+    if (shouldExit()) return;
+    
     progress.store(0.1);
 
     analyserBeats->analyse(buffer, &progress, track.bpm, track.beatPhase, track.downbeat);
     
-    if (threadShouldExit()) return;
+    if (shouldExit()) return;
     
     progress.store(0.7);
     
@@ -64,11 +66,23 @@ void AnalysisThread::analyse(TrackInfo& track)
     
     track.analysed = true;
     
-    if (threadShouldExit()) return;
+    if (shouldExit()) return;
     
     dataManager->releaseAudio(buffer);
     
     analysisManager->storeAnalysis(&track);
     
     progress.store(1.0);
+}
+
+
+bool AnalysisThread::shouldExit()
+{
+    while (pause.load() && !threadShouldExit())
+        sleep(1000);
+    
+    if (threadShouldExit())
+        return true;
+    
+    return false;
 }

@@ -28,6 +28,8 @@ public:
     
     void startAnalysis(TrackDataManager* dataManager);
     
+    void playPause();
+    
     bool isFinished(double& progress);
     
     TrackInfo* getNextJob();

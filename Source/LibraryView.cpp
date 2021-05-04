@@ -27,7 +27,7 @@ LibraryView::LibraryView(TrackDataManager* dm, juce::Button* play)
     loadingFilesProgress.reset(new juce::ProgressBar(loadingProgress));
     addChildComponent(loadingFilesProgress.get());
     
-    analysisProgress.reset(new juce::ProgressBar(loadingProgress));
+    analysisProgress.reset(new AnalysisProgressBar(dataManager->getAnalysisManager(), loadingProgress));
     addChildComponent(analysisProgress.get());
     analysisProgress->setColour(analysisProgress->backgroundColourId, juce::Colours::darkgrey);
     
@@ -45,11 +45,11 @@ void LibraryView::resized()
     chooseFolderBtn->setSize(120, 40);
     chooseFolderBtn->setCentrePosition(getWidth()/2, (getHeight() + TOOLBAR_HEIGHT)/2);
     
-    loadingFilesProgress->setSize(200, 20);
+    loadingFilesProgress->setSize(150, 30);
     loadingFilesProgress->setCentrePosition(getWidth()/2, getHeight()/2);
     
-    analysisProgress->setSize(200, 20);
-    analysisProgress->setTopLeftPosition(10, getHeight() - 30);
+    analysisProgress->setSize(300, 30);
+    analysisProgress->setCentrePosition(getWidth()/2, getHeight() - 30);
     
     waveformBar->setSize(getWidth(), 40);
 }

@@ -62,6 +62,15 @@ void AnalysisManager::startAnalysis(TrackDataManager* dm)
 }
 
 
+void AnalysisManager::playPause()
+{
+    for (auto* thread : threads)
+    {
+        thread->playPause();
+    }
+}
+
+
 bool AnalysisManager::isFinished(double& progress)
 {
     const juce::ScopedLock sl(lock);

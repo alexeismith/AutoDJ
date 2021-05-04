@@ -51,6 +51,8 @@ public:
     AnalysisResults getAnalysisResults() { return analysisManager->getResults(); }
     
     std::atomic<bool> trackDataUpdate = false;
+    
+    AnalysisManager* getAnalysisManager() { return analysisManager.get(); }
       
 private:
     

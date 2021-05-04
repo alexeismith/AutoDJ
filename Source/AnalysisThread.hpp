@@ -31,13 +31,19 @@ public:
     
     double getProgress() { return progress.load(); }
     
+    void playPause() { pause.store(!pause.load()); }
+    
 private:
     
     void analyse(TrackInfo& track);
     
+    bool shouldExit();
+    
     int id;
     
     std::atomic<double> progress = 0.0;
+    
+    std::atomic<bool> pause = false;
     
     AnalysisManager* analysisManager = nullptr;
     TrackDataManager* dataManager = nullptr;

@@ -7,24 +7,31 @@
 
 #include "WaveformBarComponent.hpp"
 
-#define WAVEFORM_BAR_FRAME_SIZE (100000)
-
 WaveformBarComponent::WaveformBarComponent()
 {
     setSize(0, WAVEFORM_BAR_HEIGHT);
-    
-    frameSize = WAVEFORM_BAR_FRAME_SIZE;
 }
 
 
 void WaveformBarComponent::paint(juce::Graphics& g)
 {
-    g.setColour(juce::Colours::darkgrey);
-    g.fillAll();
+    if (!ready.load())
+    {
+        g.setColour(juce::Colours::black);
+        g.fillAll();
+        return;
+    }
     
-    if (!ready.load()) return;
-
     g.drawImageAt(imageScaled, 0, 0);
+    
+    g.setColour(juce::Colours::white);
+    g.drawRect(windowStartX, 0, windowWidth, getHeight());
+}
+
+
+void WaveformBarComponent::resized()
+{
+    imageScaled = image.rescaled(getWidth(), getHeight(), juce::Graphics::ResamplingQuality::mediumResamplingQuality);
 }
 
 
@@ -32,7 +39,13 @@ void WaveformBarComponent::update(int playhead, double timeStretch, double gain)
 {
     if (!ready.load()) return;
     
+    int visibleWidth = getWidth() * timeStretch;
+    double playheadAdjust = playhead - double(WAVEFORM_FRAME_SIZE * visibleWidth)/2;
+    double multiplier = double(getWidth()) / numFrames;
     
+    int windowStartFrame = playheadAdjust / WAVEFORM_FRAME_SIZE;
+    windowStartX = round(windowStartFrame * multiplier);
+    windowWidth = visibleWidth * multiplier;
     
     getCachedComponentImage()->invalidateAll();
 }
@@ -58,5 +71,9 @@ void WaveformLoadThread::load(WaveformComponent* wave, WaveformBarComponent* wav
     waveform = wave;
     bar = waveBar;
     track = t;
+    
+    waveform->reset();
+    bar->reset();
+    
     startThread();
 }

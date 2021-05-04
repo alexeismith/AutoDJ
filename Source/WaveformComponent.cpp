@@ -24,14 +24,12 @@ WaveformComponent::WaveformComponent()
     setOpaque(true);
     
     setSize(0, WAVEFORM_HEIGHT);
-    
-    frameSize = WAVEFORM_FRAME_SIZE;
 }
 
 
 void WaveformComponent::paint(juce::Graphics& g)
 {
-    g.setColour(juce::Colours::darkgrey);
+    g.setColour(juce::Colours::black);
     g.fillAll();
     
     if (!ready.load()) return;
@@ -74,8 +72,6 @@ void WaveformComponent::update(int playhead, double timeStretch, double gain)
 void WaveformComponent::loadTrack(Track* t)
 {
     int numSamples;
-    
-    reset();
     
     track = t;
     
@@ -160,6 +156,8 @@ void WaveformComponent::draw()
 void WaveformComponent::reset()
 {
     ready.store(false);
+    
+    getCachedComponentImage()->invalidateAll();
     
     filterLow.reset();
     filterMid.reset();

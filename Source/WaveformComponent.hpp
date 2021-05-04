@@ -42,7 +42,7 @@ protected:
     
     std::atomic<bool> ready;
     
-    int frameSize, numFrames = 0, startFrame = 0;
+    int numFrames = 0, startFrame = 0;
     
     int beatMarkerHeight;
     

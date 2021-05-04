@@ -105,8 +105,8 @@ void LibraryView::timerCallback()
         trackTable->sort();
     }
     
-    waveformBar->update(0);
-    repaint();
+//    waveformBar->update(0);
+//    repaint();
 }
 
 

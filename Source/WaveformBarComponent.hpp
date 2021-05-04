@@ -23,6 +23,8 @@ public:
     
     void paint(juce::Graphics& g) override;
     
+    void resized() override;
+    
     void update(int playhead, double timeStretch = 1.0, double gain = 1.0) override;
     
 private:
@@ -31,7 +33,7 @@ private:
     
     bool isBeat(int frameIndex, bool& downbeat) override;
     
-    int windowStartFrame, windowEndFrame;
+    int windowStartX, windowWidth;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformBarComponent)
 };

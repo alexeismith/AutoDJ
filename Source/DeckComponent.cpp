@@ -14,17 +14,28 @@ DeckComponent::DeckComponent(int id, TrackProcessor* processor) :
     waveform.reset(new WaveformComponent());
     addAndMakeVisible(waveform.get());
     
-    waveformLoader.reset(new WaveformLoadThread(waveform.get()));
+    waveformBar.reset(new WaveformBarComponent());
+    addAndMakeVisible(waveformBar.get());
+    
+    waveformLoader.reset(new WaveformLoadThread());
 }
 
 
 void DeckComponent::resized()
 {
     waveform->setSize(getWidth(), WAVEFORM_HEIGHT);
+    waveformBar->setSize(getWidth(), WAVEFORM_BAR_HEIGHT);
+    
     if (deckId == 0)
+    {
         waveform->setTopLeftPosition(0, getHeight()-WAVEFORM_HEIGHT);
+        waveformBar->setTopLeftPosition(0, waveform->getY()-WAVEFORM_BAR_HEIGHT);
+    }
     else
+    {
         waveform->setTopLeftPosition(0, 0);
+        waveformBar->setTopLeftPosition(0, waveform->getY()+WAVEFORM_HEIGHT);
+    }
 }
 
 
@@ -46,7 +57,7 @@ void DeckComponent::load(Track* trackPtr)
     
 //    DBG("Deck " << deckId+1 << " playing: " << track.info.getFilename());
     
-    waveformLoader->load(&track);
+    waveformLoader->load(waveform.get(), waveformBar.get(), &track);
     
     trackLoaded = true;
     
@@ -67,5 +78,9 @@ void DeckComponent::update()
         load(t);
     
     if (trackLoaded)
+    {
         waveform->draw(trackProcessor->getTrack()->getPlayhead(), trackProcessor->getTimeStretch(), trackProcessor->getTrack()->gain.currentValue);
+        waveformBar->draw(trackProcessor->getTrack()->getPlayhead(), trackProcessor->getTimeStretch(), trackProcessor->getTrack()->gain.currentValue);
+    }
+       
 }

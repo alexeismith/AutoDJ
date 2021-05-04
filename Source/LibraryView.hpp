@@ -45,6 +45,7 @@ private:
     TrackDataManager* dataManager;
     
     // TODO: temp
+    std::unique_ptr<WaveformComponent> waveform;
     std::unique_ptr<WaveformBarComponent> waveformBar;
     std::unique_ptr<WaveformLoadThread> waveformLoader;
     TrackInfo info;

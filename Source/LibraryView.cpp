@@ -31,9 +31,10 @@ LibraryView::LibraryView(TrackDataManager* dm, juce::Button* play)
     addChildComponent(analysisProgress.get());
     analysisProgress->setColour(analysisProgress->backgroundColourId, juce::Colours::darkgrey);
     
+    waveform.reset(new WaveformComponent());
     waveformBar.reset(new WaveformBarComponent());
     addAndMakeVisible(waveformBar.get());
-    waveformLoader.reset(new WaveformLoadThread(waveformBar.get()));
+    waveformLoader.reset(new WaveformLoadThread());
 }
 
 void LibraryView::resized()
@@ -80,7 +81,7 @@ void LibraryView::timerCallback()
             info = dataManager->getTracks()[0];
             track.info = &info;
             track.audio = dataManager->loadAudio(info.getFilename());
-            waveformLoader->load(&track);
+            waveformLoader->load(waveform.get(), waveformBar.get(), &track);
         }
     }
     else if (waitingForAnalysis)

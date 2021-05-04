@@ -9,9 +9,7 @@
 
 #include "CommonDefs.hpp"
 
-
 #define WAVEFORM_BAR_HEIGHT (0.1f)
-#define WAVEFORM_FRAME_SIZE (380)
 
 
 WaveformComponent::WaveformComponent()
@@ -165,7 +163,7 @@ void WaveformComponent::updateImage()
         }
     }
     
-    *image = image->rescaled(getWidth(), getHeight(), juce::Graphics::ResamplingQuality::mediumResamplingQuality);
+    *image = image->rescaled(getWidth(), getHeight(), juce::Graphics::ResamplingQuality::lowResamplingQuality);
 }
 
 

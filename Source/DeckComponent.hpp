@@ -12,10 +12,7 @@
 
 #include "TrackProcessor.hpp"
 
-#include "WaveformComponent.hpp"
-
-#define WAVEFORM_HEIGHT (100)
-
+#include "WaveformBarComponent.hpp"
 
 class DeckComponent : public juce::Component, public juce::Button::Listener
 {
@@ -33,7 +30,7 @@ public:
     
     void update();
     
-    void flipWaveform() { waveform->flipImage(); }
+    void flipWaveform() { waveform->flipImage(); waveformBar->flipImage(); }
     
 private:
     
@@ -44,6 +41,7 @@ private:
     TrackProcessor* trackProcessor = nullptr;
     
     std::unique_ptr<WaveformComponent> waveform;
+    std::unique_ptr<WaveformBarComponent> waveformBar;
     std::unique_ptr<WaveformLoadThread> waveformLoader;
 
     Track track;

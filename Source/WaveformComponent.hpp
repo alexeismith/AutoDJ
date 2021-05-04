@@ -12,6 +12,10 @@
 
 #include "Track.hpp"
 
+#define WAVEFORM_HEIGHT (100)
+
+#define WAVEFORM_FRAME_SIZE (380)
+
 // NOTE: need a separate instance for each audio channel to be visualised, because the IIR filters depend on previous samples
 class WaveformComponent : public juce::Component
 {
@@ -21,7 +25,7 @@ public:
     
     ~WaveformComponent() {}
     
-    void paint(juce::Graphics& g) override;
+    virtual void paint(juce::Graphics& g) override;
     
     void resized() override;
     
@@ -67,28 +71,6 @@ private:
     juce::IIRFilter filterLow, filterMid, filterHigh;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformComponent)
-};
-
-
-class WaveformLoadThread : public juce::Thread
-{
-public:
-    
-    WaveformLoadThread(WaveformComponent* wave) :
-        juce::Thread("WaveformLoad"), waveform(wave) {}
-    
-    ~WaveformLoadThread() { stopThread(3000); }
-    
-    void load(Track* t) { track = t; startThread(); }
-    
-    void run() { waveform->loadTrack(track); }
-    
-private:
-    
-    WaveformComponent* waveform = nullptr;
-    
-    Track* track = nullptr;
-    
 };
 
 #endif /* WaveformComponent_hpp */

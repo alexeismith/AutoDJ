@@ -10,7 +10,9 @@
 
 #include "WaveformComponent.hpp"
 
-// NOTE: need a separate instance for each audio channel to be visualised, because the IIR filters depend on previous samples
+#define WAVEFORM_BAR_HEIGHT (30)
+
+// NOTE: must be same width as the WaveformComponent its paired to, in order for windowed section to be correct
 class WaveformBarComponent : public WaveformComponent
 {
 public:
@@ -19,13 +21,38 @@ public:
     
     ~WaveformBarComponent() {}
     
-    void draw(int playhead, double timeStretch, double gain) override;
+//    void paint(juce::Graphics& g) override;
+    
+    void draw(int playhead, double timeStretch = 1.0, double gain = 1.0) override;
     
 private:
     
     bool isBeat(int frameIndex, bool& downbeat) override;
     
+    int windowStartFrame, windowEndFrame;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformBarComponent)
+};
+
+
+class WaveformLoadThread : public juce::Thread
+{
+public:
+    
+    WaveformLoadThread() : juce::Thread("WaveformLoad") {}
+    
+    ~WaveformLoadThread() { stopThread(3000); }
+    
+    void load(WaveformComponent* waveform, WaveformBarComponent* bar, Track* t);
+    
+    void run() { waveform->loadTrack(track); bar->loadTrack(track); }
+    
+private:
+    
+    WaveformComponent* waveform = nullptr;
+    WaveformBarComponent* bar = nullptr;
+    Track* track = nullptr;
+    
 };
 
 #endif /* WaveformBarComponent_hpp */

@@ -62,5 +62,5 @@ void MixView::buttonClicked(juce::Button* button)
 void MixView::paintOverChildren(juce::Graphics &g)
 {
     g.setColour(juce::Colours::lightblue);
-    g.drawVerticalLine(getWidth()/2, getHeight()/2 - WAVEFORM_HEIGHT - 10, getHeight()/2 + WAVEFORM_HEIGHT + 10);
+    g.drawVerticalLine(getWidth()/2, getHeight()/2 - WAVEFORM_HEIGHT, getHeight()/2 + WAVEFORM_HEIGHT);
 }

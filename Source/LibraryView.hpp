@@ -12,6 +12,9 @@
 #include "QueueTableComponent.hpp"
 #include "CommonDefs.hpp"
 
+// TODO: temp
+#include "WaveformBarComponent.hpp"
+
 class LibraryView : public juce::Component, public juce::Button::Listener, public juce::Timer
 {
 public:
@@ -40,6 +43,12 @@ private:
     std::unique_ptr<juce::ProgressBar> analysisProgress;
     
     TrackDataManager* dataManager;
+    
+    // TODO: temp
+    std::unique_ptr<WaveformBarComponent> waveformBar;
+    std::unique_ptr<WaveformLoadThread> waveformLoader;
+    TrackInfo info;
+    Track track;
     
     bool waitingForFiles = false;
     bool waitingForAnalysis = false;

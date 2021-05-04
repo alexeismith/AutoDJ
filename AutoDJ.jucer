@@ -40,6 +40,10 @@
               file="Source/WaveformComponent.cpp"/>
         <FILE id="luYtIx" name="WaveformComponent.hpp" compile="0" resource="0"
               file="Source/WaveformComponent.hpp"/>
+        <FILE id="e430tV" name="WaveformBarComponent.cpp" compile="1" resource="0"
+              file="Source/WaveformBarComponent.cpp"/>
+        <FILE id="FE4m3e" name="WaveformBarComponent.hpp" compile="0" resource="0"
+              file="Source/WaveformBarComponent.hpp"/>
       </GROUP>
       <GROUP id="{289DA10E-433A-F192-2AB7-9034E7C7833C}" name="AI DJ">
         <FILE id="v240v0" name="ArtificialDJ.cpp" compile="1" resource="0"

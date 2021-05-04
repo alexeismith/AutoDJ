@@ -11,6 +11,7 @@
 
 
 #define WAVEFORM_BAR_HEIGHT (0.1f)
+#define WAVEFORM_FRAME_SIZE (380)
 
 
 WaveformComponent::WaveformComponent()
@@ -26,6 +27,8 @@ WaveformComponent::WaveformComponent()
     
     setBufferedToImage(true);
     setOpaque(true);
+    
+    frameSize = WAVEFORM_FRAME_SIZE;
 }
 
 
@@ -54,11 +57,7 @@ void WaveformComponent::draw(int playhead, double timeStretch, double gain)
     
     brightness = juce::jmax(float(std::sqrt(gain)), 0.3f);
     
-    #ifdef WAVEFORM_HALF_RESOLUTION
-        drawWidth = getWidth()/2 * (timeStretch);
-    #else
-        drawWidth = getWidth() * (timeStretch);
-    #endif
+    drawWidth = getWidth() * (timeStretch);
     
     double playheadAdjust = playhead - double(WAVEFORM_FRAME_SIZE * drawWidth)/2;
     

@@ -8,14 +8,6 @@
 #ifndef WaveformComponent_hpp
 #define WaveformComponent_hpp
 
-//#define WAVEFORM_HALF_RESOLUTION
-
-#ifdef WAVEFORM_HALF_RESOLUTION
-    #define WAVEFORM_FRAME_SIZE (760)
-#else
-    #define WAVEFORM_FRAME_SIZE (380)
-#endif
-
 #include <JuceHeader.h>
 
 #include "Track.hpp"
@@ -33,31 +25,36 @@ public:
     
     void resized() override;
     
-    void draw(int playhead, double timeStretch, double gain);
+    virtual void draw(int playhead, double timeStretch, double gain);
     
     void flipImage();
     
     void reset();
     
-private:
     
-    void loadTrack(Track* track);
+protected:
     
     void updateImage();
     
-    void pushFrame(int index);
-    
-    bool isBeat(int frameIndex, bool& downbeat);
-    
-    friend class WaveformLoadThread;
-    
-    Track* track;
+    virtual bool isBeat(int frameIndex, bool& downbeat);
     
     std::atomic<bool> ready;
     
     float brightness = 0.0;
     
-    int numFrames = 0, startFrame, barHeight, drawWidth = 0;
+    int frameSize, numFrames = 0, startFrame = 0, drawWidth = 0;
+    
+private:
+    
+    void loadTrack(Track* track);
+    
+    void pushFrame(int index);
+    
+    friend class WaveformLoadThread;
+    
+    Track* track;
+    
+    int barHeight;
     
     juce::OwnedArray<juce::Image> images;
     std::atomic<int> imageToPaint;

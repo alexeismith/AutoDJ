@@ -52,8 +52,6 @@ private:
     
     std::unique_ptr<juce::Button> playPauseBtn;
     
-
-    
     std::unique_ptr<LibraryView> libraryView;
 
     std::unique_ptr<MixView> mixView;

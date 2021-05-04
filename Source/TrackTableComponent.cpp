@@ -139,9 +139,6 @@ int TrackTableSorter::compareElements(TrackInfo* first, TrackInfo* second)
     
     if (result == 0)
         result = first->getTitle().compareIgnoreCase(second->getTitle());
-    
-    if (result == 0)
-        result = first->getFilename().compareIgnoreCase(second->getFilename());
 
     return direction * result;
 }
@@ -154,8 +151,7 @@ juce::String TrackTableComponent::getValueForColumn(TrackInfo* track, int column
         case TrackTableColumns::artist:
             return track->getArtist();
         case TrackTableColumns::title:
-            if (track->getTitle().isEmpty()) return track->getFilename();
-            else return track->getTitle();
+            return track->getTitle();
         case TrackTableColumns::length:
             return AutoDJ::getLengthString(track->length);
         case TrackTableColumns::bpm:

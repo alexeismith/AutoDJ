@@ -33,7 +33,7 @@ LibraryView::LibraryView(TrackDataManager* dm, juce::Button* play)
     
     waveform.reset(new WaveformComponent());
     waveformBar.reset(new WaveformBarComponent());
-    addAndMakeVisible(waveformBar.get());
+//    addAndMakeVisible(waveformBar.get());
     waveformLoader.reset(new WaveformLoadThread());
 }
 

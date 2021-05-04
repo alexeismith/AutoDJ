@@ -26,3 +26,14 @@ int TrackInfo::getLengthSamples()
 {
     return length * SUPPORTED_SAMPLERATE;
 }
+
+
+juce::String TrackInfo::getTitle()
+{
+    juce::String titleStr = juce::String(juce::CharPointer_UTF8(title));
+
+    if (titleStr.isEmpty())
+        return getFilename();
+    
+    return titleStr;
+}

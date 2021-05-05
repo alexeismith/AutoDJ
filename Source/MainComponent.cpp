@@ -21,41 +21,49 @@ MainComponent::MainComponent()
     
     dataManager.reset(new TrackDataManager());
     dj.reset(new ArtificialDJ(dataManager.get()));
+    
     audioProcessor.reset(new AudioProcessor(dataManager.get(), dj.get(), initBlockSize.load()));
     dj->setAudioProcessor(audioProcessor.get());
     
+    libraryView.reset(new LibraryView(dataManager.get(), &loadingProgress));
+    addChildComponent(libraryView.get());
+    
+    mixView.reset(new MixView(audioProcessor->getTrackProcessors()));
+    addChildComponent(mixView.get());
+    
+    
+    chooseFolderBtn.reset(new juce::TextButton("Choose Folder"));
+    chooseFolderBtn->setComponentID(juce::String(ComponentIDs::chooseFolderBtn));
+    addAndMakeVisible(chooseFolderBtn.get());
+    chooseFolderBtn->addListener(this);
+    
+    loadingFilesProgress.reset(new juce::ProgressBar(loadingProgress));
+    addChildComponent(loadingFilesProgress.get());
+    
     libraryBtn.reset(new juce::TextButton("Library"));
     libraryBtn->setComponentID(juce::String(ComponentIDs::libraryBtn));
-    addAndMakeVisible(libraryBtn.get());
+    addChildComponent(libraryBtn.get());
     libraryBtn->addListener(this);
     
     mixBtn.reset(new juce::TextButton("Mix"));
     mixBtn->setComponentID(juce::String(ComponentIDs::mixBtn));
-    addAndMakeVisible(mixBtn.get());
+    addChildComponent(mixBtn.get());
     mixBtn->addListener(this);
     
     playPauseBtn.reset(new juce::TextButton(">"));
+    addChildComponent(playPauseBtn.get());
     playPauseBtn->setComponentID(juce::String(ComponentIDs::playPauseBtn));
     playPauseBtn->addListener(this);
     playPauseBtn->setEnabled(false);
     
     volumeSld.reset(new juce::Slider());
-    addAndMakeVisible(volumeSld.get());
+    addChildComponent(volumeSld.get());
     volumeSld->setComponentID(juce::String(ComponentIDs::volumeSld));
     volumeSld->addListener(this);
     volumeSld->setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
     volumeSld->setRange(0.f, 1.f);
     volumeSld->setSkewFactor(0.7);
     volumeSld->setValue(1.f);
-    
-    libraryView.reset(new LibraryView(dataManager.get(), playPauseBtn.get()));
-    addAndMakeVisible(libraryView.get());
-    
-    mixView.reset(new MixView(audioProcessor->getTrackProcessors()));
-    addChildComponent(mixView.get());
-    
-    addChildComponent(playPauseBtn.get());
-    
     
     
 #ifdef SHOW_GRAPH
@@ -128,6 +136,12 @@ void MainComponent::resized()
 {
     sizeLimits.checkComponentBounds(this);
     
+    chooseFolderBtn->setSize(120, 40);
+    chooseFolderBtn->setCentrePosition(getWidth()/2, (getHeight() + TOOLBAR_HEIGHT)/2);
+    
+    loadingFilesProgress->setSize(150, 30);
+    loadingFilesProgress->setCentrePosition(getWidth()/2, getHeight()/2);
+    
     libraryView->setSize(getWidth(), getHeight() - TOOLBAR_HEIGHT);
     libraryView->setTopLeftPosition(0, 0);
     
@@ -150,13 +164,46 @@ void MainComponent::resized()
 
 void MainComponent::timerCallback()
 {
+    if (waitingForFiles)
+    {
+        if (dataManager->isLoaded(loadingProgress))
+        {
+            waitingForFiles = false;
+            waitingForAnalysis = true;
+            
+            loadingFilesProgress->setVisible(false);
+            loadingProgress = 0.0;
+            
+            libraryView->loadFiles();
+            
+            libraryView->setVisible(true);
+            libraryBtn->setVisible(true);
+            mixBtn->setVisible(true);
+            volumeSld->setVisible(true);
+            playPauseBtn->setVisible(true);
+        }
+    }
+    
+    if (waitingForAnalysis)
+    {
+        bool canStartPlaying;
+        
+        if (dataManager->analysisProgress(loadingProgress, canStartPlaying))
+        {
+            waitingForAnalysis = false;
+            libraryView->analysisComplete();
+        }
+        
+        if (canStartPlaying)
+            playPauseBtn->setEnabled(true);
+    }
+    
     if (waitingForDJ)
     {
         if (dj->isInitialised())
         {
             waitingForDJ = false;
             playPauseBtn->setEnabled(true);
-            stopTimer();
         }
     }
 }
@@ -186,6 +233,10 @@ void MainComponent::buttonClicked(juce::Button* button)
     
     switch (id)
     {
+        case ComponentIDs::chooseFolderBtn:
+            chooseFolder();
+            break;
+            
         case ComponentIDs::libraryBtn:
             libraryView->setVisible(true);
             mixView->setVisible(false);
@@ -224,3 +275,19 @@ void MainComponent::sliderValueChanged(juce::Slider* slider)
             jassert(false); // Unrecognised button ID
     }
 }
+
+
+void MainComponent::chooseFolder()
+{
+    juce::FileChooser chooser ("Choose Music Folder");
+    if (chooser.browseForDirectory())
+    {
+        dataManager->initialise(chooser.getResult());
+        
+        waitingForFiles = true;
+        
+        chooseFolderBtn->setVisible(false);
+        loadingFilesProgress->setVisible(true);
+    }
+}
+

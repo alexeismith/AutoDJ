@@ -39,9 +39,15 @@ private:
     
     void setAppearance();
     
+    void chooseFolder();
+    
     std::atomic<int> initBlockSize;
     
+    bool waitingForFiles = false;
+    bool waitingForAnalysis = false;
     bool waitingForDJ = false;
+    
+    double loadingProgress = 0.0;
 
     juce::LookAndFeel_V4 customAppearance;
     
@@ -50,6 +56,10 @@ private:
     std::unique_ptr<AudioProcessor> audioProcessor;
     std::unique_ptr<TrackDataManager> dataManager;
     std::unique_ptr<ArtificialDJ> dj;
+    
+    std::unique_ptr<juce::Button> chooseFolderBtn;
+    
+    std::unique_ptr<juce::ProgressBar> loadingFilesProgress;
     
     std::unique_ptr<juce::Button> libraryBtn;
     std::unique_ptr<juce::Button> mixBtn;

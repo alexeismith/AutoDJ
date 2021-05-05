@@ -16,21 +16,21 @@
 // TODO: temp
 #include "WaveformBarComponent.hpp"
 
-class LibraryView : public juce::Component, public juce::Button::Listener, public juce::Timer
+class LibraryView : public juce::Component, public juce::Timer
 {
 public:
     
-    LibraryView(TrackDataManager* dataManager, juce::Button* play);
+    LibraryView(TrackDataManager* dataManager, double* loadingProgress);
     
     ~LibraryView() {}
     
     void resized() override;
     
-    void buttonClicked(juce::Button* button) override;
-    
     void timerCallback() override;
     
     void loadFiles();
+    
+    void analysisComplete() { analysisProgress->setVisible(false); }
     
 private:
     
@@ -38,9 +38,6 @@ private:
     
     std::unique_ptr<TrackTableComponent> trackTable;
     
-    juce::Button* playBtn;
-    std::unique_ptr<juce::Button> chooseFolderBtn;
-    std::unique_ptr<juce::ProgressBar> loadingFilesProgress;
     std::unique_ptr<AnalysisProgressBar> analysisProgress;
     
     TrackDataManager* dataManager;
@@ -51,11 +48,6 @@ private:
     std::unique_ptr<WaveformLoadThread> waveformLoader;
     TrackInfo info;
     Track track;
-    
-    bool waitingForFiles = false;
-    bool waitingForAnalysis = false;
-    
-    double loadingProgress = 0.0;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LibraryView)
 };

@@ -50,6 +50,16 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
             jassert(false); // No leader!
         }
     }
+    
+    if (volume != targetVolume.load())
+    {
+        bufferToFill.buffer->applyGainRamp(bufferToFill.startSample, bufferToFill.numSamples, volume, targetVolume.load());
+        volume = targetVolume.load();
+    }
+    else
+    {
+        bufferToFill.buffer->applyGain(bufferToFill.startSample, bufferToFill.numSamples, volume);
+    }
 }
 
 

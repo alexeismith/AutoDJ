@@ -38,7 +38,14 @@ public:
     
     void prepare(int blockSize);
     
+    // We halve the volume, because two tracks could be playing at the same time
+    // TODO: attenuate less and add a limiter?
+    void setVolume(float newVolume) { targetVolume.store(newVolume/2.f); }
+    
 private:
+    
+    float volume = 0.5f;
+    std::atomic<float> targetVolume = 0.5f;
     
     std::atomic<bool> paused;
     

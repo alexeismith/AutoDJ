@@ -39,6 +39,15 @@ MainComponent::MainComponent()
     playPauseBtn->addListener(this);
     playPauseBtn->setEnabled(false);
     
+    volumeSld.reset(new juce::Slider());
+    addAndMakeVisible(volumeSld.get());
+    volumeSld->setComponentID(juce::String(ComponentIDs::volumeSld));
+    volumeSld->addListener(this);
+    volumeSld->setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    volumeSld->setRange(0.f, 1.f);
+    volumeSld->setSkewFactor(0.7);
+    volumeSld->setValue(1.f);
+    
     libraryView.reset(new LibraryView(dataManager.get(), playPauseBtn.get()));
     addAndMakeVisible(libraryView.get());
     
@@ -133,6 +142,9 @@ void MainComponent::resized()
     
     playPauseBtn->setSize(28, 28);
     playPauseBtn->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT/2);
+    
+    volumeSld->setSize(140, 50);
+    volumeSld->setCentrePosition(getWidth() - 80, getHeight() - TOOLBAR_HEIGHT/2);
 }
 
 
@@ -178,10 +190,12 @@ void MainComponent::buttonClicked(juce::Button* button)
             libraryView->setVisible(true);
             mixView->setVisible(false);
             break;
+            
         case ComponentIDs::mixBtn:
             mixView->setVisible(true);
             libraryView->setVisible(false);
             break;
+            
         case ComponentIDs::playPauseBtn:
             if (!dj->playPause())
             {
@@ -189,6 +203,23 @@ void MainComponent::buttonClicked(juce::Button* button)
                 waitingForDJ = true;
             }
             break;
+            
+        default:
+            jassert(false); // Unrecognised button ID
+    }
+}
+
+
+void MainComponent::sliderValueChanged(juce::Slider* slider)
+{
+    int id = slider->getComponentID().getIntValue();
+    
+    switch (id)
+    {
+        case ComponentIDs::volumeSld:
+            audioProcessor->setVolume(slider->getValueObject().getValue());
+            break;
+            
         default:
             jassert(false); // Unrecognised button ID
     }

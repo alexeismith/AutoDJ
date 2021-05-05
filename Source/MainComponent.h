@@ -11,7 +11,7 @@
 //#define SHOW_GRAPH
 
 
-class MainComponent : public juce::AudioAppComponent, public juce::Timer, public juce::Button::Listener
+class MainComponent : public juce::AudioAppComponent, public juce::Timer, public juce::Button::Listener, public juce::Slider::Listener
 {
 public:
     
@@ -32,6 +32,8 @@ public:
     void timerCallback() override;
     
     void buttonClicked(juce::Button* button) override;
+    
+    void sliderValueChanged(juce::Slider* slider) override;
 
 private:
     
@@ -53,6 +55,8 @@ private:
     std::unique_ptr<juce::Button> mixBtn;
     
     std::unique_ptr<juce::Button> playPauseBtn;
+    
+    std::unique_ptr<juce::Slider> volumeSld;
     
     std::unique_ptr<LibraryView> libraryView;
 

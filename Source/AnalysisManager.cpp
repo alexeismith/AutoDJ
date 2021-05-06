@@ -114,11 +114,11 @@ void AnalysisManager::storeAnalysis(TrackInfo* track)
 {
     const juce::ScopedLock sl(lock);
     
-    jobProgress += 1;
-    
     dataManager->storeAnalysis(track);
     
     processResult(track);
+    
+    jobProgress += 1;
 }
 
 
@@ -126,7 +126,7 @@ void AnalysisManager::processResult(TrackInfo* track)
 {
     // If this is the first result to be processed,
     // simply copy the bpm and groove values into the results struct and exit
-    if (jobProgress == 1)
+    if (jobProgress == 0)
     {
         results.minBpm = track->bpm;
         results.maxBpm = track->bpm;

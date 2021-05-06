@@ -55,6 +55,9 @@ TrackInfo* TrackChooser::chooseTrack()
     
     result = candidates.getUnchecked(0);
     
+    if (result == nullptr)
+        return result;
+    
 //    DBG("QUEUED " << result->getFilename() << " bpm: " << result->bpm << " groove: " << result->groove);
     DBG("QUEUED bpm: " << result->bpm << " groove: " << result->groove);
     
@@ -100,6 +103,8 @@ void TrackChooser::updatePosition()
     
     currentBpm += velocityBpm;
     currentGroove += velocityGroove;
+    
+    // TODO: check the values are within a valid range
     
 //    DBG("velocityBpm: " << velocityBpm << " velocityGroove: " << velocityGroove);
 }

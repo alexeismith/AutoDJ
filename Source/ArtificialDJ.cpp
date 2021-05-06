@@ -124,7 +124,7 @@ void ArtificialDJ::generateMix()
     
     if (nextTrack == nullptr)
     {
-        mix.nextTrack->bpm = mix.leadingTrack->bpm;
+        mix.nextTrack->bpm = mix.leadingTrack->bpm; // TODO: nextTrack uninitialised here?
         ending = true;
     }
     else

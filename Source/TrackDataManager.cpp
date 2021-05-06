@@ -186,7 +186,7 @@ void TrackDataManager::parseFile(juce::File file)
         
         if (trackInfo.analysed)
         {
-            analysisManager->processResults(trackPtr);
+            analysisManager->processResult(trackPtr);
             sorter.addAnalysed(trackPtr);
             numTracksAnalysed += 1;
             numTracksAnalysedUnplayed += 1;

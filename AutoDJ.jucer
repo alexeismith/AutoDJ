@@ -44,6 +44,10 @@
               file="Source/WaveformBarComponent.cpp"/>
         <FILE id="FE4m3e" name="WaveformBarComponent.hpp" compile="0" resource="0"
               file="Source/WaveformBarComponent.hpp"/>
+        <FILE id="J9cFtS" name="AnalysisProgressBar.cpp" compile="1" resource="0"
+              file="Source/AnalysisProgressBar.cpp"/>
+        <FILE id="A7Ke5B" name="AnalysisProgressBar.hpp" compile="0" resource="0"
+              file="Source/AnalysisProgressBar.hpp"/>
       </GROUP>
       <GROUP id="{289DA10E-433A-F192-2AB7-9034E7C7833C}" name="AI DJ">
         <FILE id="v240v0" name="ArtificialDJ.cpp" compile="1" resource="0"
@@ -110,6 +114,12 @@
               file="Source/InterpolatedParameter.hpp"/>
       </GROUP>
       <GROUP id="{9E0BB712-1FB6-4131-B7F6-FA3677F5C918}" name="Audio Analysis">
+        <GROUP id="{91826339-B2F2-D645-5E8C-CC81556888D5}" name="Testing">
+          <FILE id="uXwrXJ" name="AnalysisTest.cpp" compile="1" resource="0"
+                file="Source/AnalysisTest.cpp"/>
+          <FILE id="MzAtaS" name="AnalysisTest.hpp" compile="0" resource="0"
+                file="Source/AnalysisTest.hpp"/>
+        </GROUP>
         <GROUP id="{67C76829-2C6F-697A-3BEA-7FBFB680248E}" name="Third Party">
           <GROUP id="{8107A29A-C104-E2AA-E0B2-2F89DD3A1C14}" name="essentia">
             <GROUP id="{72CD1B26-AD64-79A2-8A75-7CF15FB407C1}" name="scheduler">

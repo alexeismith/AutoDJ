@@ -22,33 +22,35 @@ public:
     
     AnalysisManager();
     
-    ~AnalysisManager();
+    virtual ~AnalysisManager();
     
     void addJob(TrackInfo* track) { jobs.add(track); }
     
-    void startAnalysis(TrackDataManager* dataManager);
+    virtual void startAnalysis(TrackDataManager* dataManager);
     
     void playPause();
     
-    bool isFinished(double& progress);
+    virtual bool isFinished(double& progress);
     
     TrackInfo* getNextJob();
     
     void storeAnalysis(TrackInfo* track);
     
-    void processResults(TrackInfo* track);
+    virtual void processResult(TrackInfo* track);
     
     AnalysisResults getResults();
+    
+protected:
+    
+    TrackDataManager* dataManager;
+    
+    juce::Array<TrackInfo*> jobs;
     
 private:
     
     juce::CriticalSection lock;
     
     juce::OwnedArray<AnalysisThread> threads;
-    
-    juce::Array<TrackInfo*> jobs;
-    
-    TrackDataManager* dataManager;
     
     AnalysisResults results;
     

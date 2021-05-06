@@ -118,21 +118,25 @@ void AnalysisManager::storeAnalysis(TrackInfo* track)
     
     dataManager->storeAnalysis(track);
     
-    processResults(track);
+    processResult(track);
 }
 
 
-void AnalysisManager::processResults(TrackInfo* track)
+void AnalysisManager::processResult(TrackInfo* track)
 {
-    if (!results.initialised)
+    // If this is the first result to be processed,
+    // simply copy the bpm and groove values into the results struct and exit
+    if (jobProgress == 1)
     {
         results.minBpm = track->bpm;
         results.maxBpm = track->bpm;
         results.minGroove = track->groove;
         results.maxGroove = track->groove;
-        results.initialised = true;
         return;
     }
+    
+    // Compare the current result to the min/max values stored
+    // in the results struct and replace them if appropriate
     
     if (track->bpm < results.minBpm)
         results.minBpm = track->bpm;

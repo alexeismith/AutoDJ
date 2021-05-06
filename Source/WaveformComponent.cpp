@@ -67,8 +67,6 @@ void WaveformComponent::update(int playhead, double timeStretch, double gain)
 
 void WaveformComponent::load(Track* t, juce::Array<juce::Colour>* colours, juce::Array<float>* levels)
 {
-    reset();
-    
     track = t;
     numFrames = levels->size();
     draw(colours, levels);

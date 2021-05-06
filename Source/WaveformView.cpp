@@ -9,8 +9,9 @@
 
 
 
-WaveformView::WaveformView(bool scrollBarAtBottom)
+WaveformView::WaveformView(bool clickToScroll, bool scrollBarAtBottom)
 {
+    scrollable = clickToScroll;
     scrollBarBottom = scrollBarAtBottom;
     
     waveform.reset(new WaveformComponent());
@@ -43,6 +44,7 @@ void WaveformView::resized()
 
 void WaveformView::load(Track* track)
 {
+    trackLength = track->info->getLengthSamples();
     loader->load(track);
 }
 
@@ -58,4 +60,13 @@ void WaveformView::reset()
 {
     waveform->reset();
     scrollBar->reset();
+}
+
+
+void WaveformView::mouseDown(const juce::MouseEvent &event)
+{
+    if (!scrollable) return;
+    
+    double proportionX = double(event.getPosition().getX()) / getWidth();
+    update(trackLength * proportionX);
 }

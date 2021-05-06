@@ -100,6 +100,9 @@ void WaveformLoader::pushFrame(int index)
 
 void WaveformLoader::reset()
 {
+    waveform->reset();
+    scrollBar->reset();
+    
     filterLow.reset();
     filterMid.reset();
     filterHigh.reset();

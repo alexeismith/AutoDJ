@@ -25,7 +25,7 @@ public:
     
     void resized() override;
     
-    void update(int playhead, double timeStretch = 1.0, double gain = 1.0) override;
+    void update(int playhead, double timeStretch, double gain = 1.0) override;
     
     void insertMarker(int sample) { markers.add(sample); } // TODO: temp
     

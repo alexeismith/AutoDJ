@@ -40,6 +40,8 @@ private:
     
     void printResults();
     
+    std::atomic<bool> initialised = false;
+    
     juce::Array<TrackInfo> groundTruth;
     
     juce::Array<AnalysisTestResult> testResults;

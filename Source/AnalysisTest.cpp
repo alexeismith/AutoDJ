@@ -21,6 +21,8 @@ void AnalysisTest::startAnalysis(TrackDataManager* dataManager)
         groundTruth.add(dataManager->getTracks()[i]);
         jobs.add(&dataManager->getTracks()[i]);
     }
+    
+    initialised.store(true);
 
     AnalysisManager::startAnalysis(dataManager);
 }
@@ -44,6 +46,10 @@ void AnalysisTest::processResult(TrackInfo* estimate)
     
     // Pass result to superclass function
     AnalysisManager::processResult(estimate);
+    
+    // This function will get called by TrackDataManager before the test has been initialised
+    // Return when this happens
+    if (!initialised.load()) return;
     
     // Find the ground truth data for this track
     for (TrackInfo& track : groundTruth)
@@ -128,7 +134,7 @@ void AnalysisTest::printResults()
     double phaseAccuracyJnd2 = double(numPhaseWithinJnd2) / numBpmCorrect;
     double averagePhaseError = phaseErrorSum / numBpmCorrect;
     
-    double downbeatAccuracy = double(numDownbeatCorrect) / phaseAccuracyJnd2;
+    double downbeatAccuracy = double(numDownbeatCorrect) / numPhaseWithinJnd2;
     
     // Print metrics
     DBG("ANALYSIS TEST RESULTS...");

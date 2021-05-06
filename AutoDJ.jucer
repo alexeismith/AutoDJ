@@ -30,24 +30,34 @@
               file="Source/QueueTableComponent.cpp"/>
         <FILE id="L9LHSC" name="QueueTableComponent.hpp" compile="0" resource="0"
               file="Source/QueueTableComponent.hpp"/>
+        <FILE id="Hb3BBx" name="TrackEditor.cpp" compile="1" resource="0" file="Source/TrackEditor.cpp"/>
+        <FILE id="wxV6tE" name="TrackEditor.hpp" compile="0" resource="0" file="Source/TrackEditor.hpp"/>
         <FILE id="DIho3U" name="MixView.cpp" compile="1" resource="0" file="Source/MixView.cpp"/>
         <FILE id="pApJtk" name="MixView.hpp" compile="0" resource="0" file="Source/MixView.hpp"/>
         <FILE id="XYauoi" name="DeckComponent.cpp" compile="1" resource="0"
               file="Source/DeckComponent.cpp"/>
         <FILE id="CvBTHD" name="DeckComponent.hpp" compile="0" resource="0"
               file="Source/DeckComponent.hpp"/>
-        <FILE id="Ugyo69" name="WaveformComponent.cpp" compile="1" resource="0"
-              file="Source/WaveformComponent.cpp"/>
-        <FILE id="luYtIx" name="WaveformComponent.hpp" compile="0" resource="0"
-              file="Source/WaveformComponent.hpp"/>
-        <FILE id="e430tV" name="WaveformBarComponent.cpp" compile="1" resource="0"
-              file="Source/WaveformBarComponent.cpp"/>
-        <FILE id="FE4m3e" name="WaveformBarComponent.hpp" compile="0" resource="0"
-              file="Source/WaveformBarComponent.hpp"/>
         <FILE id="J9cFtS" name="AnalysisProgressBar.cpp" compile="1" resource="0"
               file="Source/AnalysisProgressBar.cpp"/>
         <FILE id="A7Ke5B" name="AnalysisProgressBar.hpp" compile="0" resource="0"
               file="Source/AnalysisProgressBar.hpp"/>
+        <FILE id="I44E5r" name="WaveformView.cpp" compile="1" resource="0"
+              file="Source/WaveformView.cpp"/>
+        <FILE id="cPBf1R" name="WaveformView.hpp" compile="0" resource="0"
+              file="Source/WaveformView.hpp"/>
+        <FILE id="Ugyo69" name="WaveformComponent.cpp" compile="1" resource="0"
+              file="Source/WaveformComponent.cpp"/>
+        <FILE id="luYtIx" name="WaveformComponent.hpp" compile="0" resource="0"
+              file="Source/WaveformComponent.hpp"/>
+        <FILE id="wJGfSC" name="WaveformScrollBar.cpp" compile="1" resource="0"
+              file="Source/WaveformScrollBar.cpp"/>
+        <FILE id="kFWR0A" name="WaveformScrollBar.hpp" compile="0" resource="0"
+              file="Source/WaveformScrollBar.hpp"/>
+        <FILE id="uWzwAv" name="WaveformLoader.cpp" compile="1" resource="0"
+              file="Source/WaveformLoader.cpp"/>
+        <FILE id="g3bV9u" name="WaveformLoader.hpp" compile="0" resource="0"
+              file="Source/WaveformLoader.hpp"/>
       </GROUP>
       <GROUP id="{289DA10E-433A-F192-2AB7-9034E7C7833C}" name="AI DJ">
         <FILE id="v240v0" name="ArtificialDJ.cpp" compile="1" resource="0"

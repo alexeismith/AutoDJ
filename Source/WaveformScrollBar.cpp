@@ -1,19 +1,19 @@
 //
-//  WaveformBarComponent.cpp
+//  WaveformScrollBar.cpp
 //  AutoDJ - App
 //
 //  Created by Alexei Smith on 04/05/2021.
 //
 
-#include "WaveformBarComponent.hpp"
+#include "WaveformScrollBar.hpp"
 
-WaveformBarComponent::WaveformBarComponent()
+WaveformScrollBar::WaveformScrollBar()
 {
     setSize(0, WAVEFORM_BAR_HEIGHT);
 }
 
 
-void WaveformBarComponent::paint(juce::Graphics& g)
+void WaveformScrollBar::paint(juce::Graphics& g)
 {
     if (!ready.load())
     {
@@ -29,13 +29,13 @@ void WaveformBarComponent::paint(juce::Graphics& g)
 }
 
 
-void WaveformBarComponent::resized()
+void WaveformScrollBar::resized()
 {
     imageScaled = image.rescaled(getWidth(), getHeight(), juce::Graphics::ResamplingQuality::mediumResamplingQuality);
 }
 
 
-void WaveformBarComponent::update(int playhead, double timeStretch, double gain)
+void WaveformScrollBar::update(int playhead, double timeStretch, double gain)
 {
     if (!ready.load()) return;
     
@@ -51,29 +51,29 @@ void WaveformBarComponent::update(int playhead, double timeStretch, double gain)
 }
 
 
-void WaveformBarComponent::draw()
+void WaveformScrollBar::draw(juce::Array<juce::Colour>* colours, juce::Array<float>* levels)
 {
-    WaveformComponent::draw();
+    WaveformComponent::draw(colours, levels);
     
     imageScaled = image.rescaled(getWidth(), getHeight(), juce::Graphics::ResamplingQuality::mediumResamplingQuality);
 }
 
 
-bool WaveformBarComponent::isBeat(int frameIndex, bool& downbeat)
+bool WaveformScrollBar::isBeat(int frameIndex, bool& downbeat)
 {
     downbeat = false;
+    
+    // TODO: temp
+    int frameStart = frameIndex * WAVEFORM_FRAME_SIZE;
+    int frameEnd = frameStart + WAVEFORM_FRAME_SIZE - 1;
+    for (int marker : markers)
+    {
+        if (marker >= frameStart && marker <= frameEnd)
+        {
+            downbeat = true;
+            break;
+        }
+    }
+    
     return false;
-}
-
-
-void WaveformLoadThread::load(WaveformComponent* wave, WaveformBarComponent* waveBar, Track* t)
-{
-    waveform = wave;
-    bar = waveBar;
-    track = t;
-    
-    waveform->reset();
-    bar->reset();
-    
-    startThread();
 }

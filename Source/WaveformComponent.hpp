@@ -33,10 +33,11 @@ public:
     
     void reset();
     
+    void load(Track* t, juce::Array<juce::Colour>* colours, juce::Array<float>* levels);
     
 protected:
     
-    virtual void draw();
+    virtual void draw(juce::Array<juce::Colour>* colours, juce::Array<float>* levels);
     
     virtual bool isBeat(int frameIndex, bool& downbeat);
     
@@ -50,24 +51,11 @@ protected:
     
 private:
     
-    void loadTrack(Track* track);
-    
-    void pushFrame(int index);
-    
-    friend class WaveformLoadThread;
-    
     Track* track;
     
     int imageOffset;
     
     float brightness = 0.0;
-    
-    juce::AudioBuffer<float> processBuffers;
-    
-    juce::Array<juce::Colour> colours;
-    juce::Array<float> levels;
-    
-    juce::IIRFilter filterLow, filterMid, filterHigh;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformComponent)
 };

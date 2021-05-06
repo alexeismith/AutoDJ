@@ -11,13 +11,8 @@
 DeckComponent::DeckComponent(int id, TrackProcessor* processor) :
     deckId(id), trackProcessor(processor)
 {
-    waveform.reset(new WaveformComponent());
+    waveform.reset(new WaveformView(id));
     addAndMakeVisible(waveform.get());
-    
-    waveformBar.reset(new WaveformBarComponent());
-    addAndMakeVisible(waveformBar.get());
-    
-    waveformLoader.reset(new WaveformLoadThread());
 }
 
 
@@ -35,23 +30,20 @@ void DeckComponent::paint(juce::Graphics& g)
 
 void DeckComponent::resized()
 {
-    waveform->setSize(getWidth(), WAVEFORM_HEIGHT);
-    waveformBar->setSize(getWidth(), WAVEFORM_BAR_HEIGHT);
+    waveform->setSize(getWidth(), WAVEFORM_VIEW_HEIGHT);
     
     if (deckId == 0)
     {
-        waveform->setTopLeftPosition(0, getHeight()-WAVEFORM_HEIGHT);
-        waveformBar->setTopLeftPosition(0, waveform->getY()-WAVEFORM_BAR_HEIGHT);
+        waveform->setTopLeftPosition(0, getHeight() - WAVEFORM_VIEW_HEIGHT);
         
-        titlePosY = waveformBar->getY() - 30;
+        titlePosY = waveform->getY() - 30;
         infoPosY = titlePosY - 30;
     }
     else
     {
         waveform->setTopLeftPosition(0, 0);
-        waveformBar->setTopLeftPosition(0, waveform->getY()+WAVEFORM_HEIGHT);
         
-        titlePosY = waveformBar->getY() + WAVEFORM_BAR_HEIGHT + 30;
+        titlePosY = waveform->getY() + WAVEFORM_VIEW_HEIGHT + 30;
         infoPosY = titlePosY + 30;
     }
 }
@@ -78,7 +70,7 @@ void DeckComponent::load(Track* trackPtr)
     title = track.info->getArtistTitle();
     info = "Length: " + AutoDJ::getLengthString(track.info->length) +  "    BPM: " + juce::String(track.info->bpm) +  "    Key: " + juce::String(track.info->key) +  "    Groove: " + AutoDJ::getGrooveString(track.info->groove);
     
-    waveformLoader->load(waveform.get(), waveformBar.get(), &track);
+    waveform->load(&track);
     
     ready.store(true);
 }
@@ -99,7 +91,6 @@ void DeckComponent::update()
     if (ready.load())
     {
         waveform->update(playhead, trackProcessor->getTimeStretch(), trackProcessor->getTrack()->gain.currentValue);
-        waveformBar->update(playhead, trackProcessor->getTimeStretch());
     }
 }
 

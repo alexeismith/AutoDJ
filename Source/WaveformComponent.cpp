@@ -16,10 +16,6 @@ WaveformComponent::WaveformComponent()
 {
     ready.store(false);
     
-    filterLow.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 200, 1.0));
-    filterMid.setCoefficients(juce::IIRCoefficients::makeBandPass(SUPPORTED_SAMPLERATE, 500, 1.0));
-    filterHigh.setCoefficients(juce::IIRCoefficients::makeHighPass(SUPPORTED_SAMPLERATE, 10000, 1.0));
-    
     setBufferedToImage(true);
     setOpaque(true);
     
@@ -69,44 +65,18 @@ void WaveformComponent::update(int playhead, double timeStretch, double gain)
 }
 
 
-void WaveformComponent::loadTrack(Track* t)
+void WaveformComponent::load(Track* t, juce::Array<juce::Colour>* colours, juce::Array<float>* levels)
 {
-    int numSamples;
+    reset();
     
     track = t;
-    
-    numSamples = track->audio->getNumSamples();
-    numFrames = numSamples / WAVEFORM_FRAME_SIZE;
-    
-    processBuffers.setSize(4, numSamples);
-    
-    // Copy frame data into filter buffers
-    memcpy(processBuffers.getWritePointer(0), track->audio->getReadPointer(0), numSamples * sizeof(float));
-    memcpy(processBuffers.getWritePointer(1), track->audio->getReadPointer(0), numSamples * sizeof(float));
-    memcpy(processBuffers.getWritePointer(2), track->audio->getReadPointer(0), numSamples * sizeof(float));
-    memcpy(processBuffers.getWritePointer(3), track->audio->getReadPointer(0), numSamples * sizeof(float));
-    
-    // Apply filters to buffers 1-3
-    filterLow.processSamples(processBuffers.getWritePointer(1), numSamples);
-    filterMid.processSamples(processBuffers.getWritePointer(2), numSamples);
-    filterHigh.processSamples(processBuffers.getWritePointer(3), numSamples);
-    
-    // Convert to absolute values
-    juce::FloatVectorOperations::abs(processBuffers.getWritePointer(0), processBuffers.getReadPointer(0), numSamples);
-    juce::FloatVectorOperations::abs(processBuffers.getWritePointer(1), processBuffers.getReadPointer(1), numSamples);
-    juce::FloatVectorOperations::abs(processBuffers.getWritePointer(2), processBuffers.getReadPointer(2), numSamples);
-    juce::FloatVectorOperations::abs(processBuffers.getWritePointer(3), processBuffers.getReadPointer(3), numSamples);
-    
-    for (int i = 0; i < numFrames; i++)
-        pushFrame(i);
-    
-    draw();
-    
+    numFrames = levels->size();
+    draw(colours, levels);
     ready.store(true);
 }
 
 
-void WaveformComponent::draw()
+void WaveformComponent::draw(juce::Array<juce::Colour>* colours, juce::Array<float>* levels)
 {
     image = juce::Image(juce::Image::RGB, numFrames, getHeight(), true);
     juce::Graphics g(image);
@@ -121,9 +91,9 @@ void WaveformComponent::draw()
     {
         if (frame > 0 && frame < numFrames)
         {
-            magnitude = levels[frame] * getHeight() * 0.4f;
+            magnitude = levels->getReference(frame) * getHeight() * 0.4f;
             
-            g.setColour(colours[frame]);
+            g.setColour(colours->getReference(frame));
             g.drawVerticalLine(frame, 0.5f * getHeight() - magnitude, 0.5f * getHeight() + magnitude);
         }
         else
@@ -159,42 +129,7 @@ void WaveformComponent::reset()
     
     getCachedComponentImage()->invalidateAll();
     
-    filterLow.reset();
-    filterMid.reset();
-    filterHigh.reset();
-    
-    levels.clear();
-    colours.clear();
-    
     numFrames = startFrame = 0;
-}
-
-
-void WaveformComponent::pushFrame(int index)
-{
-    int startSample = index * WAVEFORM_FRAME_SIZE;
-    
-    levels.add(juce::FloatVectorOperations::findMaximum(processBuffers.getReadPointer(0, startSample), WAVEFORM_FRAME_SIZE));
-    
-    float low = juce::FloatVectorOperations::findMaximum(processBuffers.getReadPointer(1, startSample), WAVEFORM_FRAME_SIZE);
-    float mid = juce::FloatVectorOperations::findMaximum(processBuffers.getReadPointer(2, startSample), WAVEFORM_FRAME_SIZE);
-    float high = juce::FloatVectorOperations::findMaximum(processBuffers.getReadPointer(3, startSample), WAVEFORM_FRAME_SIZE);
-    
-    float multiplier = 2.f;
-    
-    low *= multiplier;
-    mid *= multiplier;
-    high *= multiplier;
-    
-    low += 0.1f;
-    mid += 0.1f;
-    high += 0.1f;
-    
-    low = juce::jmin(low, 1.f);
-    mid = juce::jmin(mid, 1.f);
-    high = juce::jmin(high, 1.f);
-    
-    colours.add(juce::Colour(low*255, mid*255, high*255));
 }
 
 

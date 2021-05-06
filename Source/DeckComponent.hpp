@@ -12,7 +12,7 @@
 
 #include "TrackProcessor.hpp"
 
-#include "WaveformBarComponent.hpp"
+#include "WaveformView.hpp"
 
 class DeckComponent : public juce::Component, public juce::Button::Listener
 {
@@ -48,9 +48,7 @@ private:
     
     TrackProcessor* trackProcessor = nullptr;
     
-    std::unique_ptr<WaveformComponent> waveform;
-    std::unique_ptr<WaveformBarComponent> waveformBar;
-    std::unique_ptr<WaveformLoadThread> waveformLoader;
+    std::unique_ptr<WaveformView> waveform;
 
     Track track;
     

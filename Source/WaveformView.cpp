@@ -75,10 +75,18 @@ void WaveformView::reset()
 }
 
 
-void WaveformView::mouseDown(const juce::MouseEvent &event)
+void WaveformView::scroll(juce::Point<int> pos)
 {
     if (!scrollable) return;
     
-    double proportionX = double(event.getPosition().getX()) / getWidth();
+    if (!scrolling)
+        if (!scrollBar->getBounds().contains(pos)) return;
+    
+    scrolling = true;
+    
+    double xPos = juce::jlimit(0, getWidth() - scrollBar->getWindowWidth()/2 - 3, pos.getX());
+    
+    double proportionX = xPos / getWidth();
     update(trackLength * proportionX);
+    repaint();
 }

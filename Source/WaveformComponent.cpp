@@ -20,6 +20,8 @@ WaveformComponent::WaveformComponent()
     setOpaque(true);
     
     setSize(0, WAVEFORM_HEIGHT);
+    
+    setInterceptsMouseClicks(false, false);
 }
 
 

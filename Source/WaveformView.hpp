@@ -31,15 +31,19 @@ public:
     
     void reset();
     
-    void mouseDown(const juce::MouseEvent &event) override;
+    void mouseDown(const juce::MouseEvent &event) override { scroll(event.getPosition()); }
+    void mouseUp(const juce::MouseEvent &event) override { scrolling = false; }
+    void mouseDrag(const juce::MouseEvent &event) override { scroll(event.getPosition()); }
     
 private:
+    
+    void scroll(juce::Point<int> pos);
     
     std::unique_ptr<WaveformComponent> waveform;
     std::unique_ptr<WaveformScrollBar> scrollBar;
     std::unique_ptr<WaveformLoader> loader;
     
-    bool scrollable;
+    bool scrollable, scrolling;
     bool scrollBarBottom;
     
     int playhead, trackLength;

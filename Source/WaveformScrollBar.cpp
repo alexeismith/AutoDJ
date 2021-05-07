@@ -25,7 +25,7 @@ void WaveformScrollBar::paint(juce::Graphics& g)
     g.drawImageAt(imageScaled, 0, 0);
     
     g.setColour(juce::Colours::white);
-//    g.drawRect(windowStartX, 0, windowWidth, getHeight());
+    g.drawRect(windowStartX, 0, windowWidth, getHeight());
 }
 
 

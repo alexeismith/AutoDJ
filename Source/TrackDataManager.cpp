@@ -33,7 +33,9 @@ TrackDataManager::TrackDataManager() :
 
 TrackDataManager::~TrackDataManager()
 {
-    // Must delete analysisManager before dirContents because the analysis threads might try to access dirContents
+    // Delete file parser first, because it might try to access analysisManager before it dies
+    parser.reset();
+    // Then delete analysisManager, because it might try to access dirContents before it dies
     analysisManager.reset();
     dirContents.reset();
 }

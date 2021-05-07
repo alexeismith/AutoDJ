@@ -11,7 +11,7 @@
 DeckComponent::DeckComponent(int id, TrackProcessor* processor) :
     deckId(id), trackProcessor(processor)
 {
-    waveform.reset(new WaveformView(false, id));
+    waveform.reset(new WaveformView(nullptr, false, id, false));
     addAndMakeVisible(waveform.get());
 }
 

@@ -8,7 +8,8 @@
 #include "QueueTableComponent.hpp"
 
 
-QueueTableComponent::QueueTableComponent()
+QueueTableComponent::QueueTableComponent(TrackEditor* editor) :
+    TrackTableComponent(editor)
 {
     table->getHeader().setLookAndFeel(&headerAppearance);
     table->setInterceptsMouseClicks(false, false);

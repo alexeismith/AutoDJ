@@ -14,7 +14,10 @@ LibraryView::LibraryView(TrackDataManager* dm, double* loadingProgress)
     
     startTimerHz(30);
     
-    trackTable.reset(new TrackTableComponent());
+    trackEditor.reset(new TrackEditor(dataManager));
+    addAndMakeVisible(trackEditor.get());
+    
+    trackTable.reset(new TrackTableComponent(trackEditor.get()));
     addAndMakeVisible(trackTable.get());
     trackTable->addColumns();
     
@@ -25,8 +28,11 @@ LibraryView::LibraryView(TrackDataManager* dm, double* loadingProgress)
 
 void LibraryView::resized()
 {
-    trackTable->setSize(getWidth(), getHeight());
+    trackTable->setSize(getWidth(), getHeight() - WAVEFORM_VIEW_HEIGHT);
     trackTable->setTopLeftPosition(0, 0);
+    
+    trackEditor->setSize(getWidth(), WAVEFORM_VIEW_HEIGHT);
+    trackEditor->setTopLeftPosition(0, getHeight() - WAVEFORM_VIEW_HEIGHT);
     
     analysisProgress->setSize(300, 30);
     analysisProgress->setCentrePosition(getWidth()/2, getHeight() - 30);

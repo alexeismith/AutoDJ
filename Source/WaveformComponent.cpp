@@ -51,9 +51,9 @@ void WaveformComponent::update(int playhead, double timeStretch, double gain)
     
     int visibleWidth = getWidth() * timeStretch;
     
-    double playheadAdjust = playhead - double(WAVEFORM_FRAME_SIZE * visibleWidth)/2;
+    playhead -= double(WAVEFORM_FRAME_SIZE * visibleWidth) / 2;
     
-    startFrame = round(playheadAdjust / WAVEFORM_FRAME_SIZE);
+    startFrame = round(double(playhead) / WAVEFORM_FRAME_SIZE);
     
     imageScaled = image.getClippedImage(juce::Rectangle<int>(startFrame, 0, visibleWidth, getHeight()));
     
@@ -70,7 +70,10 @@ void WaveformComponent::load(Track* t, juce::Array<juce::Colour>* colours, juce:
     track = t;
     numFrames = levels->size();
     draw(colours, levels);
+    
     ready.store(true);
+    
+    update(0, 1.0, 1.0);
 }
 
 

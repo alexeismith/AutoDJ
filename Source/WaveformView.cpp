@@ -9,7 +9,7 @@
 
 
 
-WaveformView::WaveformView(bool clickToScroll, bool scrollBarAtBottom)
+WaveformView::WaveformView(TrackDataManager* dm, bool clickToScroll, bool scrollBarAtBottom, bool hideWhenEmpty)
 {
     scrollable = clickToScroll;
     scrollBarBottom = scrollBarAtBottom;
@@ -20,7 +20,7 @@ WaveformView::WaveformView(bool clickToScroll, bool scrollBarAtBottom)
     scrollBar.reset(new WaveformScrollBar());
     addAndMakeVisible(scrollBar.get());
     
-    loader.reset(new WaveformLoader(waveform.get(), scrollBar.get()));
+    loader.reset(new WaveformLoader(dm, waveform.get(), scrollBar.get(), hideWhenEmpty));
 }
 
 
@@ -46,13 +46,25 @@ void WaveformView::load(Track* track)
 {
     trackLength = track->info->getLengthSamples();
     loader->load(track);
+    update(0);
 }
 
 
-void WaveformView::update(int playhead, double timeStretch, double gain)
+void WaveformView::update(int p, double t, double g)
 {
+    playhead = p;
+    timeStretch = t;
+    gain = g;
+    
     waveform->update(playhead, timeStretch, gain);
     scrollBar->update(playhead, timeStretch);
+}
+
+
+void WaveformView::refresh()
+{
+    update(playhead, timeStretch, gain);
+    repaint();
 }
 
 

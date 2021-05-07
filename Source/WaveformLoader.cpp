@@ -10,25 +10,22 @@
 #include "CommonDefs.hpp"
 
 
-WaveformLoader::WaveformLoader(WaveformComponent* wave, WaveformScrollBar* bar) :
-    juce::Thread("WaveformLoader"), waveform(wave), scrollBar(bar)
+WaveformLoader::WaveformLoader(TrackDataManager* dm, WaveformComponent* wave, WaveformScrollBar* bar, bool hide) :
+    juce::Thread("WaveformLoader"), dataManager(dm), waveform(wave), scrollBar(bar), hideWhenEmpty(hide)
 {
     filterLow.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 200, 1.0));
     filterMid.setCoefficients(juce::IIRCoefficients::makeBandPass(SUPPORTED_SAMPLERATE, 500, 1.0));
     filterHigh.setCoefficients(juce::IIRCoefficients::makeHighPass(SUPPORTED_SAMPLERATE, 10000, 1.0));
+    
+    reset();
 }
 
 
 void WaveformLoader::load(Track* t)
 {
-    while (loading.load())
-        sleep(1000);
+    newRequest.store(true);
     
-    loading.store(true);
-    
-    reset();
-    
-    track = t;
+    newTrack = t;
     
     startThread();
 }
@@ -36,7 +33,40 @@ void WaveformLoader::load(Track* t)
 
 void WaveformLoader::run()
 {
+    while (newRequest.load())
+    {
+        newRequest.store(false);
+        reset();
+        process();
+    }
+    
+    juce::MessageManager::callAsync(std::function<void()>([this]() {
+        if (hideWhenEmpty)
+        {
+            waveform->setVisible(true);
+            scrollBar->setVisible(true);
+        }
+        waveform->repaint();
+        scrollBar->repaint();
+    }));
+}
+
+
+void WaveformLoader::process()
+{
     int numSamples, numFrames;
+    
+    track = newTrack;
+    
+    if (newRequest.load()) return;
+    
+    if (track->audio == nullptr)
+    {
+        jassert(dataManager != nullptr);
+        track->audio = dataManager->loadAudio(track->info->getFilename());
+    }
+    
+    if (newRequest.load()) return;
     
     numSamples = track->audio->getNumSamples();
     numFrames = numSamples / WAVEFORM_FRAME_SIZE;
@@ -63,10 +93,10 @@ void WaveformLoader::run()
     for (int i = 0; i < numFrames; i++)
         pushFrame(i);
     
+    if (newRequest.load()) return;
+    
     waveform->load(track, &colours, &levels);
     scrollBar->load(track, &colours, &levels);
-    
-    loading.store(false);
 }
 
 
@@ -100,6 +130,14 @@ void WaveformLoader::pushFrame(int index)
 
 void WaveformLoader::reset()
 {
+    if (hideWhenEmpty)
+    {
+        juce::MessageManager::callAsync(std::function<void()>([this]() {
+            waveform->setVisible(false);
+            scrollBar->setVisible(false);
+        }));
+    }
+    
     waveform->reset();
     scrollBar->reset();
     

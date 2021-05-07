@@ -17,7 +17,7 @@ class WaveformView : public juce::Component
 {
 public:
     
-    WaveformView(bool clickToScroll, bool scrollBarAtBottom);
+    WaveformView(TrackDataManager* dm, bool clickToScroll, bool scrollBarAtBottom, bool hideWhenEmpty);
     
     ~WaveformView() {}
     
@@ -26,6 +26,8 @@ public:
     void load(Track* track);
     
     void update(int playhead, double timeStretch = 1.0, double gain = 1.0);
+    
+    void refresh();
     
     void reset();
     
@@ -40,7 +42,8 @@ private:
     bool scrollable;
     bool scrollBarBottom;
     
-    int trackLength;
+    int playhead, trackLength;
+    double timeStretch, gain;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformView)
 };

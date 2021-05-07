@@ -18,11 +18,21 @@ enum TrackTableColumns {
 };
 
 
-TrackTableComponent::TrackTableComponent()
+TrackTableComponent::TrackTableComponent(TrackEditor* editor) :
+    trackEditor(editor)
 {
     table.reset(new juce::TableListBox());
     table->setModel(this);
     addAndMakeVisible(table.get());
+}
+
+
+void TrackTableComponent::cellClicked(int rowNumber, int columnId, const juce::MouseEvent& e)
+{
+    TrackInfo* info = tracksSorted.getReference(rowNumber);
+    Track track;
+    track.info = info;
+    trackEditor->load(track);
 }
 
 

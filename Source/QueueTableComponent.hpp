@@ -22,7 +22,7 @@ class QueueTableComponent : public TrackTableComponent
 {
 public:
     
-    QueueTableComponent();
+    QueueTableComponent(TrackEditor* editor);
     
     ~QueueTableComponent() { table.reset(); }
     

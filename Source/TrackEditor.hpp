@@ -9,22 +9,31 @@
 #define TrackEditor_hpp
 
 #include "WaveformView.hpp"
+#include "TrackDataManager.hpp"
 
-class TrackEditor : juce::Component
+class TrackEditor : public juce::Component
 {
 public:
     
-    TrackEditor();
+    TrackEditor(TrackDataManager* dm);
     
     ~TrackEditor() {}
     
-    void load(Track* track);
+    void resized() override;
+    
+    void paint(juce::Graphics& g) override;
+    
+    void load(Track track);
     
 private:
     
     std::unique_ptr<WaveformView> waveform;
     
-    Track* track;
+    Track track;
+    
+    TrackDataManager* dataManager = nullptr;
+    
+    juce::String message;
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackEditor)

@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "TrackInfo.hpp"
+#include "TrackEditor.hpp"
 
 
 class TrackTableSorter
@@ -32,9 +33,11 @@ class TrackTableComponent : public juce::Component, public juce::TableListBoxMod
 {
 public:
     
-    TrackTableComponent();
+    TrackTableComponent(TrackEditor* editor);
     
     ~TrackTableComponent() {}
+    
+    void cellClicked(int rowNumber, int columnId, const juce::MouseEvent& e) override;
     
     void populate(TrackInfo* track, int numTracks);
     
@@ -64,6 +67,8 @@ private:
     juce::String getValueForColumn(TrackInfo* track, int columnId);
     
     std::unique_ptr<TrackTableSorter> sorter;
+    
+    TrackEditor* trackEditor = nullptr;
     
     int fixedColumnWidth;
     

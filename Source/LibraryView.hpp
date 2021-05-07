@@ -10,11 +10,9 @@
 
 #include "TrackDataManager.hpp"
 #include "QueueTableComponent.hpp"
+#include "TrackEditor.hpp"
 #include "AnalysisProgressBar.hpp"
 #include "CommonDefs.hpp"
-
-// TODO: temp
-#include "WaveformScrollBar.hpp"
 
 class LibraryView : public juce::Component, public juce::Timer
 {
@@ -37,6 +35,8 @@ private:
     void chooseFolder();
     
     std::unique_ptr<TrackTableComponent> trackTable;
+    
+    std::unique_ptr<TrackEditor> trackEditor;
     
     std::unique_ptr<AnalysisProgressBar> analysisProgress;
     

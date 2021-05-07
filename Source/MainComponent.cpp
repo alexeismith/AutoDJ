@@ -137,7 +137,7 @@ void MainComponent::resized()
     sizeLimits.checkComponentBounds(this);
     
     chooseFolderBtn->setSize(120, 40);
-    chooseFolderBtn->setCentrePosition(getWidth()/2, (getHeight() + TOOLBAR_HEIGHT)/2);
+    chooseFolderBtn->setCentrePosition(getWidth()/2, getHeight()/2);
     
     loadingFilesProgress->setSize(150, 30);
     loadingFilesProgress->setCentrePosition(getWidth()/2, getHeight()/2);

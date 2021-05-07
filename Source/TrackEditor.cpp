@@ -15,6 +15,8 @@ TrackEditor::TrackEditor(TrackDataManager* dm) :
     addAndMakeVisible(waveform.get());
     
     message = "Select a track to view or edit it here.";
+    
+    analyserSegments.reset(new AnalyserSegments());
 }
 
 
@@ -40,11 +42,19 @@ void TrackEditor::paint(juce::Graphics& g)
 void TrackEditor::load(Track t)
 {
     track = t;
-    track.audio = nullptr;
+//    track.audio = nullptr;
+    
+    track.audio = dataManager->loadAudio(track.info->getFilename());
+    
+    juce::Array<int> segments = analyserSegments->analyse(track.audio);
     
     waveform->load(&track);
     waveform->update(0);
+    waveform->clearMarkers();
 
+    for (auto segment : segments)
+        waveform->insertMarker(track.info->getNearestDownbeat(segment));
+    
     message = "Loading...";
     
     repaint();

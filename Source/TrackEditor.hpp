@@ -10,6 +10,7 @@
 
 #include "WaveformView.hpp"
 #include "TrackDataManager.hpp"
+#include "AnalyserSegments.hpp"
 
 class TrackEditor : public juce::Component
 {
@@ -34,6 +35,9 @@ private:
     TrackDataManager* dataManager = nullptr;
     
     juce::String message;
+    
+    
+    std::unique_ptr<AnalyserSegments> analyserSegments;
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackEditor)

@@ -78,7 +78,7 @@ void WaveformView::reset()
 void WaveformView::insertMarker(int sample)
 {
     waveform->insertMarker(sample);
-    scrollBar->insertMarker(sample);
+    scrollBar->insertMarker(sample, 40);
 }
 
 

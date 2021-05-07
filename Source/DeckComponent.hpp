@@ -28,13 +28,15 @@ public:
     
     void buttonClicked(juce::Button* button) override;
     
-    void load(Track* track);
-    
     void update();
     
     void logPlayheadPosition();
     
 private:
+    
+    void load(Track* track);
+    
+    void setMixMarkers();
     
     int deckId;
     

@@ -122,12 +122,21 @@ void WaveformComponent::draw(juce::Array<juce::Colour>* colours, juce::Array<flo
                 g.drawVerticalLine(frame+1, getHeight() - beatMarkerHeight, getHeight());
             }
         }
-        
+    }
+    
+    drawMarkers(g);
+}
+
+
+void WaveformComponent::drawMarkers(juce::Graphics& g)
+{
+    g.setColour(juce::Colours::red);
+    
+    for (int frame = 0; frame < numFrames; frame++)
+    {
         if (isMarker(frame))
         {
-            g.setColour(juce::Colours::red);
-            for (int i = 0; i < 15; i++)
-                g.drawVerticalLine(frame+i, 0, getHeight());
+            g.drawLine(frame, 0, frame, getHeight(), markerThickness);
         }
     }
 }

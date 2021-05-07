@@ -61,21 +61,6 @@ void DeckComponent::buttonClicked(juce::Button* button)
 }
 
 
-void DeckComponent::load(Track* trackPtr)
-{
-    ready.store(false);
-    
-    track = *trackPtr;
-    
-    title = track.info->getArtistTitle();
-    info = "Length: " + AutoDJ::getLengthString(track.info->length) +  "    BPM: " + juce::String(track.info->bpm) +  "    Key: " + juce::String(track.info->key) +  "    Groove: " + AutoDJ::getGrooveString(track.info->groove);
-    
-    waveform->load(&track);
-    
-    ready.store(true);
-}
-
-
 void DeckComponent::update()
 {
     if (!trackProcessor->isReady())
@@ -88,6 +73,12 @@ void DeckComponent::update()
     if (t)
         load(t);
     
+    if (!track.leader && playhead > track.getCurrentMix()->endNext)
+    {
+        track.leader = true;
+        setMixMarkers();
+    }
+    
     if (ready.load())
     {
         waveform->update(playhead, trackProcessor->getTimeStretch(), trackProcessor->getTrack()->gain.currentValue);
@@ -99,4 +90,47 @@ void DeckComponent::logPlayheadPosition()
 {
     if (ready.load())
         playhead = trackProcessor->getTrack()->getPlayhead();
+}
+
+
+void DeckComponent::load(Track* trackPtr)
+{
+    ready.store(false);
+    
+    track = *trackPtr;
+    
+    title = track.info->getArtistTitle();
+    info = "Length: " + AutoDJ::getLengthString(track.info->length) +  "    BPM: " + juce::String(track.info->bpm) +  "    Key: " + juce::String(track.info->key) +  "    Groove: " + AutoDJ::getGrooveString(track.info->groove);
+    
+    waveform->load(&track);
+    
+    setMixMarkers();
+    
+    ready.store(true);
+}
+
+
+void DeckComponent::setMixMarkers()
+{
+    ready.store(false);
+    
+    waveform->clearMarkers();
+    
+    int start, end;
+    
+    if (track.leader)
+    {
+        start = track.getCurrentMix()->start;
+        end = track.getCurrentMix()->end;
+    }
+    else
+    {
+        start = track.getCurrentMix()->startNext;
+        end = track.getCurrentMix()->endNext;
+    }
+    
+    waveform->insertMarker(start);
+    waveform->insertMarker(end);
+    
+    ready.store(true);
 }

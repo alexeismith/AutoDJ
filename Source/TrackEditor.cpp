@@ -28,6 +28,9 @@ void TrackEditor::resized()
 
 void TrackEditor::paint(juce::Graphics& g)
 {
+    g.setColour(juce::Colours::black);
+    g.fillAll();
+    
     g.setColour(juce::Colours::grey);
     g.setFont(juce::Font(18));
     g.drawText(message, 0, 0, getWidth(), getHeight(), juce::Justification::centred);

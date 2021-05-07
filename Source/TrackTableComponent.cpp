@@ -101,6 +101,8 @@ void TrackTableComponent::resized()
 
     table->getHeader().setColumnWidth(1, availableWidth*0.4);
     table->getHeader().setColumnWidth(2, availableWidth*0.6);
+    
+    table->getHorizontalScrollBar().setColour(juce::ScrollBar::ColourIds::thumbColourId, juce::Colours::black.withAlpha(0.f));
 }
 
 

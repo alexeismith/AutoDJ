@@ -31,6 +31,10 @@ public:
     
     void reset();
     
+    void insertMarker(int sample);
+    
+    void clearMarkers();
+    
     void mouseDown(const juce::MouseEvent &event) override { scroll(event.getPosition()); }
     void mouseUp(const juce::MouseEvent &event) override { scrolling = false; }
     void mouseDrag(const juce::MouseEvent &event) override { scroll(event.getPosition()); }

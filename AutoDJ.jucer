@@ -374,6 +374,10 @@
               file="Source/AnalyserGroove.cpp"/>
         <FILE id="YGKV9M" name="AnalyserGroove.hpp" compile="0" resource="0"
               file="Source/AnalyserGroove.hpp"/>
+        <FILE id="tgztwB" name="AnalyserSegments.cpp" compile="1" resource="0"
+              file="Source/AnalyserSegments.cpp"/>
+        <FILE id="C9qOQy" name="AnalyserSegments.hpp" compile="0" resource="0"
+              file="Source/AnalyserSegments.hpp"/>
       </GROUP>
       <GROUP id="{9D7FECDF-8952-8FC4-090E-52526F978CD8}" name="Database">
         <GROUP id="{864AE706-4D80-286D-4EE2-E6FFF4FBB695}" name="Third Party">

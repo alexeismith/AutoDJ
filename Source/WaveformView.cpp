@@ -75,6 +75,20 @@ void WaveformView::reset()
 }
 
 
+void WaveformView::insertMarker(int sample)
+{
+    waveform->insertMarker(sample);
+    scrollBar->insertMarker(sample);
+}
+
+
+void WaveformView::clearMarkers()
+{
+    waveform->clearMarkers();
+    scrollBar->clearMarkers();
+}
+
+
 void WaveformView::scroll(juce::Point<int> pos)
 {
     if (!scrollable) return;

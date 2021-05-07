@@ -122,6 +122,13 @@ void WaveformComponent::draw(juce::Array<juce::Colour>* colours, juce::Array<flo
                 g.drawVerticalLine(frame+1, getHeight() - beatMarkerHeight, getHeight());
             }
         }
+        
+        if (isMarker(frame))
+        {
+            g.setColour(juce::Colours::red);
+            for (int i = 0; i < 15; i++)
+                g.drawVerticalLine(frame+i, 0, getHeight());
+        }
     }
 }
 
@@ -160,6 +167,21 @@ bool WaveformComponent::isBeat(int frameIndex, bool& downbeat)
             downbeat = true;
         
         return true;
+    }
+    
+    return false;
+}
+
+
+bool WaveformComponent::isMarker(int frameIndex)
+{
+    int frameStart = frameIndex * WAVEFORM_FRAME_SIZE;
+    int frameEnd = frameStart + WAVEFORM_FRAME_SIZE - 1;
+    
+    for (int marker : markers)
+    {
+        if (marker >= frameStart && marker <= frameEnd)
+            return true;
     }
     
     return false;

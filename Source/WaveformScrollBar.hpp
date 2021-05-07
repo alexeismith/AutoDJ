@@ -27,8 +27,6 @@ public:
     
     void update(int playhead, double timeStretch, double gain = 1.0) override;
     
-    void insertMarker(int sample) { markers.add(sample); } // TODO: temp
-    
     int getWindowWidth() { return windowWidth; }
     
 private:
@@ -38,8 +36,6 @@ private:
     bool isBeat(int frameIndex, bool& downbeat) override;
     
     int windowStartX, windowWidth = 0;
-    
-    juce::Array<int> markers; // TODO: temp
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformScrollBar)
 };

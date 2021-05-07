@@ -62,18 +62,5 @@ void WaveformScrollBar::draw(juce::Array<juce::Colour>* colours, juce::Array<flo
 bool WaveformScrollBar::isBeat(int frameIndex, bool& downbeat)
 {
     downbeat = false;
-    
-    // TODO: temp
-    int frameStart = frameIndex * WAVEFORM_FRAME_SIZE;
-    int frameEnd = frameStart + WAVEFORM_FRAME_SIZE - 1;
-    for (int marker : markers)
-    {
-        if (marker >= frameStart && marker <= frameEnd)
-        {
-            downbeat = true;
-            break;
-        }
-    }
-    
     return false;
 }

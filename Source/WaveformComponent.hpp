@@ -35,11 +35,17 @@ public:
     
     void load(Track* t, juce::Array<juce::Colour>* colours, juce::Array<float>* levels);
     
+    void insertMarker(int sample) { markers.add(sample); }
+    
+    void clearMarkers() { markers.clear(); }
+    
 protected:
     
     virtual void draw(juce::Array<juce::Colour>* colours, juce::Array<float>* levels);
     
     virtual bool isBeat(int frameIndex, bool& downbeat);
+    
+    bool isMarker(int frameIndex);
     
     std::atomic<bool> ready;
     
@@ -52,6 +58,8 @@ protected:
 private:
     
     Track* track;
+    
+    juce::Array<int> markers;
     
     int imageOffset;
     

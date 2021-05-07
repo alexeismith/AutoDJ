@@ -21,6 +21,10 @@ public:
     
     int getSampleOfBeat(int beat);
     
+    int getFirstDownbeat() { return getSampleOfBeat(downbeat); }
+    
+    int getNearestDownbeat(int sample);
+    
     int getBeatPeriod();
     
     int getLengthSamples(); // TODO: make sure this is used where possible

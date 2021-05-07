@@ -16,6 +16,24 @@ int TrackInfo::getSampleOfBeat(int beat)
 }
 
 
+int TrackInfo::getNearestDownbeat(int sample)
+{
+    if (sample <= getFirstDownbeat())
+        return getFirstDownbeat();
+    
+    int samplesPerBar = getBeatPeriod() * BEATS_PER_BAR;
+    sample -= getFirstDownbeat();
+    int bar = round(double(sample) / samplesPerBar);
+    
+    int nearestDownbeat = bar * samplesPerBar + getFirstDownbeat();
+    
+    if (nearestDownbeat > getLengthSamples())
+        nearestDownbeat -= samplesPerBar;
+    
+    return nearestDownbeat;
+}
+
+
 int TrackInfo::getBeatPeriod()
 {
     return AutoDJ::getBeatPeriod(bpm);

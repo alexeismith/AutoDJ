@@ -36,7 +36,7 @@ void LibraryView::resized()
     trackEditor->setTopLeftPosition(0, getHeight() - WAVEFORM_VIEW_HEIGHT);
     
     analysisProgress->setSize(300, 30);
-    analysisProgress->setCentrePosition(getWidth()/2, getHeight() - 30);
+    analysisProgress->setCentrePosition(getWidth()/2, trackEditor->getY() - 30);
 }
 
 

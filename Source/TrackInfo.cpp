@@ -40,6 +40,12 @@ int TrackInfo::getBeatPeriod()
 }
 
 
+int TrackInfo::getBarLength()
+{
+    return getBeatPeriod() * BEATS_PER_BAR;
+}
+
+
 int TrackInfo::getLengthSamples()
 {
     return length * SUPPORTED_SAMPLERATE;

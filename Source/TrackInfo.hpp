@@ -27,6 +27,8 @@ public:
     
     int getBeatPeriod();
     
+    int getBarLength();
+    
     int getLengthSamples(); // TODO: make sure this is used where possible
     
     juce::String getFilename() { return juce::String(juce::CharPointer_UTF8(filename)); }

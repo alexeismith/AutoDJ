@@ -68,6 +68,10 @@
               file="Source/TrackChooser.cpp"/>
         <FILE id="CuoVYU" name="TrackChooser.hpp" compile="0" resource="0"
               file="Source/TrackChooser.hpp"/>
+        <FILE id="pxAIE6" name="RandomGenerator.cpp" compile="1" resource="0"
+              file="Source/RandomGenerator.cpp"/>
+        <FILE id="tJ4Lo2" name="RandomGenerator.hpp" compile="0" resource="0"
+              file="Source/RandomGenerator.hpp"/>
         <FILE id="IvwbWJ" name="MixInfo.hpp" compile="0" resource="0" file="Source/MixInfo.hpp"/>
       </GROUP>
       <GROUP id="{7A6526E7-D707-1DAA-1D55-8A76C42F1D9A}" name="Audio Processing">

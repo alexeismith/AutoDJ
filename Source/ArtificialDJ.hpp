@@ -66,6 +66,9 @@ private:
     TrackDataManager* dataManager = nullptr;
     AudioProcessor* audioProcessor = nullptr;
     
+    RandomGenerator randomGenerator;
+    
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ArtificialDJ)
 };
 

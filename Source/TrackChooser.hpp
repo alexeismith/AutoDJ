@@ -10,8 +10,7 @@
 
 #include <JuceHeader.h>
 
-#include <random>
-
+#include "RandomGenerator.hpp"
 #include "TrackDataManager.hpp"
 
 
@@ -19,7 +18,7 @@ class TrackChooser
 {
 public:
     
-    TrackChooser(TrackDataManager* dm);
+    TrackChooser(TrackDataManager* dm, RandomGenerator* random);
     
     ~TrackChooser() {}
     
@@ -45,7 +44,7 @@ private:
     double accelerationBpm = 0.0;
     double accelerationGroove = 0.0;
     
-    std::mt19937 randomGenerator;
+    RandomGenerator* randomGenerator;
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackChooser)

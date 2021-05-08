@@ -12,12 +12,10 @@
 #define NUM_CANDIDATES (1)
 
 
-TrackChooser::TrackChooser(TrackDataManager* dm)
+TrackChooser::TrackChooser(TrackDataManager* dm, RandomGenerator* random) :
+    dataManager(dm), randomGenerator(random)
 {
-    dataManager = dm;
     sorter = dataManager->getSorter();
-    
-    randomGenerator.seed((unsigned int)juce::Time::currentTimeMillis());
 }
 
 
@@ -30,8 +28,8 @@ void TrackChooser::initialise()
     float bpmMultiplier = analysisResults.maxBpm - analysisResults.minBpm;
     float grooveMultiplier = analysisResults.maxGroove - analysisResults.minGroove;
     
-    currentBpm = analysisResults.minBpm + bpmMultiplier * getRandomGaussian(0.2, 0.5, 0.5);
-    currentGroove = analysisResults.minGroove +grooveMultiplier * getRandomGaussian(0.2, 0.5, 0.5);
+    currentBpm = analysisResults.minBpm + bpmMultiplier * randomGenerator->getGaussian(0.2, 0.5, 0.5);
+    currentGroove = analysisResults.minGroove +grooveMultiplier * randomGenerator->getGaussian(0.2, 0.5, 0.5);
 }
 
 
@@ -76,24 +74,12 @@ TrackInfo* TrackChooser::chooseTrack()
 }
 
 
-double TrackChooser::getRandomGaussian(double stdDev, double rangeLimit, double shift)
-{
-    std::normal_distribution<double> distribution(0, stdDev);
-    double value = distribution(randomGenerator);
-    
-    if (rangeLimit > 0.0)
-        value = juce::jlimit(-rangeLimit, rangeLimit, value);
-    
-    return value + shift;
-}
-
-
 void TrackChooser::updatePosition()
 {
     const double momentum = 0.9;
     
-    accelerationBpm = accelerationBpm*momentum + getRandomGaussian(0.5)*(1.0 - momentum);
-    accelerationGroove = accelerationGroove*momentum + getRandomGaussian(0.5)*(1.0 - momentum);
+    accelerationBpm = accelerationBpm*momentum + randomGenerator->getGaussian(0.5)*(1.0 - momentum);
+    accelerationGroove = accelerationGroove*momentum + randomGenerator->getGaussian(0.5)*(1.0 - momentum);
     
     velocityBpm += accelerationBpm;
     velocityGroove += accelerationGroove;

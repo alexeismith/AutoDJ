@@ -15,7 +15,7 @@ ArtificialDJ::ArtificialDJ(TrackDataManager* dm) :
 {
     initialised.store(false);
     
-    chooser.reset(new TrackChooser(dataManager));
+    chooser.reset(new TrackChooser(dataManager, &randomGenerator));
 }
 
 

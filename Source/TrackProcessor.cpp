@@ -72,6 +72,9 @@ void TrackProcessor::loadNextTrack()
         trackEnd = false;
         newTrack = true;
         
+        track->info->played = true;
+        dataManager->trackDataUpdate.store(true);
+        
         ready.store(true);
     }
     

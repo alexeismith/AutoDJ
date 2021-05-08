@@ -85,7 +85,6 @@ void WaveformComponent::draw(juce::Array<juce::Colour>* colours, juce::Array<flo
     juce::Graphics g(image);
     
     float magnitude;
-    bool downbeat;
     
     g.setColour(juce::Colours::black);
     g.fillAll();
@@ -104,24 +103,6 @@ void WaveformComponent::draw(juce::Array<juce::Colour>* colours, juce::Array<flo
             g.setColour(juce::Colours::darkgrey);
             g.drawVerticalLine(frame, 0, getHeight());
         }
-        
-        if (isBeat(frame, downbeat))
-        {
-            g.setColour(juce::Colours::white);
-            
-            if (downbeat)
-            {
-                g.drawVerticalLine(frame, 0, getHeight());
-                g.drawVerticalLine(frame+1, 0, getHeight());
-            }
-            else
-            {
-                g.drawVerticalLine(frame, 0, beatMarkerHeight);
-                g.drawVerticalLine(frame, getHeight() - beatMarkerHeight, getHeight());
-                g.drawVerticalLine(frame+1, 0, beatMarkerHeight);
-                g.drawVerticalLine(frame+1, getHeight() - beatMarkerHeight, getHeight());
-            }
-        }
     }
     
     drawMarkers(g);
@@ -130,6 +111,26 @@ void WaveformComponent::draw(juce::Array<juce::Colour>* colours, juce::Array<flo
 
 void WaveformComponent::drawMarkers(juce::Graphics& g)
 {
+    bool downbeat;
+    
+    g.setColour(juce::Colours::white);
+    
+    for (int frame = 0; frame < numFrames; frame++)
+    {
+        if (isBeat(frame, downbeat))
+        {
+            if (downbeat)
+            {
+                g.drawLine(frame, 0, frame, getHeight(), 2);
+            }
+            else
+            {
+                g.drawLine(frame, 0, frame, beatMarkerHeight, 2);
+                g.drawLine(frame, getHeight()-beatMarkerHeight, frame, getHeight(), 2);
+            }
+        }
+    }
+    
     g.setColour(juce::Colours::red);
     
     for (int frame = 0; frame < numFrames; frame++)

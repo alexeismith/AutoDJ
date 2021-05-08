@@ -40,7 +40,7 @@ public:
     
     void loadNextTrack();
     
-    void loadFirstTrack(TrackInfo* trackInfo, bool leader);
+    void loadFirstTrack(TrackInfo* trackInfo, bool leader, juce::AudioBuffer<float>* audio = nullptr);
     
     void prepare(int blockSize);
     

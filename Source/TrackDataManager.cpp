@@ -122,7 +122,7 @@ juce::AudioBuffer<float>* TrackDataManager::loadAudio(juce::String filename, boo
 
 void TrackDataManager::adjustChannels(juce::AudioBuffer<float>* buffer, bool mono)
 {
-    if (mono && buffer->getNumChannels() == 2)
+    if (mono && buffer->getNumChannels() >= 2)
     {
         buffer->applyGain(0.5f);
         buffer->addFrom(0, 0, buffer->getReadPointer(1), buffer->getNumSamples());

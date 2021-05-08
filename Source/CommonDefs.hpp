@@ -33,8 +33,8 @@ enum ComponentIDs : int
 
 typedef struct AnalysisResults
 {
-    int minBpm;
-    int maxBpm;
+    int minBpm = -1;
+    int maxBpm = -1;
     float minGroove;
     float maxGroove;
 } AnalysisResults;

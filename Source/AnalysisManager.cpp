@@ -126,7 +126,7 @@ void AnalysisManager::processResult(TrackInfo* track)
 {
     // If this is the first result to be processed,
     // simply copy the bpm and groove values into the results struct and exit
-    if (jobProgress == 0)
+    if (results.minBpm == -1)
     {
         results.minBpm = track->bpm;
         results.maxBpm = track->bpm;

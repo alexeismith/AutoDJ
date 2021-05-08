@@ -37,9 +37,19 @@ juce::Array<int> AnalyserSegments::analyse(juce::AudioBuffer<float>* audio)
     
     for (int i = 0; i < numFrames; i++)
     {
-        for (int j = 0; j < windowSize; j++)
+        if (audio->getNumChannels() == 1)
         {
-            tempBuffer[j] = (double)audio->getReadPointer(0)[i*windowSize + j];
+            for (int j = 0; j < windowSize; j++)
+            {
+                tempBuffer[j] = (double)audio->getReadPointer(0)[i*windowSize + j];
+            }
+        }
+        else
+        {
+            for (int j = 0; j < windowSize; j++)
+            {
+                tempBuffer[j] = 0.5*((double)audio->getReadPointer(0)[i*windowSize + j] + (double)audio->getReadPointer(1)[i*windowSize + j]);
+            }
         }
 
         segmenter->extractFeatures(tempBuffer, segmenter->getWindowsize());

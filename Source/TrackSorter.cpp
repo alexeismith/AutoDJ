@@ -28,7 +28,7 @@ void TrackSorter::addAnalysed(TrackInfo* track)
 
 TrackInfo* TrackSorter::findClosestAndRemove(float bpm, float groove)
 {
-    TrackInfo* const* result = tree->findClosest(quadtree::Box<float>(bpm, groove*GROOVE_MULTIPLIER, 0.f, 0.f));
+    TrackInfo* const result = *tree->findClosest(quadtree::Box<float>(bpm, groove*GROOVE_MULTIPLIER, 0.f, 0.f));
     
     if (result == nullptr)
     {
@@ -36,6 +36,7 @@ TrackInfo* TrackSorter::findClosestAndRemove(float bpm, float groove)
         return nullptr;
     }
     
-    tree->remove(*result);
-    return *result;
+    tree->remove(result);
+    
+    return result;
 }

@@ -58,8 +58,8 @@ TrackInfo* TrackChooser::chooseTrack()
     if (result == nullptr)
         return result;
     
-//    DBG("QUEUED " << result->getFilename() << " bpm: " << result->bpm << " groove: " << result->groove);
-    DBG("QUEUED bpm: " << result->bpm << " groove: " << result->groove);
+    DBG("QUEUED " << result->getFilename() << " bpm: " << result->bpm << " groove: " << result->groove);
+//    DBG("QUEUED bpm: " << result->bpm << " groove: " << result->groove);
     
     currentBpm = result->bpm;
     currentGroove = result->groove;

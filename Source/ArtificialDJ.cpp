@@ -102,7 +102,7 @@ void ArtificialDJ::initialise()
     
     generateMix();
     
-    leader->loadFirstTrack(firstTrack, true);
+    leader->loadFirstTrack(firstTrack, true, dataManager->loadAudio(firstTrack->getFilename()));
     next->loadFirstTrack(prevTrack, false);
     
     initialised.store(true);

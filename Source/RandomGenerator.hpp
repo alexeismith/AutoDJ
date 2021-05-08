@@ -20,6 +20,8 @@ public:
     
     double getGaussian(double stdDev = 1.0, double rangeLimit = -1.0, double shift = 0.0);
     
+    bool getBool();
+    
 private:
     
     std::mt19937 algorithm;

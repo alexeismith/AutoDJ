@@ -7,6 +7,8 @@
 
 #include "TrackEditor.hpp"
 
+//#define SHOW_SEGMENTS
+
 
 TrackEditor::TrackEditor(TrackDataManager* dm) :
     dataManager(dm)
@@ -42,18 +44,26 @@ void TrackEditor::paint(juce::Graphics& g)
 void TrackEditor::load(Track t)
 {
     track = t;
-//    track.audio = nullptr;
+    track.audio = nullptr;
+    
+#ifdef SHOW_SEGMENTS
     
     track.audio = dataManager->loadAudio(track.info->getFilename());
     
-    juce::Array<int> segments = analyserSegments->analyse(track.audio);
+    juce::Array<int> segments = analyserSegments->analyse(track.info, track.audio);
     
-    waveform->load(&track);
-    waveform->update(0);
     waveform->clearMarkers();
 
     for (auto segment : segments)
-        waveform->insertMarker(track.info->getNearestDownbeat(segment));
+        waveform->insertMarker(segment);
+    
+    DBG(track.info->getFilename());
+    DBG("Num segments: " << segments.size());
+    
+#endif
+    
+    waveform->load(&track);
+    waveform->update(0);
     
     message = "Loading...";
     

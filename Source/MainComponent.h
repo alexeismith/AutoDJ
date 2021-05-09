@@ -74,6 +74,7 @@ private:
     std::unique_ptr<juce::Button> mixBtn;
     
     std::unique_ptr<juce::Button> playPauseBtn;
+    std::unique_ptr<juce::Button> skipBtn;
     
     std::unique_ptr<juce::Slider> volumeSld;
     

@@ -42,10 +42,16 @@ public:
     // TODO: attenuate less and add a limiter?
     void setVolume(float newVolume) { targetVolume.store(newVolume/2.f); }
     
+    void skip() { skipFlag.store(true); }
+    
 private:
+    
+    void skipToNextEvent();
     
     float volume = 0.5f;
     std::atomic<float> targetVolume = 0.5f;
+    
+    std::atomic<bool> skipFlag = false;
     
     std::atomic<bool> paused;
     

@@ -64,6 +64,12 @@ MainComponent::MainComponent()
     playPauseBtn->addListener(this);
     playPauseBtn->setEnabled(false);
     
+    skipBtn.reset(new juce::TextButton(">>"));
+    addChildComponent(skipBtn.get());
+    skipBtn->setComponentID(juce::String(ComponentIDs::skipBtn));
+    skipBtn->addListener(this);
+    skipBtn->setEnabled(false);
+    
     volumeSld.reset(new juce::Slider());
     addChildComponent(volumeSld.get());
     volumeSld->setComponentID(juce::String(ComponentIDs::volumeSld));
@@ -174,6 +180,9 @@ void MainComponent::resized()
     playPauseBtn->setSize(28, 28);
     playPauseBtn->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT/2);
     
+    skipBtn->setSize(28, 28);
+    skipBtn->setCentrePosition(getWidth()/2 + 40, getHeight() - TOOLBAR_HEIGHT/2);
+    
     volumeSld->setSize(140, 50);
     volumeSld->setCentrePosition(getWidth() - 80, getHeight() - TOOLBAR_HEIGHT/2);
     
@@ -205,6 +214,7 @@ void MainComponent::timerCallback()
             mixBtn->setVisible(true);
             volumeSld->setVisible(true);
             playPauseBtn->setVisible(true);
+            skipBtn->setVisible(true);
             analysisProgress->setVisible(true);
         }
     }
@@ -231,6 +241,7 @@ void MainComponent::timerCallback()
         {
             waitingForDJ = false;
             playPauseBtn->setEnabled(true);
+            skipBtn->setEnabled(true);
         }
     }
     
@@ -240,6 +251,8 @@ void MainComponent::timerCallback()
         libraryView->updateData();
         directionView->updateData();
     }
+    
+    skipBtn->setEnabled(dj->canSkip());
 }
 
 
@@ -297,6 +310,11 @@ void MainComponent::buttonClicked(juce::Button* button)
                 playPauseBtn->setEnabled(false);
                 waitingForDJ = true;
             }
+            break;
+            
+        case ComponentIDs::skipBtn:
+            if (dj->canSkip())
+                audioProcessor->skip();
             break;
             
         default:

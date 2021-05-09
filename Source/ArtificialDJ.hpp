@@ -41,6 +41,10 @@ public:
     
     bool isInitialised() { return initialised.load(); }
     
+    bool isMixReady(int minimumReady = 1);
+    
+    bool canSkip();
+    
 private:
     
     void removeMix(MixInfo mix);

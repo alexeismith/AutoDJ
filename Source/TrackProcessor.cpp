@@ -144,6 +144,28 @@ void TrackProcessor::syncWithLeader(int leaderPlayhead)
 }
 
 
+void TrackProcessor::skipToNextEvent()
+{
+    jassert(isLeader()); // Must invoke this call on the leader only!
+    
+    int playhead = track->getPlayhead();
+    MixInfo* mix = track->getCurrentMix();
+    
+    if (playhead < mix->start)
+    {
+        playhead = mix->start;
+        track->bpm.resetTo(mix->bpm);
+    }
+    else if (playhead < mix->end)
+    {
+        playhead = mix->end;
+        partner->resetPlayhead(mix->endNext);
+    }
+    
+    resetPlayhead(playhead);
+}
+
+
 void TrackProcessor::update(int numSamples)
 {
     trackEnd = track->update(numSamples);
@@ -158,6 +180,8 @@ void TrackProcessor::update(int numSamples)
 void TrackProcessor::resetPlayhead(int sample)
 {
     track->resetPlayhead(sample);
+    
+    shifter.clear();
     shifterPlayhead = sample;
 }
 

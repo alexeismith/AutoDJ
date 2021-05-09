@@ -27,6 +27,7 @@ enum ComponentIDs : int
     directionBtn,
     mixBtn,
     playPauseBtn,
+    skipBtn,
     volumeSld,
     chooseFolderBtn
 };

@@ -31,6 +31,9 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
     
     bufferToFill.clearActiveBufferRegion();
     
+    if (skipFlag.load())
+        skipToNextEvent();
+    
     if (paused.load())
     {
         // Preview
@@ -95,5 +98,20 @@ void AudioProcessor::prepare(int blockSize)
     for (auto* processor : trackProcessors)
     {
         processor->prepare(blockSize);
+    }
+}
+
+
+void AudioProcessor::skipToNextEvent()
+{
+    TrackProcessor* leader = nullptr;
+    TrackProcessor* next = nullptr;
+    
+    getTrackProcessors(&leader, &next);
+    
+    if (leader)
+    {
+        leader->skipToNextEvent();
+        skipFlag.store(false);
     }
 }

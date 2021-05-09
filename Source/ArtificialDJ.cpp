@@ -78,6 +78,29 @@ bool ArtificialDJ::playPause()
 }
 
 
+bool ArtificialDJ::isMixReady(int minimumReady)
+{
+    if (!initialised.load())
+        return false;
+    
+    const juce::ScopedLock sl(lock);
+    
+    return (mixQueue.size() >= minimumReady);
+}
+
+
+bool ArtificialDJ::canSkip()
+{
+    if (!initialised.load())
+        return false;
+    
+    if (!playing)
+        return false;
+    
+    return isMixReady(2);
+}
+
+
 void ArtificialDJ::removeMix(MixInfo mix)
 {
     if (mixQueue.size() > 0)
@@ -208,7 +231,7 @@ void ArtificialDJ::generateMixComplex()
     // LEADING TRACK START --------------------------------------------------------------
 
     // The earliest we will start this mix is three fifths through the leading track
-    int mixStartMinimum = 3 * leadingTrack->getLengthSamples() / 5;
+    int mixStartMinimum = 4 * leadingTrack->getLengthSamples() / 7;
 
     // Find how much of the leading track remains available for this mix
     int leadingTrackAvailable = leadingTrack->getLengthSamples() - mixStartMinimum;
@@ -244,6 +267,9 @@ void ArtificialDJ::generateMixComplex()
     
     jassert(largestMultiple4 >= 2);
     
+    // Limit to 24 bar max mix length
+    largestMultiple4 = juce::jmin(6, largestMultiple4);
+    
     int lengthCandidate = -1;
     bool isSegmentLeading, isSegmentNext;
     
@@ -275,7 +301,7 @@ void ArtificialDJ::generateMixComplex()
     if (lengthCandidate == -1)
     {
         // Get a Gaussian random sample between 0-1, weighted towards 1
-        double multiplier = juce::jmin(randomGenerator.getGaussian(0.2, 0.5, 1.0), 1.0);
+        double multiplier = juce::jmin(randomGenerator.getGaussian(0.2, 0.5, 0.7), 1.0);
         // Choose the length using the random multiplier
         lengthCandidate = round(float(largestMultiple4) * multiplier);
         // Ensure the length is at least 2

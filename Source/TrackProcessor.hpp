@@ -52,6 +52,8 @@ public:
     
     void syncWithLeader(int leaderPlayhead);
     
+    void skipToNextEvent();
+    
 private:
     
     void update(int numSamples);

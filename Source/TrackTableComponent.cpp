@@ -84,6 +84,8 @@ void TrackTableComponent::paintCell(juce::Graphics& g, int rowNumber, int column
         g.setColour(juce::Colours::darkblue);
     else if (!track->analysed)
         g.setColour(juce::Colours::lightslategrey.brighter());
+    else if (track->playing)
+        g.setColour(juce::Colours::cyan);
     else if (track->played)
         g.setColour(juce::Colours::lightgreen.darker());
     else

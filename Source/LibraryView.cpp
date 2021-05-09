@@ -23,7 +23,7 @@ LibraryView::LibraryView(TrackDataManager* dm)
 
 void LibraryView::resized()
 {
-    trackTable->setSize(getWidth(), getHeight() - WAVEFORM_VIEW_HEIGHT + 8);
+    trackTable->setSize(getWidth(), getHeight() - WAVEFORM_VIEW_HEIGHT);
     trackTable->setTopLeftPosition(0, 0);
     
     trackEditor->setSize(getWidth(), WAVEFORM_VIEW_HEIGHT);

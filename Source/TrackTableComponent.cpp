@@ -102,12 +102,12 @@ void TrackTableComponent::paintCell(juce::Graphics& g, int rowNumber, int column
 
 void TrackTableComponent::resized()
 {
-    table->setSize(getWidth(), getHeight());
-    
     int availableWidth = getWidth() - fixedColumnWidth - table->getVerticalScrollBar().getWidth();
 
     table->getHeader().setColumnWidth(1, availableWidth*0.4);
     table->getHeader().setColumnWidth(2, availableWidth*0.6);
+    
+    table->setSize(getWidth(), getHeight());
     
     table->getHorizontalScrollBar().setColour(juce::ScrollBar::ColourIds::thumbColourId, juce::Colours::black.withAlpha(0.f));
 }

@@ -25,13 +25,29 @@ void TrackChooser::initialise()
     
     AnalysisResults analysisResults = dataManager->getAnalysisResults();
     
-    float bpmMultiplier = analysisResults.maxBpm - analysisResults.minBpm;
-    float grooveMultiplier = analysisResults.maxGroove - analysisResults.minGroove;
+    // BPM INITIALISATION...
     
-    currentBpm = analysisResults.minBpm + bpmMultiplier * randomGenerator->getGaussian(0.2, 0.5, 0.5);
-    currentGroove = analysisResults.minGroove +grooveMultiplier * randomGenerator->getGaussian(0.2, 0.5, 0.5);
+    // Define some approximate constant to help initialisation...
+    // 124BPM is about the average for house
+    const int averageHouseBpm = 124;
+    // House ranges from about 116 - 130BPM;
+    const int houseBpmRange = 14;
+    
+    // Calculate a Gaussian random value in the range +-(houseBpmRange/2)
+    int bpmShift = round(float(houseBpmRange/2) * randomGenerator->getGaussian(0.7, 0.5));
+    
+    // The initial bpm will be the average house BPM plus this shift
+    currentBpm = averageHouseBpm + bpmShift;
+    
+    // GROOVE INITIALISATION...
+    
+    // Get the range of groove available
+    float grooveRange = analysisResults.maxGroove - analysisResults.minGroove;
+    // Choose a random value in this range, weighted towards its centre
+    currentGroove = analysisResults.minGroove + grooveRange * randomGenerator->getGaussian(0.2, 0.5, 0.5);
+    
+    DBG("Init BPM: " << currentBpm << " Init Groove: " << currentGroove);
 }
-
 
 TrackInfo* TrackChooser::chooseTrack()
 {

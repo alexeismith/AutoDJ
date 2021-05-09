@@ -25,6 +25,8 @@ TrackTableComponent::TrackTableComponent(TrackEditor* editor) :
     table.reset(new juce::TableListBox());
     table->setModel(this);
     addAndMakeVisible(table.get());
+    
+    sortOrderChanged(1, true);
 }
 
 

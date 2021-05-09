@@ -42,9 +42,15 @@ void DirectionView::resized()
 
 void DirectionView::updateData()
 {
-    for (auto* dot : dots)
+    for (int i = 0; i < dots.size(); i++)
     {
-        dot->updateColour();
+        dots.getUnchecked(i)->update();
+        
+        if (i >= numDotsAdded)
+        {
+            addAndMakeVisible(dots.getUnchecked(i));
+            numDotsAdded += 1;
+        }
     }
     
     repaint();
@@ -53,11 +59,13 @@ void DirectionView::updateData()
 
 void DirectionView::addAnalysed(TrackInfo* track)
 {
-    dots.add(new TrackDotComponent(track));
+    const juce::ScopedLock sl(lock);
+    
+    TrackDotComponent* dot = new TrackDotComponent(track);
+    dots.add(dot);
     calculatePositions();
     
     juce::MessageManager::callAsync(std::function<void()>([this]() {
-        this->addAndMakeVisible(dots.getLast());
         this->resized();
     }));
 }
@@ -79,6 +87,6 @@ void DirectionView::calculatePositions()
         // Flip y axis so high groove is at top
         yProportion = 1 - yProportion;
         
-        dot->updatePosition(xProportion, yProportion);
+        dot->setPosition(xProportion, yProportion);
     }
 }

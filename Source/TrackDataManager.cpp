@@ -197,6 +197,9 @@ void TrackDataManager::parseFile(juce::File file)
             analysisManager->processResult(trackPtr);
             sorter.addAnalysed(trackPtr);
             directionView->addAnalysed(trackPtr);
+            
+            trackDataUpdate.store(true);
+            
             numTracksAnalysed += 1;
             numTracksAnalysedUnplayed += 1;
         }

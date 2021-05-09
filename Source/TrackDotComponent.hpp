@@ -12,7 +12,7 @@
 #include "CamelotKey.hpp"
 
 
-class TrackDotComponent : public juce::Component, public juce::SettableTooltipClient
+class TrackDotComponent : public juce::Component, public juce::SettableTooltipClient, public juce::Timer
 {
 public:
     
@@ -24,12 +24,15 @@ public:
     
     void paint(juce::Graphics& g) override;
     
+    void timerCallback() override;
+    
     void mouseEnter(const juce::MouseEvent &event) override;
+    
     void mouseExit(const juce::MouseEvent &event) override;
     
-    void updateColour();
+    void update();
     
-    void updatePosition(float xProportion, float yProportion);
+    void setPosition(float xProportion, float yProportion);
     
     float getXProportion() { return xProportion; }
     float getYProportion() { return yProportion; }

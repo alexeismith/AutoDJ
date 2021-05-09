@@ -34,9 +34,12 @@ public:
     
 private:
     
+    juce::CriticalSection lock;
+    
     std::unique_ptr<juce::TooltipWindow> toolTip;
     
     juce::OwnedArray<TrackDotComponent> dots;
+    int numDotsAdded = 0;
     
     AnalysisManager* analysisManager;
     

@@ -65,15 +65,16 @@ void TrackProcessor::loadNextTrack()
     ready.store(false);
     shifter.clear();
     
+    track->info->playing = false;
+    track->info->played = true;
+    dataManager->trackDataUpdate.store(true);
+    
     currentMix = dj->getNextMix(currentMix);
     if (track->applyNextMix(&currentMix))
     {
         play = false;
         trackEnd = false;
         newTrack = true;
-        
-        track->info->played = true;
-        dataManager->trackDataUpdate.store(true);
         
         ready.store(true);
     }
@@ -97,15 +98,15 @@ void TrackProcessor::loadFirstTrack(TrackInfo* trackInfo, bool leader, juce::Aud
         resetPlayhead();
         track->applyNextMix(&currentMix);
         play = true;
+        
+        track->info->playing = true;
+        dataManager->trackDataUpdate.store(true);
     }
     else
     {
         track->leader = true;
         track->applyNextMix(&currentMix);
     }
-
-    track->info->played = true;
-    dataManager->trackDataUpdate.store(true);
     
     newTrack = true;
     
@@ -137,6 +138,8 @@ void TrackProcessor::syncWithLeader(int leaderPlayhead)
     {
         resetPlayhead(currentMix.startNext + (leaderPlayhead - currentMix.start));
         play = true;
+        track->info->playing = true;
+        dataManager->trackDataUpdate.store(true);
     }
 }
 

@@ -48,6 +48,7 @@ public:
     int length = 0; // Total length in seconds
     bool analysed = false; // Indicates whether analysis has been performed
     bool played = false; // Indicates whether the track has been played this session
+    bool playing = false; // Indicates whether the track is currently playing
     int bpm = -1; // Tempo in beats per minute
     int beatPhase = -1;
     int downbeat = -1;

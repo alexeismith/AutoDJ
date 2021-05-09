@@ -32,6 +32,19 @@ void TrackDotComponent::paint(juce::Graphics& g)
 }
 
 
+void TrackDotComponent::timerCallback()
+{
+    if (isMouseOver())
+        return;
+    
+    juce::uint32 seconds = juce::Time::getApproximateMillisecondCounter();
+    double sine = (std::sin(double(seconds) / 100) + 1.0) / 2.0;
+    
+    dotSize = DOT_SIZE + sine * (DOT_SIZE_HIGHLIGHT - DOT_SIZE);
+    repaint();
+}
+
+
 void TrackDotComponent::mouseEnter(const juce::MouseEvent &event)
 {
     dotSize = DOT_SIZE_HIGHLIGHT;
@@ -46,14 +59,22 @@ void TrackDotComponent::mouseExit(const juce::MouseEvent &event)
 }
 
 
-void TrackDotComponent::updateColour()
+void TrackDotComponent::update()
 {
-    if (info->played)
-        colour = colour.withAlpha(0.2f);
+    if (info->playing)
+    {
+        startTimerHz(30);
+    }
+    else if (info->played)
+    {
+        stopTimer();
+        dotSize = DOT_SIZE;
+        colour = colour.withAlpha(0.25f);
+    }
 }
 
 
-void TrackDotComponent::updatePosition(float x, float y)
+void TrackDotComponent::setPosition(float x, float y)
 {
     xProportion = x;
     yProportion = y;

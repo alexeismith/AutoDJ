@@ -35,7 +35,7 @@ int CamelotKey::compability(CamelotKey key)
 juce::String CamelotKey::getName()
 {
     if (value == -1)
-        return juce::String();
+        return juce::String("-");
     
     if (major)
         return juce::String(value) + "B";
@@ -144,6 +144,8 @@ void CamelotKey::fromChromaKey(int chromaKey)
             break;
         case 24:
             value = 10;
+            break;
+        case -1:
             break;
         default:
             jassert(false); // chromaKey not recognised

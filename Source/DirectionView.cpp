@@ -61,8 +61,7 @@ void DirectionView::addAnalysed(TrackInfo* track)
 {
     const juce::ScopedLock sl(lock);
     
-    TrackDotComponent* dot = new TrackDotComponent(track);
-    dots.add(dot);
+    dots.add(new TrackDotComponent(track));
     calculatePositions();
     
     juce::MessageManager::callAsync(std::function<void()>([this]() {

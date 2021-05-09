@@ -207,8 +207,8 @@ void ArtificialDJ::generateMixComplex()
 
     // LEADING TRACK START --------------------------------------------------------------
 
-    // The earliest we will start this mix is two thirds through the leading track
-    int mixStartMinimum = 2 * leadingTrack->getLengthSamples() / 3;
+    // The earliest we will start this mix is three fifths through the leading track
+    int mixStartMinimum = 3 * leadingTrack->getLengthSamples() / 5;
 
     // Find how much of the leading track remains available for this mix
     int leadingTrackAvailable = leadingTrack->getLengthSamples() - mixStartMinimum;

@@ -9,7 +9,7 @@
 
 #include "CommonDefs.hpp"
 
-#define NUM_CANDIDATES (1)
+#define NUM_CANDIDATES (5)
 
 
 TrackChooser::TrackChooser(TrackDataManager* dm, RandomGenerator* random) :
@@ -21,8 +21,6 @@ TrackChooser::TrackChooser(TrackDataManager* dm, RandomGenerator* random) :
 
 void TrackChooser::initialise()
 {
-    // TODO: This method is prone to picking an extreme starting BPM of there are outlier tracks
-    
     AnalysisResults analysisResults = dataManager->getAnalysisResults();
     
     // BPM INITIALISATION...
@@ -39,6 +37,7 @@ void TrackChooser::initialise()
     // The initial bpm will be the average house BPM plus this shift
     currentBpm = averageHouseBpm + bpmShift;
     
+    
     // GROOVE INITIALISATION...
     
     // Get the range of groove available
@@ -46,12 +45,19 @@ void TrackChooser::initialise()
     // Choose a random value in this range, weighted towards its centre
     currentGroove = analysisResults.minGroove + grooveRange * randomGenerator->getGaussian(0.2, 0.5, 0.5);
     
+    
+    // KEY INITIALISATION...
+    
+    // Simply initialise to a random key (valid range is 1 to 24)
+    currentKey = randomGenerator->getInt(1, 24);
+    
     DBG("Init BPM: " << currentBpm << " Init Groove: " << currentGroove);
 }
 
 TrackInfo* TrackChooser::chooseTrack()
 {
     juce::Array<TrackInfo*> candidates;
+    TrackInfo* candidate;
     TrackInfo* result;
     
     int numCandidates = juce::jmin(NUM_CANDIDATES, dataManager->getNumTracksReady());
@@ -61,29 +67,47 @@ TrackInfo* TrackChooser::chooseTrack()
     
     updatePosition();
     
+    // Fetch candidate tracks from the track sorter
+    // This returns the track nearest in both BPM and groove
     for (int i = 0; i < numCandidates; i++)
-        candidates.add(sorter->findClosestAndRemove(currentBpm, currentGroove));
-    
-    // Find one with the same key, or related key, or random
-    // Either sort array or iterate through it and remove the result
-    
-    result = candidates.getUnchecked(0);
-    
-    if (result == nullptr)
-        return result;
-    
-    DBG("QUEUED " << result->getFilename() << " bpm: " << result->bpm << " groove: " << result->groove);
-//    DBG("QUEUED bpm: " << result->bpm << " groove: " << result->groove);
-    
-    currentBpm = result->bpm;
-    currentGroove = result->groove;
-    
-    // Add the other candidates back into the tree, so they are present for future choices
-    for (int i = 1; i < candidates.size(); i++)
     {
-        sorter->addAnalysed(candidates.getUnchecked(i));
+        candidate = sorter->findClosestAndRemove(currentBpm, currentGroove);
+        if (candidate == nullptr)
+            break;
+        candidates.add(candidate);
     }
     
+    // If no tracks were returned, there are no more to play
+    if (candidates.isEmpty())
+        return nullptr;
+    
+    // If only one track was returned, return that one
+    if (candidates.size() == 1)
+        return candidates.getFirst();
+    
+    // Sort the candidates by key compatibility with the current key
+    KeySorter keySorter(currentKey);
+    candidates.sort(keySorter);
+    
+    // Make a random choice between the first two tracks in the sorted array
+    int choice = randomGenerator->getInt(0, 1);
+    result = candidates.getUnchecked(choice);
+    
+    // Add the other candidates back into the tree, so they are present for future choices
+    // First, remove the chosen track from the candidates array
+    candidates.remove(choice);
+    // Add others into tree
+    for (auto track : candidates)
+        sorter->addAnalysed(track);
+    
+    DBG("QUEUED " << result->getFilename() << " bpm: " << result->bpm << " groove: " << result->groove << " key: " << CamelotKey(result->key).getName());
+    
+    // Update the current BPM, groove and key to that of the new track
+    currentBpm = result->bpm;
+    currentGroove = result->groove;
+    currentKey = result->key;
+    
+    // Notift the data manager that a track has been queued
     dataManager->trackQueued();
     
     return result;
@@ -109,4 +133,18 @@ void TrackChooser::updatePosition()
     // TODO: check the values are within a valid range
     
 //    DBG("velocityBpm: " << velocityBpm << " velocityGroove: " << velocityGroove);
+}
+
+
+int KeySorter::compareElements(TrackInfo* first, TrackInfo* second)
+{
+    int compatibilityFirst = reference.compability(CamelotKey(first->key));
+    int compatibilitySecond = reference.compability(CamelotKey(second->key));
+    
+    if (compatibilityFirst > compatibilitySecond)
+        return -1;
+    else if (compatibilitySecond > compatibilityFirst)
+        return 1;
+    
+    return 0;
 }

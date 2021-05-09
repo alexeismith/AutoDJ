@@ -7,6 +7,8 @@
 
 #include "DeckComponent.hpp"
 
+#include "CamelotKey.hpp"
+
 
 DeckComponent::DeckComponent(int id, TrackProcessor* processor) :
     deckId(id), trackProcessor(processor)
@@ -100,7 +102,7 @@ void DeckComponent::load(Track* trackPtr)
     track = *trackPtr;
     
     title = track.info->getArtistTitle();
-    info = "Length: " + AutoDJ::getLengthString(track.info->length) +  "    BPM: " + juce::String(track.info->bpm) +  "    Key: " + juce::String(track.info->key) +  "    Groove: " + AutoDJ::getGrooveString(track.info->groove);
+    info = "Length: " + AutoDJ::getLengthString(track.info->length) +  "    BPM: " + juce::String(track.info->bpm) +  "    Key: " + CamelotKey(track.info->key).getName() +  "    Groove: " + AutoDJ::getGrooveString(track.info->groove);
     
     waveform->load(&track);
     

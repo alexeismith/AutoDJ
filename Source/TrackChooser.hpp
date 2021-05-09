@@ -10,6 +10,8 @@
 
 #include <JuceHeader.h>
 
+#include "CamelotKey.hpp"
+
 #include "RandomGenerator.hpp"
 #include "TrackDataManager.hpp"
 
@@ -35,6 +37,8 @@ private:
     TrackDataManager* dataManager = nullptr;
     TrackSorter* sorter = nullptr;
     
+    int currentKey;
+    
     double currentBpm = -1.0;
     double currentGroove = -1.0;
     
@@ -48,6 +52,23 @@ private:
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackChooser)
+};
+
+
+class KeySorter
+{
+public:
+    
+    KeySorter(int chromaKey) : reference(chromaKey) {}
+    
+    ~KeySorter() {}
+    
+    int compareElements(TrackInfo* first, TrackInfo* second);
+    
+private:
+    
+    CamelotKey reference;
+
 };
 
 

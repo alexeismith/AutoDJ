@@ -22,6 +22,8 @@ public:
     
     bool getBool();
     
+    int getInt(int min, int max);
+    
 private:
     
     std::mt19937 algorithm;

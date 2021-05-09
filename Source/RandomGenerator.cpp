@@ -16,7 +16,7 @@ RandomGenerator::RandomGenerator()
     
     // TODO: temp
 //    for (int i = 0; i < 100; i++)
-//        juce::jmin(getGaussian(0.2, 0.5, 1.0), 1.0);
+//        DBG(getInt(1,24));
 }
 
 
@@ -36,4 +36,13 @@ bool RandomGenerator::getBool()
 {
     std::uniform_int_distribution<> distribution(0, 1);
     return bool(distribution(algorithm));
+}
+
+
+int RandomGenerator::getInt(int min, int max)
+{
+    jassert(min < max);
+    
+    std::uniform_int_distribution<> distribution(min, max);
+    return distribution(algorithm);
 }

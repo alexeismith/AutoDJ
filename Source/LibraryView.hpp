@@ -11,24 +11,21 @@
 #include "TrackDataManager.hpp"
 #include "QueueTableComponent.hpp"
 #include "TrackEditor.hpp"
-#include "AnalysisProgressBar.hpp"
 #include "CommonDefs.hpp"
 
-class LibraryView : public juce::Component, public juce::Timer
+class LibraryView : public juce::Component
 {
 public:
     
-    LibraryView(TrackDataManager* dataManager, double* loadingProgress);
+    LibraryView(TrackDataManager* dataManager);
     
     ~LibraryView() {}
     
     void resized() override;
     
-    void timerCallback() override;
+    void updateData() { trackTable->sort(); }
     
     void loadFiles();
-    
-    void analysisComplete() { analysisProgress->setVisible(false); }
     
 private:
     
@@ -37,8 +34,6 @@ private:
     std::unique_ptr<TrackTableComponent> trackTable;
     
     std::unique_ptr<TrackEditor> trackEditor;
-    
-    std::unique_ptr<AnalysisProgressBar> analysisProgress;
     
     TrackDataManager* dataManager;
     

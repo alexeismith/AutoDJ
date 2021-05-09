@@ -25,8 +25,11 @@ MainComponent::MainComponent()
     audioProcessor.reset(new AudioProcessor(dataManager.get(), dj.get(), initBlockSize.load()));
     dj->setAudioProcessor(audioProcessor.get());
     
-    libraryView.reset(new LibraryView(dataManager.get(), &loadingProgress));
+    libraryView.reset(new LibraryView(dataManager.get()));
     addChildComponent(libraryView.get());
+    
+    directionView.reset(new DirectionView(dataManager->getAnalysisManager()));
+    addChildComponent(directionView.get());
     
     mixView.reset(new MixView(audioProcessor->getTrackProcessors()));
     addChildComponent(mixView.get());
@@ -44,6 +47,11 @@ MainComponent::MainComponent()
     libraryBtn->setComponentID(juce::String(ComponentIDs::libraryBtn));
     addChildComponent(libraryBtn.get());
     libraryBtn->addListener(this);
+    
+    directionBtn.reset(new juce::TextButton("Direction"));
+    directionBtn->setComponentID(juce::String(ComponentIDs::directionBtn));
+    addChildComponent(directionBtn.get());
+    directionBtn->addListener(this);
     
     mixBtn.reset(new juce::TextButton("Mix"));
     mixBtn->setComponentID(juce::String(ComponentIDs::mixBtn));
@@ -65,6 +73,9 @@ MainComponent::MainComponent()
     volumeSld->setSkewFactor(0.7);
     volumeSld->setValue(1.f);
     
+    analysisProgress.reset(new AnalysisProgressBar(dataManager->getAnalysisManager()));
+    addChildComponent(analysisProgress.get());
+    analysisProgress->setColour(analysisProgress->backgroundColourId, juce::Colours::darkgrey);
     
 #ifdef SHOW_GRAPH
     graphWindow.reset(new juce::ResizableWindow("Data Graph", true));
@@ -82,7 +93,7 @@ MainComponent::MainComponent()
     // Set resize limits
     sizeLimits.setSizeLimits(800, 475, 1200, 700);
     
-    startTimerHz(20);
+    startTimerHz(30);
 }
 
 MainComponent::~MainComponent()
@@ -145,20 +156,32 @@ void MainComponent::resized()
     libraryView->setSize(getWidth(), getHeight() - TOOLBAR_HEIGHT);
     libraryView->setTopLeftPosition(0, 0);
     
+    directionView->setSize(getWidth(), getHeight() - TOOLBAR_HEIGHT);
+    directionView->setTopLeftPosition(0, 0);
+    
     mixView->setSize(getWidth(), getHeight() - TOOLBAR_HEIGHT);
     mixView->setTopLeftPosition(0, 0);
     
     libraryBtn->setSize(80, 30);
     libraryBtn->setCentrePosition(libraryBtn->getWidth()/2 + 10, getHeight() - TOOLBAR_HEIGHT/2);
     
+    directionBtn->setSize(80, 30);
+    directionBtn->setCentrePosition(directionBtn->getWidth()/2 + 100, getHeight() - TOOLBAR_HEIGHT/2);
+    
     mixBtn->setSize(50, 30);
-    mixBtn->setCentrePosition(mixBtn->getWidth()/2 + 100, getHeight() - TOOLBAR_HEIGHT/2);
+    mixBtn->setCentrePosition(mixBtn->getWidth()/2 + 190, getHeight() - TOOLBAR_HEIGHT/2);
     
     playPauseBtn->setSize(28, 28);
     playPauseBtn->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT/2);
     
     volumeSld->setSize(140, 50);
     volumeSld->setCentrePosition(getWidth() - 80, getHeight() - TOOLBAR_HEIGHT/2);
+    
+    analysisProgress->setSize(300, 30);
+    if (directionView->isVisible())
+        analysisProgress->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT - 30);
+    else
+        analysisProgress->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT - WAVEFORM_VIEW_HEIGHT - 30);
 }
 
 
@@ -178,9 +201,11 @@ void MainComponent::timerCallback()
             
             libraryView->setVisible(true);
             libraryBtn->setVisible(true);
+            directionBtn->setVisible(true);
             mixBtn->setVisible(true);
             volumeSld->setVisible(true);
             playPauseBtn->setVisible(true);
+            analysisProgress->setVisible(true);
         }
     }
     
@@ -188,10 +213,12 @@ void MainComponent::timerCallback()
     {
         bool canStartPlaying;
         
+        analysisProgress->update(loadingProgress);
+        
         if (dataManager->analysisProgress(loadingProgress, canStartPlaying))
         {
             waitingForAnalysis = false;
-            libraryView->analysisComplete();
+            analysisProgress->setVisible(false);
         }
         
         if (canStartPlaying)
@@ -205,6 +232,13 @@ void MainComponent::timerCallback()
             waitingForDJ = false;
             playPauseBtn->setEnabled(true);
         }
+    }
+    
+    if (dataManager->trackDataUpdate.load())
+    {
+        dataManager->trackDataUpdate.store(false);
+        libraryView->updateData();
+        directionView->updateData();
     }
 }
 
@@ -239,11 +273,21 @@ void MainComponent::buttonClicked(juce::Button* button)
             
         case ComponentIDs::libraryBtn:
             libraryView->setVisible(true);
+            directionView->setVisible(false);
             mixView->setVisible(false);
+            analysisProgress->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT - WAVEFORM_VIEW_HEIGHT - 30);
+            break;
+            
+        case ComponentIDs::directionBtn:
+            directionView->setVisible(true);
+            libraryView->setVisible(false);
+            mixView->setVisible(false);
+            analysisProgress->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT - 30);
             break;
             
         case ComponentIDs::mixBtn:
             mixView->setVisible(true);
+            directionView->setVisible(false);
             libraryView->setVisible(false);
             break;
             
@@ -282,7 +326,7 @@ void MainComponent::chooseFolder()
     juce::FileChooser chooser ("Choose Music Folder");
     if (chooser.browseForDirectory())
     {
-        dataManager->initialise(chooser.getResult());
+        dataManager->initialise(chooser.getResult(), directionView.get());
         
         waitingForFiles = true;
         

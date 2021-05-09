@@ -13,6 +13,7 @@
 #include "SqlDatabase.hpp"
 #include "TrackSorter.hpp"
 #include "AnalysisManager.hpp"
+#include "DirectionView.hpp"
 
 #define DATABASE_FILENAME ("AutoDjData.db")
 
@@ -26,7 +27,7 @@ public:
       
     ~TrackDataManager();
     
-    void initialise(juce::File directory);
+    void initialise(juce::File directory, DirectionView* directionView);
     
     TrackInfo* getTracks() { return tracks; }
     
@@ -90,6 +91,8 @@ private:
     friend class FileParserThread;
     
     std::unique_ptr<FileParserThread> parser;
+    
+    DirectionView* directionView;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackDataManager)
 };

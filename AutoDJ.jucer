@@ -32,6 +32,14 @@
               file="Source/QueueTableComponent.hpp"/>
         <FILE id="Hb3BBx" name="TrackEditor.cpp" compile="1" resource="0" file="Source/TrackEditor.cpp"/>
         <FILE id="wxV6tE" name="TrackEditor.hpp" compile="0" resource="0" file="Source/TrackEditor.hpp"/>
+        <FILE id="kPVqIP" name="DirectionView.cpp" compile="1" resource="0"
+              file="Source/DirectionView.cpp"/>
+        <FILE id="EDxRzB" name="DirectionView.hpp" compile="0" resource="0"
+              file="Source/DirectionView.hpp"/>
+        <FILE id="SqRZXp" name="TrackDotComponent.cpp" compile="1" resource="0"
+              file="Source/TrackDotComponent.cpp"/>
+        <FILE id="H0YSoL" name="TrackDotComponent.hpp" compile="0" resource="0"
+              file="Source/TrackDotComponent.hpp"/>
         <FILE id="DIho3U" name="MixView.cpp" compile="1" resource="0" file="Source/MixView.cpp"/>
         <FILE id="pApJtk" name="MixView.hpp" compile="0" resource="0" file="Source/MixView.hpp"/>
         <FILE id="XYauoi" name="DeckComponent.cpp" compile="1" resource="0"

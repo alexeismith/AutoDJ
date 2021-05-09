@@ -24,6 +24,7 @@
 enum ComponentIDs : int
 {
     libraryBtn,
+    directionBtn,
     mixBtn,
     playPauseBtn,
     volumeSld,

@@ -41,8 +41,10 @@ TrackDataManager::~TrackDataManager()
 }
 
 
-void TrackDataManager::initialise(juce::File directory)
+void TrackDataManager::initialise(juce::File directory, DirectionView* direction)
 {
+    directionView = direction;
+    
     dirContents->setDirectory(directory, true, true);
     
     if (!database.initialise(directory))
@@ -61,6 +63,10 @@ void TrackDataManager::storeAnalysis(TrackInfo* track)
 
     // Pass the track to the sorter
     sorter.addAnalysed(track);
+    
+    // Pass the track to the direction view
+    directionView->addAnalysed(track);
+    
     // Increment the counters
     numTracksAnalysed += 1;
     numTracksAnalysedUnplayed += 1;
@@ -190,6 +196,7 @@ void TrackDataManager::parseFile(juce::File file)
         {
             analysisManager->processResult(trackPtr);
             sorter.addAnalysed(trackPtr);
+            directionView->addAnalysed(trackPtr);
             numTracksAnalysed += 1;
             numTracksAnalysedUnplayed += 1;
         }

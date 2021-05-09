@@ -17,7 +17,7 @@ class AnalysisProgressBar : public juce::ProgressBar
 {
 public:
     
-    AnalysisProgressBar(AnalysisManager* analysisManager, double& progress);
+    AnalysisProgressBar(AnalysisManager* analysisManager);
     
     ~AnalysisProgressBar() {}
     
@@ -29,9 +29,13 @@ public:
     
     void mouseDown(const juce::MouseEvent &event) override;
     
+    void update(double progress);
+    
 private:
     
     AnalysisManager* analysisManager = nullptr;
+    
+    double progress = 0.0;
     
     bool paused = false;
     

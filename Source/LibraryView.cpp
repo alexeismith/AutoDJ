@@ -8,11 +8,9 @@
 #include "LibraryView.hpp"
 
 
-LibraryView::LibraryView(TrackDataManager* dm, double* loadingProgress)
+LibraryView::LibraryView(TrackDataManager* dm)
 {
     dataManager = dm;
-    
-    startTimerHz(30);
     
     trackEditor.reset(new TrackEditor(dataManager));
     
@@ -21,10 +19,6 @@ LibraryView::LibraryView(TrackDataManager* dm, double* loadingProgress)
     trackTable->addColumns();
     
     addAndMakeVisible(trackEditor.get());
-    
-    analysisProgress.reset(new AnalysisProgressBar(dataManager->getAnalysisManager(), *loadingProgress));
-    addAndMakeVisible(analysisProgress.get());
-    analysisProgress->setColour(analysisProgress->backgroundColourId, juce::Colours::darkgrey);
 }
 
 void LibraryView::resized()
@@ -34,19 +28,6 @@ void LibraryView::resized()
     
     trackEditor->setSize(getWidth(), WAVEFORM_VIEW_HEIGHT);
     trackEditor->setTopLeftPosition(0, getHeight() - WAVEFORM_VIEW_HEIGHT);
-    
-    analysisProgress->setSize(300, 30);
-    analysisProgress->setCentrePosition(getWidth()/2, trackEditor->getY() - 30);
-}
-
-
-void LibraryView::timerCallback()
-{    
-    if (dataManager->trackDataUpdate.load())
-    {
-        dataManager->trackDataUpdate.store(false);
-        trackTable->sort();
-    }
 }
 
 

@@ -26,8 +26,6 @@ public:
     
     void buttonClicked(juce::Button* button) override;
     
-//    void paint(juce::Graphics& g) override;
-    
     void paintOverChildren(juce::Graphics &g) override;
     
 private:

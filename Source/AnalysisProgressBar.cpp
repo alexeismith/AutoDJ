@@ -8,7 +8,7 @@
 #include "AnalysisProgressBar.hpp"
 
 
-AnalysisProgressBar::AnalysisProgressBar(AnalysisManager* am, double& progress) :
+AnalysisProgressBar::AnalysisProgressBar(AnalysisManager* am) :
     juce::ProgressBar(progress), analysisManager(am)
 {
     setTextToDisplay("Analysing Library...");
@@ -55,4 +55,11 @@ void AnalysisProgressBar::mouseExit(const juce::MouseEvent &event)
         setTextToDisplay("Analysis Paused.");
     else
         setTextToDisplay("Analysing Library...");
+}
+
+
+void AnalysisProgressBar::update(double p)
+{
+    if (!paused)
+        progress = p;
 }

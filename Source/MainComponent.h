@@ -4,9 +4,11 @@
 
 #include "AudioProcessor.hpp"
 #include "LibraryView.hpp"
+#include "DirectionView.hpp"
 #include "MixView.hpp"
 #include "GraphComponent.hpp"
 #include "ArtificialDJ.hpp"
+#include "AnalysisProgressBar.hpp"
 
 //#define SHOW_GRAPH
 
@@ -61,16 +63,21 @@ private:
     
     std::unique_ptr<juce::ProgressBar> loadingFilesProgress;
     
+    std::unique_ptr<AnalysisProgressBar> analysisProgress;
+    
+    std::unique_ptr<LibraryView> libraryView;
+    std::unique_ptr<DirectionView> directionView;
+    std::unique_ptr<MixView> mixView;
+    
     std::unique_ptr<juce::Button> libraryBtn;
+    std::unique_ptr<juce::Button> directionBtn;
     std::unique_ptr<juce::Button> mixBtn;
     
     std::unique_ptr<juce::Button> playPauseBtn;
     
     std::unique_ptr<juce::Slider> volumeSld;
     
-    std::unique_ptr<LibraryView> libraryView;
 
-    std::unique_ptr<MixView> mixView;
     
 #ifdef SHOW_GRAPH
     std::unique_ptr<juce::ResizableWindow> graphWindow;

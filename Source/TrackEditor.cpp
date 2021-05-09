@@ -16,7 +16,7 @@ TrackEditor::TrackEditor(TrackDataManager* dm) :
     waveform.reset(new WaveformView(dm, true, false, true));
     addAndMakeVisible(waveform.get());
     
-    message = "Select a track to view or edit it here.";
+    message = "Select a track to view it here.";
     
     analyserSegments.reset(new AnalyserSegments());
 }

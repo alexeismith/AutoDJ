@@ -102,7 +102,7 @@ void TrackTableComponent::resized()
 {
     table->setSize(getWidth(), getHeight());
     
-    int availableWidth = (getWidth() - fixedColumnWidth);
+    int availableWidth = getWidth() - fixedColumnWidth - table->getVerticalScrollBar().getWidth();
 
     table->getHeader().setColumnWidth(1, availableWidth*0.4);
     table->getHeader().setColumnWidth(2, availableWidth*0.6);

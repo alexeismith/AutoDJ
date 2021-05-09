@@ -7,6 +7,7 @@
 
 #include "TrackTableComponent.hpp"
 #include "CommonDefs.hpp"
+#include "CamelotKey.hpp"
 
 enum TrackTableColumns {
     artist = 1,
@@ -73,18 +74,22 @@ void TrackTableComponent::paintRowBackground(juce::Graphics& g, int rowNumber, i
 
 void TrackTableComponent::paintCell(juce::Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
 {
-    if (rowIsSelected)
+    TrackInfo* track = tracksSorted.getReference(rowNumber);
+    
+    if (columnId == TrackTableColumns::key && track->analysed)
+        g.setColour(CamelotKey(track->key).getColour());
+    else if (rowIsSelected)
         g.setColour(juce::Colours::darkblue);
-    else if (!tracksSorted.getReference(rowNumber)->analysed)
+    else if (!track->analysed)
         g.setColour(juce::Colours::lightslategrey.brighter());
-    else if (tracksSorted.getReference(rowNumber)->played)
+    else if (track->played)
         g.setColour(juce::Colours::lightgreen.darker());
     else
         g.setColour(getLookAndFeel().findColour(juce::ListBox::textColourId));
         
     g.setFont(font);
 
-    juce::String text = getValueForColumn(tracksSorted.getReference(rowNumber), columnId);
+    juce::String text = getValueForColumn(track, columnId);
 
     g.drawText(text, 2, 0, width - 4, height, juce::Justification::centredLeft, true);
 
@@ -181,7 +186,7 @@ juce::String TrackTableComponent::getValueForColumn(TrackInfo* track, int column
             return juce::String(track->bpm);
             
         case TrackTableColumns::key:
-            return juce::String(track->key);//AutoDJ::getKeyName(track->key); TODO: temp
+            return CamelotKey(track->key).getName();
             
         case TrackTableColumns::groove:
             if (track->groove < 0.f) return juce::String("-");

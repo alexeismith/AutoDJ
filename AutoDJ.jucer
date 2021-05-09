@@ -374,6 +374,8 @@
               file="Source/AnalyserBeatsEssentia.hpp"/>
         <FILE id="m2NH4S" name="AnalyserKey.cpp" compile="1" resource="0" file="Source/AnalyserKey.cpp"/>
         <FILE id="GaaLbC" name="AnalyserKey.hpp" compile="0" resource="0" file="Source/AnalyserKey.hpp"/>
+        <FILE id="tj1HXV" name="CamelotKey.cpp" compile="1" resource="0" file="Source/CamelotKey.cpp"/>
+        <FILE id="AIYZu4" name="CamelotKey.hpp" compile="0" resource="0" file="Source/CamelotKey.hpp"/>
         <FILE id="xhtZXG" name="AnalyserGroove.cpp" compile="1" resource="0"
               file="Source/AnalyserGroove.cpp"/>
         <FILE id="YGKV9M" name="AnalyserGroove.hpp" compile="0" resource="0"

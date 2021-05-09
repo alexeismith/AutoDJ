@@ -10,6 +10,8 @@
 
 #include <JuceHeader.h>
 
+#include "TrackInfo.hpp"
+
 #include "ThirdParty/qm-dsp/dsp/segmentation/ClusterMeltSegmenter.h"
 
 
@@ -21,7 +23,11 @@ public:
     
     ~AnalyserSegments() {}
     
-    juce::Array<int> analyse(juce::AudioBuffer<float>* audio);
+    juce::Array<int> analyse(TrackInfo* track, juce::AudioBuffer<float>* audio);
+    
+    int findClosestSegment(TrackInfo* track, juce::Array<int>* segments, int sample, int min, int max);
+    
+    bool isSegment(juce::Array<int>* segments, int sample);
     
 private:
     

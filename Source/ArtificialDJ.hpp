@@ -14,6 +14,7 @@
 #include "MixInfo.hpp"
 #include "Track.hpp"
 #include "TrackChooser.hpp"
+#include "AnalyserSegments.hpp"
 
 // Need to keep reference to currently executing MixInfo
 
@@ -46,7 +47,11 @@ private:
     
     void initialise();
     
-    void generateMix();
+    void generateMix() { generateMixComplex(); }
+    
+    void generateMixSimple();
+    
+    void generateMixComplex();
     
     std::unique_ptr<TrackChooser> chooser;
     
@@ -61,13 +66,15 @@ private:
     
     juce::Array<MixInfo> mixQueue;
     
-    TrackInfo* prevTrack = nullptr;
-    
     TrackDataManager* dataManager = nullptr;
     AudioProcessor* audioProcessor = nullptr;
     
     RandomGenerator randomGenerator;
     
+    AnalyserSegments segmenter;
+    
+    TrackInfo* leadingTrack = nullptr;
+    juce::Array<int> leadingTrackSegments;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ArtificialDJ)
 };

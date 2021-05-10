@@ -78,7 +78,8 @@ private:
     
     std::unique_ptr<juce::Slider> volumeSld;
     
-
+    juce::Rectangle<float> logoArea;
+    juce::Image logo;
     
 #ifdef SHOW_GRAPH
     std::unique_ptr<juce::ResizableWindow> graphWindow;

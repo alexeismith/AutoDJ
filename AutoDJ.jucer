@@ -6,6 +6,12 @@
               defines="kiss_fft_scalar=double&#10;JUCE_USE_MP3AUDIOFORMAT&#10;ANDROID&#10;SOUNDTOUCH_ALLOW_X86_OPTIMIZATIONS"
               cppLanguageStandard="17">
   <MAINGROUP id="r4tD07" name="AutoDJ">
+    <GROUP id="{C2485738-6C72-35F3-2B17-CC172F0C6CC0}" name="Images">
+      <FILE id="Q1U3GX" name="logo.png" compile="0" resource="1" file="Images/logo.png"/>
+      <FILE id="BfNEWZ" name="pause.png" compile="0" resource="1" file="Images/pause.png"/>
+      <FILE id="T7tqjW" name="play.png" compile="0" resource="1" file="Images/play.png"/>
+      <FILE id="NCppzX" name="skip.png" compile="0" resource="1" file="Images/skip.png"/>
+    </GROUP>
     <GROUP id="{A84FEFF8-C709-ECFA-E10F-9FF3F5BBB565}" name="Source">
       <FILE id="gOh4WX" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="HUgRlp" name="CommonDefs.cpp" compile="1" resource="0" file="Source/CommonDefs.cpp"/>

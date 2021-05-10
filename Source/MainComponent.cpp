@@ -19,6 +19,8 @@ MainComponent::MainComponent()
         setAudioChannels (2, 2);
     }
     
+    logo = juce::ImageFileFormat::loadFrom(BinaryData::logo_png, BinaryData::logo_pngSize);
+    
     dataManager.reset(new TrackDataManager());
     dj.reset(new ArtificialDJ(dataManager.get()));
     
@@ -146,18 +148,21 @@ void MainComponent::paint (juce::Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 
-    // You can add your drawing code here!
+    g.drawImage(logo, logoArea, juce::RectanglePlacement::centred);
 }
 
 void MainComponent::resized()
 {
     sizeLimits.checkComponentBounds(this);
     
-    chooseFolderBtn->setSize(120, 40);
-    chooseFolderBtn->setCentrePosition(getWidth()/2, getHeight()/2);
+    logoArea.setSize(220, 121);
+    logoArea.setCentre(getWidth()/2, getHeight()/2 - 35);
+    
+    chooseFolderBtn->setSize(120, 35);
+    chooseFolderBtn->setCentrePosition(getWidth()/2, getHeight()/2 + 50);
     
     loadingFilesProgress->setSize(150, 30);
-    loadingFilesProgress->setCentrePosition(getWidth()/2, getHeight()/2);
+    loadingFilesProgress->setCentrePosition(getWidth()/2, getHeight()/2 + 50);
     
     libraryView->setSize(getWidth(), getHeight() - TOOLBAR_HEIGHT);
     libraryView->setTopLeftPosition(0, 0);

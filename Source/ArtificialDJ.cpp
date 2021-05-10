@@ -300,8 +300,9 @@ void ArtificialDJ::generateMixComplex()
     // If no segments were found, choose a random mix length, weighted towards the maximum
     if (lengthCandidate == -1)
     {
+        DBG("RANDOM LENGTH");
         // Get a Gaussian random sample between 0-1, weighted towards 1
-        double multiplier = juce::jmin(randomGenerator.getGaussian(0.2, 0.5, 0.7), 1.0);
+        double multiplier = juce::jlimit(0.0, 1.0, randomGenerator.getGaussian(0.2, 0.5, 0.6));
         // Choose the length using the random multiplier
         lengthCandidate = round(float(largestMultiple4) * multiplier);
         // Ensure the length is at least 2

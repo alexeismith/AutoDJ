@@ -46,6 +46,9 @@ private:
     juce::Image logo;
     juce::Rectangle<float> logoArea;
     
+    juce::Image axes;
+    juce::Rectangle<float> axesArea;
+    
     AnalysisManager* analysisManager;
     
     std::atomic<bool> needsUpdate = false;

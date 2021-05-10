@@ -9,6 +9,7 @@
     <GROUP id="{C2485738-6C72-35F3-2B17-CC172F0C6CC0}" name="Images">
       <FILE id="Q1U3GX" name="logo.png" compile="0" resource="1" file="Images/logo.png"/>
       <FILE id="EssJrS" name="logoLarge.png" compile="0" resource="1" file="Images/logoLarge.png"/>
+      <FILE id="VaZkXj" name="axes.png" compile="0" resource="1" file="Images/axes.png"/>
       <FILE id="BfNEWZ" name="pause.png" compile="0" resource="1" file="Images/pause.png"/>
       <FILE id="T7tqjW" name="play.png" compile="0" resource="1" file="Images/play.png"/>
       <FILE id="NCppzX" name="skip.png" compile="0" resource="1" file="Images/skip.png"/>

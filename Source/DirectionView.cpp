@@ -19,6 +19,7 @@ DirectionView::DirectionView(AnalysisManager* am) :
     colourBackground = getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId);
     
     logo = juce::ImageFileFormat::loadFrom(BinaryData::logoLarge_png, BinaryData::logoLarge_pngSize);
+    axes = juce::ImageFileFormat::loadFrom(BinaryData::axes_png, BinaryData::axes_pngSize);
 }
 
 
@@ -28,6 +29,7 @@ void DirectionView::paint(juce::Graphics& g)
     g.fillAll();
     
     g.drawImage(logo, logoArea, juce::RectanglePlacement::centred);
+    g.drawImage(axes, axesArea, juce::RectanglePlacement::xLeft | juce::RectanglePlacement::yBottom);
 }
 
 
@@ -46,6 +48,10 @@ void DirectionView::resized()
     
     logoArea.setSize(getWidth()/2, getHeight()/2);
     logoArea.setCentre(getWidth()/2, getHeight()/2);
+    
+    axesArea.setSize(getHeight()/3, getHeight()/3);
+    axesArea.setX(40);
+    axesArea.setY(getHeight() - 30 - axesArea.getHeight());
 }
 
 

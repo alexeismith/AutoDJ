@@ -32,6 +32,22 @@ int CamelotKey::compability(CamelotKey key)
 }
 
 
+int CamelotKey::sort(CamelotKey first, CamelotKey second)
+{
+    if (first.value < second.value)
+        return -1;
+    else if (first.value > second.value)
+        return 1;
+    
+    if (!first.major && second.major)
+        return -1;
+    else if (first.major && !second.major)
+        return 1;
+    
+    return 0;
+}
+
+
 juce::String CamelotKey::getName()
 {
     if (value == -1)

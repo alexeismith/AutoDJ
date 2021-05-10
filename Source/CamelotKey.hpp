@@ -20,6 +20,8 @@ public:
     
     int compability(CamelotKey key);
     
+    static int sort(CamelotKey first, CamelotKey second);
+    
     juce::String getName();
     
     juce::Colour getColour();

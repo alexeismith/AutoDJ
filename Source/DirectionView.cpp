@@ -7,7 +7,7 @@
 
 #include "DirectionView.hpp"
 
-#define SIDE_PADDING (50)
+#define SIDE_PADDING (60)
 
 
 DirectionView::DirectionView(AnalysisManager* am) :
@@ -50,8 +50,8 @@ void DirectionView::resized()
     logoArea.setCentre(getWidth()/2, getHeight()/2);
     
     axesArea.setSize(getHeight()/3, getHeight()/3);
-    axesArea.setX(40);
-    axesArea.setY(getHeight() - 30 - axesArea.getHeight());
+    axesArea.setX(35);
+    axesArea.setY(getHeight() - 25 - axesArea.getHeight());
 }
 
 

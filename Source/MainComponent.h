@@ -78,8 +78,8 @@ private:
     
     std::unique_ptr<juce::Slider> volumeSld;
     
-    juce::Rectangle<float> logoArea;
     juce::Image logo;
+    juce::Rectangle<float> logoArea;
     
     juce::Image playImg;
     juce::Image pauseImg;

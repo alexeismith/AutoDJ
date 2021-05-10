@@ -43,6 +43,9 @@ private:
     
     juce::Colour colourBackground;
     
+    juce::Image logo;
+    juce::Rectangle<float> logoArea;
+    
     AnalysisManager* analysisManager;
     
     std::atomic<bool> needsUpdate = false;

@@ -51,6 +51,8 @@ void TrackDataManager::initialise(juce::File directory, DirectionView* direction
         jassert(false); // Database failed to initialise
     
     parser->startThread();
+    
+    initialised.store(true);
 }
 
 
@@ -78,6 +80,9 @@ void TrackDataManager::storeAnalysis(TrackInfo* track)
 bool TrackDataManager::isLoaded(double& progress)
 {
     progress = parser->getProgress();
+    
+    if (!initialised.load()) return false;
+    
     return (!parser->isThreadRunning());
 }
 

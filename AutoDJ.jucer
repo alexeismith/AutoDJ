@@ -12,7 +12,9 @@
       <FILE id="VaZkXj" name="axes.png" compile="0" resource="1" file="Images/axes.png"/>
       <FILE id="BfNEWZ" name="pause.png" compile="0" resource="1" file="Images/pause.png"/>
       <FILE id="T7tqjW" name="play.png" compile="0" resource="1" file="Images/play.png"/>
+      <FILE id="xMkVFr" name="settings.png" compile="0" resource="1" file="Images/settings.png"/>
       <FILE id="NCppzX" name="skip.png" compile="0" resource="1" file="Images/skip.png"/>
+      <FILE id="bU3J6C" name="volume.png" compile="0" resource="1" file="Images/volume.png"/>
     </GROUP>
     <GROUP id="{A84FEFF8-C709-ECFA-E10F-9FF3F5BBB565}" name="Source">
       <FILE id="gOh4WX" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>

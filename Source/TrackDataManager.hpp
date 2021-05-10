@@ -92,6 +92,8 @@ private:
     
     std::unique_ptr<FileParserThread> parser;
     
+    std::atomic<bool> initialised = false;
+    
     DirectionView* directionView;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackDataManager)
@@ -114,7 +116,7 @@ public:
 private:
     
     TrackDataManager* dataManager;
-    std::atomic<double> progress;
+    std::atomic<double> progress = 0.0;
     
 };
 

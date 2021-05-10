@@ -21,13 +21,14 @@
 #define TOOLBAR_HEIGHT (48)
 
 
-enum ComponentIDs : int
+enum ComponentID : int
 {
     libraryBtn,
     directionBtn,
     mixBtn,
     playPauseBtn,
     skipBtn,
+    settingsBtn,
     volumeSld,
     chooseFolderBtn
 };

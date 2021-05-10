@@ -2,8 +2,13 @@
 
 #include "CommonDefs.hpp"
 
-MainComponent::MainComponent()
+MainComponent::MainComponent() :
+    juce::AudioAppComponent(customDeviceManager)
 {
+    customDeviceManager.initialise(0, 2, nullptr, true);
+    audioSettings.reset(new juce::AudioDeviceSelectorComponent(customDeviceManager, 0, 0, 2, 2, false, false, false, true));
+    addChildComponent(audioSettings.get());
+    
     setAppearance();
     
     // Some platforms require permissions to open input channels so request that here
@@ -20,6 +25,15 @@ MainComponent::MainComponent()
     }
     
     logo = juce::ImageFileFormat::loadFrom(BinaryData::logo_png, BinaryData::logo_pngSize);
+    
+    playImg = juce::ImageFileFormat::loadFrom(BinaryData::play_png, BinaryData::play_pngSize);
+    pauseImg = juce::ImageFileFormat::loadFrom(BinaryData::pause_png, BinaryData::pause_pngSize);
+    
+    juce::Image skipImg = juce::ImageFileFormat::loadFrom(BinaryData::skip_png, BinaryData::skip_pngSize);
+    juce::Image settingsImg = juce::ImageFileFormat::loadFrom(BinaryData::settings_png, BinaryData::settings_pngSize);
+    
+    volumeImg = juce::ImageFileFormat::loadFrom(BinaryData::volume_png, BinaryData::volume_pngSize);
+    volumeImg.multiplyAllAlphas(0.8f);
     
     dataManager.reset(new TrackDataManager());
     dj.reset(new ArtificialDJ(dataManager.get()));
@@ -38,7 +52,7 @@ MainComponent::MainComponent()
     
     
     chooseFolderBtn.reset(new juce::TextButton("Choose Folder"));
-    chooseFolderBtn->setComponentID(juce::String(ComponentIDs::chooseFolderBtn));
+    chooseFolderBtn->setComponentID(juce::String(ComponentID::chooseFolderBtn));
     addAndMakeVisible(chooseFolderBtn.get());
     chooseFolderBtn->addListener(this);
     
@@ -46,51 +60,51 @@ MainComponent::MainComponent()
     addChildComponent(loadingFilesProgress.get());
     
     libraryBtn.reset(new juce::TextButton("Library"));
-    libraryBtn->setComponentID(juce::String(ComponentIDs::libraryBtn));
+    libraryBtn->setComponentID(juce::String(ComponentID::libraryBtn));
     addChildComponent(libraryBtn.get());
     libraryBtn->addListener(this);
     
     directionBtn.reset(new juce::TextButton("Direction"));
-    directionBtn->setComponentID(juce::String(ComponentIDs::directionBtn));
+    directionBtn->setComponentID(juce::String(ComponentID::directionBtn));
     addChildComponent(directionBtn.get());
     directionBtn->addListener(this);
     
     mixBtn.reset(new juce::TextButton("Mix"));
-    mixBtn->setComponentID(juce::String(ComponentIDs::mixBtn));
+    mixBtn->setComponentID(juce::String(ComponentID::mixBtn));
     addChildComponent(mixBtn.get());
     mixBtn->addListener(this);
-    
-    playImg = juce::ImageFileFormat::loadFrom(BinaryData::play_png, BinaryData::play_pngSize);
-    pauseImg = juce::ImageFileFormat::loadFrom(BinaryData::pause_png, BinaryData::pause_pngSize);
     
     playPauseBtn.reset(new juce::ImageButton());
     addChildComponent(playPauseBtn.get());
     playPauseBtn->setImages(false, true, true, playImg, 0.8f, {}, playImg, 1.f, {}, playImg, 1.f, juce::Colours::lightblue);
-    playPauseBtn->setComponentID(juce::String(ComponentIDs::playPauseBtn));
+    playPauseBtn->setComponentID(juce::String(ComponentID::playPauseBtn));
     playPauseBtn->addListener(this);
     playPauseBtn->setEnabled(false);
-    
-    juce::Image skipImg = juce::ImageFileFormat::loadFrom(BinaryData::skip_png, BinaryData::skip_pngSize);
     
     skipBtn.reset(new juce::ImageButton());
     addChildComponent(skipBtn.get());
     skipBtn->setImages(false, true, true, skipImg, 0.8f, {}, skipImg, 1.f, {}, skipImg, 1.f, juce::Colours::lightblue);
-    skipBtn->setComponentID(juce::String(ComponentIDs::skipBtn));
+    skipBtn->setComponentID(juce::String(ComponentID::skipBtn));
     skipBtn->addListener(this);
     skipBtn->setEnabled(false);
     
     volumeSld.reset(new juce::Slider());
     addChildComponent(volumeSld.get());
-    volumeSld->setComponentID(juce::String(ComponentIDs::volumeSld));
+    volumeSld->setComponentID(juce::String(ComponentID::volumeSld));
     volumeSld->addListener(this);
     volumeSld->setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
     volumeSld->setRange(0.f, 1.f);
     volumeSld->setSkewFactor(0.7);
     volumeSld->setValue(1.f);
     
+    settingsBtn.reset(new juce::ImageButton());
+    addChildComponent(settingsBtn.get());
+    settingsBtn->setImages(false, true, true, settingsImg, 0.8f, {}, settingsImg, 1.f, {}, settingsImg, 1.f, juce::Colours::lightblue);
+    settingsBtn->setComponentID(juce::String(ComponentID::settingsBtn));
+    settingsBtn->addListener(this);
+    
     analysisProgress.reset(new AnalysisProgressBar(dataManager->getAnalysisManager()));
     addChildComponent(analysisProgress.get());
-    analysisProgress->setColour(analysisProgress->backgroundColourId, juce::Colours::darkgrey);
     
 #ifdef SHOW_GRAPH
     graphWindow.reset(new juce::ResizableWindow("Data Graph", true));
@@ -106,13 +120,17 @@ MainComponent::MainComponent()
     setSize (800, 550);
     
     // Set resize limits
-    sizeLimits.setSizeLimits(800, 475, 1200, 700);
+    sizeLimits.setSizeLimits(800, 475, 3000, 2000);
     
     startTimerHz(30);
 }
 
 MainComponent::~MainComponent()
 {
+    libraryView.reset();
+    directionView.reset();
+    mixView.reset();
+    
     // This shuts down the audio device and clears the audio source.
     shutdownAudio();
 }
@@ -152,15 +170,23 @@ void MainComponent::releaseResources()
 //==============================================================================
 void MainComponent::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
-
-    g.drawImage(logo, logoArea, juce::RectanglePlacement::centred);
+    if (waitingForFiles)
+        g.setGradientFill(juce::ColourGradient(colourBackground, getWidth()/2, getHeight()/4, colourBackground.withBrightness(0.15f), getWidth(), getHeight(), true));
+    else
+        g.setGradientFill(juce::ColourGradient(colourBackground.withBrightness(0.3f), getWidth()/2, getHeight()/4, colourBackground, getWidth()/2, getHeight(), true));
+    g.fillAll();
+    
+    if (waitingForFiles)
+        g.drawImage(logo, logoArea, juce::RectanglePlacement::centred);
+    else
+        g.drawImage(volumeImg, volumeArea, juce::RectanglePlacement::centred);
 }
 
 void MainComponent::resized()
 {
     sizeLimits.checkComponentBounds(this);
+    
+    audioSettings->centreWithSize(getWidth() - 40, getHeight() - TOOLBAR_HEIGHT - 40);
     
     logoArea.setSize(220, 121);
     logoArea.setCentre(getWidth()/2, getHeight()/2 - 35);
@@ -196,7 +222,13 @@ void MainComponent::resized()
     skipBtn->setCentrePosition(getWidth()/2 + 40, getHeight() - TOOLBAR_HEIGHT/2);
     
     volumeSld->setSize(140, 50);
-    volumeSld->setCentrePosition(getWidth() - 80, getHeight() - TOOLBAR_HEIGHT/2);
+    volumeSld->setCentrePosition(getWidth() - 125, getHeight() - TOOLBAR_HEIGHT/2);
+    
+    volumeArea.setSize(22, 22);
+    volumeArea.setCentre(volumeSld->getX() - 15, getHeight() - TOOLBAR_HEIGHT/2);
+    
+    settingsBtn->setSize(25, 25);
+    settingsBtn->setCentrePosition(getWidth() - 25, getHeight() - TOOLBAR_HEIGHT/2);
     
     analysisProgress->setSize(300, 30);
     if (directionView->isVisible())
@@ -220,6 +252,7 @@ void MainComponent::timerCallback()
             
             libraryView->loadFiles();
             
+            audioSettings->setVisible(true);
             libraryView->setVisible(true);
             libraryBtn->setVisible(true);
             directionBtn->setVisible(true);
@@ -227,7 +260,10 @@ void MainComponent::timerCallback()
             volumeSld->setVisible(true);
             playPauseBtn->setVisible(true);
             skipBtn->setVisible(true);
+            settingsBtn->setVisible(true);
             analysisProgress->setVisible(true);
+            
+            repaint();
         }
     }
     
@@ -282,31 +318,23 @@ void MainComponent::buttonClicked(juce::Button* button)
     
     switch (id)
     {
-        case ComponentIDs::chooseFolderBtn:
+        case ComponentID::chooseFolderBtn:
             chooseFolder();
             break;
             
-        case ComponentIDs::libraryBtn:
-            libraryView->setVisible(true);
-            directionView->setVisible(false);
-            mixView->setVisible(false);
-            analysisProgress->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT - WAVEFORM_VIEW_HEIGHT - 30);
+        case ComponentID::libraryBtn:
+            changeView(ViewID::library);
             break;
             
-        case ComponentIDs::directionBtn:
-            directionView->setVisible(true);
-            libraryView->setVisible(false);
-            mixView->setVisible(false);
-            analysisProgress->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT - 30);
+        case ComponentID::directionBtn:
+            changeView(ViewID::direction);
             break;
             
-        case ComponentIDs::mixBtn:
-            mixView->setVisible(true);
-            directionView->setVisible(false);
-            libraryView->setVisible(false);
+        case ComponentID::mixBtn:
+            changeView(ViewID::mix);
             break;
             
-        case ComponentIDs::playPauseBtn:
+        case ComponentID::playPauseBtn:
             if (waitingForDJ)
                 break;
             
@@ -323,9 +351,13 @@ void MainComponent::buttonClicked(juce::Button* button)
             }
             break;
             
-        case ComponentIDs::skipBtn:
+        case ComponentID::skipBtn:
             if (dj->canSkip())
                 audioProcessor->skip();
+            break;
+
+        case ComponentID::settingsBtn:
+            changeView(ViewID::settings);
             break;
             
         default:
@@ -340,7 +372,7 @@ void MainComponent::sliderValueChanged(juce::Slider* slider)
     
     switch (id)
     {
-        case ComponentIDs::volumeSld:
+        case ComponentID::volumeSld:
             audioProcessor->setVolume(slider->getValueObject().getValue());
             break;
             
@@ -377,8 +409,52 @@ void MainComponent::setAppearance()
     
     customAppearance.setColour(juce::TextButton::buttonColourId, juce::Colour(0xff191926).brighter());
     
-//    customAppearance.setColourScheme(juce::LookAndFeel_V4::getMidnightColourScheme());
-    
     juce::LookAndFeel::setDefaultLookAndFeel(&customAppearance);
+    
+    colourBackground = getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId);
+}
+
+
+void MainComponent::changeView(ViewID view)
+{
+    libraryView->setVisible(false);
+    mixView->setVisible(false);
+    directionView->setVisible(false);
+    analysisProgress->setVisible(false);
+    
+    switch (view)
+    {
+        case ViewID::library:
+            libraryView->setVisible(true);
+            if (waitingForAnalysis)
+            {
+                analysisProgress->setVisible(true);
+                analysisProgress->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT - WAVEFORM_VIEW_HEIGHT - 30);
+            }
+            break;
+            
+        case ViewID::direction:
+            directionView->setVisible(true);
+            if (waitingForAnalysis)
+            {
+                analysisProgress->setVisible(true);
+                analysisProgress->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT - 30);
+            }
+            break;
+            
+        case ViewID::mix:
+            mixView->setVisible(true);
+            break;
+            
+        case ViewID::settings:
+            if (currentView == ViewID::settings)
+            {
+                changeView(prevView);
+                return;
+            }
+    }
+    
+    prevView = currentView;
+    currentView = view;
 }
 

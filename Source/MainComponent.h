@@ -12,6 +12,14 @@
 
 //#define SHOW_GRAPH
 
+enum ViewID : int
+{
+    library,
+    direction,
+    mix,
+    settings
+};
+
 
 class MainComponent : public juce::AudioAppComponent, public juce::Timer, public juce::Button::Listener, public juce::Slider::Listener
 {
@@ -43,40 +51,37 @@ private:
     
     void chooseFolder();
     
-    std::atomic<int> initBlockSize;
+    void changeView(ViewID view);
     
-    bool waitingForFiles = false;
-    bool waitingForAnalysis = false;
-    bool waitingForDJ = false;
+    juce::AudioDeviceManager customDeviceManager;
     
-    double loadingProgress = 0.0;
+    std::unique_ptr<juce::AudioDeviceSelectorComponent> audioSettings;
 
     juce::LookAndFeel_V4 customAppearance;
     
     juce::ComponentBoundsConstrainer sizeLimits;
     
-    std::unique_ptr<AudioProcessor> audioProcessor;
-    std::unique_ptr<TrackDataManager> dataManager;
-    std::unique_ptr<ArtificialDJ> dj;
+    std::unique_ptr<LibraryView> libraryView;
+    std::unique_ptr<DirectionView> directionView;
+    std::unique_ptr<MixView> mixView;
     
     std::unique_ptr<juce::Button> chooseFolderBtn;
     
     std::unique_ptr<juce::ProgressBar> loadingFilesProgress;
     
     std::unique_ptr<AnalysisProgressBar> analysisProgress;
-    
-    std::unique_ptr<LibraryView> libraryView;
-    std::unique_ptr<DirectionView> directionView;
-    std::unique_ptr<MixView> mixView;
-    
+
     std::unique_ptr<juce::Button> libraryBtn;
     std::unique_ptr<juce::Button> directionBtn;
     std::unique_ptr<juce::Button> mixBtn;
     
     std::unique_ptr<juce::ImageButton> playPauseBtn;
     std::unique_ptr<juce::ImageButton> skipBtn;
+    std::unique_ptr<juce::ImageButton> settingsBtn;
     
     std::unique_ptr<juce::Slider> volumeSld;
+    
+    juce::Colour colourBackground;
     
     juce::Image logo;
     juce::Rectangle<float> logoArea;
@@ -84,7 +89,24 @@ private:
     juce::Image playImg;
     juce::Image pauseImg;
     
+    juce::Image volumeImg;
+    juce::Rectangle<float> volumeArea;
+    
+    ViewID currentView = ViewID::library, prevView = ViewID::library;
+    
+    std::unique_ptr<AudioProcessor> audioProcessor;
+    std::unique_ptr<TrackDataManager> dataManager;
+    std::unique_ptr<ArtificialDJ> dj;
+    
     bool playing = false;
+    
+    std::atomic<int> initBlockSize;
+    
+    bool waitingForFiles = true;
+    bool waitingForAnalysis = false;
+    bool waitingForDJ = false;
+    
+    double loadingProgress = 0.0;
     
 #ifdef SHOW_GRAPH
     std::unique_ptr<juce::ResizableWindow> graphWindow;

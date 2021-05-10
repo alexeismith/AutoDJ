@@ -11,6 +11,8 @@
 AnalysisProgressBar::AnalysisProgressBar(AnalysisManager* am) :
     juce::ProgressBar(progress), analysisManager(am)
 {
+    setColour(juce::ProgressBar::ColourIds::backgroundColourId, getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId).withBrightness(0.15f));
+    
     setTextToDisplay("Analysing Library...");
     
     playImg = juce::ImageFileFormat::loadFrom(BinaryData::play_png, BinaryData::play_pngSize);

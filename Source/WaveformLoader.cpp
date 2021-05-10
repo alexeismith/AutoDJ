@@ -23,9 +23,15 @@ WaveformLoader::WaveformLoader(TrackDataManager* dm, WaveformComponent* wave, Wa
 
 void WaveformLoader::load(Track* t)
 {
-    newRequest.store(true);
+    const juce::ScopedLock sl(lock);
     
-    newTrack = t;
+    if (newTrack.info != nullptr)
+        if (t->info->hash == newTrack.info->hash)
+            return;
+    
+    newTrack = *t;
+    
+    newRequest = true;
     
     startThread();
 }
@@ -33,11 +39,17 @@ void WaveformLoader::load(Track* t)
 
 void WaveformLoader::run()
 {
-    while (newRequest.load())
+    while (newRequest)
     {
-        newRequest.store(false);
+        newRequest = false;
         reset();
         process();
+        
+        if (loadedAudio)
+        {
+            dataManager->releaseAudio(track.audio);
+            loadedAudio = false;
+        }
     }
     
     juce::MessageManager::callAsync(std::function<void()>([this]() {
@@ -58,26 +70,27 @@ void WaveformLoader::process()
     
     track = newTrack;
     
-    if (newRequest.load()) return;
+    if (newRequest) return;
     
-    if (track->audio == nullptr)
+    if (track.audio == nullptr)
     {
         jassert(dataManager != nullptr);
-        track->audio = dataManager->loadAudio(track->info->getFilename());
+        track.audio = dataManager->loadAudio(track.info->getFilename());
+        loadedAudio = true;
     }
     
-    if (newRequest.load()) return;
+    if (newRequest) return;
     
-    numSamples = track->audio->getNumSamples();
+    numSamples = track.audio->getNumSamples();
     numFrames = numSamples / WAVEFORM_FRAME_SIZE;
     
     processBuffers.setSize(4, numSamples);
     
     // Copy frame data into filter buffers
-    memcpy(processBuffers.getWritePointer(0), track->audio->getReadPointer(0), numSamples * sizeof(float));
-    memcpy(processBuffers.getWritePointer(1), track->audio->getReadPointer(0), numSamples * sizeof(float));
-    memcpy(processBuffers.getWritePointer(2), track->audio->getReadPointer(0), numSamples * sizeof(float));
-    memcpy(processBuffers.getWritePointer(3), track->audio->getReadPointer(0), numSamples * sizeof(float));
+    memcpy(processBuffers.getWritePointer(0), track.audio->getReadPointer(0), numSamples * sizeof(float));
+    memcpy(processBuffers.getWritePointer(1), track.audio->getReadPointer(0), numSamples * sizeof(float));
+    memcpy(processBuffers.getWritePointer(2), track.audio->getReadPointer(0), numSamples * sizeof(float));
+    memcpy(processBuffers.getWritePointer(3), track.audio->getReadPointer(0), numSamples * sizeof(float));
     
     // Apply filters to buffers 1-3
     filterLow.processSamples(processBuffers.getWritePointer(1), numSamples);
@@ -93,10 +106,10 @@ void WaveformLoader::process()
     for (int i = 0; i < numFrames; i++)
         pushFrame(i);
     
-    if (newRequest.load()) return;
+    if (newRequest) return;
     
-    waveform->load(track, &colours, &levels);
-    scrollBar->load(track, &colours, &levels);
+    waveform->load(&track, &colours, &levels);
+    scrollBar->load(&track, &colours, &levels);
 }
 
 

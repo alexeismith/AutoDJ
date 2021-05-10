@@ -39,10 +39,12 @@ private:
     WaveformComponent* waveform = nullptr;
     WaveformScrollBar* scrollBar = nullptr;
     
-    Track* track;
-    Track* newTrack;
+    Track track;
+    Track newTrack;
     
-    std::atomic<bool> newRequest = false;
+    bool newRequest = false;
+    
+    bool loadedAudio = false;
     
     bool hideWhenEmpty;
     

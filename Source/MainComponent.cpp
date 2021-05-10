@@ -166,10 +166,10 @@ void MainComponent::resized()
     logoArea.setCentre(getWidth()/2, getHeight()/2 - 35);
     
     chooseFolderBtn->setSize(120, 35);
-    chooseFolderBtn->setCentrePosition(getWidth()/2, getHeight()/2 + 50);
+    chooseFolderBtn->setCentrePosition(getWidth()/2, getHeight()/2 + 60);
     
     loadingFilesProgress->setSize(150, 30);
-    loadingFilesProgress->setCentrePosition(getWidth()/2, getHeight()/2 + 50);
+    loadingFilesProgress->setCentrePosition(getWidth()/2, getHeight()/2 + 60);
     
     libraryView->setSize(getWidth(), getHeight() - TOOLBAR_HEIGHT);
     libraryView->setTopLeftPosition(0, 0);

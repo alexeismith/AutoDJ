@@ -36,7 +36,7 @@ public:
     
     MixInfo* getCurrentMix() { return currentMix; }
     
-    TrackInfo* info;
+    TrackInfo* info = nullptr;
     
     bool leader = false;
     

@@ -39,7 +39,10 @@ private:
     
     bool paused = false;
     
-    std::unique_ptr<juce::Button> playPauseBtn; // TODO: just make this an image
+    std::unique_ptr<juce::ImageButton> playPauseBtn;
+    
+    juce::Image playImg;
+    juce::Image pauseImg;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalysisProgressBar)
 };

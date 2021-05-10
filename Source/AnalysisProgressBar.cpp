@@ -13,15 +13,19 @@ AnalysisProgressBar::AnalysisProgressBar(AnalysisManager* am) :
 {
     setTextToDisplay("Analysing Library...");
     
-    playPauseBtn.reset(new juce::TextButton("||"));
+    playImg = juce::ImageFileFormat::loadFrom(BinaryData::play_png, BinaryData::play_pngSize);
+    pauseImg = juce::ImageFileFormat::loadFrom(BinaryData::pause_png, BinaryData::pause_pngSize);
+    
+    playPauseBtn.reset(new juce::ImageButton());
     addChildComponent(playPauseBtn.get());
+    playPauseBtn->setImages(false, true, true, pauseImg, 0.65f, {}, pauseImg, 1.f, {}, pauseImg, 1.f, {});
     playPauseBtn->setInterceptsMouseClicks(false, false);
 }
 
 
 void AnalysisProgressBar::resized()
 {
-    playPauseBtn->setSize(25, 25);
+    playPauseBtn->setSize(18, 18);
     playPauseBtn->setCentrePosition(getWidth()/2, getHeight()/2);
 }
 
@@ -41,9 +45,9 @@ void AnalysisProgressBar::mouseDown(const juce::MouseEvent &event)
     paused = !paused;
     
     if (paused)
-        playPauseBtn->setButtonText(">");
+        playPauseBtn->setImages(false, true, true, playImg, 0.65f, {}, playImg, 1.f, {}, playImg, 1.f, {});
     else
-        playPauseBtn->setButtonText("||");
+        playPauseBtn->setImages(false, true, true, pauseImg, 0.65f, {}, pauseImg, 1.f, {}, pauseImg, 1.f, {});
 }
 
 

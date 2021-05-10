@@ -30,7 +30,7 @@ public:
     
     void resetPlayhead(int sample) { playhead = sample; }
     
-    void reset(double initBpm = 0.0, double initGain = 0.0, double initPitch = 0.0);
+    void reset(double initBpm = 0.0, double initGain = 0.0);
     
     void setCurrentMix(MixInfo* mix) { currentMix = mix; }
     
@@ -44,7 +44,6 @@ public:
     
     InterpolatedParameter bpm;
     InterpolatedParameter gain;
-    InterpolatedParameter pitch;
     
 private:
     

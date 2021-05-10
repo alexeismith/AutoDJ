@@ -21,9 +21,7 @@ TrackProcessor::TrackProcessor(TrackDataManager* dm, ArtificialDJ* DJ) :
     
     track.reset(new Track());
     
-    shifter.setSampleRate(SUPPORTED_SAMPLERATE);
-    shifter.setChannels(1);
-    shifter.clear();
+    stretcher.reset(new TimeStretcher());
 }
 
 
@@ -36,9 +34,9 @@ int TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
     if (play)
     {
         if (output.getNumSamples() != bufferToFill.numSamples) jassert(false);
-            
-        processShifts(bufferToFill.numSamples);
-//        simpleCopy(bufferToFill.numSamples);
+        
+        int numProcessed = stretcher->process(track->audio, &output, bufferToFill.numSamples);
+        update(numProcessed);
         
         output.applyGain(std::sqrt(track->gain.currentValue));
         
@@ -63,7 +61,8 @@ void TrackProcessor::nextMix()
 void TrackProcessor::loadNextTrack()
 {
     ready.store(false);
-    shifter.clear();
+    
+    stretcher->reset();
     
     track->info->playing = false;
     track->info->played = true;
@@ -117,6 +116,7 @@ void TrackProcessor::loadFirstTrack(TrackInfo* trackInfo, bool leader, juce::Aud
 void TrackProcessor::prepare(int blockSize)
 {
     output.setSize(1, blockSize);
+    stretcher->prepare(blockSize);
 }
 
 
@@ -170,47 +170,13 @@ void TrackProcessor::update(int numSamples)
 {
     trackEnd = track->update(numSamples);
     
-    // Update time & pitch shifts
-    timeStretch = double(track->bpm.currentValue) / track->info->bpm;
-    shifter.setTempo(timeStretch);
-    shifter.setPitchSemiTones(track->pitch.currentValue);
+    // Update time shift
+    stretcher->update(track->info->bpm, track->bpm.currentValue);
 }
 
 
 void TrackProcessor::resetPlayhead(int sample)
 {
     track->resetPlayhead(sample);
-    
-    shifter.clear();
-    shifterPlayhead = sample;
-}
-
-
-void TrackProcessor::processShifts(int numSamples)
-{
-    double ratio = shifter.getInputOutputSampleRatio();
-    int numInput = round(double(numSamples) / ratio);
-    
-    while (shifter.numSamples() < numSamples)
-    {
-        if (shifterPlayhead >= getAudioLength() - numInput)
-            return; // TODO: handle this better
-        
-        shifter.putSamples(track->audio->getReadPointer(0, shifterPlayhead), numInput);
-        shifterPlayhead += numInput;
-    }
-    
-    shifter.receiveSamples(output.getWritePointer(0), numSamples);
-    
-    update(numInput);
-}
-
-
-void TrackProcessor::simpleCopy(int numSamples)
-{
-    if (shifterPlayhead >= getAudioLength() - numSamples) return;
-    
-    output.copyFrom(0, 0, *track->audio, 0, shifterPlayhead, numSamples);
-    shifterPlayhead += numSamples;
-    update(numSamples);
+    stretcher->resetPlayhead(sample);
 }

@@ -8,9 +8,8 @@
 #ifndef TrackProcessor_hpp
 #define TrackProcessor_hpp
 
-#include <JuceHeader.h>
-
 #include "TrackDataManager.hpp"
+#include "TimeStretcher.hpp"
 
 #include "Track.hpp"
 
@@ -46,7 +45,7 @@ public:
     
     void setPartner(TrackProcessor* p) { partner = p; }
     
-    double getTimeStretch() { return timeStretch; }
+    double getTimeStretch() { return stretcher->getTimeStretch(); }
     
     Track* getNewTrack();
     
@@ -64,9 +63,6 @@ private:
     
     void processShifts(int numSamples);
     
-    void simpleCopy(int numSamples);
-    
-    void updateShifts();
     
     juce::CriticalSection lock;
     
@@ -85,12 +81,9 @@ private:
     std::unique_ptr<Track> track;
     MixInfo currentMix;
     
-    int shifterPlayhead = 0;
-    
     juce::AudioBuffer<float> output;
     
-    soundtouch::SoundTouch shifter;
-    double timeStretch = 1;
+    std::unique_ptr<TimeStretcher> stretcher;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackProcessor)
 };

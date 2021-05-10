@@ -135,6 +135,10 @@
               file="Source/TrackProcessor.cpp"/>
         <FILE id="UeV71s" name="TrackProcessor.hpp" compile="0" resource="0"
               file="Source/TrackProcessor.hpp"/>
+        <FILE id="qvniTg" name="TimeStretcher.cpp" compile="1" resource="0"
+              file="Source/TimeStretcher.cpp"/>
+        <FILE id="ZUwxg1" name="TimeStretcher.hpp" compile="0" resource="0"
+              file="Source/TimeStretcher.hpp"/>
         <FILE id="i7eWR2" name="Track.cpp" compile="1" resource="0" file="Source/Track.cpp"/>
         <FILE id="UcyA5w" name="Track.hpp" compile="0" resource="0" file="Source/Track.hpp"/>
         <FILE id="MB7NHa" name="InterpolatedParameter.cpp" compile="1" resource="0"

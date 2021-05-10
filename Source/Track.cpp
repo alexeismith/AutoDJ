@@ -15,7 +15,6 @@ bool Track::update(int numSamples)
     playhead += numSamples;
     
     bpm.update(playhead, numSamples);
-    pitch.update(playhead, numSamples);
     gain.update(playhead, numSamples);
     
     if (leader && playhead >= currentMix->end)
@@ -25,14 +24,13 @@ bool Track::update(int numSamples)
 }
 
 
-void Track::reset(double initBpm, double initGain, double initPitch)
+void Track::reset(double initBpm, double initGain)
 {
     leader = false;
     playhead = 0;
     
     bpm.resetTo(initBpm);
     gain.resetTo(initGain);
-    pitch.resetTo(initPitch);
 }
 
 

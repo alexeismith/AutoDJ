@@ -51,6 +51,8 @@ private:
     TrackProcessor* trackProcessor = nullptr;
     
     std::unique_ptr<WaveformView> waveform;
+    
+    juce::Colour colourBackground;
 
     Track track;
     

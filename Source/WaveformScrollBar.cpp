@@ -17,7 +17,7 @@ void WaveformScrollBar::paint(juce::Graphics& g)
 {
     if (!ready.load())
     {
-        g.setColour(juce::Colours::black);
+        g.setColour(colourBackground);
         g.fillAll();
         return;
     }

@@ -57,7 +57,10 @@ juce::String TrackInfo::getTitle()
     juce::String titleStr = juce::String(juce::CharPointer_UTF8(title));
 
     if (titleStr.isEmpty())
-        return getFilename();
+        titleStr = getFilename();
+    
+    if (titleStr.endsWith(".mp3") || titleStr.endsWith(".wav"))
+        titleStr = titleStr.dropLastCharacters(4);
     
     return titleStr;
 }
@@ -67,9 +70,17 @@ juce::String TrackInfo::getArtistTitle()
 {
     juce::String artistStr = juce::String(juce::CharPointer_UTF8(artist));
     juce::String titleStr = juce::String(juce::CharPointer_UTF8(title));
+    juce::String filenameStr;
     
     if (artistStr.isEmpty() || titleStr.isEmpty())
-        return getFilename();
+    {
+        filenameStr = getFilename();
+        
+        if (filenameStr.endsWith(".mp3") || filenameStr.endsWith(".wav"))
+            filenameStr = filenameStr.dropLastCharacters(4);
+        
+        return filenameStr;
+    }
     
     return artistStr + " - " + titleStr;
 }

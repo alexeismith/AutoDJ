@@ -18,7 +18,7 @@
 #define BEATS_PER_BAR (4)
 #define NUM_TRACKS_MIN (4)
 
-#define TOOLBAR_HEIGHT (40)
+#define TOOLBAR_HEIGHT (48)
 
 
 enum ComponentIDs : int

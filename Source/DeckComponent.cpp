@@ -15,11 +15,29 @@ DeckComponent::DeckComponent(int id, TrackProcessor* processor) :
 {
     waveform.reset(new WaveformView(nullptr, false, id, false));
     addAndMakeVisible(waveform.get());
+    
+    colourBackground = getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId);
 }
 
 
 void DeckComponent::paint(juce::Graphics& g)
 {
+    int startY, endY;
+    
+    if (deckId == 0)
+    {
+        startY = waveform->getY();
+        endY = startY - (getHeight() - waveform->getHeight() - 20);
+    }
+    else
+    {
+        startY = waveform->getY() + waveform->getHeight();
+        endY = startY + (getHeight() - waveform->getHeight() - 10);
+    }
+    
+    g.setGradientFill(juce::ColourGradient(colourBackground.withBrightness(0.17f), 0, startY, colourBackground, 0, endY, false));
+    g.fillAll();
+    
     if (!ready.load()) return;
     
     g.setColour(juce::Colours::white);
@@ -36,7 +54,7 @@ void DeckComponent::resized()
     
     if (deckId == 0)
     {
-        waveform->setTopLeftPosition(0, getHeight() - WAVEFORM_VIEW_HEIGHT);
+        waveform->setTopLeftPosition(0, getHeight() - waveform->getHeight());
         
         titlePosY = waveform->getY() - 30;
         infoPosY = titlePosY - 30;
@@ -45,7 +63,7 @@ void DeckComponent::resized()
     {
         waveform->setTopLeftPosition(0, 0);
         
-        titlePosY = waveform->getY() + WAVEFORM_VIEW_HEIGHT + 30;
+        titlePosY = waveform->getY() + waveform->getHeight() + 30;
         infoPosY = titlePosY + 30;
     }
 }

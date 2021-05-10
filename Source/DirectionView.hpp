@@ -41,6 +41,8 @@ private:
     juce::OwnedArray<TrackDotComponent> dots;
     int numDotsAdded = 0;
     
+    juce::Colour colourBackground;
+    
     AnalysisManager* analysisManager;
     
     std::atomic<bool> needsUpdate = false;

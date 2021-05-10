@@ -16,6 +16,8 @@ WaveformComponent::WaveformComponent()
 {
     ready.store(false);
     
+    colourBackground = getLookAndFeel().findColour(juce::ListBox::backgroundColourId).withBrightness(0.08f);
+    
     setBufferedToImage(true);
     setOpaque(true);
     
@@ -27,14 +29,14 @@ WaveformComponent::WaveformComponent()
 
 void WaveformComponent::paint(juce::Graphics& g)
 {
-    g.setColour(juce::Colours::black);
+    g.setColour(colourBackground);
     g.fillAll();
     
     if (!ready.load()) return;
 
     g.drawImageAt(imageScaled, imageOffset, 0);
     
-    g.setColour(juce::Colours::black.withAlpha(1.f - brightness));
+    g.setColour(colourBackground.withAlpha(1.f - brightness));
     g.fillAll();
 }
 
@@ -86,7 +88,7 @@ void WaveformComponent::draw(juce::Array<juce::Colour>* colours, juce::Array<flo
     
     float magnitude;
     
-    g.setColour(juce::Colours::black);
+    g.setColour(colourBackground);
     g.fillAll();
     
     for (int frame = 0; frame < numFrames; frame++)

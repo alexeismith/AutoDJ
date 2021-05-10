@@ -57,6 +57,8 @@ protected:
     
     juce::Image image, imageScaled;
     
+    juce::Colour colourBackground;
+    
 private:
     
     Track* track;

@@ -13,14 +13,16 @@
 DirectionView::DirectionView(AnalysisManager* am) :
     analysisManager(am)
 {
-    toolTip.reset(new juce::TooltipWindow(this, 200));
+    toolTip.reset(new juce::TooltipWindow(this, 0));
     addAndMakeVisible(toolTip.get());
+    
+    colourBackground = getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId);
 }
 
 
 void DirectionView::paint(juce::Graphics& g)
 {
-    g.setGradientFill(juce::ColourGradient(juce::Colours::darkgrey, getWidth()/2, getHeight()/4, juce::Colours::darkgrey.darker(), getWidth(), getHeight(), true));
+    g.setGradientFill(juce::ColourGradient(colourBackground.withBrightness(0.3f), getWidth()/2, getHeight()/4, colourBackground, getWidth()/2, getHeight(), true));
     g.fillAll();
 }
 

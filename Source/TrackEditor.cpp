@@ -32,7 +32,7 @@ void TrackEditor::resized()
 
 void TrackEditor::paint(juce::Graphics& g)
 {
-    g.setColour(juce::Colours::black);
+    g.setColour(getLookAndFeel().findColour(juce::ListBox::backgroundColourId).withBrightness(0.08f));
     g.fillAll();
     
     g.setColour(juce::Colours::grey);

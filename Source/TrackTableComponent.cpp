@@ -78,10 +78,10 @@ void TrackTableComponent::paintCell(juce::Graphics& g, int rowNumber, int column
 {
     TrackInfo* track = tracksSorted.getReference(rowNumber);
     
-    if (columnId == TrackTableColumns::key && track->analysed)
-        g.setColour(CamelotKey(track->key).getColour());
-    else if (rowIsSelected)
+    if (rowIsSelected)
         g.setColour(juce::Colours::darkblue);
+    else if (columnId == TrackTableColumns::key && track->analysed)
+        g.setColour(CamelotKey(track->key).getColour());
     else if (!track->analysed)
         g.setColour(juce::Colours::lightslategrey.brighter());
     else if (track->playing)

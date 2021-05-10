@@ -153,7 +153,7 @@ void MainComponent::releaseResources()
 void MainComponent::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+    g.fillAll (getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 
     g.drawImage(logo, logoArea, juce::RectanglePlacement::centred);
 }
@@ -180,14 +180,14 @@ void MainComponent::resized()
     mixView->setSize(getWidth(), getHeight() - TOOLBAR_HEIGHT);
     mixView->setTopLeftPosition(0, 0);
     
-    libraryBtn->setSize(80, 30);
+    libraryBtn->setSize(68, 28);
     libraryBtn->setCentrePosition(libraryBtn->getWidth()/2 + 10, getHeight() - TOOLBAR_HEIGHT/2);
     
-    directionBtn->setSize(80, 30);
-    directionBtn->setCentrePosition(directionBtn->getWidth()/2 + 100, getHeight() - TOOLBAR_HEIGHT/2);
+    directionBtn->setSize(80, 28);
+    directionBtn->setCentrePosition(directionBtn->getWidth()/2 + 88, getHeight() - TOOLBAR_HEIGHT/2);
     
-    mixBtn->setSize(50, 30);
-    mixBtn->setCentrePosition(mixBtn->getWidth()/2 + 190, getHeight() - TOOLBAR_HEIGHT/2);
+    mixBtn->setSize(50, 28);
+    mixBtn->setCentrePosition(mixBtn->getWidth()/2 + 178, getHeight() - TOOLBAR_HEIGHT/2);
     
     playPauseBtn->setSize(24, 24);
     playPauseBtn->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT/2);
@@ -367,9 +367,7 @@ void MainComponent::chooseFolder()
 
 void MainComponent::setAppearance()
 {
-    DBG(juce::Colour(0xff191926).withBrightness(0.3f).getSaturation());
-    DBG(juce::Colour(0xff191926).getSaturation());
-//    DBG(juce::Colour(0xff191926).brighter().getBrightness());
+    // The following colour values are an adaption of juce::LookAndFeel_V4::getMidnightColourScheme()
     
     juce::LookAndFeel_V4::ColourScheme colours = {
         0xff2f2f3a, juce::Colour(0xff191926).withBrightness(0.2f).withSaturation(0.2f), juce::Colour(0xffd0d0d0).brighter(),
@@ -377,8 +375,7 @@ void MainComponent::setAppearance()
         0xffffffff, 0xff606073, 0xff000000 };
     customAppearance.setColourScheme(colours);
     
-    // For Buttons:
-//    juce::Colour(0xff191926).brighter();
+    customAppearance.setColour(juce::TextButton::buttonColourId, juce::Colour(0xff191926).brighter());
     
 //    customAppearance.setColourScheme(juce::LookAndFeel_V4::getMidnightColourScheme());
     

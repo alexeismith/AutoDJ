@@ -23,7 +23,7 @@ public:
     
     void resized() override;
     
-    void load(Track* track);
+    void load(Track* track, bool force = false);
     
     void update(int playhead, double timeStretch = 1.0, double gain = 1.0);
     

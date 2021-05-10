@@ -20,7 +20,7 @@ public:
     
     ~WaveformLoader() { stopThread(3000); }
     
-    void load(Track* track);
+    void load(Track* track, bool force);
     
     void run();
     

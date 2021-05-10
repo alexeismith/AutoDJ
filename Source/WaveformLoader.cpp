@@ -21,11 +21,11 @@ WaveformLoader::WaveformLoader(TrackDataManager* dm, WaveformComponent* wave, Wa
 }
 
 
-void WaveformLoader::load(Track* t)
+void WaveformLoader::load(Track* t, bool force)
 {
     const juce::ScopedLock sl(lock);
     
-    if (newTrack.info != nullptr)
+    if (newTrack.info != nullptr && !force)
         if (t->info->hash == newTrack.info->hash)
             return;
     

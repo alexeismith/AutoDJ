@@ -152,7 +152,7 @@ void DeckComponent::setMixMarkers()
     waveform->insertMarker(start);
     waveform->insertMarker(end);
     
-    waveform->load(&track);
+    waveform->load(&track, true);
     
     ready.store(true);
 }

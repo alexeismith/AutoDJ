@@ -42,10 +42,10 @@ void WaveformView::resized()
 }
 
 
-void WaveformView::load(Track* track)
+void WaveformView::load(Track* track, bool force)
 {
     trackLength = track->info->getLengthSamples();
-    loader->load(track);
+    loader->load(track, force);
     update(0);
 }
 

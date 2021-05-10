@@ -14,6 +14,9 @@
 #include "ThirdParty/soundtouch/include/SoundTouch.h"
 
 
+//#define STRETCHER_MONO
+
+
 class TimeStretcher
 {
 public:
@@ -38,7 +41,12 @@ public:
     
 private:
     
-    juce::AudioBuffer<float> buffer;
+    void interleave(juce::AudioBuffer<float>* input, int numSamples);
+    
+    void deinterleave(juce::AudioBuffer<float>* output, int numSamples);
+    
+    juce::AudioBuffer<float> inputInterleaved;
+    juce::AudioBuffer<float> outputInterleaved;
     
     soundtouch::SoundTouch shifter;
     double timeStretch = 1;

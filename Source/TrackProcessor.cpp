@@ -41,7 +41,7 @@ int TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
         output.applyGain(std::sqrt(track->gain.currentValue));
         
         bufferToFill.buffer->addFrom(0, bufferToFill.startSample, output.getReadPointer(0), bufferToFill.numSamples);
-        bufferToFill.buffer->addFrom(1, bufferToFill.startSample, output.getReadPointer(0), bufferToFill.numSamples);
+        bufferToFill.buffer->addFrom(1, bufferToFill.startSample, output.getReadPointer(1), bufferToFill.numSamples);
         
         if (trackEnd)
             loadNextTrack();
@@ -115,7 +115,7 @@ void TrackProcessor::loadFirstTrack(TrackInfo* trackInfo, bool leader, juce::Aud
 
 void TrackProcessor::prepare(int blockSize)
 {
-    output.setSize(1, blockSize);
+    output.setSize(2, blockSize);
     stretcher->prepare(blockSize);
 }
 

@@ -73,13 +73,18 @@ private:
     std::unique_ptr<juce::Button> directionBtn;
     std::unique_ptr<juce::Button> mixBtn;
     
-    std::unique_ptr<juce::Button> playPauseBtn;
-    std::unique_ptr<juce::Button> skipBtn;
+    std::unique_ptr<juce::ImageButton> playPauseBtn;
+    std::unique_ptr<juce::ImageButton> skipBtn;
     
     std::unique_ptr<juce::Slider> volumeSld;
     
     juce::Rectangle<float> logoArea;
     juce::Image logo;
+    
+    juce::Image playImg;
+    juce::Image pauseImg;
+    
+    bool playing = false;
     
 #ifdef SHOW_GRAPH
     std::unique_ptr<juce::ResizableWindow> graphWindow;

@@ -60,14 +60,21 @@ MainComponent::MainComponent()
     addChildComponent(mixBtn.get());
     mixBtn->addListener(this);
     
-    playPauseBtn.reset(new juce::TextButton(">"));
+    playImg = juce::ImageFileFormat::loadFrom(BinaryData::play_png, BinaryData::play_pngSize);
+    pauseImg = juce::ImageFileFormat::loadFrom(BinaryData::pause_png, BinaryData::pause_pngSize);
+    
+    playPauseBtn.reset(new juce::ImageButton());
     addChildComponent(playPauseBtn.get());
+    playPauseBtn->setImages(false, true, true, playImg, 0.8f, {}, playImg, 1.f, {}, playImg, 1.f, juce::Colours::lightblue);
     playPauseBtn->setComponentID(juce::String(ComponentIDs::playPauseBtn));
     playPauseBtn->addListener(this);
     playPauseBtn->setEnabled(false);
     
-    skipBtn.reset(new juce::TextButton(">>"));
+    juce::Image skipImg = juce::ImageFileFormat::loadFrom(BinaryData::skip_png, BinaryData::skip_pngSize);
+    
+    skipBtn.reset(new juce::ImageButton());
     addChildComponent(skipBtn.get());
+    skipBtn->setImages(false, true, true, skipImg, 0.8f, {}, skipImg, 1.f, {}, skipImg, 1.f, juce::Colours::lightblue);
     skipBtn->setComponentID(juce::String(ComponentIDs::skipBtn));
     skipBtn->addListener(this);
     skipBtn->setEnabled(false);
@@ -182,10 +189,10 @@ void MainComponent::resized()
     mixBtn->setSize(50, 30);
     mixBtn->setCentrePosition(mixBtn->getWidth()/2 + 190, getHeight() - TOOLBAR_HEIGHT/2);
     
-    playPauseBtn->setSize(28, 28);
+    playPauseBtn->setSize(24, 24);
     playPauseBtn->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT/2);
     
-    skipBtn->setSize(28, 28);
+    skipBtn->setSize(25, 25);
     skipBtn->setCentrePosition(getWidth()/2 + 40, getHeight() - TOOLBAR_HEIGHT/2);
     
     volumeSld->setSize(140, 50);
@@ -245,8 +252,16 @@ void MainComponent::timerCallback()
         if (dj->isInitialised())
         {
             waitingForDJ = false;
-            playPauseBtn->setEnabled(true);
+            playing = true;
+            playPauseBtn->setAlpha(1.f);
+            playPauseBtn->setImages(false, true, true, pauseImg, 0.8f, {}, pauseImg, 1.f, {}, pauseImg, 1.f, juce::Colours::lightblue);
             skipBtn->setEnabled(true);
+        }
+        else
+        {
+            juce::uint32 seconds = juce::Time::getApproximateMillisecondCounter();
+            double sine = (std::sin(double(seconds) / 200) + 1.0) / 4.0;
+            playPauseBtn->setAlpha(sine + 0.5f);
         }
     }
     
@@ -258,24 +273,6 @@ void MainComponent::timerCallback()
     }
     
     skipBtn->setEnabled(dj->canSkip());
-}
-
-
-void MainComponent::setAppearance()
-{
-//    juce::LookAndFeel_V4::ColourScheme colourScheme = juce::LookAndFeel_V4::ColourScheme(juce::Colours::white,
-//                                        juce::Colours::grey,
-//                                        juce::Colours::lightgrey,
-//                                        juce::Colours::black,
-//                                        juce::Colours::black,
-//                                        juce::Colours::grey,
-//                                        juce::Colours::red,
-//                                        juce::Colours::darkred,
-//                                        juce::Colours::white);
-//    
-//    customAppearance.setColourScheme(colourScheme);
-    
-    juce::LookAndFeel::setDefaultLookAndFeel(&customAppearance);
 }
 
 
@@ -310,10 +307,19 @@ void MainComponent::buttonClicked(juce::Button* button)
             break;
             
         case ComponentIDs::playPauseBtn:
+            if (waitingForDJ)
+                break;
+            
             if (!dj->playPause())
-            {
-                playPauseBtn->setEnabled(false);
                 waitingForDJ = true;
+            else
+            {
+                playing = !playing;
+                
+                if (playing)
+                    playPauseBtn->setImages(false, true, true, pauseImg, 0.8f, {}, pauseImg, 1.f, {}, pauseImg, 1.f, juce::Colours::lightblue);
+                else
+                    playPauseBtn->setImages(false, true, true, playImg, 0.8f, {}, playImg, 1.f, {}, playImg, 1.f, juce::Colours::lightblue);
             }
             break;
             
@@ -356,5 +362,26 @@ void MainComponent::chooseFolder()
         chooseFolderBtn->setVisible(false);
         loadingFilesProgress->setVisible(true);
     }
+}
+
+
+void MainComponent::setAppearance()
+{
+    DBG(juce::Colour(0xff191926).withBrightness(0.3f).getSaturation());
+    DBG(juce::Colour(0xff191926).getSaturation());
+//    DBG(juce::Colour(0xff191926).brighter().getBrightness());
+    
+    juce::LookAndFeel_V4::ColourScheme colours = {
+        0xff2f2f3a, juce::Colour(0xff191926).withBrightness(0.2f).withSaturation(0.2f), juce::Colour(0xffd0d0d0).brighter(),
+        0xff66667c, juce::Colours::white, 0xffd8d8d8,
+        0xffffffff, 0xff606073, 0xff000000 };
+    customAppearance.setColourScheme(colours);
+    
+    // For Buttons:
+//    juce::Colour(0xff191926).brighter();
+    
+//    customAppearance.setColourScheme(juce::LookAndFeel_V4::getMidnightColourScheme());
+    
+    juce::LookAndFeel::setDefaultLookAndFeel(&customAppearance);
 }
 

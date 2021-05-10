@@ -13,6 +13,7 @@
 TimeStretcher::TimeStretcher()
 {
     shifter.setSampleRate(SUPPORTED_SAMPLERATE);
+    
 #ifdef STRETCHER_MONO
     shifter.setChannels(1);
 #else
@@ -56,8 +57,15 @@ int TimeStretcher::process(juce::AudioBuffer<float>* input, juce::AudioBuffer<fl
     
     while (shifter.numSamples() < numSamples)
     {
-        if (playhead >= input->getNumSamples() - numInput)
-            return 0; // TODO: handle this better
+        if (playhead >= input->getNumSamples() - 1)
+        {
+            shifter.flush();
+            break;
+        }
+        else if (playhead >= input->getNumSamples() - numInput)
+        {
+            numInput = input->getNumSamples() - playhead - 1;
+        }
         
         interleave(input, numInput);
         
@@ -85,6 +93,10 @@ void TimeStretcher::resetPlayhead(int sample)
 {
     reset();
     playhead = sample;
+    
+    shifter.setRate(1.0);
+    shifter.setPitch(1.0);
+    shifter.setTempo(1.0);
 }
 
 

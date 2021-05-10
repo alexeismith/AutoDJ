@@ -166,6 +166,11 @@ int TrackTableSorter::compareElements(TrackInfo* first, TrackInfo* second)
     
     if (result == 0)
         result = first->getTitle().compareIgnoreCase(second->getTitle());
+    
+    if (!first->analysed && second->analysed)
+        result = 1;
+    else if (first->analysed && !second->analysed)
+        result = -1;
 
     return direction * result;
 }

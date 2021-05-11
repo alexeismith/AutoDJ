@@ -40,6 +40,8 @@ public:
     
     AnalysisResults getResults();
     
+    void clearJobs() { jobs.clear(); }
+    
 protected:
     
     TrackDataManager* dataManager;

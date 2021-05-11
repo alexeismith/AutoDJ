@@ -105,7 +105,8 @@ private:
     
     std::atomic<int> initBlockSize;
     
-    bool waitingForFiles = true;
+    bool initialised = false;
+    bool loadingFiles = false;
     bool waitingForAnalysis = false;
     bool waitingForDJ = false;
     

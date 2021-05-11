@@ -39,7 +39,7 @@ public:
     
     void trackQueued() { numTracksAnalysedUnplayed -= 1; }
     
-    bool isLoaded(double& progress);
+    bool isLoading(double& progress, bool& validDirectory);
     
     bool analysisProgress(double& progress, bool& canStartPlaying);
     
@@ -68,6 +68,8 @@ private:
     
     int getHash(juce::File file);
     
+    void reset();
+    
     juce::OwnedArray<juce::AudioBuffer<float>> audioBuffers;
     
     std::unique_ptr<AnalysisManager> analysisManager;
@@ -79,9 +81,9 @@ private:
     TrackSorter sorter;
     
     TrackInfo* tracks;
-    int numTracks = 0;
-    int numTracksAnalysed = 0;
-    int numTracksAnalysedUnplayed = 0;
+    int numTracks;
+    int numTracksAnalysed;
+    int numTracksAnalysedUnplayed;
     
     juce::TimeSliceThread thread {"BackgroundUpdateThread"};
     std::unique_ptr<juce::DirectoryContentsList> dirContents;
@@ -93,6 +95,8 @@ private:
     std::unique_ptr<FileParserThread> parser;
     
     std::atomic<bool> initialised = false;
+    
+    std::atomic<bool> validDirectory = false;
     
     DirectionView* directionView;
     

@@ -172,13 +172,13 @@ void MainComponent::releaseResources()
 //==============================================================================
 void MainComponent::paint (juce::Graphics& g)
 {
-    if (waitingForFiles)
+    if (!initialised)
         g.setGradientFill(juce::ColourGradient(colourBackground, getWidth()/2, getHeight()/4, colourBackground.withBrightness(0.15f), getWidth(), getHeight(), true));
     else
         g.setGradientFill(juce::ColourGradient(colourBackground.withBrightness(0.3f), getWidth()/2, getHeight()/4, colourBackground, getWidth()/2, getHeight(), true));
     g.fillAll();
     
-    if (waitingForFiles)
+    if (!initialised)
         g.drawImage(logo, logoArea, juce::RectanglePlacement::centred);
     else
         g.drawImage(volumeImg, volumeArea, juce::RectanglePlacement::centred);
@@ -243,15 +243,31 @@ void MainComponent::resized()
 
 void MainComponent::timerCallback()
 {
-    if (waitingForFiles)
+    if (loadingFiles)
     {
-        if (dataManager->isLoaded(loadingProgress))
+        bool validDirectory;
+        
+        if (!dataManager->isLoading(loadingProgress, validDirectory))
         {
-            waitingForFiles = false;
-            waitingForAnalysis = true;
-            
+            loadingFiles = false;
             loadingFilesProgress->setVisible(false);
             loadingProgress = 0.0;
+            
+            if (!validDirectory)
+            {
+                std::stringstream errorMessage;
+                errorMessage << "Please choose a folder with at least " << NUM_TRACKS_MIN << " tracks. " \
+                             << "These must be '.mp3' or '.wav' files, at least 60 seconds in length.";
+                // Show an error window containing the message
+                juce::AlertWindow::showMessageBox(juce::AlertWindow::WarningIcon, "Error", errorMessage.str(), "OK");
+                
+                chooseFolderBtn->setVisible(true);
+                return;
+            }
+            
+            initialised = true;
+            
+            waitingForAnalysis = true;
             
             libraryView->loadFiles();
             
@@ -311,7 +327,7 @@ void MainComponent::timerCallback()
         directionView->updateData();
     }
     
-    if (!waitingForFiles && !validSamplerate.load() && !errorShown.load())
+    if (!loadingFiles && !validSamplerate.load() && !errorShown.load())
     {
         errorShown.store(true);
         
@@ -407,7 +423,7 @@ void MainComponent::chooseFolder()
         if (!dataManager->initialise(chooser.getResult(), directionView.get()))
             return;
         
-        waitingForFiles = true;
+        loadingFiles = true;
         
         chooseFolderBtn->setVisible(false);
         loadingFilesProgress->setVisible(true);

@@ -28,6 +28,8 @@ TrackDataManager::TrackDataManager() :
     analysisManager.reset(new AnalysisManager());
     
     parser.reset(new FileParserThread(this));
+    
+    reset();
 }
 
 
@@ -84,13 +86,13 @@ void TrackDataManager::storeAnalysis(TrackInfo* track)
 }
 
 
-bool TrackDataManager::isLoaded(double& progress)
+bool TrackDataManager::isLoading(double& progress, bool& valid)
 {
     progress = parser->getProgress();
     
-    if (!initialised.load()) return false;
+    valid = validDirectory.load();
     
-    return (!parser->isThreadRunning());
+    return (parser->isThreadRunning());
 }
 
 
@@ -256,28 +258,51 @@ int TrackDataManager::getHash(juce::File file)
 }
 
 
+void TrackDataManager::reset()
+{
+    numTracks = 0;
+    numTracksAnalysed = 0;
+    numTracksAnalysedUnplayed = 0;
+    
+    initialised.store(false);
+    validDirectory.store(false);
+}
+
+
 void FileParserThread::run()
 {
     int numFiles;
+    TrackDataManager* dm = dataManager;
     
-    while (dataManager->dirContents->isStillLoading())
+    while (dm->dirContents->isStillLoading())
     {
         _mm_pause();
     }
     
-    numFiles = dataManager->dirContents->getNumFiles();
+    numFiles = dm->dirContents->getNumFiles();
     DBG("Num files in directory: " << numFiles);
     
-    dataManager->tracks = (TrackInfo*)malloc(sizeof(TrackInfo) * numFiles);
+    dm->tracks = (TrackInfo*)malloc(sizeof(TrackInfo) * numFiles);
     
     for (int i = 0; i < numFiles; i++)
     {
         if (threadShouldExit()) return;
         progress.store(double(i) / numFiles);
-        dataManager->parseFile(dataManager->dirContents->getFile(i));
+        dm->parseFile(dm->dirContents->getFile(i));
     }
     
-    DBG("Num already analysed: " << dataManager->numTracksAnalysed);
+    if (dm->numTracks < NUM_TRACKS_MIN)
+    {
+        dm->analysisManager->clearJobs();
+        dm->reset();
+        
+        memset(dm->tracks, 0, dm->numTracksAnalysed * sizeof(TrackInfo));
+        return;
+    }
     
-    dataManager->analysisManager->startAnalysis(dataManager);
+    dm->validDirectory.store(true);
+    
+    DBG("Num already analysed: " << dm->numTracksAnalysed);
+    
+    dm->analysisManager->startAnalysis(dm);
 }

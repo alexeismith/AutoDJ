@@ -54,8 +54,6 @@ juce::Array<int> AnalyserSegments::analyse(TrackInfo* track, juce::AudioBuffer<f
 
         segmenter->extractFeatures(tempBuffer, segmenter->getWindowsize());
     }
-
-    delete [] tempBuffer;
     
     segmenter->segment(NUM_SEGMENT_TYPES);
     Segmentation segmentation = segmenter->getSegmentation();
@@ -68,6 +66,8 @@ juce::Array<int> AnalyserSegments::analyse(TrackInfo* track, juce::AudioBuffer<f
         segmentAdjust = track->getNearestDownbeat(segment.start * 3);
         segments.add(segmentAdjust);
     }
+    
+    delete [] tempBuffer;
     
     return segments;
 }

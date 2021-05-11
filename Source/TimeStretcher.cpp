@@ -113,6 +113,8 @@ void TimeStretcher::interleave(juce::AudioBuffer<float>* input, int numSamples)
 #ifdef STRETCHER_MONO
     inputInterleaved.copyFrom(0, 0, *input, 0, playhead, numSamples);
 #else
+    jassert(input->getNumChannels() >= 2); // Input must be stereo!
+    
     for (int i = 0; i < numSamples; i++)
     {
         inputInterleaved.setSample(0, i*2, input->getSample(0, playhead + i));
@@ -128,6 +130,8 @@ void TimeStretcher::deinterleave(juce::AudioBuffer<float>* output, int numSample
     output->copyFrom(0, 0, outputInterleaved.getReadPointer(0), numSamples);
     output->copyFrom(1, 0, outputInterleaved.getReadPointer(0), numSamples);
 #else
+    jassert(output->getNumChannels() >= 2); // Output must be stereo!
+    
     for (int i = 0; i < numSamples; i++)
     {
         output->setSample(0, i, outputInterleaved.getSample(0, i*2));

@@ -61,7 +61,7 @@ TrackInfo* TrackChooser::chooseTrack()
     TrackInfo* result;
     
     int numCandidates = juce::jmin(NUM_CANDIDATES, dataManager->getNumTracksReady());
-    
+
     if (numCandidates <= 0)
         return nullptr;
     
@@ -81,9 +81,15 @@ TrackInfo* TrackChooser::chooseTrack()
     if (candidates.isEmpty())
         return nullptr;
     
-    // If only one track was returned, return that one
+    // Notify the data manager that a track will be queued
+    dataManager->trackQueued();
+    
+    // If only one track was returned, choose that one
     if (candidates.size() == 1)
+    {
+        printChoice(candidates.getFirst());
         return candidates.getFirst();
+    }
     
     // Sort the candidates by key compatibility with the current key
     KeySorter keySorter(currentKey);
@@ -100,17 +106,23 @@ TrackInfo* TrackChooser::chooseTrack()
     for (auto track : candidates)
         sorter->addAnalysed(track);
     
-    DBG("QUEUED " << result->getFilename() << " bpm: " << result->bpm << " groove: " << result->groove << " key: " << CamelotKey(result->key).getName());
+    printChoice(result);
     
     // Update the current BPM, groove and key to that of the new track
     currentBpm = result->bpm;
     currentGroove = result->groove;
     currentKey = result->key;
     
-    // Notift the data manager that a track has been queued
-    dataManager->trackQueued();
-    
     return result;
+}
+
+
+void TrackChooser::printChoice(TrackInfo* track)
+{
+    DBG("QUEUED " << track->getFilename() << \
+        " bpm: " << track->bpm << \
+        " groove: " << track->groove << \
+        " key: " << CamelotKey(track->key).getName());
 }
 
 

@@ -146,8 +146,9 @@ void ArtificialDJ::generateMixSimple()
     
     mix.leadingTrack = leadingTrack;
     
+    // Choose a new track to play
     TrackInfo* nextTrack = chooser->chooseTrack();
-    
+
     // If nextTrack is null, there are no more tracks to play
     if (nextTrack == nullptr)
     {
@@ -165,7 +166,7 @@ void ArtificialDJ::generateMixSimple()
     // Otherwise, we can proceed normally...
     
     mix.nextTrack = nextTrack;
-    mix.nextTrackAudio = dataManager->loadAudio(nextTrack->getFilename(), true);
+    mix.nextTrackAudio = dataManager->loadAudio(nextTrack->getFilename());
     
     int mixLengthBeats = 16;
     
@@ -202,7 +203,7 @@ void ArtificialDJ::generateMixComplex()
     TrackInfo* nextTrack = chooser->chooseTrack();
 
     // If nextTrack is null, there are no more tracks to play
-    if (mix.nextTrack == nullptr)
+    if (nextTrack == nullptr)
     {
         // Set the end of mix flag
         ending = true;

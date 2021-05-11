@@ -28,9 +28,9 @@ public:
     
     TrackInfo* chooseTrack();
     
-private:
+    void printChoice(TrackInfo* track);
     
-    double getRandomGaussian(double stdDev = 1.0, double rangeLimit = -1.0, double shift = 0.0);
+private:
     
     void updatePosition();
     

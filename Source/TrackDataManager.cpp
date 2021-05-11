@@ -80,7 +80,7 @@ void TrackDataManager::storeAnalysis(TrackInfo* track)
     
     // Increment the counters
     numTracksAnalysed += 1;
-    numTracksAnalysedUnplayed += 1;
+    numTracksAnalysedUnqueued += 1;
     
     trackDataUpdate.store(true);
 }
@@ -215,7 +215,7 @@ void TrackDataManager::parseFile(juce::File file)
             trackDataUpdate.store(true);
             
             numTracksAnalysed += 1;
-            numTracksAnalysedUnplayed += 1;
+            numTracksAnalysedUnqueued += 1;
         }
         else
         {
@@ -262,7 +262,7 @@ void TrackDataManager::reset()
 {
     numTracks = 0;
     numTracksAnalysed = 0;
-    numTracksAnalysedUnplayed = 0;
+    numTracksAnalysedUnqueued = 0;
     
     initialised.store(false);
     validDirectory.store(false);

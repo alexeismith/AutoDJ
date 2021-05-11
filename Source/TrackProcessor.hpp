@@ -49,6 +49,8 @@ public:
     
     Track* getNewTrack();
     
+    MixInfo getCurrentMix() { return currentMix; }
+    
     void syncWithLeader(int leaderPlayhead);
     
     void skipToNextEvent();

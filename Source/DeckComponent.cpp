@@ -93,7 +93,7 @@ void DeckComponent::update()
     if (t)
         load(t);
     
-    if (!track.leader && playhead > track.getCurrentMix()->endNext)
+    if (trackProcessor->isLeader() && !track.leader)
     {
         track.leader = true;
         setMixMarkers();
@@ -134,19 +134,21 @@ void DeckComponent::setMixMarkers()
 {
     ready.store(false);
     
-    waveform->clearMarkers();
-    
     int start, end;
+    
+    MixInfo mix = trackProcessor->getCurrentMix();
+    
+    waveform->clearMarkers();
     
     if (track.leader)
     {
-        start = track.getCurrentMix()->start;
-        end = track.getCurrentMix()->end;
+        start = mix.start;
+        end = mix.end;
     }
     else
     {
-        start = track.getCurrentMix()->startNext;
-        end = track.getCurrentMix()->endNext;
+        start = mix.startNext;
+        end = mix.endNext;
     }
     
     waveform->insertMarker(start);

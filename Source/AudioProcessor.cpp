@@ -102,6 +102,23 @@ void AudioProcessor::prepare(int blockSize)
 }
 
 
+bool AudioProcessor::mixEnded()
+{
+    TrackProcessor* leader = nullptr;
+    TrackProcessor* next = nullptr;
+    
+    getTrackProcessors(&leader, &next);
+    
+    if (leader)
+    {
+        if (leader->mixEnded())
+            return true;
+    }
+    
+    return false;
+}
+
+
 void AudioProcessor::skipToNextEvent()
 {
     TrackProcessor* leader = nullptr;

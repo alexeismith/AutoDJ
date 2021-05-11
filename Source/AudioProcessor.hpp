@@ -44,6 +44,8 @@ public:
     
     void skip() { skipFlag.store(true); }
     
+    bool mixEnded();
+    
 private:
     
     void skipToNextEvent();

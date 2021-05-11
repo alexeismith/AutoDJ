@@ -83,15 +83,21 @@ void DeckComponent::buttonClicked(juce::Button* button)
 
 void DeckComponent::update()
 {
-    if (!trackProcessor->isReady())
+    bool mixEnd;
+    
+    if (!trackProcessor->isReady(mixEnd))
     {
-        waveform->reset();
+        if (mixEnd)
+            reset();
+        else
+            waveform->reset();
+        
         return;
     }
     
-    Track* t = trackProcessor->getNewTrack();
-    if (t)
-        load(t);
+    Track* newTrack = trackProcessor->getNewTrack();
+    if (newTrack)
+        load(newTrack);
     
     if (trackProcessor->isLeader() && !track.leader)
     {
@@ -127,6 +133,18 @@ void DeckComponent::load(Track* trackPtr)
     setMixMarkers();
     
     ready.store(true);
+}
+
+
+void DeckComponent::reset()
+{
+    waveform->clearMarkers();
+    waveform->reset();
+    
+    title.clear();
+    info.clear();
+    
+    ready.store(false);
 }
 
 

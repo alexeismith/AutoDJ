@@ -23,7 +23,7 @@ void ArtificialDJ::run()
 {
     initialise();
     
-    while (!threadShouldExit() && !ending)
+    while (!threadShouldExit())
     {
         if (mixQueue.size() < MIX_QUEUE_LENGTH)
             generateMix();
@@ -41,7 +41,7 @@ MixInfo ArtificialDJ::getNextMix(MixInfo current)
     
     if (mixQueue.size() == 0)
     {
-        if (ending)
+        if (ending.load())
             return MixInfo();
         
         jassert(false); // Mix queue was empty!
@@ -152,15 +152,27 @@ void ArtificialDJ::generateMixSimple()
     // If nextTrack is null, there are no more tracks to play
     if (nextTrack == nullptr)
     {
+        if (ending.load())
+            return;
+        
+        DBG("ENDING MIX");
+        
         // Set the end of mix flag
-        ending = true;
+        ending.store(true);
         // Set the mix bpm to that of the leading track
         mix.bpm = mix.leadingTrack->bpm;
-        // Set the start of this final mix to the end of the leading track, so it simply plays all the way through
-        mix.start = mix.leadingTrack->getLengthSamples();
+        // Set the start and end of this final mix to the end of the leading track, so it simply plays all the way through
+        mix.start = mix.end = mix.leadingTrack->getLengthSamples();
         // Add the final mix to the mix queue
         mixQueue.add(mix);
         return;
+    }
+    
+    if (ending.load())
+    {
+        mixQueue.removeLast();
+        ending.store(false);
+        DBG("CANELLED MIX END");
     }
     
     // Otherwise, we can proceed normally...
@@ -205,15 +217,27 @@ void ArtificialDJ::generateMixComplex()
     // If nextTrack is null, there are no more tracks to play
     if (nextTrack == nullptr)
     {
+        if (ending.load())
+            return;
+        
+        DBG("ENDING MIX");
+        
         // Set the end of mix flag
-        ending = true;
+        ending.store(true);
         // Set the mix bpm to that of the leading track
         mix.bpm = mix.leadingTrack->bpm;
-        // Set the start of this final mix to the end of the leading track, so it simply plays all the way through
-        mix.start = mix.leadingTrack->getLengthSamples();
+        // Set the start and end of this final mix to the end of the leading track, so it simply plays all the way through
+        mix.start = mix.end = mix.leadingTrack->getLengthSamples();
         // Add the final mix to the mix queue
         mixQueue.add(mix);
         return;
+    }
+    
+    if (ending.load())
+    {
+        mixQueue.removeLast();
+        ending.store(false);
+        DBG("CANELLED MIX END");
     }
 
     // Otherwise, we can proceed normally...

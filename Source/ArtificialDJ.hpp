@@ -62,7 +62,7 @@ private:
     std::atomic<bool> initialised;
     
     bool playing = false;
-    bool ending = false;
+    std::atomic<bool> ending = false;
     
     int mixIdCounter = 0;
     

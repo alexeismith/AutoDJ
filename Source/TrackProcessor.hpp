@@ -35,7 +35,9 @@ public:
     
     void nextMix();
     
-    bool isReady() { return ready; }
+    bool isReady(bool& mixEnd);
+    
+    bool mixEnded() { return mixEnd.load(); } 
     
     void loadNextTrack();
     
@@ -74,8 +76,10 @@ private:
     TrackDataManager* dataManager = nullptr;
     ArtificialDJ* dj = nullptr;
     
+    std::atomic<bool> newTrack = true;
+    std::atomic<bool> mixEnd = false;
+    
     bool trackEnd = false;
-    bool newTrack = true;
     bool play = false;
     
     std::atomic<bool> ready;

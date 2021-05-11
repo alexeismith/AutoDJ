@@ -36,6 +36,7 @@ int TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
         if (output.getNumSamples() != bufferToFill.numSamples) jassert(false);
         
         int numProcessed = stretcher->process(track->audio, &output, bufferToFill.numSamples);
+        
         update(numProcessed);
         
         output.applyGain(std::sqrt(track->gain.currentValue));
@@ -58,6 +59,13 @@ void TrackProcessor::nextMix()
 }
 
 
+bool TrackProcessor::isReady(bool& end)
+{
+    end = mixEnd.load();
+    return ready.load();
+}
+
+
 void TrackProcessor::loadNextTrack()
 {
     ready.store(false);
@@ -69,6 +77,7 @@ void TrackProcessor::loadNextTrack()
     dataManager->trackDataUpdate.store(true);
     
     currentMix = dj->getNextMix(currentMix);
+    
     if (track->applyNextMix(&currentMix))
     {
         play = false;
@@ -76,6 +85,10 @@ void TrackProcessor::loadNextTrack()
         newTrack = true;
         
         ready.store(true);
+    }
+    else // Mix is ending
+    {
+        mixEnd.store(true);
     }
     
     partner->nextMix();
@@ -122,9 +135,9 @@ void TrackProcessor::prepare(int blockSize)
 
 Track* TrackProcessor::getNewTrack()
 {
-    if (newTrack)
+    if (newTrack.load())
     {
-        newTrack = false;
+        newTrack.store(false);
         return getTrack();
     }
     

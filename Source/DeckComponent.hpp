@@ -36,6 +36,8 @@ private:
     
     void load(Track* track);
     
+    void reset();
+    
     void setMixMarkers();
     
     int deckId;

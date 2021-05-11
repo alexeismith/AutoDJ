@@ -299,8 +299,8 @@ void MainComponent::timerCallback()
         else
         {
             juce::uint32 seconds = juce::Time::getApproximateMillisecondCounter();
-            double sine = (std::sin(double(seconds) / 200) + 1.0) / 4.0;
-            playPauseBtn->setAlpha(sine + 0.5f);
+            double sine = (std::sin(double(seconds) / 150) + 1.0) / 3.0;
+            playPauseBtn->setAlpha(sine + 0.3f);
         }
     }
     

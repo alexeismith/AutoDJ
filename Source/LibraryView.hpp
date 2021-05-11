@@ -29,8 +29,6 @@ public:
     
 private:
     
-    void chooseFolder();
-    
     std::unique_ptr<TrackTableComponent> trackTable;
     
     std::unique_ptr<TrackEditor> trackEditor;

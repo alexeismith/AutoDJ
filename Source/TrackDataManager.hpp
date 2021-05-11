@@ -27,7 +27,7 @@ public:
       
     ~TrackDataManager();
     
-    void initialise(juce::File directory, DirectionView* directionView);
+    bool initialise(juce::File directory, DirectionView* directionView);
     
     TrackInfo* getTracks() { return tracks; }
     

@@ -41,18 +41,25 @@ TrackDataManager::~TrackDataManager()
 }
 
 
-void TrackDataManager::initialise(juce::File directory, DirectionView* direction)
+bool TrackDataManager::initialise(juce::File directory, DirectionView* direction)
 {
     directionView = direction;
     
     dirContents->setDirectory(directory, true, true);
     
     if (!database.initialise(directory))
+    {
+        // Show an error window
+        juce::AlertWindow::showMessageBox(juce::AlertWindow::WarningIcon, "Error", "Failed to initialise database.", "OK");
         jassert(false); // Database failed to initialise
+        return false;
+    }
     
     parser->startThread();
     
     initialised.store(true);
+    
+    return true;
 }
 
 

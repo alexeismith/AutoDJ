@@ -322,10 +322,7 @@ void MainComponent::timerCallback()
             changeView(ViewID::settings);
         
         // Show an error window containing the message
-        juce::AlertWindow::showMessageBox(juce::AlertWindow::WarningIcon,
-                                          "Error",
-                                          errorMessage,
-                                          "OK");
+        juce::AlertWindow::showMessageBox(juce::AlertWindow::WarningIcon, "Error", errorMessage, "OK");
     }
     
     skipBtn->setEnabled(dj->canSkip());
@@ -407,7 +404,8 @@ void MainComponent::chooseFolder()
     juce::FileChooser chooser ("Choose Music Folder");
     if (chooser.browseForDirectory())
     {
-        dataManager->initialise(chooser.getResult(), directionView.get());
+        if (!dataManager->initialise(chooser.getResult(), directionView.get()))
+            return;
         
         waitingForFiles = true;
         

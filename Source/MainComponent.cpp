@@ -6,7 +6,7 @@ MainComponent::MainComponent() :
     juce::AudioAppComponent(customDeviceManager)
 {
     customDeviceManager.initialise(0, 2, nullptr, true);
-    audioSettings.reset(new juce::AudioDeviceSelectorComponent(customDeviceManager, 0, 0, 2, 2, false, false, false, true));
+    audioSettings.reset(new juce::AudioDeviceSelectorComponent(customDeviceManager, 0, 0, 2, 2, false, false, false, false));
     addChildComponent(audioSettings.get());
     
     setAppearance();
@@ -138,14 +138,16 @@ MainComponent::~MainComponent()
 //==============================================================================
 void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
 {
-    // This function will be called when the audio device is started, or when
-    // its settings (i.e. sample rate, block size, etc) are changed.
-
-    // You can use this function to initialise any resources you might need,
-    // but be careful - it will be called on the audio thread, not the GUI thread.
-
-    // For more details, see the help for AudioProcessor::prepareToPlay()
-    
+    if (sampleRate != SUPPORTED_SAMPLERATE)
+    {
+        validSamplerate.store(false);
+    }
+    else
+    {
+        validSamplerate.store(true);
+        errorShown.store(false);
+    }
+        
     if (audioProcessor.get())
         audioProcessor->prepare(samplesPerBlockExpected);
     else
@@ -154,7 +156,7 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
 
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    if (audioProcessor.get() == nullptr) return;
+    if (!validSamplerate.load() || audioProcessor.get() == nullptr) return;
     
     audioProcessor->getNextAudioBlock(bufferToFill);
 }
@@ -186,7 +188,8 @@ void MainComponent::resized()
 {
     sizeLimits.checkComponentBounds(this);
     
-    audioSettings->centreWithSize(getWidth() - 40, getHeight() - TOOLBAR_HEIGHT - 40);
+    audioSettings->setSize(getWidth() - 40, getHeight() - TOOLBAR_HEIGHT - 40);
+    audioSettings->setCentrePosition(getWidth()/2 - 60, getHeight()/2 - TOOLBAR_HEIGHT);
     
     logoArea.setSize(220, 121);
     logoArea.setCentre(getWidth()/2, getHeight()/2 - 35);
@@ -225,7 +228,7 @@ void MainComponent::resized()
     volumeSld->setCentrePosition(getWidth() - 125, getHeight() - TOOLBAR_HEIGHT/2);
     
     volumeArea.setSize(22, 22);
-    volumeArea.setCentre(volumeSld->getX() - 15, getHeight() - TOOLBAR_HEIGHT/2);
+    volumeArea.setCentre(volumeSld->getX() - 10, getHeight() - TOOLBAR_HEIGHT/2);
     
     settingsBtn->setSize(25, 25);
     settingsBtn->setCentrePosition(getWidth() - 25, getHeight() - TOOLBAR_HEIGHT/2);
@@ -306,6 +309,23 @@ void MainComponent::timerCallback()
         dataManager->trackDataUpdate.store(false);
         libraryView->updateData();
         directionView->updateData();
+    }
+    
+    if (!waitingForFiles && !validSamplerate.load() && !errorShown.load())
+    {
+        errorShown.store(true);
+        
+        // Create error message about sample rate
+        juce::String errorMessage = "Unsupported Sample Rate: please set to " + juce::String(SUPPORTED_SAMPLERATE) + "Hz.";
+        
+        if (currentView != ViewID::settings)
+            changeView(ViewID::settings);
+        
+        // Show an error window containing the message
+        juce::AlertWindow::showMessageBox(juce::AlertWindow::WarningIcon,
+                                          "Error",
+                                          errorMessage,
+                                          "OK");
     }
     
     skipBtn->setEnabled(dj->canSkip());

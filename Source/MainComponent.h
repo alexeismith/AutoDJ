@@ -98,6 +98,9 @@ private:
     std::unique_ptr<TrackDataManager> dataManager;
     std::unique_ptr<ArtificialDJ> dj;
     
+    std::atomic<bool> validSamplerate = false;
+    std::atomic<bool> errorShown = false;
+    
     bool playing = false;
     
     std::atomic<int> initBlockSize;

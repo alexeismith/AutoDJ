@@ -45,6 +45,8 @@ public:
     
     bool canSkip();
     
+    void reset();
+    
 private:
     
     void removeMix(MixInfo mix);
@@ -63,6 +65,7 @@ private:
     
     bool playing = false;
     std::atomic<bool> ending = false;
+    std::atomic<bool> endingConfirm = false;
     
     int mixIdCounter = 0;
     

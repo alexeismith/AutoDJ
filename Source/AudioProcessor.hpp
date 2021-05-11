@@ -46,6 +46,8 @@ public:
     
     bool mixEnded();
     
+    void reset();
+    
 private:
     
     void skipToNextEvent();
@@ -55,7 +57,7 @@ private:
     
     std::atomic<bool> skipFlag = false;
     
-    std::atomic<bool> paused;
+    std::atomic<bool> paused = true;
     
     juce::OwnedArray<TrackProcessor> trackProcessors;
     

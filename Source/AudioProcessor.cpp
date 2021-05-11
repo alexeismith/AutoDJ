@@ -12,8 +12,6 @@
 
 AudioProcessor::AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj, int initBlockSize)
 {
-    paused.store(true);
-    
     trackProcessors.add(new TrackProcessor(dataManager, dj));
     trackProcessors.add(new TrackProcessor(dataManager, dj));
     
@@ -45,7 +43,7 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
         if (leader)
         {
             int playhead = leader->getNextAudioBlock(bufferToFill);
-            next->syncWithLeader(playhead - bufferToFill.numSamples);
+            next->cue(playhead - bufferToFill.numSamples);
             next->getNextAudioBlock(bufferToFill);
         }
         else
@@ -116,6 +114,16 @@ bool AudioProcessor::mixEnded()
     }
     
     return false;
+}
+
+
+void AudioProcessor::reset()
+{
+    paused.store(true);
+    skipFlag.store(false);
+    
+    for (auto* processor : trackProcessors)
+        processor->reset();
 }
 
 

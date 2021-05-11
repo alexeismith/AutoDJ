@@ -56,6 +56,8 @@ private:
     
     AnalysisResults results;
     
+    bool paused = false;
+    
     int jobProgress = 0; // Keeps track of how many jobs have been completed
     int nextJob = 0; // Because of multi-threading we also need to keep track of what job is next (not simply jobProgress+1)
     

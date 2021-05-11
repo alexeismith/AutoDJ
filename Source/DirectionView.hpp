@@ -20,7 +20,7 @@ public:
     
     DirectionView(AnalysisManager* am);
     
-    ~DirectionView() {}
+    ~DirectionView() { reset(); }
     
     void paint(juce::Graphics& g) override;
     
@@ -31,6 +31,8 @@ public:
     void addAnalysed(TrackInfo* track);
     
     void calculatePositions();
+    
+    void reset();
     
 private:
     

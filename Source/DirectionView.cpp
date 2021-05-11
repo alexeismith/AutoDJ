@@ -95,12 +95,32 @@ void DirectionView::calculatePositions()
     {
         info = *dot->getTrack();
         
-        xProportion = float(info.bpm - results.minBpm) / (results.maxBpm - results.minBpm);
-        yProportion = float(info.groove - results.minGroove) / (results.maxGroove - results.minGroove);
+        // Prevent division by zero when there is only 1 track
+        if (results.minBpm == results.maxBpm)
+            xProportion = 0.5;
+        else
+            xProportion = float(info.bpm - results.minBpm) / (results.maxBpm - results.minBpm);
+        
+        // Do the same for groove on y-axis
+        if (results.minGroove == results.maxGroove)
+            yProportion = 0.5;
+        else
+            yProportion = float(info.groove - results.minGroove) / (results.maxGroove - results.minGroove);
         
         // Flip y axis so high groove is at top
         yProportion = 1 - yProportion;
         
+        // Check that the values are within range
+        jassert(xProportion >= 0 && xProportion <= 1 && yProportion >= 0 && yProportion <= 1);
+        
         dot->setPosition(xProportion, yProportion);
     }
+}
+
+
+void DirectionView::reset()
+{
+    removeAllChildren();
+    dots.clear();
+    numDotsAdded = 0;
 }

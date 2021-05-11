@@ -40,6 +40,8 @@ public:
     
     TrackInfo* findClosestAndRemove(float bpm, float groove);
     
+    void reset();
+    
 private:
     
     juce::CriticalSection lock;

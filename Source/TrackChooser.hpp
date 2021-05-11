@@ -37,7 +37,7 @@ private:
     TrackDataManager* dataManager = nullptr;
     TrackSorter* sorter = nullptr;
     
-    int currentKey;
+    int currentKey = -1;
     
     double currentBpm = -1.0;
     double currentGroove = -1.0;

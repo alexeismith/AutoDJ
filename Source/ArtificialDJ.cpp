@@ -37,6 +37,9 @@ MixInfo ArtificialDJ::getNextMix(MixInfo current)
 {
     const juce::ScopedLock sl(lock);
     
+    if (ending.load())
+        endingConfirm.store(true);
+    
     removeMix(current);
     
     if (mixQueue.size() == 0)
@@ -101,6 +104,22 @@ bool ArtificialDJ::canSkip()
 }
 
 
+void ArtificialDJ::reset()
+{
+    stopThread(5000);
+    
+    playing = false;
+    
+    initialised.store(false);
+    ending.store(false);
+    endingConfirm.store(false);
+    
+    mixIdCounter = 0;
+    
+    leadingTrack = nullptr;
+}
+
+
 void ArtificialDJ::removeMix(MixInfo mix)
 {
     if (mixQueue.size() > 0)
@@ -140,6 +159,9 @@ void ArtificialDJ::initialise()
 void ArtificialDJ::generateMixSimple()
 {
     MixInfo mix;
+    
+    if (endingConfirm.load())
+        return;
     
     mix.id = mixIdCounter;
     mixIdCounter += 1;
@@ -203,6 +225,9 @@ void ArtificialDJ::generateMixSimple()
 void ArtificialDJ::generateMixComplex()
 {
     MixInfo mix;
+    
+    if (endingConfirm.load())
+        return;
 
     // Set ID for the new mix
     mix.id = mixIdCounter;
@@ -290,8 +315,6 @@ void ArtificialDJ::generateMixComplex()
     // Find the largest multiple of 4 bars that fits into this space
     int largestMultiple4 = leadingTrackAvailable / (leadingTrack->getBarLength() * 4);
     
-    jassert(largestMultiple4 >= 2);
-    
     // Limit to 24 bar max mix length
     largestMultiple4 = juce::jmin(6, largestMultiple4);
     
@@ -330,8 +353,10 @@ void ArtificialDJ::generateMixComplex()
         double multiplier = juce::jlimit(0.0, 1.0, randomGenerator.getGaussian(0.2, 0.5, 0.6));
         // Choose the length using the random multiplier
         lengthCandidate = round(float(largestMultiple4) * multiplier);
-        // Ensure the length is at least 2
-        lengthCandidate = juce::jmax(lengthCandidate, 2);
+        
+        // If possible, ensure the length is at least 8 bars
+        if (largestMultiple4 >= 2)
+            lengthCandidate = juce::jmax(lengthCandidate, 2);
     }
         
     // Set the chosen candidate as the mix end point in both tracks

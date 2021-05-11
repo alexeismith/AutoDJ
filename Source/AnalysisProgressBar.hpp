@@ -21,6 +21,8 @@ public:
     
     ~AnalysisProgressBar() {}
     
+    void paint(juce::Graphics& g) override;
+    
     void resized() override;
     
     void mouseEnter(const juce::MouseEvent &event) override;
@@ -31,7 +33,13 @@ public:
     
     void update(double progress);
     
+    void playPause();
+    
+    void pause();
+    
 private:
+    
+    juce::CriticalSection lock;
     
     AnalysisManager* analysisManager = nullptr;
     
@@ -39,7 +47,9 @@ private:
     
     bool paused = false;
     
-    std::unique_ptr<juce::ImageButton> playPauseBtn;
+    bool mouseOver = false;
+    
+    juce::Rectangle<float> imageArea;
     
     juce::Image playImg;
     juce::Image pauseImg;

@@ -175,7 +175,7 @@ void MainComponent::paint (juce::Graphics& g)
     if (!initialised)
         g.setGradientFill(juce::ColourGradient(colourBackground, getWidth()/2, getHeight()/4, colourBackground.withBrightness(0.15f), getWidth(), getHeight(), true));
     else
-        g.setGradientFill(juce::ColourGradient(colourBackground.withBrightness(0.3f), getWidth()/2, getHeight()/4, colourBackground, getWidth()/2, getHeight(), true));
+        g.setGradientFill(juce::ColourGradient(colourBackground.withBrightness(0.3f), getWidth()/2, getHeight()/4, colourBackground, getWidth()/2, getHeight() - TOOLBAR_HEIGHT, true));
     g.fillAll();
     
     if (!initialised)
@@ -341,6 +341,18 @@ void MainComponent::timerCallback()
         juce::AlertWindow::showMessageBox(juce::AlertWindow::WarningIcon, "Error", errorMessage, "OK");
     }
     
+    if (audioProcessor->mixEnded() && !ended)
+    {
+        playPauseBtn->setImages(false, true, true, playImg, 0.8f, {}, playImg, 1.f, {}, playImg, 1.f, juce::Colours::lightblue);
+        playing = false;
+        
+        ended = true;
+        
+        juce::AlertWindow::showMessageBox(juce::AlertWindow::InfoIcon, "Info", "Mix finished - ran out of analysed tracks.", "OK");
+        
+        resetMix();
+    }
+    
     skipBtn->setEnabled(dj->canSkip());
 }
 
@@ -412,6 +424,20 @@ void MainComponent::sliderValueChanged(juce::Slider* slider)
         default:
             jassert(false); // Unrecognised button ID
     }
+}
+
+
+void MainComponent::resetMix()
+{
+    analysisProgress->pause();
+    
+    dataManager->clearHistory();
+    dj->reset();
+    audioProcessor->reset();
+    
+    analysisProgress->playPause();
+    
+    ended = false;
 }
 
 

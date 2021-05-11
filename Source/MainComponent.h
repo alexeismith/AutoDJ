@@ -47,6 +47,8 @@ public:
 
 private:
     
+    void resetMix();
+    
     void setAppearance();
     
     void chooseFolder();
@@ -102,6 +104,7 @@ private:
     std::atomic<bool> errorShown = false;
     
     bool playing = false;
+    bool ended = false;
     
     std::atomic<int> initBlockSize;
     

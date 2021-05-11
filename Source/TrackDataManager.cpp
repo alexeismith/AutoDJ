@@ -258,6 +258,43 @@ int TrackDataManager::getHash(juce::File file)
 }
 
 
+void TrackDataManager::clearHistory()
+{
+    const juce::ScopedLock sl(lock);
+    
+    TrackInfo* track;
+    
+    sorter.reset();
+    directionView->reset();
+    
+    numTracksAnalysed = 0;
+    numTracksAnalysedUnqueued = 0;
+    
+    for (int i = 0; i < numTracks; i++)
+    {
+        track = &tracks[i];
+        
+        track->playing = false;
+        track->played = false;
+        
+        if (track->analysed)
+        {
+            numTracksAnalysed += 1;
+            numTracksAnalysedUnqueued += 1;
+            
+            analysisManager->processResult(track);
+            
+            sorter.addAnalysed(track);
+            
+            // Pass the track to the direction view
+            directionView->addAnalysed(track);
+        }
+    }
+    
+    trackDataUpdate.store(true);
+}
+
+
 void TrackDataManager::reset()
 {
     numTracks = 0;

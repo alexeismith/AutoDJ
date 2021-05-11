@@ -64,11 +64,13 @@ void AnalysisThread::analyse(TrackInfo& track)
     
     progress.store(0.9);
     
-    track.analysed = true;
-    
     if (shouldExit()) return;
     
+    track.analysed = true;
+    
     dataManager->releaseAudio(buffer);
+    
+    if (shouldExit()) return;
     
     analysisManager->storeAnalysis(&track);
     

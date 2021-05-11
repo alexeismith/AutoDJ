@@ -64,10 +64,14 @@ void AnalysisManager::startAnalysis(TrackDataManager* dm)
 
 void AnalysisManager::playPause()
 {
+    const juce::ScopedLock sl(lock);
+    
     for (auto* thread : threads)
     {
         thread->playPause();
     }
+    
+    paused = !paused;
 }
 
 
@@ -114,9 +118,9 @@ void AnalysisManager::storeAnalysis(TrackInfo* track)
 {
     const juce::ScopedLock sl(lock);
     
-    dataManager->storeAnalysis(track);
-    
     processResult(track);
+    
+    dataManager->storeAnalysis(track);
     
     jobProgress += 1;
 }

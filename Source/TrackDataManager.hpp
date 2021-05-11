@@ -51,9 +51,11 @@ public:
     
     AnalysisResults getAnalysisResults() { return analysisManager->getResults(); }
     
-    std::atomic<bool> trackDataUpdate = false;
-    
     AnalysisManager* getAnalysisManager() { return analysisManager.get(); }
+    
+    void clearHistory();
+    
+    std::atomic<bool> trackDataUpdate = false;
       
 private:
     

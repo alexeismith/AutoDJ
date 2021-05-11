@@ -145,7 +145,7 @@ Track* TrackProcessor::getNewTrack()
 }
 
 
-void TrackProcessor::syncWithLeader(int leaderPlayhead)
+void TrackProcessor::cue(int leaderPlayhead)
 {
     if (!play && leaderPlayhead >= currentMix.start)
     {
@@ -176,6 +176,21 @@ void TrackProcessor::skipToNextEvent()
     }
     
     resetPlayhead(playhead);
+}
+
+
+void TrackProcessor::reset()
+{
+    play = false;
+    trackEnd = false;
+    
+    newTrack.store(true);
+    mixEnd.store(false);
+
+    stretcher->reset();
+    output.clear();
+    
+    track.reset(new Track());
 }
 
 

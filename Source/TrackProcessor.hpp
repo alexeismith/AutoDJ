@@ -53,9 +53,11 @@ public:
     
     MixInfo getCurrentMix() { return currentMix; }
     
-    void syncWithLeader(int leaderPlayhead);
+    void cue(int leaderPlayhead);
     
     void skipToNextEvent();
+    
+    void reset();
     
 private:
     

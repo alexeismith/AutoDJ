@@ -14,7 +14,7 @@
 
 TrackSorter::TrackSorter()
 {
-    tree.reset(new Quadtree(quadtree::Box<float>(0.f, 0.f, BPM_MAX, GROOVE_MAX)));
+    reset();
 }
 
 
@@ -39,4 +39,10 @@ TrackInfo* TrackSorter::findClosestAndRemove(float bpm, float groove)
     tree->remove(result);
     
     return result;
+}
+
+
+void TrackSorter::reset()
+{
+    tree.reset(new Quadtree(quadtree::Box<float>(0.f, 0.f, BPM_MAX, GROOVE_MAX)));
 }

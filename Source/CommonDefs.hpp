@@ -16,7 +16,7 @@
 #define TRACK_LENGTH_SECS_MIN (60) // 1 minute minimum length
 #define TRACK_LENGTH_SECS_MAX (600) // 10 minutes maximum length
 #define BEATS_PER_BAR (4)
-#define NUM_TRACKS_MIN (2)
+#define NUM_TRACKS_MIN (6)
 
 #define TOOLBAR_HEIGHT (48)
 

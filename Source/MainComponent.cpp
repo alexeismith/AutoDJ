@@ -353,7 +353,7 @@ void MainComponent::timerCallback()
         resetMix();
     }
     
-    skipBtn->setEnabled(dj->canSkip());
+    skipBtn->setEnabled(dj->canSkip() && validSamplerate.load());
 }
 
 
@@ -380,6 +380,12 @@ void MainComponent::buttonClicked(juce::Button* button)
             break;
             
         case ComponentID::playPauseBtn:
+            if (!validSamplerate.load())
+            {
+                errorShown.store(false);
+                break;
+            }
+            
             if (waitingForDJ)
                 break;
             

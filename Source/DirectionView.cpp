@@ -16,18 +16,22 @@ DirectionView::DirectionView(AnalysisManager* am) :
     toolTip.reset(new juce::TooltipWindow(this, 0));
     addAndMakeVisible(toolTip.get());
     
+    addChildComponent(directionLine);
+    
     colourBackground = getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId);
     
     logo = juce::ImageFileFormat::loadFrom(BinaryData::logoLarge_png, BinaryData::logoLarge_pngSize);
     axes = juce::ImageFileFormat::loadFrom(BinaryData::axes_png, BinaryData::axes_pngSize);
     
-    startTimerHz(30);
+    setBufferedToImage(true);
+    
+    startTimer(30); // 33ms = 30.3Hz
 }
 
 
-void DirectionView::timerCallback()
+void DirectionView::hiResTimerCallback()
 {
-    repaint();
+    directionLine.update(leader, next);
 }
 
 
@@ -38,20 +42,6 @@ void DirectionView::paint(juce::Graphics& g)
     
     g.drawImage(logo, logoArea, juce::RectanglePlacement::centred);
     g.drawImage(axes, axesArea, juce::RectanglePlacement::xLeft | juce::RectanglePlacement::yBottom);
-    
-    if (next != nullptr)
-    {
-        juce::Line<float> line;
-        line.setStart(leader->getCentre());
-        line.setEnd(next->getCentre());
-        float dashLength[20] = { 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1 };
-        
-        g.setColour(juce::Colours::white);
-        g.drawDashedLine(line, dashLength, 20, 3, 19 - tempCounter);
-        
-        tempCounter++;
-        tempCounter %= 20;
-    }
 }
 
 
@@ -74,6 +64,9 @@ void DirectionView::resized()
     axesArea.setSize(getHeight()/3, getHeight()/3);
     axesArea.setX(35);
     axesArea.setY(getHeight() - 25 - axesArea.getHeight());
+    
+    directionLine.update(leader, next);
+    directionLine.updateBounds();
 }
 
 
@@ -130,7 +123,7 @@ void DirectionView::addAnalysed(TrackInfo* track)
     calculatePositions();
     
     juce::MessageManager::callAsync(std::function<void()>([this]() {
-        this->resized();
+        resized();
     }));
 }
 

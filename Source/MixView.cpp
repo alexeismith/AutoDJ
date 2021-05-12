@@ -17,7 +17,7 @@ MixView::MixView(TrackProcessor** processors)
     addAndMakeVisible(decks.getUnchecked(0));
     addAndMakeVisible(decks.getUnchecked(1));
     
-    startTimer(33); // 10ms interval = 100Hz, 15ms = 66.7Hz, 33ms = 30.3Hz
+    startTimer(33); // 33ms = 30.3Hz
 }
 
 
@@ -34,7 +34,7 @@ void MixView::hiResTimerCallback()
     decks.getUnchecked(1)->update();
     
     juce::MessageManager::callAsync(std::function<void()>([this]() {
-        this->repaint();
+        repaint();
     }));
 }
 

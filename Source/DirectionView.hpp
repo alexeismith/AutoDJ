@@ -12,9 +12,10 @@
 
 #include "TrackDotComponent.hpp"
 #include "AnalysisManager.hpp"
+#include "DirectionLine.hpp"
 
 
-class DirectionView : public juce::Component, public juce::Timer
+class DirectionView : public juce::Component, public juce::HighResolutionTimer
 {
 public:
     
@@ -22,7 +23,9 @@ public:
     
     ~DirectionView() { reset(); }
     
-    void timerCallback() override;
+    // Using hi res timer because it runs on a separate thread,
+    // to avoid clogging message thread
+    void hiResTimerCallback() override;
     
     void paint(juce::Graphics& g) override;
     
@@ -60,7 +63,7 @@ private:
     TrackDotComponent* leader = nullptr;
     TrackDotComponent* next = nullptr;
     
-    int tempCounter = 0;
+    DirectionLine directionLine;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DirectionView)
 };

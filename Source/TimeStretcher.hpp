@@ -35,7 +35,7 @@ public:
     
     void resetPlayhead(int sample = 0);
     
-    double getTimeStretch() { return timeStretch; }
+    double getTimeStretch() { return timeStretch.load(); }
     
     void reset();
     
@@ -49,7 +49,7 @@ private:
     juce::AudioBuffer<float> outputInterleaved;
     
     soundtouch::SoundTouch shifter;
-    double timeStretch = 1;
+    std::atomic<double> timeStretch = 1.0;
     int playhead = 0;
 
     

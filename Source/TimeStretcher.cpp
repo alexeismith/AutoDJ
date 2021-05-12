@@ -84,8 +84,8 @@ int TimeStretcher::process(juce::AudioBuffer<float>* input, juce::AudioBuffer<fl
 
 void TimeStretcher::update(double bpmOriginal, double bpmTarget)
 {
-    timeStretch = bpmTarget / bpmOriginal;
-    shifter.setTempo(timeStretch);
+    timeStretch.store(bpmTarget / bpmOriginal);
+    shifter.setTempo(timeStretch.load());
 }
 
 

@@ -15,6 +15,8 @@
       <FILE id="xMkVFr" name="settings.png" compile="0" resource="1" file="Images/settings.png"/>
       <FILE id="NCppzX" name="skip.png" compile="0" resource="1" file="Images/skip.png"/>
       <FILE id="bU3J6C" name="volume.png" compile="0" resource="1" file="Images/volume.png"/>
+      <FILE id="P8rUQo" name="icon256.png" compile="0" resource="1" file="Images/icon256.png"/>
+      <FILE id="Iq7WJJ" name="icon512.png" compile="0" resource="1" file="Images/icon512.png"/>
     </GROUP>
     <GROUP id="{A84FEFF8-C709-ECFA-E10F-9FF3F5BBB565}" name="Source">
       <FILE id="gOh4WX" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
@@ -452,7 +454,8 @@
       </MODULEPATHS>
     </VS2019>
     <XCODE_MAC targetFolder="Builds/MacOSX" externalLibraries="sqlite3&#10;essentia&#10;fftw3&#10;yaml&#10;avcodec&#10;avformat&#10;avutil&#10;samplerate&#10;tag&#10;fftw3f&#10;chromaprint&#10;avresample"
-               extraLinkerFlags="-I/usr/local/include/essentia/ -I/usr/local/include/essentia/scheduler/ -I/usr/local/include/essentia/streaming/  -I/usr/local/include/essentia/utils&#10;-I/usr/include/taglib&#10;-I/usr/include/eigen3&#10;-L/usr/local/lib">
+               extraLinkerFlags="-I/usr/local/include/essentia/ -I/usr/local/include/essentia/scheduler/ -I/usr/local/include/essentia/streaming/  -I/usr/local/include/essentia/utils&#10;-I/usr/include/taglib&#10;-I/usr/include/eigen3&#10;-L/usr/local/lib"
+               smallIcon="P8rUQo" bigIcon="Iq7WJJ">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="AutoDJ"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="AutoDJ"/>

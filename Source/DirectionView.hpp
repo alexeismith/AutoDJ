@@ -14,13 +14,15 @@
 #include "AnalysisManager.hpp"
 
 
-class DirectionView : public juce::Component
+class DirectionView : public juce::Component, public juce::Timer
 {
 public:
     
     DirectionView(AnalysisManager* am);
     
     ~DirectionView() { reset(); }
+    
+    void timerCallback() override;
     
     void paint(juce::Graphics& g) override;
     
@@ -54,8 +56,12 @@ private:
     AnalysisManager* analysisManager;
     
     std::atomic<bool> needsUpdate = false;
-
     
+    TrackDotComponent* leader = nullptr;
+    TrackDotComponent* next = nullptr;
+    
+    int tempCounter = 0;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DirectionView)
 };
 

@@ -20,6 +20,14 @@ DirectionView::DirectionView(AnalysisManager* am) :
     
     logo = juce::ImageFileFormat::loadFrom(BinaryData::logoLarge_png, BinaryData::logoLarge_pngSize);
     axes = juce::ImageFileFormat::loadFrom(BinaryData::axes_png, BinaryData::axes_pngSize);
+    
+    startTimerHz(30);
+}
+
+
+void DirectionView::timerCallback()
+{
+    repaint();
 }
 
 
@@ -30,6 +38,20 @@ void DirectionView::paint(juce::Graphics& g)
     
     g.drawImage(logo, logoArea, juce::RectanglePlacement::centred);
     g.drawImage(axes, axesArea, juce::RectanglePlacement::xLeft | juce::RectanglePlacement::yBottom);
+    
+    if (next != nullptr)
+    {
+        juce::Line<float> line;
+        line.setStart(leader->getCentre());
+        line.setEnd(next->getCentre());
+        float dashLength[20] = { 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1 };
+        
+        g.setColour(juce::Colours::white);
+        g.drawDashedLine(line, dashLength, 20, 3, 19 - tempCounter);
+        
+        tempCounter++;
+        tempCounter %= 20;
+    }
 }
 
 
@@ -57,15 +79,43 @@ void DirectionView::resized()
 
 void DirectionView::updateData()
 {
+    TrackDotComponent* dot;
+    
     for (int i = 0; i < dots.size(); i++)
     {
-        dots.getUnchecked(i)->update();
+        dot = dots.getUnchecked(i);
+        
+        dot->update();
         
         if (i >= numDotsAdded)
         {
             addAndMakeVisible(dots.getUnchecked(i));
             numDotsAdded += 1;
         }
+        
+        
+        if (leader != nullptr)
+        {
+            if (dot->getTrack()->hash == leader->getTrack()->hash)
+            {
+                if (!dot->getTrack()->playing)
+                    leader = nullptr;
+            }
+            else if (dot->getTrack()->playing)
+            {
+                next = dot;
+            }
+        }
+        else if (dot->getTrack()->playing)
+        {
+            next = dot;
+        }
+    }
+    
+    if (leader == nullptr)
+    {
+        leader = next;
+        next = nullptr;
     }
     
     repaint();

@@ -74,6 +74,16 @@ void TrackDotComponent::update()
 }
 
 
+juce::Point<float> TrackDotComponent::getCentre()
+{
+    juce::Point<float> centre;
+    centre.setX(getX() + getWidth() * 0.5f);
+    centre.setY(getY() + getHeight() * 0.5f);
+    
+    return centre;
+}
+
+
 void TrackDotComponent::setPosition(float x, float y)
 {
     xProportion = x;

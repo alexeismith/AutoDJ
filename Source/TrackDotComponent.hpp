@@ -32,10 +32,14 @@ public:
     
     void update();
     
+    juce::Point<float> getCentre();
+    
     void setPosition(float xProportion, float yProportion);
     
     float getXProportion() { return xProportion; }
     float getYProportion() { return yProportion; }
+    
+    bool unplayed = true;
     
 private:
     

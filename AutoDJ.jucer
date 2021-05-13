@@ -48,6 +48,10 @@
               file="Source/DirectionView.cpp"/>
         <FILE id="EDxRzB" name="DirectionView.hpp" compile="0" resource="0"
               file="Source/DirectionView.hpp"/>
+        <FILE id="fvUQmn" name="DirectionLine.cpp" compile="1" resource="0"
+              file="Source/DirectionLine.cpp"/>
+        <FILE id="ySElCu" name="DirectionLine.hpp" compile="0" resource="0"
+              file="Source/DirectionLine.hpp"/>
         <FILE id="SqRZXp" name="TrackDotComponent.cpp" compile="1" resource="0"
               file="Source/TrackDotComponent.cpp"/>
         <FILE id="H0YSoL" name="TrackDotComponent.hpp" compile="0" resource="0"
@@ -157,6 +161,10 @@
                 file="Source/AnalysisTest.cpp"/>
           <FILE id="MzAtaS" name="AnalysisTest.hpp" compile="0" resource="0"
                 file="Source/AnalysisTest.hpp"/>
+          <FILE id="W8xWeS" name="PerformanceMeasure.cpp" compile="1" resource="0"
+                file="Source/PerformanceMeasure.cpp"/>
+          <FILE id="gBWPjX" name="PerformanceMeasure.hpp" compile="0" resource="0"
+                file="Source/PerformanceMeasure.hpp"/>
         </GROUP>
         <GROUP id="{67C76829-2C6F-697A-3BEA-7FBFB680248E}" name="Third Party">
           <GROUP id="{8107A29A-C104-E2AA-E0B2-2F89DD3A1C14}" name="essentia">

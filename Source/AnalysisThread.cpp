@@ -50,7 +50,7 @@ void AnalysisThread::analyse(TrackInfo& track)
     
     progress.store(0.1);
 
-    analyserBeats->analyse(buffer, &progress, track.bpm, track.beatPhase, track.downbeat);
+    analyserBeatsEssentia->analyse(buffer, &progress, track.bpm, track.beatPhase, track.downbeat);
     
     if (shouldExit()) return;
     

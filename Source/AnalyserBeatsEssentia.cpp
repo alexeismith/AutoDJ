@@ -11,6 +11,8 @@
 
 #include "ThirdParty/beatutils.h"
 
+#include "PerformanceMeasure.hpp"
+
 // TODO: define these elsewhere
 #define MIN_TEMPO (90)
 #define MAX_TEMPO (160)
@@ -22,7 +24,7 @@
 
 AnalyserBeatsEssentia::AnalyserBeatsEssentia(essentia::standard::AlgorithmFactory& factory)
 {
-    rhythmExtractor.reset(factory.create("RhythmExtractor2013", "minTempo", MIN_TEMPO, "maxTempo", MAX_TEMPO));
+    rhythmExtractor.reset(factory.create("RhythmExtractor2013", "minTempo", MIN_TEMPO, "maxTempo", MAX_TEMPO, "method", "degara"));
     
     downBeat.reset(new DownBeat(SUPPORTED_SAMPLERATE, DOWNBEAT_DECIMATION_FACTOR, STEP_SIZE));
     downBeat->setBeatsPerBar(BEATS_PER_BAR);
@@ -58,6 +60,10 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
     float bpmFloat;
     float confidence;
     
+    double timeSec;
+    {
+    juce::ScopedTimeMeasurement m(timeSec);
+    
     rhythmExtractor->reset();
     
     try {
@@ -76,6 +82,10 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
     }
     
     bpm = round(bpmFloat);
+    
+    }
+    
+    PerformanceMeasure::addResult(timeSec);
     
 //    DBG("bpm: " << bpmFloat << " confidence: " << confidence);
     

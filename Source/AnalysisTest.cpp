@@ -9,6 +9,8 @@
 
 #include "TrackDataManager.hpp"
 
+#include "PerformanceMeasure.hpp"
+
 
 void AnalysisTest::startAnalysis(TrackDataManager* dataManager)
 {
@@ -21,6 +23,8 @@ void AnalysisTest::startAnalysis(TrackDataManager* dataManager)
         groundTruth.add(dataManager->getTracks()[i]);
         jobs.add(&dataManager->getTracks()[i]);
     }
+    
+    PerformanceMeasure::reset();
     
     initialised.store(true);
 
@@ -144,6 +148,10 @@ void AnalysisTest::printResults()
     DBG("Phase Accuracy Within 2xJND: " << phaseAccuracyJnd2);
     DBG("Average Phase Error: " << averagePhaseError);
     DBG("\nDownbeat Accuracy: " << downbeatAccuracy);
+    
+    // Also print average time taken, measured by the static PerformanceMeasure class
+    DBG("\nAverage Time: " << PerformanceMeasure::getAverage());
+    PerformanceMeasure::reset();
 }
 
 

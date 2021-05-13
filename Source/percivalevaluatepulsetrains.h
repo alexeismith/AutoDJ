@@ -34,7 +34,8 @@ class PercivalEvaluatePulseTrains : public Algorithm {
     void calculatePulseTrains(const std::vector<Real>& ossWindow,
                               const int lag,
                               Real& magScore,
-                              Real& varScore);
+                              Real& varScore,
+                              Real& bestPhase);
 
   public:
     PercivalEvaluatePulseTrains() {

@@ -36,7 +36,7 @@ AnalyserBeatsEssentia::AnalyserBeatsEssentia(essentia::standard::AlgorithmFactor
 #endif
 
 #ifdef PHASE_PULSETRAIN
-    onsetGlobal.reset(factory.create("OnsetDetectionGlobal"));
+    onsetGlobal.reset(factory.create("OnsetDetectionGlobal", "hopSize", STEP_SIZE));
     percivalPulseTrains.reset(new essentia::standard::PercivalEvaluatePulseTrains());
 #endif
     
@@ -46,7 +46,7 @@ AnalyserBeatsEssentia::AnalyserBeatsEssentia(essentia::standard::AlgorithmFactor
 #if defined LOW_PASS_ALL
     filter.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 800, 1.0));
 #elif defined LOW_PASS_PHASE_DOWNBEAT || defined LOW_PASS_DOWNBEAT
-    filter.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 200, 1.0));
+    filter.setCoefficients(juce::IIRCoefficients::makeBandPass(SUPPORTED_SAMPLERATE, 150, 1.0));
 #endif
 }
 
@@ -147,6 +147,11 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
     
 #elif defined PHASE_PULSETRAIN
     
+    for (auto tick : ticks)
+        beats.push_back(tick*SUPPORTED_SAMPLERATE);
+
+    processBeats(beats, bpm, beatPhase);
+    
     pulseTrainsPhase(audio, bpm, beatPhase);
     
 #else
@@ -183,17 +188,24 @@ void AnalyserBeatsEssentia::pulseTrainsPhase(juce::AudioBuffer<float>* audio, in
     
     onsetGlobal->compute();
     
-    std::vector<float> bpmEstimates;
-    bpmEstimates.push_back(bpm);
-    float lag;
+    std::vector<float> bpmLag;
+    bpmLag.push_back((60 * (44100 / STEP_SIZE)) / bpm);
+    float phaseNew;
 
     percivalPulseTrains->input("oss").set(onsetSignal);
-    percivalPulseTrains->input("positions").set(bpmEstimates);
-    percivalPulseTrains->output("lag").set(lag);
+    percivalPulseTrains->input("positions").set(bpmLag);
+    percivalPulseTrains->output("lag").set(phaseNew);
     
     percivalPulseTrains->compute();
     
-    DBG("BPM: " << bpm << " lag: " << lag);
+    phaseNew *= STEP_SIZE;
+    
+    int beatPeriod = AutoDJ::getBeatPeriod(bpm);
+    int offbeat = beatPhase + beatPeriod/2;
+    offbeat %= beatPeriod;
+    
+    if (abs(offbeat - phaseNew) < beatPeriod*0.15)
+        beatPhase = offbeat;
 }
 
 

@@ -46,32 +46,46 @@ void PercivalEvaluatePulseTrains::configure() {
 void PercivalEvaluatePulseTrains::calculatePulseTrains(const std::vector<Real>& ossWindow,
                                                const int lag,
                                                Real& magScore,
-                                               Real& varScore) {
-  vector<Real> bpMagnitudes;
-  int period = lag;
-  bpMagnitudes.resize(lag);
-  for (int phase=0; phase < period; ++phase) {
-    Real currentMagScore;
-    currentMagScore = 0.0;
-    for (int b=0; b < 4; ++b) {
-      int ind;
-      ind = (int)(phase + b * period);
-      if (ind >= 0) {
-        currentMagScore += ossWindow[ind];
-      }
-      ind = (int)(phase + b * period * 2);
-      if (ind >= 0) {
-        currentMagScore += 0.5 * ossWindow[ind];
-      }
-      ind = (int)(phase + b * period * 3 / 2);
-      if (ind >= 0) {
-        currentMagScore += 0.5 * ossWindow[ind];
-      }
+                                               Real& varScore,
+                                               Real& bestPhase) {
+    vector<Real> bpMagnitudes;
+    int period = lag;
+    bpMagnitudes.resize(lag);
+    float bestPhaseScore = 0.f;
+    
+    for (int phase=0; phase < period; ++phase) {
+        Real currentMagScore;
+        currentMagScore = 0.0;
+        
+        for (int b=0; b < 4; ++b) {
+          int ind;
+          ind = (int)(phase + b * period);
+          if (ind >= 0) {
+            currentMagScore += ossWindow[ind];
+          }
+          ind = (int)(phase + b * period * 2);
+          if (ind >= 0) {
+            currentMagScore += 0.5 * ossWindow[ind];
+          }
+//          ind = (int)(phase + b * period * 3 / 2);
+//          if (ind >= 0) {
+//            currentMagScore += 0.5 * ossWindow[ind];
+//          }
+        }
+        
+        bpMagnitudes[phase] = currentMagScore;
+        
+        if (currentMagScore > bestPhaseScore)
+        {
+            bestPhaseScore = currentMagScore;
+            bestPhase = phase;
+        }
+        else if (currentMagScore == bestPhaseScore)
+            std::cout << "EQUAL" << '\n';
     }
-    bpMagnitudes[phase] = currentMagScore;
-  }
-  magScore = *std::max_element(bpMagnitudes.begin(), bpMagnitudes.end());
-  varScore = variance(bpMagnitudes, mean(bpMagnitudes));
+    
+    magScore = *std::max_element(bpMagnitudes.begin(), bpMagnitudes.end());
+    varScore = variance(bpMagnitudes, mean(bpMagnitudes));
 }
 
 void PercivalEvaluatePulseTrains::compute() {
@@ -84,6 +98,8 @@ void PercivalEvaluatePulseTrains::compute() {
     lag = -1;
     return;
   }
+    
+    Real bestPhase;
 
   vector<Real> tempoScores;
   vector<Real> onsetScores;
@@ -97,7 +113,7 @@ void PercivalEvaluatePulseTrains::compute() {
       Real varScore = 0;
       if (lag > 0) {
         // Passing lag = 0 to calculatePulseTrains will result in crash
-        calculatePulseTrains(oss, lag, magScore, varScore);
+        calculatePulseTrains(oss, lag, magScore, varScore, bestPhase);
       }
       tempoScores[i] = magScore;
       onsetScores[i] = varScore;
@@ -114,6 +130,8 @@ void PercivalEvaluatePulseTrains::compute() {
   // As we are only taking argmax, we assume there is no need for this normalization.
   Real bestScorePosition = argmax(comboScores);
   lag = round(peakPositions[bestScorePosition]);
+    
+    lag = bestPhase;
 }
 
 } // namespace standard

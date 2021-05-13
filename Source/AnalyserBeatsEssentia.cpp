@@ -75,18 +75,19 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
         DBG(((essentia::EssentiaException&)e).what());
     }
     
-    for (auto tick : ticks)
-        beats.push_back(tick*SUPPORTED_SAMPLERATE);
+    bpm = round(bpmFloat);
     
 //    DBG("bpm: " << bpmFloat << " confidence: " << confidence);
     
-    processBeats(beats, bpm, beatPhase);
+    
+//    for (auto tick : ticks)
+//        beats.push_back(tick*SUPPORTED_SAMPLERATE);
+//
+//    processBeats(beats, bpm, beatPhase);
     
 //    DBG("bpm: " << bpm << " beatPhase: " << beatPhase);
     
     // Manual phase construction method...
-//    bpm = round(bpmFloat);
-//    
 //    int beatPeriod = AutoDJ::getBeatPeriod(round(bpmFloat));
 //    
 //    int phaseAvg = 0;

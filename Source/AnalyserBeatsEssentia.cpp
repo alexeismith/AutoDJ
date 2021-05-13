@@ -43,7 +43,6 @@ void AnalyserBeatsEssentia::analyse(juce::AudioBuffer<float>* audio, std::atomic
 
 void AnalyserBeatsEssentia::reset()
 {
-
     downBeat->resetAudioBuffer();
 }
 
@@ -56,25 +55,19 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
     std::vector<float> bpmIntervals;
     std::vector<double> beats;
     
-//    ticks.reserve(1);
-//    estimates.reserve(1);
-    
     float bpmFloat;
     float confidence;
     
     rhythmExtractor->reset();
     
     try {
-    rhythmExtractor->input("signal").set(buffer);
-    
-    rhythmExtractor->output("bpm").set(bpmFloat);
-    rhythmExtractor->output("ticks").set(ticks);
-    rhythmExtractor->output("confidence").set(confidence);
-    rhythmExtractor->output("estimates").set(estimates);
-    rhythmExtractor->output("bpmIntervals").set(bpmIntervals);
-    
-//    rhythmExtractor->configure();
-    
+        rhythmExtractor->input("signal").set(buffer);
+        
+        rhythmExtractor->output("bpm").set(bpmFloat);
+        rhythmExtractor->output("ticks").set(ticks);
+        rhythmExtractor->output("confidence").set(confidence);
+        rhythmExtractor->output("estimates").set(estimates);
+        rhythmExtractor->output("bpmIntervals").set(bpmIntervals);
 
         rhythmExtractor->compute();
     }
@@ -85,37 +78,29 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
     for (auto tick : ticks)
         beats.push_back(tick*SUPPORTED_SAMPLERATE);
     
-//    processBeats(beats, bpm, beatPhase);
+//    DBG("bpm: " << bpmFloat << " confidence: " << confidence);
     
-    DBG("bpm: " << bpmFloat << " confidence: " << confidence);
-    DBG("bpm: " << bpm << " beatPhase: " << beatPhase);
+    processBeats(beats, bpm, beatPhase);
     
-    bpm = round(bpmFloat);
+//    DBG("bpm: " << bpm << " beatPhase: " << beatPhase);
     
-    int beatPeriod = AutoDJ::getBeatPeriod(round(bpmFloat));
-
-//    for (auto tick : ticks)
+    // Manual phase construction method...
+//    bpm = round(bpmFloat);
+//    
+//    int beatPeriod = AutoDJ::getBeatPeriod(round(bpmFloat));
+//    
+//    int phaseAvg = 0;
+//    
+//    for (int i = 10; i < ticks.size(); i++)
 //    {
-//        DBG(tick*SUPPORTED_SAMPLERATE);
-//        DBG(int(round(tick*SUPPORTED_SAMPLERATE)) % beatPeriod);
+//        phaseAvg += int(round(ticks.at(i)*SUPPORTED_SAMPLERATE)) % beatPeriod;
 //    }
-//    for (auto interval : bpmIntervals)
-//    {
-//        DBG(interval*SUPPORTED_SAMPLERATE);
-//    }
-    
-    int phaseAvg = 0;
-    
-    for (int i = 10; i < ticks.size(); i++)
-    {
-        phaseAvg += int(round(ticks.at(i)*SUPPORTED_SAMPLERATE)) % beatPeriod;
-    }
-    
-    phaseAvg /= ticks.size() - 10;
-    
-    DBG("phaseAvg: " << phaseAvg);
-    
-    beatPhase = phaseAvg;
+//    
+//    phaseAvg /= ticks.size() - 10;
+//    
+//    DBG("phaseAvg: " << phaseAvg);
+//    
+//    beatPhase = phaseAvg;
 }
 
 

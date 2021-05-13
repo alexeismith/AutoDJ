@@ -60,9 +60,7 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
     float bpmFloat;
     float confidence;
     
-    double timeSec;
-    {
-    juce::ScopedTimeMeasurement m(timeSec);
+    PERFORMANCE_START
     
     rhythmExtractor->reset();
     
@@ -83,9 +81,7 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
     
     bpm = round(bpmFloat);
     
-    }
-    
-    PerformanceMeasure::addResult(timeSec);
+    PERFORMANCE_END
     
 //    DBG("bpm: " << bpmFloat << " confidence: " << confidence);
     

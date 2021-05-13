@@ -8,6 +8,15 @@
 #ifndef PerformanceMeasure_hpp
 #define PerformanceMeasure_hpp
 
+#define PERFORMANCE_START double timeSec; \
+{ \
+juce::ScopedTimeMeasurement m(timeSec);
+
+
+#define PERFORMANCE_END } \
+PerformanceMeasure::addResult(timeSec);
+
+
 class PerformanceMeasure
 {
 public:

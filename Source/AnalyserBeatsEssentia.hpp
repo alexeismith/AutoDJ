@@ -33,13 +33,20 @@ private:
     
     void processBeats(std::vector<double> beats, int& bpm, int& beatPhase);
     
+    void pulseTrainsPhase(int bpm, int& beatPhase);
+    
     void getDownbeat(juce::AudioBuffer<float>* audio, int numFrames, int bpm, int beatPhase, int& downbeat);
     
     bool isBeat(int frame, int bpm, int beatPhase);
     
     std::unique_ptr<essentia::standard::Algorithm> rhythmExtractor;
+    std::unique_ptr<essentia::standard::Algorithm> percivalTempo;
+    std::unique_ptr<essentia::standard::Algorithm> percivalPulseTrains;
+    std::unique_ptr<essentia::standard::Algorithm> onsetGlobal;
     
     std::unique_ptr<DownBeat> downBeat;
+    
+    juce::IIRFilter filter;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalyserBeatsEssentia)
 };

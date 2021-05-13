@@ -27,7 +27,9 @@ juce::Array<int> AnalyserSegments::analyse(TrackInfo* track, juce::AudioBuffer<f
 {
     reset();
     
-//    filter.processSamples(audio->getWritePointer(1), audio->getNumSamples());
+//    filter.processSamples(audio->getWritePointer(0), audio->getNumSamples());
+//    if (audio->getNumChannels() == 2)
+//        filter.processSamples(audio->getWritePointer(1), audio->getNumSamples());
     
     int windowSize = segmenter->getWindowsize();
     

@@ -7,15 +7,15 @@
 
 #pragma once
 
-//#define BEATS_QM PHASE_MIXXX
-
+// Pick only ONE of the following
+//#define BEATS_QM
 //#define BEATS_MULTIFEATURE
 #define BEATS_DEGARA
 //#define BEATS_PERCIVAL
 
-//#define PHASE_MIXXX
-#define PHASE_PULSETRAIN
+#define PHASE_CORRECTION_PULSETRAIN
 
+// Pick only ONE of the following
 //#define LOW_PASS_ALL
-#define LOW_PASS_PHASE_DOWNBEAT
+//#define LOW_PASS_PHASE
 //#define LOW_PASS_DOWNBEAT

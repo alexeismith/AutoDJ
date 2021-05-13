@@ -35,7 +35,7 @@ AnalyserBeatsEssentia::AnalyserBeatsEssentia(essentia::standard::AlgorithmFactor
     percivalTempo.reset(factory.create("PercivalBpmEstimator", "minBPM", MIN_TEMPO, "maxBPM", MAX_TEMPO));
 #endif
 
-#ifdef PHASE_PULSETRAIN
+#ifdef PHASE_CORRECTION_PULSETRAIN
     onsetGlobal.reset(factory.create("OnsetDetectionGlobal", "hopSize", STEP_SIZE));
     percivalPulseTrains.reset(new essentia::standard::PercivalEvaluatePulseTrains());
 #endif
@@ -45,8 +45,10 @@ AnalyserBeatsEssentia::AnalyserBeatsEssentia(essentia::standard::AlgorithmFactor
     
 #if defined LOW_PASS_ALL
     filter.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 800, 1.0));
-#elif defined LOW_PASS_PHASE_DOWNBEAT || defined LOW_PASS_DOWNBEAT
+#elif defined LOW_PASS_PHASE
     filter.setCoefficients(juce::IIRCoefficients::makeBandPass(SUPPORTED_SAMPLERATE, 150, 1.0));
+#elif defined LOW_PASS_DOWNBEAT
+    filter.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 200, 1.0));
 #endif
 }
 
@@ -55,12 +57,23 @@ void AnalyserBeatsEssentia::analyse(juce::AudioBuffer<float>* audio, std::atomic
 {
     reset();
     
+#if defined LOW_PASS_ALL || defined LOW_PASS_PHASE || defined LOW_PASS_DOWNBEAT
+    filteredBuffer.setSize(1, audio->getNumSamples());
+    filteredBuffer.copyFrom(0, 0, audio->getReadPointer(0), audio->getNumSamples());
+#endif
+    
+#ifdef LOW_PASS_ALL
+    filter.processSamples(filteredBuffer.getWritePointer(0), audio->getNumSamples());
+    audio = &filteredBuffer;
+#endif
+    
     int numFrames = (audio->getNumSamples() - FRAME_LENGTH) / STEP_SIZE;
     
     getTempo(audio, progress, numFrames, bpm, beatPhase);
     
 #ifdef LOW_PASS_DOWNBEAT
-    filter.processSamples(audio->getWritePointer(0), audio->getNumSamples());
+    filter.processSamples(filteredBuffer.getWritePointer(0), audio->getNumSamples());
+    audio = &filteredBuffer;
 #endif
     
     getDownbeat(audio, numFrames, bpm, beatPhase, downbeat);
@@ -71,13 +84,15 @@ void AnalyserBeatsEssentia::reset()
 {
     downBeat->resetAudioBuffer();
     
+    filteredBuffer.clear();
+    
 #if defined BEATS_MULTIFEATURE || defined BEATS_DEGARA
     rhythmExtractor->reset();
 #elif defined BEATS_PERCIVAL
     percivalTempo->reset();
 #endif
     
-#ifdef PHASE_PULSETRAIN
+#ifdef PHASE_CORRECTION_PULSETRAIN
     onsetGlobal->reset();
     percivalPulseTrains->reset();
 #endif
@@ -90,10 +105,6 @@ void AnalyserBeatsEssentia::reset()
 
 void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomic<double>* progress, int numFrames, int& bpm, int& beatPhase)
 {
-#ifdef LOW_PASS_ALL
-        filter.processSamples(audio->getWritePointer(0), audio->getNumSamples());
-#endif
-    
     // Tempo analysis...
     
 #if defined BEATS_MULTIFEATURE || defined BEATS_DEGARA
@@ -138,24 +149,20 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
     
     // Beat phase analysis...
     
-#ifdef PHASE_MIXXX
-    
     for (auto tick : ticks)
         beats.push_back(tick*SUPPORTED_SAMPLERATE);
 
     processBeats(beats, bpm, beatPhase);
     
-#elif defined PHASE_PULSETRAIN
+#ifdef PHASE_CORRECTION_PULSETRAIN
     
-    for (auto tick : ticks)
-        beats.push_back(tick*SUPPORTED_SAMPLERATE);
-
-    processBeats(beats, bpm, beatPhase);
+#ifdef LOW_PASS_PHASE
+    filter.processSamples(filteredBuffer.getWritePointer(0), audio->getNumSamples());
+    audio = &filteredBuffer;
+#endif
     
     pulseTrainsPhase(audio, bpm, beatPhase);
-    
-#else
-    jassert(false); // Must define a beat phase method!
+
 #endif
 }
 
@@ -176,10 +183,6 @@ void AnalyserBeatsEssentia::processBeats(std::vector<double> beats, int bpm, int
 
 void AnalyserBeatsEssentia::pulseTrainsPhase(juce::AudioBuffer<float>* audio, int bpm, int& beatPhase)
 {
-    #ifdef LOW_PASS_PHASE_DOWNBEAT
-        filter.processSamples(audio->getWritePointer(0), audio->getNumSamples());
-    #endif
-    
     std::vector<float> buffer(audio->getReadPointer(0), audio->getReadPointer(0) + audio->getNumSamples());
     std::vector<float> onsetSignal;
     

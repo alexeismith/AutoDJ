@@ -74,7 +74,7 @@ private:
     
     juce::OwnedArray<juce::AudioBuffer<float>> audioBuffers;
     
-    std::unique_ptr<AnalysisTest> analysisManager;
+    std::unique_ptr<AnalysisManager> analysisManager;
     
     juce::AudioFormatManager formatManager;
     juce::WildcardFileFilter fileFilter;

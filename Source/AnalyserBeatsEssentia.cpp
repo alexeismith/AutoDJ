@@ -11,6 +11,8 @@
 
 #include "ThirdParty/beatutils.h"
 
+#include "percivalevaluatepulsetrains.h"
+
 #include "PerformanceMeasure.hpp"
 #include "BeatTests.hpp"
 
@@ -35,7 +37,7 @@ AnalyserBeatsEssentia::AnalyserBeatsEssentia(essentia::standard::AlgorithmFactor
 
 #ifdef PHASE_PULSETRAIN
     onsetGlobal.reset(factory.create("OnsetDetectionGlobal"));
-    percivalPulseTrains.reset(factory.create("PercivalEvaluatePulseTrains"));
+    percivalPulseTrains.reset(new essentia::standard::PercivalEvaluatePulseTrains());
 #endif
     
     downBeat.reset(new DownBeat(SUPPORTED_SAMPLERATE, DOWNBEAT_DECIMATION_FACTOR, STEP_SIZE));
@@ -43,7 +45,7 @@ AnalyserBeatsEssentia::AnalyserBeatsEssentia(essentia::standard::AlgorithmFactor
     
 #if defined LOW_PASS_ALL
     filter.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 800, 1.0));
-#elif defined LOW_PASS_PHASE || defined LOW_PASS_DOWNBEAT
+#elif defined LOW_PASS_PHASE_DOWNBEAT || defined LOW_PASS_DOWNBEAT
     filter.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 200, 1.0));
 #endif
 }
@@ -73,6 +75,11 @@ void AnalyserBeatsEssentia::reset()
     rhythmExtractor->reset();
 #elif defined BEATS_PERCIVAL
     percivalTempo->reset();
+#endif
+    
+#ifdef PHASE_PULSETRAIN
+    onsetGlobal->reset();
+    percivalPulseTrains->reset();
 #endif
 
 #if defined LOW_PASS_ALL || defined LOW_PASS_PHASE || defined LOW_PASS_DOWNBEAT
@@ -140,7 +147,7 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
     
 #elif defined PHASE_PULSETRAIN
     
-    pulseTrainsPhase(bpm, beatPhase);
+    pulseTrainsPhase(audio, bpm, beatPhase);
     
 #else
     jassert(false); // Must define a beat phase method!
@@ -162,9 +169,31 @@ void AnalyserBeatsEssentia::processBeats(std::vector<double> beats, int bpm, int
 }
 
 
-void pulseTrainsPhase(int bpm, int& beatPhase)
+void AnalyserBeatsEssentia::pulseTrainsPhase(juce::AudioBuffer<float>* audio, int bpm, int& beatPhase)
 {
+    #ifdef LOW_PASS_PHASE_DOWNBEAT
+        filter.processSamples(audio->getWritePointer(0), audio->getNumSamples());
+    #endif
+    
+    std::vector<float> buffer(audio->getReadPointer(0), audio->getReadPointer(0) + audio->getNumSamples());
+    std::vector<float> onsetSignal;
+    
+    onsetGlobal->input("signal").set(buffer);
+    onsetGlobal->output("onsetDetections").set(onsetSignal);
+    
+    onsetGlobal->compute();
+    
+    std::vector<float> bpmEstimates;
+    bpmEstimates.push_back(bpm);
+    float lag;
 
+    percivalPulseTrains->input("oss").set(onsetSignal);
+    percivalPulseTrains->input("positions").set(bpmEstimates);
+    percivalPulseTrains->output("lag").set(lag);
+    
+    percivalPulseTrains->compute();
+    
+    DBG("BPM: " << bpm << " lag: " << lag);
 }
 
 

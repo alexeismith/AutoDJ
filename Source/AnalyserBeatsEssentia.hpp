@@ -33,7 +33,7 @@ private:
     
     void processBeats(std::vector<double> beats, int bpm, int& beatPhase);
     
-    void pulseTrainsPhase(int bpm, int& beatPhase);
+    void pulseTrainsPhase(juce::AudioBuffer<float>* audio, int bpm, int& beatPhase);
     
     void getDownbeat(juce::AudioBuffer<float>* audio, int numFrames, int bpm, int beatPhase, int& downbeat);
     

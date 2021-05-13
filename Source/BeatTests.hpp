@@ -13,9 +13,9 @@
 #define BEATS_DEGARA
 //#define BEATS_PERCIVAL
 
-#define PHASE_MIXXX
-//#define PHASE_PULSETRAIN
+//#define PHASE_MIXXX
+#define PHASE_PULSETRAIN
 
 //#define LOW_PASS_ALL
-//#define LOW_PASS_PHASE
-#define LOW_PASS_DOWNBEAT
+//#define LOW_PASS_PHASE_DOWNBEAT
+//#define LOW_PASS_DOWNBEAT

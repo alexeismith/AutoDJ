@@ -165,6 +165,7 @@
                 file="Source/PerformanceMeasure.cpp"/>
           <FILE id="gBWPjX" name="PerformanceMeasure.hpp" compile="0" resource="0"
                 file="Source/PerformanceMeasure.hpp"/>
+          <FILE id="YB0kBD" name="BeatTests.hpp" compile="0" resource="0" file="Source/BeatTests.hpp"/>
         </GROUP>
         <GROUP id="{67C76829-2C6F-697A-3BEA-7FBFB680248E}" name="Third Party">
           <GROUP id="{8107A29A-C104-E2AA-E0B2-2F89DD3A1C14}" name="essentia">
@@ -326,6 +327,10 @@
             <FILE id="rLSpRJ" name="threading.h" compile="0" resource="0" file="Source/ThirdParty/essentia/threading.h"/>
             <FILE id="bPPqbq" name="types.h" compile="0" resource="0" file="Source/ThirdParty/essentia/types.h"/>
             <FILE id="CRbWwS" name="version.h" compile="0" resource="0" file="Source/ThirdParty/essentia/version.h"/>
+            <FILE id="LWcwxu" name="percivalevaluatepulsetrains.cpp" compile="1"
+                  resource="0" file="Source/percivalevaluatepulsetrains.cpp"/>
+            <FILE id="pLkpqD" name="percivalevaluatepulsetrains.h" compile="0"
+                  resource="0" file="Source/percivalevaluatepulsetrains.h"/>
           </GROUP>
           <GROUP id="{2637A895-BA81-8947-F3CC-9ED9B67ADA9B}" name="Mixxx">
             <FILE id="bVlyVx" name="beatutils.cpp" compile="1" resource="0" file="Source/ThirdParty/beatutils.cpp"/>

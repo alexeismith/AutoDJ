@@ -40,6 +40,8 @@ private:
     std::unique_ptr<DownBeat> downBeat;
     DFConfig dfConfig;
     
+    juce::IIRFilter filter;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalyserBeats)
 };
 

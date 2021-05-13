@@ -77,6 +77,10 @@ void AnalysisTest::processResult(TrackInfo* estimate)
         // Determine whether the error is within 1x or 2x the Just Noticeable Difference constant
         testResult.phaseWithinJnd1 = (testResult.phaseError <= PHASE_JND);
         testResult.phaseWithinJnd2 = (testResult.phaseError <= 2*PHASE_JND);
+        
+        // Determine whether the phase had landed on the offbeat
+        if (testResult.phaseWithinJnd2 || abs(testResult.phaseError - 0.5) <= 2*PHASE_JND)
+            testResult.phaseWithinJnd2OrOffbeat = true;
     }
     else // Otherwise, the phase is irrelevant
     {
@@ -109,6 +113,7 @@ void AnalysisTest::printResults()
     int numBpmCorrect = 0;
     int numPhaseWithinJnd1 = 0;
     int numPhaseWithinJnd2 = 0;
+    int numPhaseWithinJnd2OrOffbeat = 0;
     int numDownbeatCorrect = 0;
     
     for (auto result : testResults)
@@ -125,6 +130,8 @@ void AnalysisTest::printResults()
             numPhaseWithinJnd1 += 1;
         if (result.phaseWithinJnd2)
             numPhaseWithinJnd2 += 1;
+        if (result.phaseWithinJnd2OrOffbeat)
+            numPhaseWithinJnd2OrOffbeat += 1;
         if (result.downbeatCorrect)
             numDownbeatCorrect += 1;
     }
@@ -136,6 +143,7 @@ void AnalysisTest::printResults()
     
     double phaseAccuracyJnd1 = double(numPhaseWithinJnd1) / numBpmCorrect;
     double phaseAccuracyJnd2 = double(numPhaseWithinJnd2) / numBpmCorrect;
+    double phaseAccuracyJnd2OrOffbeat = double(numPhaseWithinJnd2OrOffbeat) / numBpmCorrect;
     double averagePhaseError = phaseErrorSum / numBpmCorrect;
     
     double downbeatAccuracy = double(numDownbeatCorrect) / numPhaseWithinJnd2;
@@ -146,6 +154,7 @@ void AnalysisTest::printResults()
     DBG("Average BPM Error: " << averageBpmError);
     DBG("\nPhase Accuracy Within 1xJND: " << phaseAccuracyJnd1);
     DBG("Phase Accuracy Within 2xJND: " << phaseAccuracyJnd2);
+    DBG("Phase Accuracy Within 2xJND or Offbeat: " << phaseAccuracyJnd2OrOffbeat);
     DBG("Average Phase Error: " << averagePhaseError);
     DBG("\nDownbeat Accuracy: " << downbeatAccuracy);
     

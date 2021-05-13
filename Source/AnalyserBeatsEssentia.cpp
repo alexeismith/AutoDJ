@@ -12,6 +12,7 @@
 #include "ThirdParty/beatutils.h"
 
 #include "PerformanceMeasure.hpp"
+#include "BeatTests.hpp"
 
 // TODO: define these elsewhere
 #define MIN_TEMPO (90)
@@ -24,18 +25,27 @@
 
 AnalyserBeatsEssentia::AnalyserBeatsEssentia(essentia::standard::AlgorithmFactory& factory)
 {
+#ifdef BEATS_MULTIFEATURE
+    rhythmExtractor.reset(factory.create("RhythmExtractor2013", "minTempo", MIN_TEMPO, "maxTempo", MAX_TEMPO, "method", "multifeature"));
+#elif defined BEATS_DEGARA
     rhythmExtractor.reset(factory.create("RhythmExtractor2013", "minTempo", MIN_TEMPO, "maxTempo", MAX_TEMPO, "method", "degara"));
-    
+#elif defined BEATS_PERCIVAL
     percivalTempo.reset(factory.create("PercivalBpmEstimator", "minBPM", MIN_TEMPO, "maxBPM", MAX_TEMPO));
-    
-    percivalPulseTrains.reset(factory.create("PercivalEvaluatePulseTrains"));
-    
+#endif
+
+#ifdef PHASE_PULSETRAIN
     onsetGlobal.reset(factory.create("OnsetDetectionGlobal"));
+    percivalPulseTrains.reset(factory.create("PercivalEvaluatePulseTrains"));
+#endif
     
     downBeat.reset(new DownBeat(SUPPORTED_SAMPLERATE, DOWNBEAT_DECIMATION_FACTOR, STEP_SIZE));
     downBeat->setBeatsPerBar(BEATS_PER_BAR);
     
-    filter.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 600, 1.0));
+#if defined LOW_PASS_ALL
+    filter.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 800, 1.0));
+#elif defined LOW_PASS_PHASE || defined LOW_PASS_DOWNBEAT
+    filter.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 200, 1.0));
+#endif
 }
 
 
@@ -47,7 +57,11 @@ void AnalyserBeatsEssentia::analyse(juce::AudioBuffer<float>* audio, std::atomic
     
     getTempo(audio, progress, numFrames, bpm, beatPhase);
     
-//    getDownbeat(audio, numFrames, bpm, beatPhase, downbeat);
+#ifdef LOW_PASS_DOWNBEAT
+    filter.processSamples(audio->getWritePointer(0), audio->getNumSamples());
+#endif
+    
+    getDownbeat(audio, numFrames, bpm, beatPhase, downbeat);
 }
 
 
@@ -55,16 +69,27 @@ void AnalyserBeatsEssentia::reset()
 {
     downBeat->resetAudioBuffer();
     
+#if defined BEATS_MULTIFEATURE || defined BEATS_DEGARA
     rhythmExtractor->reset();
+#elif defined BEATS_PERCIVAL
     percivalTempo->reset();
-    
+#endif
+
+#if defined LOW_PASS_ALL || defined LOW_PASS_PHASE || defined LOW_PASS_DOWNBEAT
     filter.reset();
+#endif
 }
 
 
 void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomic<double>* progress, int numFrames, int& bpm, int& beatPhase)
 {
-    // RHYTHM EXTRACTOR BPM ----------------
+#ifdef LOW_PASS_ALL
+        filter.processSamples(audio->getWritePointer(0), audio->getNumSamples());
+#endif
+    
+    // Tempo analysis...
+    
+#if defined BEATS_MULTIFEATURE || defined BEATS_DEGARA
     
     std::vector<float> buffer(audio->getReadPointer(0), audio->getReadPointer(0) + audio->getNumSamples());
     std::vector<float> ticks;
@@ -74,91 +99,57 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
 
     float bpmFloat;
     float confidence;
-
-//    PERFORMANCE_START
     
-    filter.processSamples(audio->getWritePointer(0), audio->getNumSamples());
+    rhythmExtractor->input("signal").set(buffer);
 
-    try {
-        rhythmExtractor->input("signal").set(buffer);
+    rhythmExtractor->output("bpm").set(bpmFloat);
+    rhythmExtractor->output("ticks").set(ticks);
+    rhythmExtractor->output("confidence").set(confidence);
+    rhythmExtractor->output("estimates").set(estimates);
+    rhythmExtractor->output("bpmIntervals").set(bpmIntervals);
 
-        rhythmExtractor->output("bpm").set(bpmFloat);
-        rhythmExtractor->output("ticks").set(ticks);
-        rhythmExtractor->output("confidence").set(confidence);
-        rhythmExtractor->output("estimates").set(estimates);
-        rhythmExtractor->output("bpmIntervals").set(bpmIntervals);
-
-        rhythmExtractor->compute();
-    }
-    catch (std::exception& e) {
-        DBG(((essentia::EssentiaException&)e).what());
-    }
+    rhythmExtractor->compute();
 
     bpm = round(bpmFloat);
+    
+#elif defined BEATS_PERCIVAL
 
-//    PERFORMANCE_END
+    std::vector<float> buffer(audio->getReadPointer(0), audio->getReadPointer(0) + audio->getNumSamples());
+
+    float bpmFloat;
+
+    percivalTempo->input("signal").set(buffer);
+    percivalTempo->output("bpm").set(bpmFloat);
+
+    percivalTempo->compute();
+
+    bpm = round(bpmFloat);
     
-    // MIXXX MAKE CONST
+#else
+    jassert(false); // Must define a beat tracking method!
+#endif
     
-//    for (auto tick : ticks)
-//        beats.push_back(tick*SUPPORTED_SAMPLERATE);
-//
-//    std::vector<BeatUtils::ConstRegion> constantRegions = BeatUtils::retrieveConstRegions(beats, SUPPORTED_SAMPLERATE);
-//
-//    double firstBeat = 0;
-//    bpm = BeatUtils::makeConstBpm(constantRegions, SUPPORTED_SAMPLERATE, &firstBeat);
+    // Beat phase analysis...
     
-    // P&T BPM ----------------
-    
-//    PERFORMANCE_START
-//
-//    std::vector<float> buffer(audio->getReadPointer(0), audio->getReadPointer(0) + audio->getNumSamples());
-//
-//    float bpmFloat;
-//
-//    percivalTempo->input("signal").set(buffer);
-//    percivalTempo->output("bpm").set(bpmFloat);
-//
-//    percivalTempo->compute();
-//
-//    bpm = round(bpmFloat);
-//
-//    PERFORMANCE_END
-    
-    // P&T PULSE TRAINS PHASE -----------------
-    
-//    pulseTrainsPhase(bpm, beatPhase);
-    
-    // MIXXX PHASE -----------------
+#ifdef PHASE_MIXXX
     
     for (auto tick : ticks)
         beats.push_back(tick*SUPPORTED_SAMPLERATE);
 
     processBeats(beats, bpm, beatPhase);
     
-    // AVERAGE PHASE -----------------
+#elif defined PHASE_PULSETRAIN
     
-//    int beatPeriod = AutoDJ::getBeatPeriod(round(bpmFloat));
-//
-//    int phaseAvg = 0;
-//
-//    for (int i = 10; i < ticks.size(); i++)
-//    {
-//        phaseAvg += int(round(ticks.at(i)*SUPPORTED_SAMPLERATE)) % beatPeriod;
-//    }
-//
-//    phaseAvg /= ticks.size() - 10;
-//
-//    DBG("phaseAvg: " << phaseAvg);
-//
-//    beatPhase = phaseAvg;
+    pulseTrainsPhase(bpm, beatPhase);
+    
+#else
+    jassert(false); // Must define a beat phase method!
+#endif
 }
 
 
-void AnalyserBeatsEssentia::processBeats(std::vector<double> beats, int& bpm, int& beatPhase)
+void AnalyserBeatsEssentia::processBeats(std::vector<double> beats, int bpm, int& beatPhase)
 {
-    PERFORMANCE_START
-    
     std::vector<BeatUtils::ConstRegion> constantRegions = BeatUtils::retrieveConstRegions(beats, SUPPORTED_SAMPLERATE);
 
     double firstBeat = 0;
@@ -168,26 +159,12 @@ void AnalyserBeatsEssentia::processBeats(std::vector<double> beats, int& bpm, in
     // 'Rewind' firstBeat to start of track
     double beatLength = 60 * SUPPORTED_SAMPLERATE / bpm;
     beatPhase = firstBeat - floor(firstBeat / beatLength) * beatLength;
-    
-    PERFORMANCE_END
 }
 
 
 void pulseTrainsPhase(int bpm, int& beatPhase)
 {
-    PERFORMANCE_START
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    PERFORMANCE_END
+
 }
 
 

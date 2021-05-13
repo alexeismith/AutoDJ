@@ -31,7 +31,7 @@ private:
     
     void getTempo(juce::AudioBuffer<float>* audio, std::atomic<double>* progress, int numFrames, int& bpm, int& beatPhase);
     
-    void processBeats(std::vector<double> beats, int& bpm, int& beatPhase);
+    void processBeats(std::vector<double> beats, int bpm, int& beatPhase);
     
     void pulseTrainsPhase(int bpm, int& beatPhase);
     

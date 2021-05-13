@@ -11,6 +11,8 @@
 
 #include "ThirdParty/beatutils.h"
 
+#include "BeatTests.hpp"
+
 #define STEP_SIZE (512) // Ideal for 44.1kHz sample rate (see https://code.soundsoftware.ac.uk/projects/qm-vamp-plugins/repository/entry/plugins/BarBeatTrack.cpp#L249)
 #define DOWNBEAT_DECIMATION_FACTOR (16)
 
@@ -26,12 +28,22 @@ AnalyserBeats::AnalyserBeats()
     
     downBeat.reset(new DownBeat(SUPPORTED_SAMPLERATE, DOWNBEAT_DECIMATION_FACTOR, STEP_SIZE));
     downBeat->setBeatsPerBar(BEATS_PER_BAR);
+    
+#ifdef LOW_PASS_ALL
+    filter.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 800, 1.0));
+#elif defined LOW_PASS_DOWNBEAT
+    filter.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 200, 1.0));
+#endif
 }
 
 
 void AnalyserBeats::analyse(juce::AudioBuffer<float>* audio, std::atomic<double>* progress, int& bpm, int& beatPhase, int& downbeat)
 {
     reset();
+    
+#ifdef LOW_PASS_ALL
+    filter.processSamples(audio->getWritePointer(0), audio->getNumSamples());
+#endif
     
     // Find the number of onset detection frames for the provided audio
     int numFrames = (audio->getNumSamples() - dfConfig.frameLength) / dfConfig.stepSize;
@@ -40,6 +52,10 @@ void AnalyserBeats::analyse(juce::AudioBuffer<float>* audio, std::atomic<double>
     
     if (juce::Thread::currentThreadShouldExit()) return;
     progress->store(0.7);
+    
+#ifdef LOW_PASS_DOWNBEAT
+    filter.processSamples(audio->getWritePointer(0), audio->getNumSamples());
+#endif
     
     getDownbeat(audio, numFrames, bpm, beatPhase, downbeat);
 }
@@ -50,6 +66,10 @@ void AnalyserBeats::reset()
     // Reset the QM onset and downbeat analysers
     onsetAnalyser.reset(new DetectionFunction(dfConfig));
     downBeat->resetAudioBuffer();
+    
+#if defined LOW_PASS_ALL || defined LOW_PASS_DOWNBEAT
+    filter.reset();
+#endif
 }
 
 

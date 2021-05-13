@@ -11,6 +11,9 @@
 #include "TrackDataManager.hpp"
 #include "AnalysisManager.hpp"
 
+#include "BeatTests.hpp"
+#include "PerformanceMeasure.hpp"
+
 
 AnalysisThread::AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm, essentia::standard::AlgorithmFactory& factory) :
     juce::Thread("AnalysisThread" + juce::String(ID)), id(ID), analysisManager(am), dataManager(dm)
@@ -49,8 +52,16 @@ void AnalysisThread::analyse(TrackInfo& track)
     if (shouldExit()) return;
     
     progress.store(0.1);
+    
+    PERFORMANCE_START
 
+#ifdef BEATS_QM
+    analyserBeats->analyse(buffer, &progress, track.bpm, track.beatPhase, track.downbeat);
+#else
     analyserBeatsEssentia->analyse(buffer, &progress, track.bpm, track.beatPhase, track.downbeat);
+#endif
+    
+    PERFORMANCE_END
     
     if (shouldExit()) return;
     

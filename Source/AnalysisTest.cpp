@@ -145,3 +145,13 @@ void AnalysisTest::printResults()
     DBG("Average Phase Error: " << averagePhaseError);
     DBG("\nDownbeat Accuracy: " << downbeatAccuracy);
 }
+
+
+void AnalysisTest::storeAnalysis(TrackInfo* track)
+{
+    const juce::ScopedLock sl(lock);
+    
+    processResult(track);
+    
+    jobProgress += 1;
+}

@@ -34,7 +34,7 @@ public:
     
     TrackInfo* getNextJob();
     
-    void storeAnalysis(TrackInfo* track);
+    virtual void storeAnalysis(TrackInfo* track);
     
     virtual void processResult(TrackInfo* track);
     
@@ -48,18 +48,18 @@ protected:
     
     juce::Array<TrackInfo*> jobs;
     
-private:
-    
     juce::CriticalSection lock;
+    
+    int jobProgress = 0; // Keeps track of how many jobs have been completed
+    int nextJob = 0; // Because of multi-threading we also need to keep track of what job is next (not simply jobProgress+1)
+    
+private:
     
     juce::OwnedArray<AnalysisThread> threads;
     
     AnalysisResults results;
     
     bool paused = false;
-    
-    int jobProgress = 0; // Keeps track of how many jobs have been completed
-    int nextJob = 0; // Because of multi-threading we also need to keep track of what job is next (not simply jobProgress+1)
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalysisManager)
 };

@@ -25,7 +25,7 @@ TrackDataManager::TrackDataManager() :
     thread.startThread(3);
     dirContents.reset(new juce::DirectoryContentsList(&fileFilter, thread));
     
-    analysisManager.reset(new AnalysisManager());
+    analysisManager.reset(new AnalysisTest());
     
     parser.reset(new FileParserThread(this));
     

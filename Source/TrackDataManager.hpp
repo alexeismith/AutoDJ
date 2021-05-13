@@ -12,7 +12,7 @@
 
 #include "SqlDatabase.hpp"
 #include "TrackSorter.hpp"
-#include "AnalysisManager.hpp"
+#include "AnalysisTest.hpp"
 #include "DirectionView.hpp"
 
 #define DATABASE_FILENAME ("AutoDjData.db")
@@ -74,7 +74,7 @@ private:
     
     juce::OwnedArray<juce::AudioBuffer<float>> audioBuffers;
     
-    std::unique_ptr<AnalysisManager> analysisManager;
+    std::unique_ptr<AnalysisTest> analysisManager;
     
     juce::AudioFormatManager formatManager;
     juce::WildcardFileFilter fileFilter;

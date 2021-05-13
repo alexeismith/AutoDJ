@@ -36,6 +36,8 @@ public:
     
     void processResult(TrackInfo* track) override;
     
+    void storeAnalysis(TrackInfo* track) override;
+    
 private:
     
     void printResults();

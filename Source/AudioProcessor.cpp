@@ -43,8 +43,8 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
         if (leader)
         {
             int playhead = leader->getNextAudioBlock(bufferToFill);
-            next->cue(playhead - bufferToFill.numSamples);
             next->getNextAudioBlock(bufferToFill);
+            next->cue(playhead);
         }
         else
         {

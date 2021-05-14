@@ -41,6 +41,12 @@ int TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
         
         output.applyGain(std::sqrt(track->gain.currentValue));
         
+        if (filterOn)
+        {
+            highPassFilterL.processSamples(output.getWritePointer(0), bufferToFill.numSamples);
+            highPassFilterR.processSamples(output.getWritePointer(1), bufferToFill.numSamples);
+        }
+        
         bufferToFill.buffer->addFrom(0, bufferToFill.startSample, output.getReadPointer(0), bufferToFill.numSamples);
         bufferToFill.buffer->addFrom(1, bufferToFill.startSample, output.getReadPointer(1), bufferToFill.numSamples);
         
@@ -191,12 +197,34 @@ void TrackProcessor::reset()
     output.clear();
     
     track.reset(new Track());
+    
+    highPassFilterL.reset();
+    highPassFilterR.reset();
+}
+
+
+void TrackProcessor::setHighPass(int frequency)
+{
+    if (frequency <= 0)
+    {
+        filterOn = false;
+        highPassFilterL.reset();
+        highPassFilterR.reset();
+        return;
+    }
+    
+    filterOn = true;
+    
+    highPassFilterL.setCoefficients(juce::IIRCoefficients::makeHighPass(SUPPORTED_SAMPLERATE, frequency, 1.0));
+    highPassFilterR.setCoefficients(juce::IIRCoefficients::makeHighPass(SUPPORTED_SAMPLERATE, frequency, 1.0));
 }
 
 
 void TrackProcessor::update(int numSamples)
 {
     trackEnd = track->update(numSamples);
+    
+    setHighPass(round(track->highPassFreq.currentValue));
     
     // Update time shift
     stretcher->update(track->info->bpm, track->bpm.currentValue);

@@ -61,6 +61,8 @@ public:
     
 private:
     
+    void setHighPass(int frequency);
+    
     void update(int numSamples);
     
     void resetPlayhead(int sample = 0);
@@ -92,6 +94,9 @@ private:
     juce::AudioBuffer<float> output;
     
     std::unique_ptr<TimeStretcher> stretcher;
+    
+    juce::IIRFilter highPassFilterL, highPassFilterR;
+    bool filterOn = false;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackProcessor)
 };

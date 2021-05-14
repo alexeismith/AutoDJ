@@ -12,6 +12,9 @@
 
 #include "MixInfo.hpp"
 
+#define HIGH_PASS_MAX (150)
+
+
 class Track
 {
 public:
@@ -30,7 +33,7 @@ public:
     
     void resetPlayhead(int sample) { playhead = sample; }
     
-    void reset(double initBpm = 0.0, double initGain = 0.0);
+    void reset(double initBpm = 0.0, double initGain = 0.0, double initHighPass = HIGH_PASS_MAX);
     
     void setCurrentMix(MixInfo* mix) { currentMix = mix; }
     
@@ -44,6 +47,7 @@ public:
     
     InterpolatedParameter bpm;
     InterpolatedParameter gain;
+    InterpolatedParameter highPassFreq;
     
 private:
     

@@ -272,7 +272,6 @@ void MainComponent::timerCallback()
             libraryView->loadFiles();
             
             audioSettings->setVisible(true);
-            libraryView->setVisible(true);
             libraryBtn->setVisible(true);
             directionBtn->setVisible(true);
             mixBtn->setVisible(true);
@@ -281,6 +280,8 @@ void MainComponent::timerCallback()
             skipBtn->setVisible(true);
             settingsBtn->setVisible(true);
             analysisProgress->setVisible(true);
+            
+            changeView(ViewID::library);
             
             repaint();
         }
@@ -487,11 +488,15 @@ void MainComponent::changeView(ViewID view)
     mixView->setVisible(false);
     directionView->setVisible(false);
     analysisProgress->setVisible(false);
+    libraryBtn->setColour(juce::TextButton::ColourIds::buttonColourId, colourBackground.withBrightness(0.24f));
+    directionBtn->setColour(juce::TextButton::ColourIds::buttonColourId, colourBackground.withBrightness(0.24f));
+    mixBtn->setColour(juce::TextButton::ColourIds::buttonColourId, colourBackground.withBrightness(0.24f));
     
     switch (view)
     {
         case ViewID::library:
             libraryView->setVisible(true);
+            libraryBtn->setColour(juce::TextButton::ColourIds::buttonColourId, customAppearance.findColour(juce::TextButton::ColourIds::buttonOnColourId));
             if (waitingForAnalysis)
             {
                 analysisProgress->setVisible(true);
@@ -501,6 +506,7 @@ void MainComponent::changeView(ViewID view)
             
         case ViewID::direction:
             directionView->setVisible(true);
+            directionBtn->setColour(juce::TextButton::ColourIds::buttonColourId, customAppearance.findColour(juce::TextButton::ColourIds::buttonOnColourId));
             if (waitingForAnalysis)
             {
                 analysisProgress->setVisible(true);
@@ -510,6 +516,7 @@ void MainComponent::changeView(ViewID view)
             
         case ViewID::mix:
             mixView->setVisible(true);
+            mixBtn->setColour(juce::TextButton::ColourIds::buttonColourId, customAppearance.findColour(juce::TextButton::ColourIds::buttonOnColourId));
             break;
             
         case ViewID::settings:

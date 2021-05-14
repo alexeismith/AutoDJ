@@ -11,7 +11,7 @@
 #include <JuceHeader.h>
 #include "TrackInfo.hpp"
 
-#define DATABASE_FILENAME ("AutoDjData.db")
+#define DATABASE_FILENAME (".AutoDjData.db")
 
 
 class SqlDatabase

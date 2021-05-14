@@ -21,8 +21,8 @@
 #define MAX_TEMPO (160)
 
 
-#define STEP_SIZE (512)
-#define FRAME_LENGTH (STEP_SIZE*2)
+#define STEP_SIZE_ONSETS (512)
+#define STEP_SIZE_DOWNBEAT (4096)
 #define DOWNBEAT_DECIMATION_FACTOR (16)
 
 AnalyserBeatsEssentia::AnalyserBeatsEssentia(essentia::standard::AlgorithmFactory& factory)
@@ -36,11 +36,11 @@ AnalyserBeatsEssentia::AnalyserBeatsEssentia(essentia::standard::AlgorithmFactor
 #endif
 
 #ifdef PHASE_CORRECTION_PULSETRAIN
-    onsetGlobal.reset(factory.create("OnsetDetectionGlobal", "hopSize", STEP_SIZE));
+    onsetGlobal.reset(factory.create("OnsetDetectionGlobal", "hopSize", STEP_SIZE_ONSETS));
     percivalPulseTrains.reset(new essentia::standard::PercivalEvaluatePulseTrains());
 #endif
     
-    downBeat.reset(new DownBeat(SUPPORTED_SAMPLERATE, DOWNBEAT_DECIMATION_FACTOR, STEP_SIZE));
+    downBeat.reset(new DownBeat(SUPPORTED_SAMPLERATE, DOWNBEAT_DECIMATION_FACTOR, STEP_SIZE_DOWNBEAT));
     downBeat->setBeatsPerBar(BEATS_PER_BAR);
     
 #if defined LOW_PASS_ALL
@@ -67,9 +67,7 @@ void AnalyserBeatsEssentia::analyse(juce::AudioBuffer<float>* audio, std::atomic
     audio = &filteredBuffer;
 #endif
     
-    int numFrames = (audio->getNumSamples() - FRAME_LENGTH) / STEP_SIZE;
-    
-    getTempo(audio, progress, numFrames, bpm, beatPhase);
+    getTempo(audio, progress, bpm, beatPhase);
     
 #ifdef LOW_PASS_DOWNBEAT
     filter.processSamples(filteredBuffer.getWritePointer(0), audio->getNumSamples());
@@ -78,7 +76,7 @@ void AnalyserBeatsEssentia::analyse(juce::AudioBuffer<float>* audio, std::atomic
     
     progress->store(0.6);
     
-    getDownbeat(audio, numFrames, bpm, beatPhase, downbeat);
+    getDownbeat(audio, bpm, beatPhase, downbeat);
 }
 
 
@@ -105,7 +103,7 @@ void AnalyserBeatsEssentia::reset()
 }
 
 
-void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomic<double>* progress, int numFrames, int& bpm, int& beatPhase)
+void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomic<double>* progress, int& bpm, int& beatPhase)
 {
     // Tempo analysis...
     
@@ -198,7 +196,7 @@ void AnalyserBeatsEssentia::pulseTrainsPhase(juce::AudioBuffer<float>* audio, in
     onsetGlobal->compute();
     
     std::vector<float> bpmLag;
-    bpmLag.push_back((60 * (44100 / STEP_SIZE)) / bpm);
+    bpmLag.push_back((60 * (44100 / STEP_SIZE_ONSETS)) / bpm);
     float phaseNew;
 
     percivalPulseTrains->input("oss").set(onsetSignal);
@@ -207,7 +205,7 @@ void AnalyserBeatsEssentia::pulseTrainsPhase(juce::AudioBuffer<float>* audio, in
     
     percivalPulseTrains->compute();
     
-    phaseNew *= STEP_SIZE;
+    phaseNew *= STEP_SIZE_ONSETS;
     
     int beatPeriod = AutoDJ::getBeatPeriod(bpm);
     int offbeat = beatPhase + beatPeriod/2;
@@ -218,9 +216,11 @@ void AnalyserBeatsEssentia::pulseTrainsPhase(juce::AudioBuffer<float>* audio, in
 }
 
 
-void AnalyserBeatsEssentia::getDownbeat(juce::AudioBuffer<float>* audio, int numFrames, int bpm, int beatPhase, int& downbeat)
+void AnalyserBeatsEssentia::getDownbeat(juce::AudioBuffer<float>* audio, int bpm, int beatPhase, int& downbeat)
 {
     std::vector<double> beats;
+    
+    int numFrames = (audio->getNumSamples() - STEP_SIZE_DOWNBEAT) / STEP_SIZE_DOWNBEAT;
     
     for (int i = 0; i < numFrames; i++)
     {
@@ -231,7 +231,7 @@ void AnalyserBeatsEssentia::getDownbeat(juce::AudioBuffer<float>* audio, int num
     }
     
     for (int i = 0; i < numFrames; i++)
-        downBeat->pushAudioBlock(audio->getReadPointer(0, i*STEP_SIZE));
+        downBeat->pushAudioBlock(audio->getReadPointer(0, i*STEP_SIZE_DOWNBEAT));
     
     std::vector<int> downbeats;
     size_t downLength = 0;
@@ -248,15 +248,15 @@ void AnalyserBeatsEssentia::getDownbeat(juce::AudioBuffer<float>* audio, int num
 
 bool AnalyserBeatsEssentia::isBeat(int frame, int bpm, int beatPhase)
 {
-    int frameStart = frame * STEP_SIZE;
-    int frameEnd = frameStart + STEP_SIZE - 1;
+    int frameStart = frame * STEP_SIZE_DOWNBEAT;
+    int frameEnd = frameStart + STEP_SIZE_DOWNBEAT - 1;
     
     double beatLength = round(60 * SUPPORTED_SAMPLERATE / bpm);
     
     frameStart -= beatPhase;
     frameEnd -= beatPhase;
     
-    if (abs(floor(frameEnd/beatLength) - floor(frameStart/beatLength)) > 0)
+    if (floor(frameEnd/beatLength) - floor(frameStart/beatLength) > 0)
         return true;
     
     return false;

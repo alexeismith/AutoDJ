@@ -29,13 +29,13 @@ private:
     
     void reset();
     
-    void getTempo(juce::AudioBuffer<float>* audio, std::atomic<double>* progress, int numFrames, int& bpm, int& beatPhase);
+    void getTempo(juce::AudioBuffer<float>* audio, std::atomic<double>* progress, int& bpm, int& beatPhase);
     
     void processBeats(std::vector<double> beats, int bpm, int& beatPhase);
     
     void pulseTrainsPhase(juce::AudioBuffer<float>* audio, int bpm, int& beatPhase);
     
-    void getDownbeat(juce::AudioBuffer<float>* audio, int numFrames, int bpm, int beatPhase, int& downbeat);
+    void getDownbeat(juce::AudioBuffer<float>* audio, int bpm, int beatPhase, int& downbeat);
     
     bool isBeat(int frame, int bpm, int beatPhase);
     

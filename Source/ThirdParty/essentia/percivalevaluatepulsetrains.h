@@ -20,7 +20,7 @@
 #ifndef ESSENTIA_PERCIVALEVALUATEPULSETRAINS_H
 #define ESSENTIA_PERCIVALEVALUATEPULSETRAINS_H
 
-#include "ThirdParty/essentia/algorithm.h"
+#include "algorithm.h"
 
 namespace essentia {
 namespace standard {
@@ -61,7 +61,7 @@ class PercivalEvaluatePulseTrains : public Algorithm {
 } // namespace standard
 } // namespace essentia
 
-#include "ThirdParty/essentia/streaming/streamingalgorithmwrapper.h"
+#include "streaming/streamingalgorithmwrapper.h"
 
 namespace essentia {
 namespace streaming {

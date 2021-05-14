@@ -49,6 +49,8 @@ bool TrackDataManager::initialise(juce::File directory, DirectionView* direction
     
     dirContents->setDirectory(directory, true, true);
     
+    dirContents->refresh();
+    
     if (!database.initialise(directory))
     {
         // Show an error window

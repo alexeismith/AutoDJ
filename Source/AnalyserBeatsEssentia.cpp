@@ -76,6 +76,8 @@ void AnalyserBeatsEssentia::analyse(juce::AudioBuffer<float>* audio, std::atomic
     audio = &filteredBuffer;
 #endif
     
+    progress->store(0.6);
+    
     getDownbeat(audio, numFrames, bpm, beatPhase, downbeat);
 }
 
@@ -147,6 +149,8 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
     jassert(false); // Must define a beat tracking method!
 #endif
     
+    progress->store(0.3);
+    
     // Beat phase analysis...
     
     for (auto tick : ticks)
@@ -164,6 +168,8 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
     pulseTrainsPhase(audio, bpm, beatPhase);
 
 #endif
+    
+    progress->store(0.5);
 }
 
 

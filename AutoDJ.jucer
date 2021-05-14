@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="mliKgU" name="AutoDJ" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              headerPath="../../Source/ThirdParty/qm-dsp&#10;../../Source/ThirdParty/qm-dsp/include&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools&#10;../../Source/ThirdParty/soundtouch/include&#10;../../Source/ThirdParty/soundtouch/source/SoundTouch&#10;../../Source/ThirdParty/Quadtree/include&#10;../../Source/ThirdParty/essentia&#10;/usr/local/include/eigen3"
+              headerPath="../../Source/ThirdParty/qm-dsp&#10;../../Source/ThirdParty/qm-dsp/include&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft&#10;../../Source/ThirdParty/qm-dsp/ext/kissfft/tools&#10;../../Source/ThirdParty/soundtouch/include&#10;../../Source/ThirdParty/soundtouch/source/SoundTouch&#10;../../Source/ThirdParty/Quadtree/include&#10;../../Source/ThirdParty/essentia&#10;../../Source/ThirdParty/essentia/eigen3"
               defines="kiss_fft_scalar=double&#10;JUCE_USE_MP3AUDIOFORMAT&#10;ANDROID&#10;SOUNDTOUCH_ALLOW_X86_OPTIMIZATIONS"
               cppLanguageStandard="17">
   <MAINGROUP id="r4tD07" name="AutoDJ">
@@ -168,6 +168,12 @@
           <FILE id="YB0kBD" name="BeatTests.hpp" compile="0" resource="0" file="Source/BeatTests.hpp"/>
         </GROUP>
         <GROUP id="{67C76829-2C6F-697A-3BEA-7FBFB680248E}" name="Third Party">
+          <GROUP id="{2E212B1F-4461-9B39-54CE-4CB0EBA9453A}" name="Essentia">
+            <FILE id="q9pLJk" name="percivalevaluatepulsetrains.cpp" compile="1"
+                  resource="0" file="Source/ThirdParty/essentia/percivalevaluatepulsetrains.cpp"/>
+            <FILE id="mEguFL" name="percivalevaluatepulsetrains.h" compile="0"
+                  resource="0" file="Source/ThirdParty/essentia/percivalevaluatepulsetrains.h"/>
+          </GROUP>
           <GROUP id="{2637A895-BA81-8947-F3CC-9ED9B67ADA9B}" name="Mixxx">
             <FILE id="bVlyVx" name="beatutils.cpp" compile="1" resource="0" file="Source/ThirdParty/beatutils.cpp"/>
             <FILE id="slkKII" name="beatutils.h" compile="0" resource="0" file="Source/ThirdParty/beatutils.h"/>
@@ -229,10 +235,6 @@
                   file="Source/ThirdParty/qm-dsp/dsp/onsets/DetectionFunction.h"/>
           </GROUP>
         </GROUP>
-        <FILE id="LWcwxu" name="percivalevaluatepulsetrains.cpp" compile="1"
-              resource="0" file="Source/percivalevaluatepulsetrains.cpp"/>
-        <FILE id="pLkpqD" name="percivalevaluatepulsetrains.h" compile="0"
-              resource="0" file="Source/percivalevaluatepulsetrains.h"/>
         <FILE id="DrGG4w" name="AnalysisManager.cpp" compile="1" resource="0"
               file="Source/AnalysisManager.cpp"/>
         <FILE id="pZppWL" name="AnalysisManager.hpp" compile="0" resource="0"
@@ -306,9 +308,9 @@
         <MODULEPATH id="juce_gui_extra" path="../../../../../JUCE/modules"/>
       </MODULEPATHS>
     </VS2019>
-    <XCODE_MAC targetFolder="Builds/MacOSX" externalLibraries="sqlite3&#10;essentia&#10;fftw3&#10;yaml&#10;avcodec&#10;avformat&#10;avutil&#10;samplerate&#10;tag&#10;fftw3f&#10;chromaprint&#10;avresample"
-               extraLinkerFlags="-I/usr/local/include/essentia/ -I/usr/local/include/essentia/scheduler/ -I/usr/local/include/essentia/streaming/  -I/usr/local/include/essentia/utils&#10;-I/usr/include/taglib&#10;-I/usr/include/eigen3&#10;-L/usr/local/lib"
-               smallIcon="P8rUQo" bigIcon="Iq7WJJ">
+    <XCODE_MAC targetFolder="Builds/MacOSX" externalLibraries="sqlite3&#10;essentia"
+               extraLinkerFlags="-L../../Source/ThirdParty/essentia/lib" smallIcon="P8rUQo"
+               bigIcon="Iq7WJJ" extraCompilerFlags="-I../../Source/ThirdParty/essentia">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="AutoDJ"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="AutoDJ"/>

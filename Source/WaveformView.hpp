@@ -47,7 +47,7 @@ private:
     std::unique_ptr<WaveformScrollBar> scrollBar;
     std::unique_ptr<WaveformLoader> loader;
     
-    bool scrollable, scrolling;
+    bool scrollable, scrolling = false;
     bool scrollBarBottom;
     
     int playhead, trackLength;

@@ -9,6 +9,8 @@
 #include "CommonDefs.hpp"
 #include "CamelotKey.hpp"
 
+#define INITIAL_SORT_COLUMN (2)
+
 enum TrackTableColumns {
     artist = 1,
     title,
@@ -26,7 +28,7 @@ TrackTableComponent::TrackTableComponent(TrackEditor* editor) :
     table->setModel(this);
     addAndMakeVisible(table.get());
     
-    sortOrderChanged(1, true);
+    sortOrderChanged(INITIAL_SORT_COLUMN, true);
 }
 
 
@@ -43,14 +45,14 @@ void TrackTableComponent::addColumns()
 {
     uint8_t columnFlags = juce::TableHeaderComponent::visible | juce::TableHeaderComponent::sortable;
     
-    table->getHeader().addColumn("Artist", 1, 210, 0, 1000, columnFlags);
-    table->getHeader().addColumn("Title", 2, 310, 0, 1000, columnFlags);
+    table->getHeader().addColumn("", 1, 28, 0, 1000, juce::TableHeaderComponent::visible);
+    table->getHeader().addColumn("Title", 2, 310, 0, 2000, columnFlags);
     table->getHeader().addColumn("Length", 3, 80, 0, 1000, columnFlags);
     table->getHeader().addColumn("BPM", 4, 60, 0, 1000, columnFlags);
     table->getHeader().addColumn("Key", 5, 60, 0, 1000, columnFlags);
     table->getHeader().addColumn("Groove", 6, 100, 0, 1000, columnFlags);
     
-    fixedColumnWidth = table->getHeader().getColumnWidth(3) + table->getHeader().getColumnWidth(4) + table->getHeader().getColumnWidth(5) + table->getHeader().getColumnWidth(6);
+    fixedColumnWidth = table->getHeader().getColumnWidth(1) + table->getHeader().getColumnWidth(3) + table->getHeader().getColumnWidth(4) + table->getHeader().getColumnWidth(5) + table->getHeader().getColumnWidth(6);
 }
 
 
@@ -59,7 +61,7 @@ void TrackTableComponent::populate(TrackInfo* tracks, int numTracks)
     for (int i = 0; i < numTracks; i++)
         tracksSorted.add(&tracks[i]);
     
-    table->getHeader().setSortColumnId(1, true);
+    table->getHeader().setSortColumnId(INITIAL_SORT_COLUMN, true);
 }
 
 
@@ -106,8 +108,7 @@ void TrackTableComponent::resized()
 {
     int availableWidth = getWidth() - fixedColumnWidth - table->getVerticalScrollBar().getWidth();
 
-    table->getHeader().setColumnWidth(1, availableWidth*0.4);
-    table->getHeader().setColumnWidth(2, availableWidth*0.6);
+    table->getHeader().setColumnWidth(2, availableWidth);
     
     table->setSize(getWidth(), getHeight());
     
@@ -181,7 +182,8 @@ juce::String TrackTableComponent::getValueForColumn(TrackInfo* track, int column
     switch(columnId)
     {
         case TrackTableColumns::artist:
-            return track->getArtist();
+            return juce::String();
+//            return track->getArtist();
             
         case TrackTableColumns::title:
             return track->getTitle();

@@ -15,8 +15,6 @@
 #include "AnalysisTest.hpp"
 #include "DirectionView.hpp"
 
-#define DATABASE_FILENAME ("AutoDjData.db")
-
 class FileParserThread;
 
 class TrackDataManager

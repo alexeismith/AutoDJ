@@ -166,7 +166,7 @@ bool WaveformComponent::isBeat(int frameIndex, bool& downbeat)
     frameStart = frameIndex * WAVEFORM_FRAME_SIZE;
     frameEnd = frameStart + WAVEFORM_FRAME_SIZE - 1;
     
-    double beatLength = 60 * SUPPORTED_SAMPLERATE / track->info->bpm;
+    double beatLength = AutoDJ::getBeatPeriod(track->info->bpm);
     
     frameStart -= track->info->beatPhase;
     frameEnd -= track->info->beatPhase;

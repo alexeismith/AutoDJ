@@ -140,7 +140,7 @@ void AnalyserBeats::processBeats(std::vector<double> beats, int& bpm, int& beatP
     firstBeat = BeatUtils::adjustPhase(firstBeat, bpm, SUPPORTED_SAMPLERATE, beats);
     
     // 'Rewind' firstBeat to start of track
-    double beatLength = 60 * SUPPORTED_SAMPLERATE / bpm;
+    double beatLength = AutoDJ::getBeatPeriod(bpm);
     beatPhase = firstBeat - floor(firstBeat / beatLength) * beatLength;
 }
 
@@ -178,7 +178,7 @@ bool AnalyserBeats::isBeat(int frame, int bpm, int beatPhase)
     int frameStart = frame * STEP_SIZE;
     int frameEnd = frameStart + STEP_SIZE - 1;
     
-    double beatLength = round(60 * SUPPORTED_SAMPLERATE / bpm);
+    double beatLength = AutoDJ::getBeatPeriod(bpm);
     
     frameStart -= beatPhase;
     frameEnd -= beatPhase;

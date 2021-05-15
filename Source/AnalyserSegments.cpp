@@ -19,7 +19,7 @@ AnalyserSegments::AnalyserSegments()
     int minimumSegmentDuration = 4;
 
     params.neighbourhoodLimit = int(minimumSegmentDuration / params.hopSize + 0.0001);
-    filter.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 600, 1.0));
+    filter.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 400, 1.0));
 }
 
 
@@ -27,31 +27,31 @@ juce::Array<int> AnalyserSegments::analyse(TrackInfo* track, juce::AudioBuffer<f
 {
     reset();
     
-//    filter.processSamples(audio->getWritePointer(0), audio->getNumSamples());
-//    if (audio->getNumChannels() == 2)
-//        filter.processSamples(audio->getWritePointer(1), audio->getNumSamples());
+    int numSamples = audio->getNumSamples();
+    
+    filteredBuffer.setSize(1, numSamples);
+    
+    filteredBuffer.copyFrom(0, 0, audio->getReadPointer(0), numSamples);
+    
+    if (audio->getNumChannels() == 2)
+    {
+        filteredBuffer.copyFrom(0, 0, audio->getReadPointer(1), numSamples);
+        filteredBuffer.applyGain(0.5f);
+    }
+    
+    filter.processSamples(filteredBuffer.getWritePointer(0), numSamples);
     
     int windowSize = segmenter->getWindowsize();
     
     double *tempBuffer = new double[windowSize];
     
-    int numFrames = audio->getNumSamples() / windowSize;
+    int numFrames = numSamples / windowSize;
     
     for (int i = 0; i < numFrames; i++)
     {
-        if (audio->getNumChannels() == 1)
+        for (int j = 0; j < windowSize; j++)
         {
-            for (int j = 0; j < windowSize; j++)
-            {
-                tempBuffer[j] = (double)audio->getReadPointer(0)[i*windowSize + j];
-            }
-        }
-        else
-        {
-            for (int j = 0; j < windowSize; j++)
-            {
-                tempBuffer[j] = 0.5*((double)audio->getReadPointer(0)[i*windowSize + j] + (double)audio->getReadPointer(1)[i*windowSize + j]);
-            }
+            tempBuffer[j] = (double)filteredBuffer.getReadPointer(0)[i*windowSize + j];
         }
 
         segmenter->extractFeatures(tempBuffer, segmenter->getWindowsize());
@@ -168,4 +168,5 @@ void AnalyserSegments::reset()
     segmenter->initialise(SUPPORTED_SAMPLERATE);
     
     filter.reset();
+    filteredBuffer.clear();
 }

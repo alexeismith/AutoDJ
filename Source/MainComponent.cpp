@@ -120,7 +120,7 @@ MainComponent::MainComponent() :
     setSize (800, 550);
     
     // Set resize limits
-    sizeLimits.setSizeLimits(800, 475, 3000, 2000);
+    sizeLimits.setSizeLimits(800, 475, 900, 650);
     
     startTimerHz(30);
 }

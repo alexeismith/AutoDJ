@@ -328,7 +328,7 @@ void MainComponent::timerCallback()
         directionView->updateData();
     }
     
-    if (!loadingFiles && !validSamplerate.load() && !errorShown.load())
+    if (initialised && !validSamplerate.load() && !errorShown.load())
     {
         errorShown.store(true);
         

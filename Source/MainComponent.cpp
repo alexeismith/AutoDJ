@@ -1,4 +1,4 @@
-#include "MainComponent.h"
+#include "MainComponent.hpp"
 
 #include "CommonDefs.hpp"
 
@@ -26,15 +26,6 @@ MainComponent::MainComponent() :
     
     logo = juce::ImageFileFormat::loadFrom(BinaryData::logo_png, BinaryData::logo_pngSize);
     
-    playImg = juce::ImageFileFormat::loadFrom(BinaryData::play_png, BinaryData::play_pngSize);
-    pauseImg = juce::ImageFileFormat::loadFrom(BinaryData::pause_png, BinaryData::pause_pngSize);
-    
-    juce::Image skipImg = juce::ImageFileFormat::loadFrom(BinaryData::skip_png, BinaryData::skip_pngSize);
-    juce::Image settingsImg = juce::ImageFileFormat::loadFrom(BinaryData::settings_png, BinaryData::settings_pngSize);
-    
-    volumeImg = juce::ImageFileFormat::loadFrom(BinaryData::volume_png, BinaryData::volume_pngSize);
-    volumeImg.multiplyAllAlphas(0.8f);
-    
     dataManager.reset(new TrackDataManager());
     dj.reset(new ArtificialDJ(dataManager.get()));
     
@@ -50,6 +41,8 @@ MainComponent::MainComponent() :
     mixView.reset(new MixView(audioProcessor->getTrackProcessors()));
     addChildComponent(mixView.get());
     
+    toolBar.reset(new ToolBarComponent(this, audioProcessor.get(), dj.get()));
+    addChildComponent(toolBar.get());
     
     chooseFolderBtn.reset(new juce::TextButton("Choose Folder"));
     chooseFolderBtn->setComponentID(juce::String(ComponentID::chooseFolderBtn));
@@ -58,50 +51,6 @@ MainComponent::MainComponent() :
     
     loadingFilesProgress.reset(new juce::ProgressBar(loadingProgress));
     addChildComponent(loadingFilesProgress.get());
-    
-    libraryBtn.reset(new juce::TextButton("Library"));
-    libraryBtn->setComponentID(juce::String(ComponentID::libraryBtn));
-    addChildComponent(libraryBtn.get());
-    libraryBtn->addListener(this);
-    
-    directionBtn.reset(new juce::TextButton("Direction"));
-    directionBtn->setComponentID(juce::String(ComponentID::directionBtn));
-    addChildComponent(directionBtn.get());
-    directionBtn->addListener(this);
-    
-    mixBtn.reset(new juce::TextButton("Mix"));
-    mixBtn->setComponentID(juce::String(ComponentID::mixBtn));
-    addChildComponent(mixBtn.get());
-    mixBtn->addListener(this);
-    
-    playPauseBtn.reset(new juce::ImageButton());
-    addChildComponent(playPauseBtn.get());
-    playPauseBtn->setImages(false, true, true, playImg, 0.8f, {}, playImg, 1.f, {}, playImg, 1.f, juce::Colours::lightblue);
-    playPauseBtn->setComponentID(juce::String(ComponentID::playPauseBtn));
-    playPauseBtn->addListener(this);
-    playPauseBtn->setEnabled(false);
-    
-    skipBtn.reset(new juce::ImageButton());
-    addChildComponent(skipBtn.get());
-    skipBtn->setImages(false, true, true, skipImg, 0.8f, {}, skipImg, 1.f, {}, skipImg, 1.f, juce::Colours::lightblue);
-    skipBtn->setComponentID(juce::String(ComponentID::skipBtn));
-    skipBtn->addListener(this);
-    skipBtn->setEnabled(false);
-    
-    volumeSld.reset(new juce::Slider());
-    addChildComponent(volumeSld.get());
-    volumeSld->setComponentID(juce::String(ComponentID::volumeSld));
-    volumeSld->addListener(this);
-    volumeSld->setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-    volumeSld->setRange(0.f, 1.f);
-    volumeSld->setSkewFactor(0.7);
-    volumeSld->setValue(1.f);
-    
-    settingsBtn.reset(new juce::ImageButton());
-    addChildComponent(settingsBtn.get());
-    settingsBtn->setImages(false, true, true, settingsImg, 0.8f, {}, settingsImg, 1.f, {}, settingsImg, 1.f, juce::Colours::lightblue);
-    settingsBtn->setComponentID(juce::String(ComponentID::settingsBtn));
-    settingsBtn->addListener(this);
     
     analysisProgress.reset(new AnalysisProgressBar(dataManager->getAnalysisManager()));
     addChildComponent(analysisProgress.get());
@@ -156,7 +105,7 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
 
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    if (!validSamplerate.load() || audioProcessor.get() == nullptr) return;
+    if (!validAudioSettings() || audioProcessor.get() == nullptr) return;
     
     audioProcessor->getNextAudioBlock(bufferToFill);
 }
@@ -180,13 +129,14 @@ void MainComponent::paint (juce::Graphics& g)
     
     if (!initialised)
         g.drawImage(logo, logoArea, juce::RectanglePlacement::centred);
-    else
-        g.drawImage(volumeImg, volumeArea, juce::RectanglePlacement::centred);
 }
 
 void MainComponent::resized()
 {
     sizeLimits.checkComponentBounds(this);
+    
+    toolBar->setSize(getWidth(), TOOLBAR_HEIGHT);
+    toolBar->setTopLeftPosition(0, getHeight() - TOOLBAR_HEIGHT);
     
     audioSettings->setSize(getWidth() - 40, getHeight() - TOOLBAR_HEIGHT - 40);
     audioSettings->setCentrePosition(getWidth()/2 - 60, getHeight()/2 - TOOLBAR_HEIGHT);
@@ -208,30 +158,6 @@ void MainComponent::resized()
     
     mixView->setSize(getWidth(), getHeight() - TOOLBAR_HEIGHT);
     mixView->setTopLeftPosition(0, 0);
-    
-    libraryBtn->setSize(68, 28);
-    libraryBtn->setCentrePosition(libraryBtn->getWidth()/2 + 10, getHeight() - TOOLBAR_HEIGHT/2);
-    
-    directionBtn->setSize(80, 28);
-    directionBtn->setCentrePosition(directionBtn->getWidth()/2 + 88, getHeight() - TOOLBAR_HEIGHT/2);
-    
-    mixBtn->setSize(50, 28);
-    mixBtn->setCentrePosition(mixBtn->getWidth()/2 + 178, getHeight() - TOOLBAR_HEIGHT/2);
-    
-    playPauseBtn->setSize(24, 24);
-    playPauseBtn->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT/2);
-    
-    skipBtn->setSize(25, 25);
-    skipBtn->setCentrePosition(getWidth()/2 + 40, getHeight() - TOOLBAR_HEIGHT/2);
-    
-    volumeSld->setSize(140, 50);
-    volumeSld->setCentrePosition(getWidth() - 125, getHeight() - TOOLBAR_HEIGHT/2);
-    
-    volumeArea.setSize(22, 22);
-    volumeArea.setCentre(volumeSld->getX() - 10, getHeight() - TOOLBAR_HEIGHT/2);
-    
-    settingsBtn->setSize(25, 25);
-    settingsBtn->setCentrePosition(getWidth() - 25, getHeight() - TOOLBAR_HEIGHT/2);
     
     analysisProgress->setSize(300, 30);
     if (directionView->isVisible())
@@ -272,13 +198,7 @@ void MainComponent::timerCallback()
             libraryView->loadFiles();
             
             audioSettings->setVisible(true);
-            libraryBtn->setVisible(true);
-            directionBtn->setVisible(true);
-            mixBtn->setVisible(true);
-            volumeSld->setVisible(true);
-            playPauseBtn->setVisible(true);
-            skipBtn->setVisible(true);
-            settingsBtn->setVisible(true);
+            toolBar->setVisible(true);
             analysisProgress->setVisible(true);
             
             changeView(ViewID::library);
@@ -300,25 +220,7 @@ void MainComponent::timerCallback()
         }
         
         if (canStartPlaying)
-            playPauseBtn->setEnabled(true);
-    }
-    
-    if (waitingForDJ)
-    {
-        if (dj->isInitialised())
-        {
-            waitingForDJ = false;
-            playing = true;
-            playPauseBtn->setAlpha(1.f);
-            playPauseBtn->setImages(false, true, true, pauseImg, 0.8f, {}, pauseImg, 1.f, {}, pauseImg, 1.f, juce::Colours::lightblue);
-            skipBtn->setEnabled(true);
-        }
-        else
-        {
-            juce::uint32 seconds = juce::Time::getApproximateMillisecondCounter();
-            double sine = (std::sin(double(seconds) / 150) + 1.0) / 3.0;
-            playPauseBtn->setAlpha(sine + 0.3f);
-        }
+            toolBar->setCanPlay(true);
     }
     
     if (dataManager->trackDataUpdate.load())
@@ -335,8 +237,7 @@ void MainComponent::timerCallback()
         // Create error message about sample rate
         juce::String errorMessage = "Unsupported Sample Rate: please set to " + juce::String(SUPPORTED_SAMPLERATE) + "Hz.";
         
-        if (currentView != ViewID::settings)
-            changeView(ViewID::settings);
+        toolBar->showSettings();
         
         // Show an error window containing the message
         juce::AlertWindow::showMessageBox(juce::AlertWindow::WarningIcon, "Error", errorMessage, "OK");
@@ -344,17 +245,12 @@ void MainComponent::timerCallback()
     
     if (audioProcessor->mixEnded() && !ended)
     {
-        playPauseBtn->setImages(false, true, true, playImg, 0.8f, {}, playImg, 1.f, {}, playImg, 1.f, juce::Colours::lightblue);
-        playing = false;
-        
         ended = true;
         
         juce::AlertWindow::showMessageBox(juce::AlertWindow::InfoIcon, "Info", "Mix finished - ran out of analysed tracks.", "OK");
         
         resetMix();
     }
-    
-    skipBtn->setEnabled(dj->canSkip() && validSamplerate.load());
 }
 
 
@@ -368,69 +264,20 @@ void MainComponent::buttonClicked(juce::Button* button)
             chooseFolder();
             break;
             
-        case ComponentID::libraryBtn:
-            changeView(ViewID::library);
-            break;
-            
-        case ComponentID::directionBtn:
-            changeView(ViewID::direction);
-            break;
-            
-        case ComponentID::mixBtn:
-            changeView(ViewID::mix);
-            break;
-            
-        case ComponentID::playPauseBtn:
-            if (!validSamplerate.load())
-            {
-                errorShown.store(false);
-                break;
-            }
-            
-            if (waitingForDJ)
-                break;
-            
-            if (!dj->playPause())
-                waitingForDJ = true;
-            else
-            {
-                playing = !playing;
-                
-                if (playing)
-                    playPauseBtn->setImages(false, true, true, pauseImg, 0.8f, {}, pauseImg, 1.f, {}, pauseImg, 1.f, juce::Colours::lightblue);
-                else
-                    playPauseBtn->setImages(false, true, true, playImg, 0.8f, {}, playImg, 1.f, {}, playImg, 1.f, juce::Colours::lightblue);
-            }
-            break;
-            
-        case ComponentID::skipBtn:
-            if (dj->canSkip())
-                audioProcessor->skip();
-            break;
-
-        case ComponentID::settingsBtn:
-            changeView(ViewID::settings);
-            break;
-            
         default:
             jassert(false); // Unrecognised button ID
     }
 }
 
 
-void MainComponent::sliderValueChanged(juce::Slider* slider)
+bool MainComponent::validAudioSettings(bool showError)
 {
-    int id = slider->getComponentID().getIntValue();
+    bool valid = validSamplerate.load();
     
-    switch (id)
-    {
-        case ComponentID::volumeSld:
-            audioProcessor->setVolume(slider->getValueObject().getValue());
-            break;
-            
-        default:
-            jassert(false); // Unrecognised button ID
-    }
+    if (!valid && showError)
+        errorShown.store(false);
+    
+    return valid;
 }
 
 
@@ -488,15 +335,11 @@ void MainComponent::changeView(ViewID view)
     mixView->setVisible(false);
     directionView->setVisible(false);
     analysisProgress->setVisible(false);
-    libraryBtn->setColour(juce::TextButton::ColourIds::buttonColourId, colourBackground.withBrightness(0.24f));
-    directionBtn->setColour(juce::TextButton::ColourIds::buttonColourId, colourBackground.withBrightness(0.24f));
-    mixBtn->setColour(juce::TextButton::ColourIds::buttonColourId, colourBackground.withBrightness(0.24f));
     
     switch (view)
     {
         case ViewID::library:
             libraryView->setVisible(true);
-            libraryBtn->setColour(juce::TextButton::ColourIds::buttonColourId, customAppearance.findColour(juce::TextButton::ColourIds::buttonOnColourId));
             if (waitingForAnalysis)
             {
                 analysisProgress->setVisible(true);
@@ -506,7 +349,6 @@ void MainComponent::changeView(ViewID view)
             
         case ViewID::direction:
             directionView->setVisible(true);
-            directionBtn->setColour(juce::TextButton::ColourIds::buttonColourId, customAppearance.findColour(juce::TextButton::ColourIds::buttonOnColourId));
             if (waitingForAnalysis)
             {
                 analysisProgress->setVisible(true);
@@ -516,18 +358,10 @@ void MainComponent::changeView(ViewID view)
             
         case ViewID::mix:
             mixView->setVisible(true);
-            mixBtn->setColour(juce::TextButton::ColourIds::buttonColourId, customAppearance.findColour(juce::TextButton::ColourIds::buttonOnColourId));
             break;
             
-        case ViewID::settings:
-            if (currentView == ViewID::settings)
-            {
-                changeView(prevView);
-                return;
-            }
+        default:
+            break;
     }
-    
-    prevView = currentView;
-    currentView = view;
 }
 

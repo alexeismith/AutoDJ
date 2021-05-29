@@ -18,8 +18,6 @@
 #define BEATS_PER_BAR (4)
 #define NUM_TRACKS_MIN (6)
 
-#define TOOLBAR_HEIGHT (48)
-
 
 enum ComponentID : int
 {
@@ -31,6 +29,15 @@ enum ComponentID : int
     settingsBtn,
     volumeSld,
     chooseFolderBtn
+};
+
+
+enum ViewID : int
+{
+    library,
+    direction,
+    mix,
+    settings
 };
 
 

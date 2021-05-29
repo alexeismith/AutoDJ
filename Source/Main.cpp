@@ -7,7 +7,7 @@
 */
 
 #include <JuceHeader.h>
-#include "MainComponent.h"
+#include "MainComponent.hpp"
 
 //==============================================================================
 class AutoDJApplication  : public juce::JUCEApplication

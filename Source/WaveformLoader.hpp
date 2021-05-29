@@ -28,7 +28,7 @@ private:
     
     void process();
     
-    void pushFrame(int index);
+    void processFrame(int index);
     
     void reset();
     

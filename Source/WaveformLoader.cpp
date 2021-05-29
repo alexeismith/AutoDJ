@@ -13,6 +13,7 @@
 WaveformLoader::WaveformLoader(TrackDataManager* dm, WaveformComponent* wave, WaveformScrollBar* bar, bool hide) :
     juce::Thread("WaveformLoader"), dataManager(dm), waveform(wave), scrollBar(bar), hideWhenEmpty(hide)
 {
+    // Generate coefficients for the low-, band- and high-pass IIR filters
     filterLow.setCoefficients(juce::IIRCoefficients::makeLowPass(SUPPORTED_SAMPLERATE, 200, 1.0));
     filterMid.setCoefficients(juce::IIRCoefficients::makeBandPass(SUPPORTED_SAMPLERATE, 500, 1.0));
     filterHigh.setCoefficients(juce::IIRCoefficients::makeHighPass(SUPPORTED_SAMPLERATE, 10000, 1.0));
@@ -104,7 +105,7 @@ void WaveformLoader::process()
     juce::FloatVectorOperations::abs(processBuffers.getWritePointer(3), processBuffers.getReadPointer(3), numSamples);
     
     for (int i = 0; i < numFrames; i++)
-        pushFrame(i);
+        processFrame(i);
     
     if (newRequest) return;
     
@@ -113,7 +114,7 @@ void WaveformLoader::process()
 }
 
 
-void WaveformLoader::pushFrame(int index)
+void WaveformLoader::processFrame(int index)
 {
     int startSample = index * WAVEFORM_FRAME_SIZE;
     

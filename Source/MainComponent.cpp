@@ -226,7 +226,7 @@ void MainComponent::timerCallback()
     if (dataManager->trackDataUpdate.load())
     {
         dataManager->trackDataUpdate.store(false);
-        libraryView->updateData();
+        libraryView->refreshTable();
         directionView->updateData();
     }
     

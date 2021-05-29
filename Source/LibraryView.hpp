@@ -23,7 +23,7 @@ public:
     
     void resized() override;
     
-    void updateData() { trackTable->sort(); }
+    void refreshTable() { trackTable->sort(); }
     
     void loadFiles();
     

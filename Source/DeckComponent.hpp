@@ -14,7 +14,7 @@
 
 #include "WaveformView.hpp"
 
-class DeckComponent : public juce::Component, public juce::Button::Listener
+class DeckComponent : public juce::Component
 {
 public:
     
@@ -25,8 +25,6 @@ public:
     void paint(juce::Graphics& g) override;
     
     void resized() override;
-    
-    void buttonClicked(juce::Button* button) override;
     
     void update();
     

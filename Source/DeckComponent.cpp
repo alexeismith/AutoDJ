@@ -69,18 +69,6 @@ void DeckComponent::resized()
 }
 
 
-void DeckComponent::buttonClicked(juce::Button* button)
-{
-    int id = button->getComponentID().getIntValue();
-    
-    switch (id)
-    {
-        default:
-            jassert(false); // Unrecognised button ID
-    }
-}
-
-
 void DeckComponent::update()
 {
     bool mixEnd;

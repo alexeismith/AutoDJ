@@ -35,8 +35,6 @@ public:
     
     void reset(double initBpm = 0.0, double initGain = 0.0, double initHighPass = HIGH_PASS_MAX);
     
-    void setCurrentMix(MixInfo* mix) { currentMix = mix; }
-    
     MixInfo* getCurrentMix() { return currentMix; }
     
     TrackInfo* info = nullptr;

@@ -43,8 +43,8 @@ private:
     inline static GRAPH_DATA_TYPE minY = -1;
     inline static GRAPH_DATA_TYPE maxY = -1;
     
-    int xVal = 0;
-    GRAPH_DATA_TYPE yVal = 0;
+    int mouseOverXValue = 0;
+    GRAPH_DATA_TYPE mouseOverYValue = 0;
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GraphComponent)

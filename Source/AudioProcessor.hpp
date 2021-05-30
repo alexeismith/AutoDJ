@@ -24,11 +24,7 @@ public:
     
     void play() { paused.store(false); }
     
-    void play(TrackInfo track);
-    
     void pause() { paused.store(true); }
-    
-    void preview(TrackInfo track, int startSample, int numSamples);
     
     TrackProcessor* getTrackProcessor(int index) { return trackProcessors.getUnchecked(index); }
     

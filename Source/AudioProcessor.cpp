@@ -32,11 +32,7 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
     if (skipFlag.load())
         skipToNextEvent();
     
-    if (paused.load())
-    {
-        // Preview
-    }
-    else
+    if (!paused.load())
     {
         getTrackProcessors(&leader, &next);
         
@@ -61,21 +57,6 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
     {
         bufferToFill.buffer->applyGain(bufferToFill.startSample, bufferToFill.numSamples, volume);
     }
-}
-
-
-void AudioProcessor::play(TrackInfo track)
-{
-    play();
-}
-
-
-void AudioProcessor::preview(TrackInfo track, int startSample, int numSamples)
-{
-//    previewProcessor->load(track);
-//    previewProcessor->seekClip(startSample, numSamples);
-    
-    paused.store(true);
 }
 
 

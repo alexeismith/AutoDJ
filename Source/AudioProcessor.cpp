@@ -33,20 +33,20 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
     if (skipFlag.load())
         skipToNextEvent();
     
-    if (!paused.load())
+    if (paused.load())
+        return;
+    
+    getTrackProcessors(&leader, &next);
+    
+    if (leader)
     {
-        getTrackProcessors(&leader, &next);
-        
-        if (leader)
-        {
-            int playhead = leader->getNextAudioBlock(bufferToFill);
-            next->getNextAudioBlock(bufferToFill);
-            next->cue(playhead);
-        }
-        else
-        {
-            jassert(false); // No leader!
-        }
+        int playhead = leader->getNextAudioBlock(bufferToFill);
+        next->getNextAudioBlock(bufferToFill);
+        next->cue(playhead);
+    }
+    else
+    {
+        jassert(false); // No leader!
     }
     
     if (volume != targetVolume.load())

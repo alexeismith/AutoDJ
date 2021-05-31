@@ -153,9 +153,9 @@ Track* TrackProcessor::getNewTrack()
 
 void TrackProcessor::cue(int leaderPlayhead)
 {
-    if (!play && leaderPlayhead >= currentMix.start)
+    if (!play && leaderPlayhead >= currentMix.leaderStart)
     {
-        resetPlayhead(currentMix.startNext + (leaderPlayhead - currentMix.start));
+        resetPlayhead(currentMix.followerStart + (leaderPlayhead - currentMix.leaderStart));
         play = true;
         track->info->playing = true;
         dataManager->trackDataUpdate.store(true);
@@ -170,15 +170,15 @@ void TrackProcessor::skipToNextEvent()
     int playhead = track->getPlayhead();
     MixInfo* mix = track->getCurrentMix();
     
-    if (playhead < mix->start)
+    if (playhead < mix->leaderStart)
     {
-        playhead = mix->start;
+        playhead = mix->leaderStart;
         track->bpm.resetTo(mix->bpm);
     }
-    else if (playhead < mix->end)
+    else if (playhead < mix->leaderEnd)
     {
-        playhead = mix->end;
-        partner->resetPlayhead(mix->endNext);
+        playhead = mix->leaderEnd;
+        partner->resetPlayhead(mix->followerEnd);
     }
     
     resetPlayhead(playhead);

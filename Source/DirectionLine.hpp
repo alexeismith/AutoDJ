@@ -22,7 +22,7 @@ public:
     
     void paint(juce::Graphics& g) override;
     
-    void update(TrackDotComponent* leader, TrackDotComponent* next);
+    void update(TrackDotComponent* leader, TrackDotComponent* follower);
     
     void updateBounds();
     

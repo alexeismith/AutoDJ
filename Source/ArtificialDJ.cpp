@@ -139,7 +139,7 @@ void ArtificialDJ::removeMix(MixInfo mix)
 void ArtificialDJ::initialise()
 {
     TrackProcessor* leader = audioProcessor->getTrackProcessor(0);
-    TrackProcessor* next = audioProcessor->getTrackProcessor(1);
+    TrackProcessor* follower = audioProcessor->getTrackProcessor(1);
     
     chooser->initialise();
     
@@ -152,7 +152,7 @@ void ArtificialDJ::initialise()
     generateMix();
     
     leader->loadFirstTrack(firstTrack, true, firstTrackAudio);
-    next->loadFirstTrack(leadingTrack, false);
+    follower->loadFirstTrack(leadingTrack, false);
     
     initialised.store(true);
     
@@ -188,7 +188,7 @@ void ArtificialDJ::generateMixSimple()
         // Set the mix bpm to that of the leading track
         mix.bpm = mix.leadingTrack->bpm;
         // Set the start and end of this final mix to the end of the leading track, so it simply plays all the way through
-        mix.start = mix.end = mix.leadingTrack->getLengthSamples();
+        mix.leaderStart = mix.leaderEnd = mix.leadingTrack->getLengthSamples();
         // Add the final mix to the mix queue
         mixQueue.add(mix);
         return;
@@ -210,13 +210,13 @@ void ArtificialDJ::generateMixSimple()
     
     int mixStartBeats = mix.leadingTrack->downbeat + 2 * mixLengthBeats;
     
-    mix.start = mix.leadingTrack->getSampleOfBeat(mixStartBeats);
-    mix.end = mix.leadingTrack->getSampleOfBeat(mixStartBeats + mixLengthBeats);
+    mix.leaderStart = mix.leadingTrack->getSampleOfBeat(mixStartBeats);
+    mix.leaderEnd = mix.leadingTrack->getSampleOfBeat(mixStartBeats + mixLengthBeats);
     
     mixStartBeats = mix.nextTrack->downbeat;
     
-    mix.startNext = mix.nextTrack->getSampleOfBeat(mixStartBeats);
-    mix.endNext = mix.nextTrack->getSampleOfBeat(mixStartBeats + mixLengthBeats);
+    mix.followerStart = mix.nextTrack->getSampleOfBeat(mixStartBeats);
+    mix.followerEnd = mix.nextTrack->getSampleOfBeat(mixStartBeats + mixLengthBeats);
     
     mix.bpm = double(mix.leadingTrack->bpm + mix.nextTrack->bpm) / 2;
     
@@ -256,7 +256,7 @@ void ArtificialDJ::generateMixComplex()
         // Set the mix bpm to that of the leading track
         mix.bpm = mix.leadingTrack->bpm;
         // Set the start and end of this final mix to the end of the leading track, so it simply plays all the way through
-        mix.start = mix.end = mix.leadingTrack->getLengthSamples();
+        mix.leaderStart = mix.leaderEnd = mix.leadingTrack->getLengthSamples();
         // Add the final mix to the mix queue
         mixQueue.add(mix);
         return;
@@ -297,9 +297,9 @@ void ArtificialDJ::generateMixComplex()
     int startOffset = double(leadingTrackAvailable/2) * randomGenerator.getGaussian(0.2, 0.5, 0.5);
 
     // Initialise the mix start as the minimum, plus the random offset
-    mix.start = mixStartMinimum + startOffset;
+    mix.leaderStart = mixStartMinimum + startOffset;
     // Find the track segment nearest this point
-    mix.start = segmenter.findClosestSegment(leadingTrack, &leadingTrackSegments, mix.start, mixStartMinimum, mixStartMaximum);
+    mix.leaderStart = segmenter.findClosestSegment(leadingTrack, &leadingTrackSegments, mix.leaderStart, mixStartMinimum, mixStartMaximum);
 
     // NEXT TRACK START ----------------------------------------------------------------
 
@@ -307,14 +307,14 @@ void ArtificialDJ::generateMixComplex()
     int nextTrackStartMax = nextTrack->getLengthSamples() / 4;
 
     // Choose a random sample within this range
-    mix.startNext = double(nextTrackStartMax) * randomGenerator.getGaussian(0.2, 0.5, 0.0);
+    mix.followerStart = double(nextTrackStartMax) * randomGenerator.getGaussian(0.2, 0.5, 0.0);
     // Find the track segment nearest this point
-    mix.startNext = segmenter.findClosestSegment(nextTrack, &nextTrackSegments, mix.startNext, 0, nextTrackStartMax);
+    mix.followerStart = segmenter.findClosestSegment(nextTrack, &nextTrackSegments, mix.followerStart, 0, nextTrackStartMax);
 
     // MIX LENGTH ----------------------------------------------------------------------
 
     // Recalculate the amount of leading track we have left, based on the chosen mix start
-    leadingTrackAvailable = leadingTrack->getLengthSamples() - mix.start;
+    leadingTrackAvailable = leadingTrack->getLengthSamples() - mix.leaderStart;
     
     // Find the largest multiple of 4 bars that fits into this space
     int largestMultiple4 = leadingTrackAvailable / (leadingTrack->getBarLength() * 4);
@@ -323,27 +323,27 @@ void ArtificialDJ::generateMixComplex()
     largestMultiple4 = juce::jmin(6, largestMultiple4);
     
     int lengthCandidate = -1;
-    bool isSegmentLeading, isSegmentNext;
+    bool isSegmentInLeader, isSegmentInFollower;
     
     // Loop through the possible mix lengths to see if any land on a segment in both tracks
     for (int i = 2; i < largestMultiple4 + 1; i++)
     {
         // For this length, find the point in each track that the mix would end
-        mix.end = mix.start + (i * (leadingTrack->getBarLength() * 4));
-        mix.endNext = mix.startNext + (i * (nextTrack->getBarLength() * 4));
+        mix.leaderEnd = mix.leaderStart + (i * (leadingTrack->getBarLength() * 4));
+        mix.followerEnd = mix.followerStart + (i * (nextTrack->getBarLength() * 4));
         
         // Find whether these points are segments
-        isSegmentLeading = segmenter.isSegment(&leadingTrackSegments, mix.end);
-        isSegmentNext = segmenter.isSegment(&nextTrackSegments, mix.endNext);
+        isSegmentInLeader = segmenter.isSegment(&leadingTrackSegments, mix.leaderEnd);
+        isSegmentInFollower = segmenter.isSegment(&nextTrackSegments, mix.followerEnd);
         
         // If they are both segments, choose this mix length and break the loop
-        if (isSegmentLeading && isSegmentNext)
+        if (isSegmentInLeader && isSegmentInFollower)
         {
             lengthCandidate = i;
             break;
         }
         // Otherwise, store this result and keep looping
-        else if (isSegmentLeading || isSegmentNext)
+        else if (isSegmentInLeader || isSegmentInFollower)
         {
             lengthCandidate = i;
         }
@@ -364,10 +364,10 @@ void ArtificialDJ::generateMixComplex()
     }
         
     // Set the chosen candidate as the mix end point in both tracks
-    mix.end = mix.start + (lengthCandidate * (leadingTrack->getBarLength() * 4));
-    mix.endNext = mix.startNext + (lengthCandidate * (nextTrack->getBarLength() * 4));
+    mix.leaderEnd = mix.leaderStart + (lengthCandidate * (leadingTrack->getBarLength() * 4));
+    mix.followerEnd = mix.followerStart + (lengthCandidate * (nextTrack->getBarLength() * 4));
     
-    jassert(mix.end <= leadingTrack->getLengthSamples()); // Check there is enough leading track to mix
+    jassert(mix.leaderEnd <= leadingTrack->getLengthSamples()); // Check there is enough leading track to mix
 
     // FINALISE ------------------------------------------------------------------------
 

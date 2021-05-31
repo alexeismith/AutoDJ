@@ -28,7 +28,7 @@ public:
     
     TrackProcessor* getTrackProcessor(int index) { return trackProcessors.getUnchecked(index); }
     
-    void getTrackProcessors(TrackProcessor** leader, TrackProcessor** next);
+    void getTrackProcessors(TrackProcessor** leader, TrackProcessor** follower);
     
     TrackProcessor** getTrackProcessors() { return trackProcessors.data(); }
     

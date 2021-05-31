@@ -25,7 +25,7 @@ AudioProcessor::AudioProcessor(DataManager* dataManager, ArtificialDJ* dj, int i
 void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
     TrackProcessor* leader = nullptr;
-    TrackProcessor* next = nullptr;
+    TrackProcessor* follower = nullptr;
     
     bufferToFill.clearActiveBufferRegion();
     
@@ -36,13 +36,13 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
     if (paused.load())
         return;
     
-    getTrackProcessors(&leader, &next);
+    getTrackProcessors(&leader, &follower);
     
     if (leader)
     {
         int playhead = leader->getNextAudioBlock(bufferToFill);
-        next->getNextAudioBlock(bufferToFill);
-        next->cue(playhead);
+        follower->getNextAudioBlock(bufferToFill);
+        follower->cue(playhead);
     }
     else
     {
@@ -61,14 +61,14 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
 }
 
 
-void AudioProcessor::getTrackProcessors(TrackProcessor** leader, TrackProcessor** next)
+void AudioProcessor::getTrackProcessors(TrackProcessor** leader, TrackProcessor** follower)
 {
     for (auto* processor : trackProcessors)
     {
         if (processor->isLeader())
             *leader = processor;
         else
-            *next = processor;
+            *follower = processor;
     }
 }
 
@@ -85,9 +85,9 @@ void AudioProcessor::prepare(int blockSize)
 bool AudioProcessor::mixEnded()
 {
     TrackProcessor* leader = nullptr;
-    TrackProcessor* next = nullptr;
+    TrackProcessor* follower = nullptr;
     
-    getTrackProcessors(&leader, &next);
+    getTrackProcessors(&leader, &follower);
     
     if (leader)
     {
@@ -112,9 +112,9 @@ void AudioProcessor::reset()
 void AudioProcessor::skipToNextEvent()
 {
     TrackProcessor* leader = nullptr;
-    TrackProcessor* next = nullptr;
+    TrackProcessor* follower = nullptr;
     
-    getTrackProcessors(&leader, &next);
+    getTrackProcessors(&leader, &follower);
     
     if (leader)
     {

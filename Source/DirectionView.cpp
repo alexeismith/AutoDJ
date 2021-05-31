@@ -31,7 +31,7 @@ DirectionView::DirectionView(AnalysisManager* am) :
 
 void DirectionView::hiResTimerCallback()
 {
-    directionLine.update(leader, next);
+    directionLine.update(leader, follower);
 }
 
 
@@ -65,7 +65,7 @@ void DirectionView::resized()
     axesArea.setX(35);
     axesArea.setY(getHeight() - 25 - axesArea.getHeight());
     
-    directionLine.update(leader, next);
+    directionLine.update(leader, follower);
     directionLine.updateBounds();
 }
 
@@ -96,19 +96,19 @@ void DirectionView::updateData()
             }
             else if (dot->getTrack()->playing)
             {
-                next = dot;
+                follower = dot;
             }
         }
         else if (dot->getTrack()->playing)
         {
-            next = dot;
+            follower = dot;
         }
     }
     
     if (leader == nullptr)
     {
-        leader = next;
-        next = nullptr;
+        leader = follower;
+        follower = nullptr;
     }
     
     repaint();

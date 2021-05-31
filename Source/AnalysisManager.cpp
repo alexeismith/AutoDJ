@@ -98,17 +98,23 @@ bool AnalysisManager::isFinished(double& progress)
 
 TrackInfo* AnalysisManager::getNextJob()
 {
+    // Initiate a scoped mutex lock to protect
+    // class data while this function executes
     const juce::ScopedLock sl(lock);
     
+    // Fetch the index of the next job
     int job = nextJob;
     
+    // If there are no more jobs, return
     if (job >= jobs.size())
     {
         return nullptr;
     }
     else
     {
+        // Otherwise, increment the job counter
         nextJob += 1;
+        // Return the next job
         return jobs.getUnchecked(job);
     }
 }

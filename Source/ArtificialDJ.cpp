@@ -21,13 +21,17 @@ ArtificialDJ::ArtificialDJ(DataManager* dm) :
 
 void ArtificialDJ::run()
 {
+    // First entry into this thread, so we must initialise the mix queue
     initialise();
     
+    // While the thread is allowed to continue...
     while (!threadShouldExit())
     {
+        // If the mix queue is not full, generate a new mix
         if (mixQueue.size() < MIX_QUEUE_LENGTH)
             generateMix();
         
+        // Pause this thread for 1 second
         sleep(1000);
     }
 }

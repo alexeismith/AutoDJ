@@ -29,6 +29,7 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
     
     bufferToFill.clearActiveBufferRegion();
     
+    // If a skip has been requested, skip to the next mix event
     if (skipFlag.load())
         skipToNextEvent();
     

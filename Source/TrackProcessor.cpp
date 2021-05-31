@@ -12,7 +12,7 @@
 #include "ArtificialDJ.hpp"
 
 
-TrackProcessor::TrackProcessor(TrackDataManager* dm, ArtificialDJ* DJ) :
+TrackProcessor::TrackProcessor(DataManager* dm, ArtificialDJ* DJ) :
     dataManager(dm), dj(DJ)
 {
     trackLoader.reset(new TrackLoadThread(this));

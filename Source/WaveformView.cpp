@@ -9,7 +9,7 @@
 
 
 
-WaveformView::WaveformView(TrackDataManager* dm, bool clickToScroll, bool scrollBarAtBottom, bool hideWhenEmpty)
+WaveformView::WaveformView(DataManager* dm, bool clickToScroll, bool scrollBarAtBottom, bool hideWhenEmpty)
 {
     scrollable = clickToScroll;
     scrollBarBottom = scrollBarAtBottom;

@@ -10,7 +10,7 @@
 //#define SHOW_SEGMENTS
 
 
-TrackEditor::TrackEditor(TrackDataManager* dm) :
+TrackEditor::TrackEditor(DataManager* dm) :
     dataManager(dm)
 {
     waveform.reset(new WaveformView(dm, true, false, true));

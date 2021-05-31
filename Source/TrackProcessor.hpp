@@ -8,7 +8,7 @@
 #ifndef TrackProcessor_hpp
 #define TrackProcessor_hpp
 
-#include "TrackDataManager.hpp"
+#include "DataManager.hpp"
 #include "TimeStretcher.hpp"
 
 #include "Track.hpp"
@@ -23,7 +23,7 @@ class TrackProcessor
 {
 public:
     
-    TrackProcessor(TrackDataManager* dm, ArtificialDJ* DJ);
+    TrackProcessor(DataManager* dm, ArtificialDJ* DJ);
     
     ~TrackProcessor() {}
     
@@ -77,7 +77,7 @@ private:
     std::unique_ptr<TrackLoadThread> trackLoader;
 
     TrackProcessor* partner = nullptr;
-    TrackDataManager* dataManager = nullptr;
+    DataManager* dataManager = nullptr;
     ArtificialDJ* dj = nullptr;
     
     std::atomic<bool> newTrack = true;

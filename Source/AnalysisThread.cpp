@@ -8,14 +8,14 @@
 
 #include "AnalysisThread.hpp"
 
-#include "TrackDataManager.hpp"
+#include "DataManager.hpp"
 #include "AnalysisManager.hpp"
 
 #include "BeatTests.hpp"
 #include "PerformanceMeasure.hpp"
 
 
-AnalysisThread::AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm, essentia::standard::AlgorithmFactory& factory) :
+AnalysisThread::AnalysisThread(int ID, AnalysisManager* am, DataManager* dm, essentia::standard::AlgorithmFactory& factory) :
     juce::Thread("AnalysisThread" + juce::String(ID)), id(ID), analysisManager(am), dataManager(dm)
 {
     analyserBeats.reset(new AnalyserBeats());

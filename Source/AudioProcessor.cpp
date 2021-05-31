@@ -10,7 +10,7 @@
 #include "CommonDefs.hpp"
 
 
-AudioProcessor::AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj, int initBlockSize)
+AudioProcessor::AudioProcessor(DataManager* dataManager, ArtificialDJ* dj, int initBlockSize)
 {
     trackProcessors.add(new TrackProcessor(dataManager, dj));
     trackProcessors.add(new TrackProcessor(dataManager, dj));

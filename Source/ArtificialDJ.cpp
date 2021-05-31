@@ -10,7 +10,7 @@
 #define MIX_QUEUE_LENGTH (3)
 
 
-ArtificialDJ::ArtificialDJ(TrackDataManager* dm) :
+ArtificialDJ::ArtificialDJ(DataManager* dm) :
     juce::Thread("ArtificialDJ"), dataManager(dm)
 {
     initialised.store(false);

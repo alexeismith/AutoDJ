@@ -7,12 +7,12 @@
 
 #include "AnalysisTest.hpp"
 
-#include "TrackDataManager.hpp"
+#include "DataManager.hpp"
 
 #include "PerformanceMeasure.hpp"
 
 
-void AnalysisTest::startAnalysis(TrackDataManager* dataManager)
+void AnalysisTest::startAnalysis(DataManager* dataManager)
 {
     jassert(jobs.isEmpty()); // Invalid ground truth data: all tracks should be marked as analysed
     

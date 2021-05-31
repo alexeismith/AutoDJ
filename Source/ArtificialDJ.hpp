@@ -26,7 +26,7 @@ class ArtificialDJ : public juce::Thread
 {
 public:
     
-    ArtificialDJ(TrackDataManager* dm);
+    ArtificialDJ(DataManager* dm);
     
     ~ArtificialDJ() { stopThread(5000); }
     
@@ -73,7 +73,7 @@ private:
     
     juce::Array<MixInfo> mixQueue;
     
-    TrackDataManager* dataManager = nullptr;
+    DataManager* dataManager = nullptr;
     AudioProcessor* audioProcessor = nullptr;
     
     RandomGenerator randomGenerator;

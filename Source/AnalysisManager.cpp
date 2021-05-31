@@ -7,7 +7,7 @@
 
 #include "AnalysisManager.hpp"
 
-#include "TrackDataManager.hpp"
+#include "DataManager.hpp"
 
 #define MAX_NUM_THREADS (8)
 
@@ -30,7 +30,7 @@ AnalysisManager::~AnalysisManager()
 }
 
 
-void AnalysisManager::startAnalysis(TrackDataManager* dm)
+void AnalysisManager::startAnalysis(DataManager* dm)
 {
     dataManager = dm;
     

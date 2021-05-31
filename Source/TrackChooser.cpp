@@ -12,7 +12,7 @@
 #define NUM_CANDIDATES (5)
 
 
-TrackChooser::TrackChooser(TrackDataManager* dm, RandomGenerator* random) :
+TrackChooser::TrackChooser(DataManager* dm, RandomGenerator* random) :
     dataManager(dm), randomGenerator(random)
 {
     sorter = dataManager->getSorter();

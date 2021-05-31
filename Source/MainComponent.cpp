@@ -26,7 +26,7 @@ MainComponent::MainComponent() :
     
     logo = juce::ImageFileFormat::loadFrom(BinaryData::logo_png, BinaryData::logo_pngSize);
     
-    dataManager.reset(new TrackDataManager());
+    dataManager.reset(new DataManager());
     dj.reset(new ArtificialDJ(dataManager.get()));
     
     audioProcessor.reset(new AudioProcessor(dataManager.get(), dj.get(), initBlockSize.load()));

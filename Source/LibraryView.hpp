@@ -8,7 +8,7 @@
 #ifndef LibraryComponent_hpp
 #define LibraryComponent_hpp
 
-#include "TrackDataManager.hpp"
+#include "DataManager.hpp"
 #include "QueueTableComponent.hpp"
 #include "TrackEditor.hpp"
 #include "CommonDefs.hpp"
@@ -17,7 +17,7 @@ class LibraryView : public juce::Component
 {
 public:
     
-    LibraryView(TrackDataManager* dataManager);
+    LibraryView(DataManager* dataManager);
     
     ~LibraryView() {}
     
@@ -33,7 +33,7 @@ private:
     
     std::unique_ptr<TrackEditor> trackEditor;
     
-    TrackDataManager* dataManager;
+    DataManager* dataManager;
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LibraryView)

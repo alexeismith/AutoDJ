@@ -5,7 +5,7 @@
 //  Created by Alexei Smith on 01/03/2021.
 //
 
-#include "TrackDataManager.hpp"
+#include "DataManager.hpp"
 
 #include "CommonDefs.hpp"
 
@@ -16,7 +16,7 @@ extern "C" {
 }
 
 
-TrackDataManager::TrackDataManager() :
+DataManager::DataManager() :
     fileFilter(juce::WildcardFileFilter("*.wav,*.mp3", "*", "AudioFormats"))
 {
     formatManager.registerFormat(new juce::WavAudioFormat(), false);
@@ -33,7 +33,7 @@ TrackDataManager::TrackDataManager() :
 }
 
 
-TrackDataManager::~TrackDataManager()
+DataManager::~DataManager()
 {
     // Delete file parser first, because it might try to access analysisManager before it dies
     parser.reset();
@@ -43,7 +43,7 @@ TrackDataManager::~TrackDataManager()
 }
 
 
-bool TrackDataManager::initialise(juce::File directory, DirectionView* direction)
+bool DataManager::initialise(juce::File directory, DirectionView* direction)
 {
     directionView = direction;
     
@@ -67,7 +67,7 @@ bool TrackDataManager::initialise(juce::File directory, DirectionView* direction
 }
 
 
-void TrackDataManager::storeAnalysis(TrackInfo* track)
+void DataManager::storeAnalysis(TrackInfo* track)
 {
     const juce::ScopedLock sl(lock);
     
@@ -88,7 +88,7 @@ void TrackDataManager::storeAnalysis(TrackInfo* track)
 }
 
 
-bool TrackDataManager::isLoading(double& progress, bool& valid)
+bool DataManager::isLoading(double& progress, bool& valid)
 {
     progress = parser->getProgress();
     
@@ -98,14 +98,14 @@ bool TrackDataManager::isLoading(double& progress, bool& valid)
 }
 
 
-bool TrackDataManager::analysisProgress(double& progress, bool& canStartPlaying)
+bool DataManager::analysisProgress(double& progress, bool& canStartPlaying)
 {
     canStartPlaying = numTracksAnalysed >= NUM_TRACKS_MIN;
     return analysisManager->isFinished(progress);
 }
 
 
-juce::AudioBuffer<float>* TrackDataManager::loadAudio(juce::String filename, bool mono)
+juce::AudioBuffer<float>* DataManager::loadAudio(juce::String filename, bool mono)
 {
     juce::AudioBuffer<float>* buffer;
     juce::AudioFormatReader* reader = nullptr;
@@ -142,7 +142,7 @@ juce::AudioBuffer<float>* TrackDataManager::loadAudio(juce::String filename, boo
 }
 
 
-void TrackDataManager::adjustChannels(juce::AudioBuffer<float>* buffer, bool mono)
+void DataManager::adjustChannels(juce::AudioBuffer<float>* buffer, bool mono)
 {
     if (mono && buffer->getNumChannels() >= 2)
     {
@@ -162,7 +162,7 @@ void TrackDataManager::adjustChannels(juce::AudioBuffer<float>* buffer, bool mon
 }
 
 
-void TrackDataManager::printTrackInfo(TrackInfo info)
+void DataManager::printTrackInfo(TrackInfo info)
 {
     std::stringstream ss;
     ss << "\nTrack Data..." << \
@@ -182,7 +182,7 @@ void TrackDataManager::printTrackInfo(TrackInfo info)
 }
 
 
-void TrackDataManager::parseFile(juce::File file)
+void DataManager::parseFile(juce::File file)
 {
     TrackInfo trackInfo, existingInfo;
     
@@ -227,7 +227,7 @@ void TrackDataManager::parseFile(juce::File file)
 }
 
 
-bool TrackDataManager::getTrackInfo(juce::File file, TrackInfo& trackInfo)
+bool DataManager::getTrackInfo(juce::File file, TrackInfo& trackInfo)
 {
     std::unique_ptr<juce::AudioFormatReader> reader(formatManager.createReaderFor(file));
 
@@ -247,7 +247,7 @@ bool TrackDataManager::getTrackInfo(juce::File file, TrackInfo& trackInfo)
 }
 
 
-int TrackDataManager::getHash(juce::File file)
+int DataManager::getHash(juce::File file)
 {
     juce::MemoryBlock rawFile;
     int hash;
@@ -260,7 +260,7 @@ int TrackDataManager::getHash(juce::File file)
 }
 
 
-void TrackDataManager::clearHistory()
+void DataManager::clearHistory()
 {
     const juce::ScopedLock sl(lock);
     
@@ -297,7 +297,7 @@ void TrackDataManager::clearHistory()
 }
 
 
-void TrackDataManager::reset()
+void DataManager::reset()
 {
     numTracks = 0;
     numTracksAnalysed = 0;
@@ -311,7 +311,7 @@ void TrackDataManager::reset()
 void FileParserThread::run()
 {
     int numFiles;
-    TrackDataManager* dm = dataManager;
+    DataManager* dm = dataManager;
     
     while (dm->dirContents->isStillLoading())
     {

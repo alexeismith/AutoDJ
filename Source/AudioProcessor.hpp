@@ -16,7 +16,7 @@ class AudioProcessor
 {
 public:
     
-    AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj, int initBlockSize);
+    AudioProcessor(DataManager* dataManager, ArtificialDJ* dj, int initBlockSize);
     
     ~AudioProcessor() {}
     

@@ -74,7 +74,7 @@ private:
     juce::Rectangle<float> logoArea;
     
     std::unique_ptr<AudioProcessor> audioProcessor;
-    std::unique_ptr<TrackDataManager> dataManager;
+    std::unique_ptr<DataManager> dataManager;
     std::unique_ptr<ArtificialDJ> dj;
     
     std::atomic<bool> validSamplerate = false;

@@ -10,7 +10,7 @@
 #include "CommonDefs.hpp"
 
 
-WaveformLoader::WaveformLoader(TrackDataManager* dm, WaveformComponent* wave, WaveformScrollBar* bar, bool hide) :
+WaveformLoader::WaveformLoader(DataManager* dm, WaveformComponent* wave, WaveformScrollBar* bar, bool hide) :
     juce::Thread("WaveformLoader"), dataManager(dm), waveform(wave), scrollBar(bar), hideWhenEmpty(hide)
 {
     // Generate coefficients for the low-, band- and high-pass IIR filters

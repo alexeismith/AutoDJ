@@ -330,6 +330,8 @@ void FileParserThread::run()
         dm->parseFile(dm->dirContents->getFile(i));
     }
     
+    // Now that we know how many valid tracks there are,
+    // if there aren't enough, reset and return
     if (dm->numTracks < NUM_TRACKS_MIN)
     {
         dm->analysisManager->clearJobs();

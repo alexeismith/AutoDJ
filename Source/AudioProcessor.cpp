@@ -42,6 +42,8 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
     {
         int playhead = leader->getNextAudioBlock(bufferToFill);
         follower->getNextAudioBlock(bufferToFill);
+        
+        // Check whether the follower should start playing, if it isn't already
         follower->cue(playhead);
     }
     else

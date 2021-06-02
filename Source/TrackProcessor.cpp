@@ -15,8 +15,6 @@
 TrackProcessor::TrackProcessor(DataManager* dm, ArtificialDJ* DJ) :
     dataManager(dm), dj(DJ)
 {
-    trackLoader.reset(new TrackLoadThread(this));
-    
     ready.store(false);
     
     track.reset(new Track());

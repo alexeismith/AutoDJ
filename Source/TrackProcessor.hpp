@@ -73,8 +73,6 @@ private:
     
     
     juce::CriticalSection lock;
-    
-    std::unique_ptr<TrackLoadThread> trackLoader;
 
     TrackProcessor* partner = nullptr;
     DataManager* dataManager = nullptr;
@@ -99,24 +97,6 @@ private:
     bool filterOn = false;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackProcessor)
-};
-
-
-class TrackLoadThread : public juce::Thread
-{
-public:
-    
-    TrackLoadThread(TrackProcessor* processor) :
-        juce::Thread("TrackLoad"), trackProcessor(processor) {}
-    
-    ~TrackLoadThread() { stopThread(1000); }
-    
-    void run() { trackProcessor->loadNextTrack(); }
-    
-private:
-    
-    TrackProcessor* trackProcessor = nullptr;
-    
 };
 
 #endif /* TrackProcessor_hpp */

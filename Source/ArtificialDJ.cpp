@@ -272,14 +272,14 @@ void ArtificialDJ::generateMixComplex()
     // Otherwise, we can proceed normally...
 
     mix.nextTrack = nextTrack;
+    
+    // Set the mix bpm to half way between each track
+    mix.bpm = double(mix.leadingTrack->bpm + nextTrack->bpm) / 2;
 
     // Load the audio for the next track
     mix.nextTrackAudio = dataManager->loadAudio(nextTrack->getFilename());
     // Use segmentation analyse to classify sections within the track
     juce::Array<int> nextTrackSegments = segmenter.analyse(nextTrack, mix.nextTrackAudio);
-
-    // Set the mix bpm to half way between each track
-    mix.bpm = double(mix.leadingTrack->bpm + nextTrack->bpm) / 2;
 
 
     // LEADING TRACK START --------------------------------------------------------------

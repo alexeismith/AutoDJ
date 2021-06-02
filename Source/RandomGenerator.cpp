@@ -22,12 +22,16 @@ RandomGenerator::RandomGenerator()
 
 double RandomGenerator::getGaussian(double stdDev, double rangeLimit, double shift)
 {
+    // Use the standard library to pick a random value using a Gaussian distribution
+    // Set up the distribution with a mean of 0 and the supplied standard deviation
     std::normal_distribution<double> distribution(0, stdDev);
     double value = distribution(algorithm);
     
+    // If a range has been specified, use the JUCE utility to limit the random value
     if (rangeLimit > 0.0)
         value = juce::jlimit(-rangeLimit, rangeLimit, value);
     
+    // Apply a value shift (0 by default)
     return value + shift;
 }
 

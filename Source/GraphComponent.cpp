@@ -38,14 +38,14 @@ void GraphComponent::paint(juce::Graphics& g)
         g.drawLine(juce::Line<float>(prevPoint, point));
     }
     
-    point = getPositionForValue(xVal);
+    point = getPositionForValue(mouseOverXValue);
     prevPoint.addXY(5, 5);
     
     g.setColour(juce::Colours::white);
     g.fillEllipse(juce::Rectangle<float>(point.getX()-1,point.getY()-1,3,3));
     
     g.setColour(juce::Colours::red);
-    g.drawSingleLineText(juce::String(juce::String(xVal) + " " + juce::String(yVal)), 10, 20);
+    g.drawSingleLineText(juce::String(juce::String(mouseOverXValue) + " " + juce::String(mouseOverYValue)), 10, 20);
 }
 
 
@@ -103,6 +103,6 @@ juce::Point<float> GraphComponent::getPositionForValue(int index)
 
 void GraphComponent::getValueForPosition(juce::Point<float> pos)
 {
-    xVal = round((pos.getX() / getWidth()) * dataStore.size());
-    yVal = dataStore[xVal];
+    mouseOverXValue = round((pos.getX() / getWidth()) * dataStore.size());
+    mouseOverYValue = dataStore[mouseOverXValue];
 }

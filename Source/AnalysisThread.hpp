@@ -16,14 +16,14 @@
 #include "AnalyserKey.hpp"
 #include "AnalyserGroove.hpp"
 
-class TrackDataManager;
+class DataManager;
 class AnalysisManager;
 
 class AnalysisThread : public juce::Thread
 {
 public:
     
-    AnalysisThread(int ID, AnalysisManager* am, TrackDataManager* dm, essentia::standard::AlgorithmFactory& factory);
+    AnalysisThread(int ID, AnalysisManager* am, DataManager* dm, essentia::standard::AlgorithmFactory& factory);
     
     ~AnalysisThread() {}
     
@@ -46,7 +46,7 @@ private:
     std::atomic<bool> pause = false;
     
     AnalysisManager* analysisManager = nullptr;
-    TrackDataManager* dataManager = nullptr;
+    DataManager* dataManager = nullptr;
     
     std::unique_ptr<AnalyserBeats> analyserBeats;
     std::unique_ptr<AnalyserBeatsEssentia> analyserBeatsEssentia;

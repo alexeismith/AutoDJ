@@ -8,7 +8,7 @@
 #include "LibraryView.hpp"
 
 
-LibraryView::LibraryView(TrackDataManager* dm)
+LibraryView::LibraryView(DataManager* dm)
 {
     dataManager = dm;
     

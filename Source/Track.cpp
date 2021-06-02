@@ -18,7 +18,7 @@ bool Track::update(int numSamples)
     gain.update(playhead, numSamples);
     highPassFreq.update(playhead, numSamples);
     
-    if (leader && playhead >= currentMix->end)
+    if (leader && playhead >= currentMix->leaderEnd)
         return true;
     
     return false;
@@ -50,10 +50,10 @@ bool Track::applyNextMix(MixInfo* mix)
         
         info = currentMix->nextTrack;
         
-        playhead = currentMix->startNext;
+        playhead = currentMix->followerStart;
         
-        gain.moveTo(1.0, currentMix->startNext, currentMix->endNext - currentMix->startNext);
-        highPassFreq.moveTo(0, currentMix->startNext, currentMix->endNext - currentMix->startNext);
+        gain.moveTo(1.0, currentMix->followerStart, currentMix->followerEnd - currentMix->followerStart);
+        highPassFreq.moveTo(0, currentMix->followerStart, currentMix->followerEnd - currentMix->followerStart);
     }
     else
     {
@@ -62,10 +62,10 @@ bool Track::applyNextMix(MixInfo* mix)
         gain.currentValue = 1.0;
         highPassFreq.currentValue = 0.0;
         
-        bpm.moveTo(currentMix->bpm, playhead, currentMix->start - playhead);
+        bpm.moveTo(currentMix->bpm, playhead, currentMix->leaderStart - playhead);
         
-        gain.moveTo(0, currentMix->start, currentMix->end - currentMix->start);
-        highPassFreq.moveTo(HIGH_PASS_MAX, currentMix->start, currentMix->end - currentMix->start);
+        gain.moveTo(0, currentMix->leaderStart, currentMix->leaderEnd - currentMix->leaderStart);
+        highPassFreq.moveTo(HIGH_PASS_MAX, currentMix->leaderStart, currentMix->leaderEnd - currentMix->leaderStart);
     }
     
     return true;

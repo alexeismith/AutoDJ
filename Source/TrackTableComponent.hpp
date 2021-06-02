@@ -39,7 +39,7 @@ public:
     
     void cellClicked(int rowNumber, int columnId, const juce::MouseEvent& e) override;
     
-    void populate(TrackInfo* track, int numTracks);
+    void populate(TrackInfo* tracks, int numTracks);
     
     int getNumRows() override { return tracksSorted.size(); }
     

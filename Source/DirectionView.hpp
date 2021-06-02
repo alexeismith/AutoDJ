@@ -61,7 +61,7 @@ private:
     std::atomic<bool> needsUpdate = false;
     
     TrackDotComponent* leader = nullptr;
-    TrackDotComponent* next = nullptr;
+    TrackDotComponent* follower = nullptr;
     
     DirectionLine directionLine;
 

@@ -10,7 +10,7 @@
 #include "CommonDefs.hpp"
 
 
-AudioProcessor::AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj, int initBlockSize)
+AudioProcessor::AudioProcessor(DataManager* dataManager, ArtificialDJ* dj, int initBlockSize)
 {
     trackProcessors.add(new TrackProcessor(dataManager, dj));
     trackProcessors.add(new TrackProcessor(dataManager, dj));
@@ -25,31 +25,30 @@ AudioProcessor::AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj, 
 void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
     TrackProcessor* leader = nullptr;
-    TrackProcessor* next = nullptr;
+    TrackProcessor* follower = nullptr;
     
     bufferToFill.clearActiveBufferRegion();
     
+    // If a skip has been requested, skip to the next mix event
     if (skipFlag.load())
         skipToNextEvent();
     
     if (paused.load())
+        return;
+    
+    getTrackProcessors(&leader, &follower);
+    
+    if (leader)
     {
-        // Preview
+        int playhead = leader->getNextAudioBlock(bufferToFill);
+        follower->getNextAudioBlock(bufferToFill);
+        
+        // Check whether the follower should start playing, if it isn't already
+        follower->cue(playhead);
     }
     else
     {
-        getTrackProcessors(&leader, &next);
-        
-        if (leader)
-        {
-            int playhead = leader->getNextAudioBlock(bufferToFill);
-            next->getNextAudioBlock(bufferToFill);
-            next->cue(playhead);
-        }
-        else
-        {
-            jassert(false); // No leader!
-        }
+        jassert(false); // No leader!
     }
     
     if (volume != targetVolume.load())
@@ -64,29 +63,14 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
 }
 
 
-void AudioProcessor::play(TrackInfo track)
-{
-    play();
-}
-
-
-void AudioProcessor::preview(TrackInfo track, int startSample, int numSamples)
-{
-//    previewProcessor->load(track);
-//    previewProcessor->seekClip(startSample, numSamples);
-    
-    paused.store(true);
-}
-
-
-void AudioProcessor::getTrackProcessors(TrackProcessor** leader, TrackProcessor** next)
+void AudioProcessor::getTrackProcessors(TrackProcessor** leader, TrackProcessor** follower)
 {
     for (auto* processor : trackProcessors)
     {
         if (processor->isLeader())
             *leader = processor;
         else
-            *next = processor;
+            *follower = processor;
     }
 }
 
@@ -103,9 +87,9 @@ void AudioProcessor::prepare(int blockSize)
 bool AudioProcessor::mixEnded()
 {
     TrackProcessor* leader = nullptr;
-    TrackProcessor* next = nullptr;
+    TrackProcessor* follower = nullptr;
     
-    getTrackProcessors(&leader, &next);
+    getTrackProcessors(&leader, &follower);
     
     if (leader)
     {
@@ -130,9 +114,9 @@ void AudioProcessor::reset()
 void AudioProcessor::skipToNextEvent()
 {
     TrackProcessor* leader = nullptr;
-    TrackProcessor* next = nullptr;
+    TrackProcessor* follower = nullptr;
     
-    getTrackProcessors(&leader, &next);
+    getTrackProcessors(&leader, &follower);
     
     if (leader)
     {

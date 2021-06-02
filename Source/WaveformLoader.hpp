@@ -9,14 +9,14 @@
 #define WaveformLoader_hpp
 
 #include "WaveformScrollBar.hpp"
-#include "TrackDataManager.hpp"
+#include "DataManager.hpp"
 
 // NOTE: need a separate instance for each audio channel to be visualised, because the IIR filters depend on previous samples
 class WaveformLoader : juce::Thread
 {
 public:
     
-    WaveformLoader(TrackDataManager* dm, WaveformComponent* waveform, WaveformScrollBar* scrollBar, bool hideWhenEmpty);
+    WaveformLoader(DataManager* dm, WaveformComponent* waveform, WaveformScrollBar* scrollBar, bool hideWhenEmpty);
     
     ~WaveformLoader() { stopThread(3000); }
     
@@ -28,13 +28,13 @@ private:
     
     void process();
     
-    void pushFrame(int index);
+    void processFrame(int index);
     
     void reset();
     
     juce::CriticalSection lock;
     
-    TrackDataManager* dataManager = nullptr;
+    DataManager* dataManager = nullptr;
     
     WaveformComponent* waveform = nullptr;
     WaveformScrollBar* scrollBar = nullptr;

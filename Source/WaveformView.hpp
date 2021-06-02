@@ -17,7 +17,7 @@ class WaveformView : public juce::Component
 {
 public:
     
-    WaveformView(TrackDataManager* dm, bool clickToScroll, bool scrollBarAtBottom, bool hideWhenEmpty);
+    WaveformView(DataManager* dm, bool clickToScroll, bool scrollBarAtBottom, bool hideWhenEmpty);
     
     ~WaveformView() {}
     

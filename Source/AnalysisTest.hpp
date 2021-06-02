@@ -33,7 +33,7 @@ public:
     
     ~AnalysisTest() {}
     
-    void startAnalysis(TrackDataManager* dataManager) override;
+    void startAnalysis(DataManager* dataManager) override;
     
     bool isFinished(double& progress) override;
     

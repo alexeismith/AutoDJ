@@ -69,18 +69,6 @@ void DeckComponent::resized()
 }
 
 
-void DeckComponent::buttonClicked(juce::Button* button)
-{
-    int id = button->getComponentID().getIntValue();
-    
-    switch (id)
-    {
-        default:
-            jassert(false); // Unrecognised button ID
-    }
-}
-
-
 void DeckComponent::update()
 {
     bool mixEnd;
@@ -160,13 +148,13 @@ void DeckComponent::setMixMarkers()
     
     if (track.leader)
     {
-        start = mix.start;
-        end = mix.end;
+        start = mix.leaderStart;
+        end = mix.leaderEnd;
     }
     else
     {
-        start = mix.startNext;
-        end = mix.endNext;
+        start = mix.followerStart;
+        end = mix.followerEnd;
     }
     
     waveform->insertMarker(start);

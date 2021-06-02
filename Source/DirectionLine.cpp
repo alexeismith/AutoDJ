@@ -17,9 +17,9 @@ void DirectionLine::paint(juce::Graphics& g)
 }
 
 
-void DirectionLine::update(TrackDotComponent* leader, TrackDotComponent* next)
+void DirectionLine::update(TrackDotComponent* leader, TrackDotComponent* follower)
 {
-    if (next == nullptr)
+    if (follower == nullptr)
     {
         juce::MessageManager::callAsync(std::function<void()>([this]() {
             setVisible(false);
@@ -33,13 +33,13 @@ void DirectionLine::update(TrackDotComponent* leader, TrackDotComponent* next)
 
     juce::Path path;
     path.startNewSubPath(leader->getCentre());
-    path.lineTo(next->getCentre());
+    path.lineTo(follower->getCentre());
     
     bounds = path.getBounds();
     bounds.expand(LINE_THICKNESS, LINE_THICKNESS);
     
     juce::Point<float> start = path.getPointAlongPath(counter) - bounds.getPosition();
-    juce::Point<float> end = next->getCentre() - bounds.getPosition();
+    juce::Point<float> end = follower->getCentre() - bounds.getPosition();
     
     line = juce::Line<float>(start, end);
 

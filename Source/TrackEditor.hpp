@@ -9,14 +9,14 @@
 #define TrackEditor_hpp
 
 #include "WaveformView.hpp"
-#include "TrackDataManager.hpp"
+#include "DataManager.hpp"
 #include "AnalyserSegments.hpp"
 
 class TrackEditor : public juce::Component
 {
 public:
     
-    TrackEditor(TrackDataManager* dm);
+    TrackEditor(DataManager* dm);
     
     ~TrackEditor() {}
     
@@ -32,7 +32,7 @@ private:
     
     Track track;
     
-    TrackDataManager* dataManager = nullptr;
+    DataManager* dataManager = nullptr;
     
     juce::String message;
     

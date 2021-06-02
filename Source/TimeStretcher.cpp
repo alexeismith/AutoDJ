@@ -12,8 +12,12 @@
 
 TimeStretcher::TimeStretcher()
 {
+    // Set the samplerate of SoundTouch using the
+    // globally-supported sample rate
     shifter.setSampleRate(SUPPORTED_SAMPLERATE);
     
+    // Set the number of channels depending on
+    // the pre-processor mono/stereo macro
 #ifdef STRETCHER_MONO
     shifter.setChannels(1);
 #else
@@ -37,8 +41,6 @@ void TimeStretcher::prepare(int blockSize)
     inputInterleaved.setSize(1, blockSize * maxInputOutputRatio * 2);
     outputInterleaved.setSize(1, blockSize * 2);
 #endif
-    
-    
 }
 
 

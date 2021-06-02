@@ -16,7 +16,7 @@ class AudioProcessor
 {
 public:
     
-    AudioProcessor(TrackDataManager* dataManager, ArtificialDJ* dj, int initBlockSize);
+    AudioProcessor(DataManager* dataManager, ArtificialDJ* dj, int initBlockSize);
     
     ~AudioProcessor() {}
     
@@ -24,15 +24,11 @@ public:
     
     void play() { paused.store(false); }
     
-    void play(TrackInfo track);
-    
     void pause() { paused.store(true); }
-    
-    void preview(TrackInfo track, int startSample, int numSamples);
     
     TrackProcessor* getTrackProcessor(int index) { return trackProcessors.getUnchecked(index); }
     
-    void getTrackProcessors(TrackProcessor** leader, TrackProcessor** next);
+    void getTrackProcessors(TrackProcessor** leader, TrackProcessor** follower);
     
     TrackProcessor** getTrackProcessors() { return trackProcessors.data(); }
     

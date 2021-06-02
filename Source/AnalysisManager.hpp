@@ -13,7 +13,7 @@
 #include "AnalysisThread.hpp"
 #include "CommonDefs.hpp"
 
-class TrackDataManager;
+class DataManager;
 
 
 class AnalysisManager
@@ -26,7 +26,7 @@ public:
     
     void addJob(TrackInfo* track) { jobs.add(track); }
     
-    virtual void startAnalysis(TrackDataManager* dataManager);
+    virtual void startAnalysis(DataManager* dataManager);
     
     void playPause();
     
@@ -44,7 +44,7 @@ public:
     
 protected:
     
-    TrackDataManager* dataManager;
+    DataManager* dataManager;
     
     juce::Array<TrackInfo*> jobs;
     

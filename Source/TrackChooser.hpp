@@ -13,14 +13,14 @@
 #include "CamelotKey.hpp"
 
 #include "RandomGenerator.hpp"
-#include "TrackDataManager.hpp"
+#include "DataManager.hpp"
 
 
 class TrackChooser
 {
 public:
     
-    TrackChooser(TrackDataManager* dm, RandomGenerator* random);
+    TrackChooser(DataManager* dm, RandomGenerator* random);
     
     ~TrackChooser() {}
     
@@ -34,7 +34,7 @@ private:
     
     void updatePosition();
     
-    TrackDataManager* dataManager = nullptr;
+    DataManager* dataManager = nullptr;
     TrackSorter* sorter = nullptr;
     
     int currentKey = -1;

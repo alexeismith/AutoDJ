@@ -17,13 +17,13 @@
 
 class FileParserThread;
 
-class TrackDataManager
+class DataManager
 {
 public:
       
-    TrackDataManager();
+    DataManager();
       
-    ~TrackDataManager();
+    ~DataManager();
     
     bool initialise(juce::File directory, DirectionView* directionView);
     
@@ -100,7 +100,7 @@ private:
     
     DirectionView* directionView;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackDataManager)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DataManager)
 };
 
 
@@ -108,7 +108,7 @@ class FileParserThread : public juce::Thread
 {
 public:
     
-    FileParserThread(TrackDataManager* dm) :
+    FileParserThread(DataManager* dm) :
         juce::Thread("FileParser"), dataManager(dm) {}
     
     ~FileParserThread() { stopThread(10000); }
@@ -119,7 +119,7 @@ public:
     
 private:
     
-    TrackDataManager* dataManager;
+    DataManager* dataManager;
     std::atomic<double> progress = 0.0;
     
 };

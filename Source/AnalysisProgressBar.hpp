@@ -39,6 +39,8 @@ public:
     
 private:
     
+    void updateText();
+    
     juce::CriticalSection lock;
     
     AnalysisManager* analysisManager = nullptr;

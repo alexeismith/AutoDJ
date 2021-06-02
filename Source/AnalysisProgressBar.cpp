@@ -13,13 +13,13 @@ AnalysisProgressBar::AnalysisProgressBar(AnalysisManager* am) :
 {
     setColour(juce::ProgressBar::ColourIds::backgroundColourId, getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId).withBrightness(0.15f));
     
-    setTextToDisplay("Analysing Library...");
-    
     playImg = juce::ImageFileFormat::loadFrom(BinaryData::play_png, BinaryData::play_pngSize);
     playImg.multiplyAllAlphas(0.65f);
     
     pauseImg = juce::ImageFileFormat::loadFrom(BinaryData::pause_png, BinaryData::pause_pngSize);
     pauseImg.multiplyAllAlphas(0.65f);
+    
+    updateText();
 }
 
 
@@ -46,9 +46,8 @@ void AnalysisProgressBar::resized()
 
 void AnalysisProgressBar::mouseEnter(const juce::MouseEvent &event)
 {
-    setTextToDisplay("");
-    
     mouseOver = true;
+    updateText();
 }
 
 
@@ -61,11 +60,7 @@ void AnalysisProgressBar::mouseDown(const juce::MouseEvent &event)
 void AnalysisProgressBar::mouseExit(const juce::MouseEvent &event)
 {
     mouseOver = false;
-    
-    if (paused)
-        setTextToDisplay("Analysis Paused.");
-    else
-        setTextToDisplay("Analysing Library...");
+    updateText();
 }
 
 
@@ -82,6 +77,8 @@ void AnalysisProgressBar::playPause()
     
     paused = !paused;
     
+    updateText();
+    
     analysisManager->playPause();
     
     repaint();
@@ -93,4 +90,15 @@ void AnalysisProgressBar::pause()
     
     if (!paused)
         playPause();
+}
+
+
+void AnalysisProgressBar::updateText()
+{
+    if (mouseOver)
+        setTextToDisplay("");
+    else if (paused)
+        setTextToDisplay("Analysis Paused.");
+    else
+        setTextToDisplay("Analysing Library...");
 }

@@ -12,13 +12,11 @@
 
 #include <unordered_map>
 
-#define SUPPORTED_SAMPLERATE (44100)
+#define SUPPORTED_SAMPLERATE (44100) // Sample rate to use (Hz)
 #define TRACK_LENGTH_SECS_MIN (60) // 1 minute minimum length
 #define TRACK_LENGTH_SECS_MAX (600) // 10 minutes maximum length
-#define BEATS_PER_BAR (4)
-#define NUM_TRACKS_MIN (6)
-
-#define TOOLBAR_HEIGHT (48)
+#define BEATS_PER_BAR (4) // Number of beats per bar (4/4 time assumed)
+#define NUM_TRACKS_MIN (6) // Minimum track required to launch mix
 
 
 enum ComponentID : int
@@ -31,6 +29,15 @@ enum ComponentID : int
     settingsBtn,
     volumeSld,
     chooseFolderBtn
+};
+
+
+enum ViewID : int
+{
+    library,
+    direction,
+    mix,
+    settings
 };
 
 

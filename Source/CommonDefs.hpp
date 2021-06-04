@@ -19,6 +19,7 @@
 #define NUM_TRACKS_MIN (6) // Minimum track required to launch mix
 
 
+// Enum to define a unique ID for each control (buttons & sliders)
 enum ComponentID : int
 {
     libraryBtn,
@@ -32,6 +33,7 @@ enum ComponentID : int
 };
 
 
+// Enum to define a unique ID for each view
 enum ViewID : int
 {
     library,

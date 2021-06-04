@@ -218,12 +218,16 @@ void AnalyserBeatsEssentia::pulseTrainsPhase(juce::AudioBuffer<float>* audio, in
 
 void AnalyserBeatsEssentia::getDownbeat(juce::AudioBuffer<float>* audio, int bpm, int beatPhase, int& downbeat)
 {
+    // The downbeat algorithm requires a grid of beat position, so we need to construct one
     std::vector<double> beats;
     
+    // Find the number of downbeat frames that will fit into the audio length
     int numFrames = (audio->getNumSamples() - STEP_SIZE_DOWNBEAT) / STEP_SIZE_DOWNBEAT;
     
+    // For each frame to be analysed by the downbeat algorithm
     for (int i = 0; i < numFrames; i++)
     {
+        // If the frame contains a beat, add the frame number to the beat grid array
         if (isBeat(i, bpm, beatPhase))
         {
             beats.push_back(i);
@@ -236,6 +240,7 @@ void AnalyserBeatsEssentia::getDownbeat(juce::AudioBuffer<float>* audio, int bpm
     std::vector<int> downbeats;
     size_t downLength = 0;
     const float *downsampled = downBeat->getBufferedAudio(downLength);
+    // Find downbeats using QM-DSP algorithm
     downBeat->findDownBeats(downsampled, downLength, beats, downbeats);
     
     downbeat = downbeats.front();

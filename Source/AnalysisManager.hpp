@@ -13,8 +13,17 @@
 #include "AnalysisThread.hpp"
 #include "CommonDefs.hpp"
 
-class DataManager;
 
+
+typedef struct AnalysisResults
+{
+    int minBpm = -1;
+    int maxBpm = -1;
+    float minGroove;
+    float maxGroove;
+} AnalysisResults;
+
+class DataManager;
 
 class AnalysisManager
 {

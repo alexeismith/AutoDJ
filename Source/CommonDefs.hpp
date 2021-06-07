@@ -43,25 +43,23 @@ enum ViewID : int
 };
 
 
-typedef struct AnalysisResults
-{
-    int minBpm = -1;
-    int maxBpm = -1;
-    float minGroove;
-    float maxGroove;
-} AnalysisResults;
-
-
+// Restrict the following functions to the AutoDJ:: namespace
 namespace AutoDJ {
 
+// Generates a time length string from a given number of seconds
+// Format: MM:SS
 juce::String getLengthString(int secs);
 
-juce::String getKeyName(int chromaKey);
-
+// Generates a text representation of groove: 'Low', 'Med' or 'High'
+// Determined by fixed ranges of groove that give a fairly balanced distribution across dance music
 juce::String getGrooveString(float groove);
 
+// Calculates the periodicity of beats at a given BPM, in samples
+// i.e. the number of samples per beat
 int getBeatPeriod(int bpm);
 
+// Finds the most common value in an array of any data type
+// (template means we have to keep the definition in this header file, rather than CommonDefs.cpp)
 // ============== Code taken from: https://www.geeksforgeeks.org/frequent-element-array/ ==============
 template <typename Type>
 Type mostCommonValue(Type* data, int size)

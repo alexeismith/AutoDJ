@@ -150,21 +150,22 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
     progress->store(0.3);
     
     // Beat phase analysis...
-    
+    // (Currently no phase available using percival method)
+#if defined BEATS_MULTIFEATURE || defined BEATS_DEGARA
     for (auto tick : ticks)
         beats.push_back(tick*SUPPORTED_SAMPLERATE);
 
     processBeats(beats, bpm, beatPhase);
+#endif
     
+    // Phase correction using Percival pulse trains...
 #ifdef PHASE_CORRECTION_PULSETRAIN
-    
 #ifdef LOW_PASS_PHASE
     filter.processSamples(filteredBuffer.getWritePointer(0), audio->getNumSamples());
     audio = &filteredBuffer;
 #endif
     
     pulseTrainsPhase(audio, bpm, beatPhase);
-
 #endif
     
     progress->store(0.5);

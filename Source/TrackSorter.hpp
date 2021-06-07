@@ -50,7 +50,7 @@ private:
     
     std::unique_ptr<Quadtree> tree;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackSorter)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackSorter) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* TrackSorter_hpp */

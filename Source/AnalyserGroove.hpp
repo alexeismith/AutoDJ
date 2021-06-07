@@ -30,7 +30,7 @@ private:
     
     std::unique_ptr<essentia::standard::Algorithm> danceability;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalyserGroove)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AnalyserGroove) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* AnalyserGroove_hpp */

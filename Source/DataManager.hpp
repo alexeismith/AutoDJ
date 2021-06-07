@@ -100,7 +100,7 @@ private:
     
     DirectionView* directionView;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DataManager)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DataManager) ///< JUCE macro to add a memory leak detector
 };
 
 

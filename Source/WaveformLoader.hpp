@@ -55,7 +55,7 @@ private:
     
     juce::IIRFilter filterLow, filterMid, filterHigh;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformLoader)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WaveformLoader) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* WaveformLoader_hpp */

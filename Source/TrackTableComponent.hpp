@@ -74,7 +74,7 @@ private:
     
     juce::Font font { 14.0f };
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackTableComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackTableComponent) ///< JUCE macro to add a memory leak detector
 };
 
 

@@ -37,7 +37,7 @@ private:
     
     int windowStartX, windowWidth = 0;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformScrollBar)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WaveformScrollBar) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* WaveformScrollBar_hpp */

@@ -53,7 +53,7 @@ private:
     int playhead = 0;
 
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeStretcher)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TimeStretcher) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* TimeStretcher_hpp */

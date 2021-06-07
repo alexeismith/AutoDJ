@@ -53,7 +53,7 @@ private:
     std::unique_ptr<AnalyserKey> analyserKey;
     std::unique_ptr<AnalyserGroove> analyserGroove;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalysisThread)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AnalysisThread) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* AnalysisThread_hpp */

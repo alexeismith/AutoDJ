@@ -57,7 +57,7 @@ private:
     
     juce::OwnedArray<TrackProcessor> trackProcessors;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioProcessor) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* AudioProcessor_hpp */

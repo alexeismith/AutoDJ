@@ -33,7 +33,7 @@ private:
     
     int prevKey;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalyserKey)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AnalyserKey) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* AnalyserKey_hpp */

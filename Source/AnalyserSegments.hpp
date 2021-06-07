@@ -40,7 +40,7 @@ private:
     
     juce::IIRFilter filter;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalyserSegments)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AnalyserSegments) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* AnalyserSegments_hpp */

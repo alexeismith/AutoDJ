@@ -65,7 +65,7 @@ private:
     
     DirectionLine directionLine;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DirectionView)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DirectionView) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* DirectionView_hpp */

@@ -56,7 +56,7 @@ private:
     juce::Image playImg;
     juce::Image pauseImg;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalysisProgressBar)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AnalysisProgressBar) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* AnalysisProgressBar_hpp */

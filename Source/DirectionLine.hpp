@@ -34,7 +34,7 @@ private:
     
     float dashLength[2] = { 5, 5 };
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DirectionLine)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DirectionLine) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* DirectionLine_hpp */

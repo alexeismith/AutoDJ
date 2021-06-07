@@ -70,7 +70,7 @@ private:
     
     float brightness = 0.0;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WaveformComponent) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* WaveformComponent_hpp */

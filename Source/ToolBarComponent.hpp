@@ -74,7 +74,7 @@ private:
     bool ended = false;
     bool waitingForDJ = false;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ToolBarComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ToolBarComponent) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* ToolBarComponent_hpp */

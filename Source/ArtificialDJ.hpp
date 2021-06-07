@@ -83,7 +83,7 @@ private:
     TrackInfo* leadingTrack = nullptr;
     juce::Array<int> leadingTrackSegments;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ArtificialDJ)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ArtificialDJ) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* ArtificialDJ_hpp */

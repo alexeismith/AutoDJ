@@ -32,7 +32,7 @@ private:
     
     juce::OwnedArray<DeckComponent> decks;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MixView)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MixView) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* MixView_hpp */

@@ -96,7 +96,7 @@ private:
     juce::IIRFilter highPassFilterL, highPassFilterR;
     bool filterOn = false;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackProcessor) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* TrackProcessor_hpp */

@@ -36,7 +36,7 @@ private:
     DataManager* dataManager;
     
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LibraryView)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LibraryView) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* LibraryComponent_hpp */

@@ -53,7 +53,7 @@ private:
     int playhead, trackLength;
     double timeStretch, gain;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformView)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WaveformView) ///< JUCE macro to add a memory leak detector
 };
 
 

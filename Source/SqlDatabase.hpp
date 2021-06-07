@@ -42,7 +42,7 @@ private:
     bool initialised = false;
     void* database;
       
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SqlDatabase)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SqlDatabase) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* SqlDatabase_hpp */

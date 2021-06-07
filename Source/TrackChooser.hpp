@@ -51,7 +51,7 @@ private:
     RandomGenerator* randomGenerator;
     
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackChooser)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackChooser) ///< JUCE macro to add a memory leak detector
 };
 
 

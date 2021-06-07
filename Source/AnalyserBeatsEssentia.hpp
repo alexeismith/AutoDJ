@@ -50,7 +50,7 @@ private:
     
     juce::IIRFilter filter;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnalyserBeatsEssentia)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AnalyserBeatsEssentia) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* AnalyserBeatsEssentia_hpp */

@@ -40,7 +40,7 @@ private:
     std::unique_ptr<AnalyserSegments> analyserSegments;
     
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackEditor) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* TrackEditor_hpp */

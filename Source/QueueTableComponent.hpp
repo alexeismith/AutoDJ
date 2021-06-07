@@ -47,7 +47,7 @@ private:
     
     QueueHeaderLook headerAppearance;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (QueueTableComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(QueueTableComponent) ///< JUCE macro to add a memory leak detector
 };
 
 

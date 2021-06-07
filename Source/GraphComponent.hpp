@@ -31,7 +31,10 @@ public:
     /** Destructor */
     ~GraphComponent() {}
     
-    /** Renders this object using the JUCE graphics handler */
+    /** Called by the JUCE message thread to paint this component
+     
+     @param[in] g  JUCE graphics handler
+     */
     void paint(juce::Graphics& g) override;
     
     /** JUCE timer callback, used to trigger a repaint */
@@ -66,6 +69,7 @@ private:
     /** Gets the index of the data array element displayed at a given screen coordinate
      
      @param[in] xPos Local x-coordinate of the mouse
+     
      @return Index of the array element displayed at pos
      */
     int getElementAtPosition(float xPos);
@@ -82,8 +86,7 @@ private:
     
     int mouseOverElement = -1; ///< Index of the data array element that the mouse is hovering over
     
-    
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GraphComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GraphComponent) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* GraphComponent_hpp */

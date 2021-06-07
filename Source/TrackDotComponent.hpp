@@ -52,7 +52,7 @@ private:
     float xProportion, yProportion;
     
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackDotComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackDotComponent) ///< JUCE macro to add a memory leak detector
 };
 
 #endif /* TrackDotComponent_hpp */

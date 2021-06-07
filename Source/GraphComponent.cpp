@@ -90,7 +90,7 @@ void GraphComponent::timerCallback()
 void GraphComponent::mouseMove(const juce::MouseEvent& e)
 {
     // Store the index of the data array element where the mouse is
-    mouseOverElement = getElementAtPosition(e.getPosition().getX());
+    mouseOverElement = getElementAtPosition(e.position.getX());
 }
 
 

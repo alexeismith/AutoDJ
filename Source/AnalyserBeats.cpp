@@ -75,6 +75,9 @@ void AnalyserBeats::reset()
 
 void AnalyserBeats::getTempo(juce::AudioBuffer<float>* audio, std::atomic<double>* progress, int numFrames, int& bpm, int& beatPhase)
 {
+    // QM Vamp plugins used as reference for this function (not like-for-like copy)
+    // https://github.com/c4dm/qm-vamp-plugins/blob/master/plugins/BarBeatTrack.cpp#L378
+    
     juce::AudioBuffer<double> buffer;
     std::vector<double> onsets, onsetsTrim, beatPeriod, tempi, beats;
     

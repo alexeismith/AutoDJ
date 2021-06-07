@@ -57,7 +57,7 @@ MainComponent::MainComponent() :
     
 #ifdef SHOW_GRAPH
     graphWindow.reset(new juce::ResizableWindow("Data Graph", true));
-    graphWindow->setSize(600, 600);
+    graphWindow->setSize(1000, 200);
     graphWindow->setUsingNativeTitleBar(true);
     graphWindow->setCentrePosition(400, 400);
     graphWindow->setVisible(true);

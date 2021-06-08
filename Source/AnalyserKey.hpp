@@ -9,8 +9,8 @@
 #define AnalyserKey_hpp
 
 #include <JuceHeader.h>
-
 #include "ThirdParty/qm-dsp/dsp/keydetection/GetKeyMode.h"
+
 
 class AnalyserKey
 {

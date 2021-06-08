@@ -9,7 +9,6 @@
 #define DirectionView_hpp
 
 #include <JuceHeader.h>
-
 #include "TrackDotComponent.hpp"
 #include "AnalysisManager.hpp"
 #include "TransitionLine.hpp"

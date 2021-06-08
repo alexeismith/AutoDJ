@@ -9,7 +9,6 @@
 #define AnalysisProgressBar_hpp
 
 #include <JuceHeader.h>
-
 #include "AnalysisManager.hpp"
 
 

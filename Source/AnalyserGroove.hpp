@@ -9,7 +9,6 @@
 #define AnalyserGroove_hpp
 
 #include <JuceHeader.h>
-
 #include <essentia.h>
 #include <algorithmfactory.h>
 

@@ -10,6 +10,7 @@
 
 #include "WaveformComponent.hpp"
 
+
 #define WAVEFORM_SCROLL_BAR_HEIGHT (30) ///< Height of WaveformScrollBar, in pixels
 
 

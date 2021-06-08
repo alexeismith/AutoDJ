@@ -9,9 +9,7 @@
 #define DeckComponent_hpp
 
 #include <JuceHeader.h>
-
 #include "TrackProcessor.hpp"
-
 #include "WaveformView.hpp"
 
 

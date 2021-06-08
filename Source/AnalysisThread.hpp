@@ -9,7 +9,6 @@
 #define AnalysisThread_hpp
 
 #include <JuceHeader.h>
-
 #include "TrackInfo.hpp"
 #include "AnalyserBeats.hpp"
 #include "AnalyserBeatsEssentia.hpp"
@@ -18,6 +17,7 @@
 
 class DataManager;
 class AnalysisManager;
+
 
 class AnalysisThread : public juce::Thread
 {

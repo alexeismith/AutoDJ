@@ -9,11 +9,10 @@
 #define AnalyserBeatsEssentia_hpp
 
 #include <JuceHeader.h>
-
 #include "ThirdParty/qm-dsp/dsp/tempotracking/DownBeat.h"
-
 #include <essentia.h>
 #include <algorithmfactory.h>
+
 
 class AnalyserBeatsEssentia
 {

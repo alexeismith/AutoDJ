@@ -9,9 +9,7 @@
 #define AnalyserSegments_hpp
 
 #include <JuceHeader.h>
-
 #include "TrackInfo.hpp"
-
 #include "ThirdParty/qm-dsp/dsp/segmentation/ClusterMeltSegmenter.h"
 
 

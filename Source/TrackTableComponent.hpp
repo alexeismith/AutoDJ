@@ -135,6 +135,7 @@ private:
     
     juce::Font font { 14.0f }; ///< Size of the font to be rendered in the table cells
     
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackTableComponent) ///< JUCE macro to add a memory leak detector
 };
 

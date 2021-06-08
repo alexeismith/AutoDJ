@@ -8,6 +8,7 @@
 #ifndef InterpolatedParameter_hpp
 #define InterpolatedParameter_hpp
 
+
 class InterpolatedParameter
 {
 public:

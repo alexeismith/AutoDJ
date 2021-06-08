@@ -1,7 +1,6 @@
 #pragma once
 
 #include <JuceHeader.h>
-
 #include "AudioProcessor.hpp"
 #include "LibraryView.hpp"
 #include "DirectionView.hpp"
@@ -11,8 +10,10 @@
 #include "AnalysisProgressBar.hpp"
 #include "ToolBarComponent.hpp"
 
+
 // Set the following macro to show the debugging graph (see GraphComponent.hpp)
 //#define SHOW_GRAPH
+
 
 /**
  The top-level JUCE window, which owns all other objects in the application.
@@ -127,6 +128,7 @@ private:
 #ifdef SHOW_GRAPH
     std::unique_ptr<juce::ResizableWindow> graphWindow; ///< Debugging graph to display data arrays, only if SHOW_GRAPH is defined
 #endif
+    
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent) ///< JUCE macro to add a memory leak detector
 };

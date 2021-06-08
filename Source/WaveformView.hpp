@@ -10,6 +10,7 @@
 
 #include "WaveformLoader.hpp"
 
+
 #define WAVEFORM_VIEW_HEIGHT (WAVEFORM_HEIGHT + WAVEFORM_SCROLL_BAR_HEIGHT) ///< Height of WaveformView, in pixels (determined by height of both the waveforms it contains)
 
 
@@ -94,6 +95,7 @@ private:
     
     double timeStretch; ///< Current time-stretch factor applied to the track
     double gain; ///< Current volume gain applied to the track
+    
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WaveformView) ///< JUCE macro to add a memory leak detector
 };

@@ -9,9 +9,7 @@
 #define TrackChooser_hpp
 
 #include <JuceHeader.h>
-
 #include "CamelotKey.hpp"
-
 #include "RandomGenerator.hpp"
 #include "DataManager.hpp"
 

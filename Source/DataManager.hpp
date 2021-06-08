@@ -9,13 +9,13 @@
 #define DataManager_hpp
 
 #include <JuceHeader.h>
-
 #include "SqlDatabase.hpp"
 #include "TrackSorter.hpp"
 #include "AnalysisTest.hpp"
 #include "DirectionView.hpp"
 
 class FileParserThread;
+
 
 class DataManager
 {

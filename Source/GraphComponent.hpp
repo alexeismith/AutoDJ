@@ -10,10 +10,12 @@
 
 #include <JuceHeader.h>
 
+
 // ----------------------------------------------------------------------
 // Set the data type to be given to the graph here:
 #define GRAPH_DATA_TYPE float ///< Data type to be displayed by the graph
 // ----------------------------------------------------------------------
+
 
 /**
  Debugging tool that displays a graph of any data array, instantiated by MainComponent in its own window.
@@ -81,6 +83,7 @@ private:
     inline static juce::String title; ///< Graph title (optional, can be left empty)
     
     int mouseOverElement = -1; ///< Index of the data array element that the mouse is hovering over
+    
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GraphComponent) ///< JUCE macro to add a memory leak detector
 };

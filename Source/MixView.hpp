@@ -9,7 +9,6 @@
 #define MixView_hpp
 
 #include <JuceHeader.h>
-
 #include "DeckComponent.hpp"
 
 

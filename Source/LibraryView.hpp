@@ -13,6 +13,7 @@
 #include "TrackEditor.hpp"
 #include "CommonDefs.hpp"
 
+
 /**
  The Library view UI, which shows the music library in a sorted table, and a waveform view of the selected track.
  */

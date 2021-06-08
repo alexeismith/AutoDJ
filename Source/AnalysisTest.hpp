@@ -10,7 +10,9 @@
 
 #include "AnalysisManager.hpp"
 
+
 #define PHASE_JND (0.025)
+
 
 typedef struct AnalysisTestResult {
     bool bpmCorrect; // Whether estimated BPM is equal to ground truth

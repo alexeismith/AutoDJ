@@ -9,8 +9,8 @@
 #define AudioProcessor_hpp
 
 #include <JuceHeader.h>
-
 #include "TrackProcessor.hpp"
+
 
 class AudioProcessor
 {

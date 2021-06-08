@@ -9,10 +9,10 @@
 #define ToolBarComponent_hpp
 
 #include <JuceHeader.h>
-
 #include "AudioProcessor.hpp"
 #include "ArtificialDJ.hpp"
 #include "CommonDefs.hpp"
+
 
 #define TOOLBAR_HEIGHT (48) ///< The height in pixels of the tool bar
 
@@ -104,6 +104,7 @@ private:
     bool ended = false; ///< Flag to track whether the mix has ended
     bool waitingForDJ = false; ///< Flag to track whether the DJ is generating a mix to begin playback (play/pause button is animated while this is true)
 
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ToolBarComponent) ///< JUCE macro to add a memory leak detector
 };
 

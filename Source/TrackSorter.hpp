@@ -9,10 +9,9 @@
 #define TrackSorter_hpp
 
 #include <JuceHeader.h>
-
 #include "TrackInfo.hpp"
-
 #include "ThirdParty/Quadtree/include/Quadtree.h"
+
 
 #define GROOVE_MULTIPLIER (20.f)
 

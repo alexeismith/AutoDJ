@@ -9,10 +9,10 @@
 #define AnalyserBeats_hpp
 
 #include <JuceHeader.h>
-
 #include "ThirdParty/qm-dsp/dsp/tempotracking/TempoTrackV2.h"
 #include "ThirdParty/qm-dsp/dsp/tempotracking/DownBeat.h"
 #include "ThirdParty/qm-dsp/dsp/onsets/DetectionFunction.h"
+
 
 class AnalyserBeats
 {

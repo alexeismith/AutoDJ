@@ -9,7 +9,6 @@
 #define MixInfo_hpp
 
 #include "TrackInfo.hpp"
-
 #include <JuceHeader.h>
 
 

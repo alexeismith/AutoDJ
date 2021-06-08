@@ -10,14 +10,12 @@
 
 #include "DataManager.hpp"
 #include "TimeStretcher.hpp"
-
 #include "Track.hpp"
-
 #include "ThirdParty/soundtouch/include/SoundTouch.h"
 
 class ArtificialDJ;
-
 class TrackLoadThread;
+
 
 class TrackProcessor
 {

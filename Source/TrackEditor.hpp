@@ -12,6 +12,7 @@
 #include "DataManager.hpp"
 #include "AnalyserSegments.hpp"
 
+
 /**
  Shows the waveform view of a track. In future, should also be used to correct temporal analysis data.
  */

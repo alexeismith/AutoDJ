@@ -8,9 +8,7 @@
 #ifndef TimeStretcher_hpp
 #define TimeStretcher_hpp
 
-
 #include <JuceHeader.h>
-
 #include "ThirdParty/soundtouch/include/SoundTouch.h"
 
 

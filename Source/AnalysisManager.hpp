@@ -9,7 +9,6 @@
 #define AnalysisManager_hpp
 
 #include <JuceHeader.h>
-
 #include "AnalysisThread.hpp"
 #include "CommonDefs.hpp"
 

@@ -9,8 +9,8 @@
 #define WaveformComponent_hpp
 
 #include <JuceHeader.h>
-
 #include "Track.hpp"
+
 
 #define WAVEFORM_HEIGHT (100) ///< Height of WaveformComponent, in pixels
 

@@ -72,6 +72,7 @@ private:
     
     QueueHeaderLook headerAppearance; ///< Custom appearance of the table header (top part of table showing column names)
     
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(QueueTableComponent) ///< JUCE macro to add a memory leak detector
 };
 

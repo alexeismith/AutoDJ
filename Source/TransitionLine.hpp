@@ -9,7 +9,6 @@
 #define TransitionLine_hpp
 
 #include <JuceHeader.h>
-
 #include "TrackDotComponent.hpp"
 
 
@@ -48,6 +47,7 @@ private:
     
     float dashLength[2] = { 5, 5 }; ///< Array to define the dashes in the line: a repeating pattern of 5 pixel dash, 5 pixel gap
 
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TransitionLine) ///< JUCE macro to add a memory leak detector
 };
 

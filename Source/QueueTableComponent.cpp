@@ -73,10 +73,11 @@ void QueueTableComponent::mouseDrag(const juce::MouseEvent& e)
 
 
 void QueueHeaderLook::drawTableHeaderColumn(juce::Graphics& g, juce::TableHeaderComponent& header, const juce::String& columnName,
-                                            int /*columnId*/, int width, int height, bool isMouseOver, bool isMouseDown, int columnFlags)
+                                            int /*columnId*/, int width, int height, bool /*isMouseOver*/, bool /*isMouseDown*/, int /*columnFlags*/)
 {
+    // The following is unused code from the base drawTableHeaderColumn() function
 //    auto highlightColour = header.findColour (juce::TableHeaderComponent::highlightColourId);
-
+//    
 //    if (isMouseDown)
 //        g.fillAll (highlightColour);
 //    else if (isMouseOver)
@@ -85,6 +86,7 @@ void QueueHeaderLook::drawTableHeaderColumn(juce::Graphics& g, juce::TableHeader
     juce::Rectangle<int> area (width, height);
     area.reduce (4, 0);
 
+    // The following is unused code from the base drawTableHeaderColumn() function
 //    if ((columnFlags & (juce::TableHeaderComponent::sortedForwards | juce::TableHeaderComponent::sortedBackwards)) != 0)
 //    {
 //        juce::Path sortArrow;

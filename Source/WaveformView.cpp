@@ -27,7 +27,7 @@ WaveformView::WaveformView(DataManager* dm, bool clickToScroll, bool scrollBarAt
 void WaveformView::resized()
 {
     waveform->setSize(getWidth(), WAVEFORM_HEIGHT);
-    scrollBar->setSize(getWidth(), WAVEFORM_BAR_HEIGHT);
+    scrollBar->setSize(getWidth(), WAVEFORM_SCROLL_BAR_HEIGHT);
     
     if (scrollBarBottom)
     {
@@ -37,7 +37,7 @@ void WaveformView::resized()
     else
     {
         scrollBar->setTopLeftPosition(0, 0);
-        waveform->setTopLeftPosition(0, WAVEFORM_BAR_HEIGHT);
+        waveform->setTopLeftPosition(0, WAVEFORM_SCROLL_BAR_HEIGHT);
     }
 }
 

@@ -190,6 +190,9 @@ bool WaveformComponent::isMarker(int frameIndex)
     int frameStart = frameIndex * WAVEFORM_FRAME_SIZE;
     int frameEnd = frameStart + WAVEFORM_FRAME_SIZE - 1;
     
+    // We could use a more efficient search method, but there shouldn't
+    // ever be more than a few markers, so this is fine...
+    
     for (int marker : markers)
     {
         if (marker >= frameStart && marker <= frameEnd)

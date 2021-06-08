@@ -9,7 +9,7 @@
 
 WaveformScrollBar::WaveformScrollBar()
 {
-    setSize(0, WAVEFORM_BAR_HEIGHT);
+    setSize(0, WAVEFORM_SCROLL_BAR_HEIGHT);
 }
 
 

@@ -10,7 +10,7 @@
 
 #include "WaveformLoader.hpp"
 
-#define WAVEFORM_VIEW_HEIGHT (WAVEFORM_HEIGHT + WAVEFORM_BAR_HEIGHT)
+#define WAVEFORM_VIEW_HEIGHT (WAVEFORM_HEIGHT + WAVEFORM_SCROLL_BAR_HEIGHT) ///< Height of WaveformView, in pixels (determined by height of both the waveforms it contains)
 
 
 /**
@@ -46,7 +46,7 @@ public:
     /** Triggers an update of playhead, timestretch and gain, then a repaint. */
     void refresh();
     
-    /** Resets the state of each waveform. */
+    /** Resets the state of each waveform, ready for a new track to be loaded. */
     void reset();
     
     /** Inserts a red mix marker into both waveforms.

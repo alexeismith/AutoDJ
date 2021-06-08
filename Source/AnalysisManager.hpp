@@ -55,7 +55,7 @@ public:
     
 protected:
     
-    DataManager* dataManager;
+    DataManager* dataManager = nullptr; ///< Pointer to the app's track data manager
     
     juce::Array<TrackInfo*> jobs;
     

@@ -75,14 +75,14 @@ private:
     
     juce::Array<MixInfo> mixQueue;
     
-    DataManager* dataManager = nullptr; ///< Pointer to app's track data manager
+    DataManager* dataManager = nullptr; ///< Pointer to the app's track data manager
     AudioProcessor* audioProcessor = nullptr; ///< Pointer to the top-level audio processor
     
     RandomGenerator randomGenerator;
     
     AnalyserSegments segmenter;
     
-    TrackInfo* leadingTrack = nullptr; ///< Pointer to 
+    TrackInfo* leadingTrack = nullptr; ///< Pointer to information of the current track being played
     juce::Array<int> leadingTrackSegments;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ArtificialDJ) ///< JUCE macro to add a memory leak detector

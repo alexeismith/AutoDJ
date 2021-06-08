@@ -36,8 +36,8 @@ private:
     
     void updatePosition();
     
-    DataManager* dataManager = nullptr; ///< Pointer to app's track data manager
-    TrackSorter* sorter = nullptr; ///< Pointer to 
+    DataManager* dataManager = nullptr; ///< Pointer to the app's track data manager
+    TrackSorter* sorter = nullptr; ///< Pointer to a quadtree which sorts tracks based on tempo and groove
     
     int currentKey = -1;
     

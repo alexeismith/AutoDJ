@@ -62,12 +62,12 @@ private:
     juce::Image axes;
     juce::Rectangle<float> axesArea;
     
-    AnalysisManager* analysisManager;
+    AnalysisManager* analysisManager = nullptr; ///< Pointer to audio analysis manager
     
     std::atomic<bool> needsUpdate = false;
     
-    TrackDotComponent* leader = nullptr; ///< Pointer to 
-    TrackDotComponent* follower = nullptr; ///< Pointer to 
+    TrackDotComponent* leader = nullptr; ///< Pointer to the dot which represents the leading track in the mix
+    TrackDotComponent* follower = nullptr; ///< Pointer to the dot which represents the track being mixed in
     
     DirectionLine directionLine;
 

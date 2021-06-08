@@ -311,39 +311,38 @@ void DataManager::reset()
 void FileParserThread::run()
 {
     int numFiles;
-    DataManager* dm = dataManager;
     
-    while (dm->dirContents->isStillLoading())
+    while (dataManager->dirContents->isStillLoading())
     {
         _mm_pause();
     }
     
-    numFiles = dm->dirContents->getNumFiles();
+    numFiles = dataManager->dirContents->getNumFiles();
     DBG("Num files in directory: " << numFiles);
     
-    dm->tracks = (TrackInfo*)malloc(sizeof(TrackInfo) * numFiles);
+    dataManager->tracks = (TrackInfo*)malloc(sizeof(TrackInfo) * numFiles);
     
     for (int i = 0; i < numFiles; i++)
     {
         if (threadShouldExit()) return;
         progress.store(double(i) / numFiles);
-        dm->parseFile(dm->dirContents->getFile(i));
+        dataManager->parseFile(dataManager->dirContents->getFile(i));
     }
     
     // Now that we know how many valid tracks there are,
     // if there aren't enough, reset and return
-    if (dm->numTracks < NUM_TRACKS_MIN)
+    if (dataManager->numTracks < NUM_TRACKS_MIN)
     {
-        dm->analysisManager->clearJobs();
-        dm->reset();
+        dataManager->analysisManager->clearJobs();
+        dataManager->reset();
         
-        memset(dm->tracks, 0, dm->numTracksAnalysed * sizeof(TrackInfo));
+        memset(dataManager->tracks, 0, dataManager->numTracksAnalysed * sizeof(TrackInfo));
         return;
     }
     
-    dm->validDirectory.store(true);
+    dataManager->validDirectory.store(true);
     
-    DBG("Num already analysed: " << dm->numTracksAnalysed);
+    DBG("Num already analysed: " << dataManager->numTracksAnalysed);
     
-    dm->analysisManager->startAnalysis(dm);
+    dataManager->analysisManager->startAnalysis(dataManager);
 }

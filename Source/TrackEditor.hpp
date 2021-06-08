@@ -38,7 +38,7 @@ private:
     
     Track track;
     
-    DataManager* dataManager = nullptr; ///< Pointer to app's track data manager
+    DataManager* dataManager = nullptr; ///< Pointer to the app's track data manager
     
     juce::String message;
     

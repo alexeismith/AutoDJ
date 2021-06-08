@@ -11,7 +11,7 @@ The software was designed by Alexei Smith as part of a study exploring audio ana
 
 ## Installing
 
-Please note that _Mac_ is currently the only supported platform.
+Please note that **Mac** is currently the only supported platform.
 
 If you just want to run the AutoDJ app, please see the [releases](https://github.com/alexeismith/AutoDJ/releases) for the latest build. There is no install process - just launch AutoDJ and select a folder of music!
 

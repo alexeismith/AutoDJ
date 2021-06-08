@@ -121,7 +121,7 @@ public:
     
 private:
     
-    DataManager* dataManager;
+    DataManager* dataManager = nullptr; ///< Pointer to the track data manager
     std::atomic<double> progress = 0.0;
     
 };

@@ -75,7 +75,7 @@ private:
     
     std::unique_ptr<TrackTableSorter> sorter;
     
-    TrackEditor* trackEditor = nullptr; ///< Pointer to 
+    TrackEditor* trackEditor = nullptr; ///< Pointer to the editor which will show the selected track's waveform
     
     int fixedColumnWidth;
     

@@ -54,7 +54,7 @@ private:
     
     std::atomic<bool> ready = false;
     
-    TrackProcessor* trackProcessor = nullptr; ///< Pointer to 
+    TrackProcessor* trackProcessor = nullptr; ///< Pointer to track audio processor associated with this deck
     
     std::unique_ptr<WaveformView> waveform;
     

@@ -26,13 +26,14 @@ public:
     
     /** Destructor. */
     ~WaveformComponent() {}
+
+    /** Called by the JUCE message when this component is resized - set size/position of child components here. */
+    void resized() override;
     
     /** Called by the JUCE message thread to paint this component.
      
      @param[in] g  JUCE graphics handler */
     virtual void paint(juce::Graphics& g) override;
-    
-    void resized() override;
     
     virtual void update(int playhead, double timeStretch, double gain);
     

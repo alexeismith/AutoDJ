@@ -114,56 +114,6 @@ MainComponent::~MainComponent()
 }
 
 
-void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
-{
-    // Store whether the supplied sample rate is valid
-    if (sampleRate != SUPPORTED_SAMPLERATE)
-    {
-        validSamplerate.store(false);
-    }
-    else
-    {
-        validSamplerate.store(true);
-        // If the sample rate is valid, reset the 'sample rate error shown' flag,
-        // so that an error will be shown again if the sample rate becomes invalid in future
-        errorShown.store(false);
-    }
-    
-    // Store the expected audio processing buffer size
-    blockSize.store(samplesPerBlockExpected);
-    
-    // If the audio processor has been instantiated, pass it the buffer size
-    if (audioProcessor.get())
-        audioProcessor->prepare(samplesPerBlockExpected);
-}
-
-
-void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
-{
-    // If the audio settings are invalid or the audio processor has not been instantiated, return
-    if (!validAudioSettings() || audioProcessor.get() == nullptr) return;
-    
-    // Pass the audio output buffer to the audio processing object
-    audioProcessor->getNextAudioBlock(bufferToFill);
-}
-
-
-void MainComponent::paint (juce::Graphics& g)
-{
-    // If on the start screen, set a dark background gradient colour
-    if (startScreen)
-        g.setGradientFill(juce::ColourGradient(colourBackground, getWidth()/2, getHeight()/4, colourBackground.withBrightness(0.15f), getWidth(), getHeight(), true));
-    else // Otherwise, show a lighter background gradient
-        g.setGradientFill(juce::ColourGradient(colourBackground.withBrightness(0.3f), getWidth()/2, getHeight()/4, colourBackground, getWidth()/2, getHeight() - TOOLBAR_HEIGHT, true));
-    // Fill the background with the chosen colour gradient
-    g.fillAll();
-    
-    // If on the start screen, draw the AutoDJ logo
-    if (startScreen)
-        g.drawImage(logo, logoArea, juce::RectanglePlacement::centred);
-}
-
-
 void MainComponent::resized()
 {
     // Constrain the new size to the specified limits
@@ -202,6 +152,56 @@ void MainComponent::resized()
         analysisProgress->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT - 30);
     else
         analysisProgress->setCentrePosition(getWidth()/2, getHeight() - TOOLBAR_HEIGHT - WAVEFORM_VIEW_HEIGHT - 30);
+}
+
+
+void MainComponent::paint (juce::Graphics& g)
+{
+    // If on the start screen, set a dark background gradient colour
+    if (startScreen)
+        g.setGradientFill(juce::ColourGradient(colourBackground, getWidth()/2, getHeight()/4, colourBackground.withBrightness(0.15f), getWidth(), getHeight(), true));
+    else // Otherwise, show a lighter background gradient
+        g.setGradientFill(juce::ColourGradient(colourBackground.withBrightness(0.3f), getWidth()/2, getHeight()/4, colourBackground, getWidth()/2, getHeight() - TOOLBAR_HEIGHT, true));
+    // Fill the background with the chosen colour gradient
+    g.fillAll();
+    
+    // If on the start screen, draw the AutoDJ logo
+    if (startScreen)
+        g.drawImage(logo, logoArea, juce::RectanglePlacement::centred);
+}
+
+
+void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
+{
+    // Store whether the supplied sample rate is valid
+    if (sampleRate != SUPPORTED_SAMPLERATE)
+    {
+        validSamplerate.store(false);
+    }
+    else
+    {
+        validSamplerate.store(true);
+        // If the sample rate is valid, reset the 'sample rate error shown' flag,
+        // so that an error will be shown again if the sample rate becomes invalid in future
+        errorShown.store(false);
+    }
+    
+    // Store the expected audio processing buffer size
+    blockSize.store(samplesPerBlockExpected);
+    
+    // If the audio processor has been instantiated, pass it the buffer size
+    if (audioProcessor.get())
+        audioProcessor->prepare(samplesPerBlockExpected);
+}
+
+
+void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
+{
+    // If the audio settings are invalid or the audio processor has not been instantiated, return
+    if (!validAudioSettings() || audioProcessor.get() == nullptr) return;
+    
+    // Pass the audio output buffer to the audio processing object
+    audioProcessor->getNextAudioBlock(bufferToFill);
 }
 
 

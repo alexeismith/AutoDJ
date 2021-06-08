@@ -27,6 +27,14 @@ public:
     
     /** Destructor - called when the app wants to exit. */
     ~MainComponent() override;
+    
+    /** Called by the JUCE message when this component is resized - set size/position of child components here. */
+    void resized() override;
+    
+    /** Called by the JUCE message thread to paint this component.
+     
+     @param[in] g  JUCE graphics handler */
+    void paint(juce::Graphics& g) override;
 
     /** Usually called when audio settings change, to prepare the audio processing pipeline.
      
@@ -44,14 +52,6 @@ public:
     /** Called when the audio device stops or restarts (Currently unused). */
     void releaseResources() override {}
 
-    /** Called by the JUCE message thread to paint this component.
-     
-     @param[in] g  JUCE graphics handler */
-    void paint(juce::Graphics& g) override;
-    
-    /** Called by the JUCE message when this component is resized - set size/position of child components here. */
-    void resized() override;
-    
     /** JUCE timer callback, used to check the state of various flags and refresh the app state accordingly. */
     void timerCallback() override;
     

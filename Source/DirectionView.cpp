@@ -29,22 +29,6 @@ DirectionView::DirectionView(AnalysisManager* am) :
 }
 
 
-void DirectionView::hiResTimerCallback()
-{
-    directionLine.update(leader, follower);
-}
-
-
-void DirectionView::paint(juce::Graphics& g)
-{
-    g.setGradientFill(juce::ColourGradient(colourBackground.withBrightness(0.3f), getWidth()/2, getHeight()/4, colourBackground, getWidth()/2, getHeight(), true));
-    g.fillAll();
-    
-    g.drawImage(logo, logoArea, juce::RectanglePlacement::centred);
-    g.drawImage(axes, axesArea, juce::RectanglePlacement::xLeft | juce::RectanglePlacement::yBottom);
-}
-
-
 void DirectionView::resized()
 {
     int x, y;
@@ -67,6 +51,22 @@ void DirectionView::resized()
     
     directionLine.update(leader, follower);
     directionLine.updateBounds();
+}
+
+
+void DirectionView::paint(juce::Graphics& g)
+{
+    g.setGradientFill(juce::ColourGradient(colourBackground.withBrightness(0.3f), getWidth()/2, getHeight()/4, colourBackground, getWidth()/2, getHeight(), true));
+    g.fillAll();
+    
+    g.drawImage(logo, logoArea, juce::RectanglePlacement::centred);
+    g.drawImage(axes, axesArea, juce::RectanglePlacement::xLeft | juce::RectanglePlacement::yBottom);
+}
+
+
+void DirectionView::hiResTimerCallback()
+{
+    directionLine.update(leader, follower);
 }
 
 

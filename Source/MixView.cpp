@@ -21,6 +21,16 @@ MixView::MixView(TrackProcessor** processors)
 }
 
 
+void MixView::resized()
+{
+    decks.getUnchecked(0)->setSize(getWidth(), getHeight()/2);
+    decks.getUnchecked(1)->setSize(getWidth(), getHeight()/2);
+    
+    decks.getUnchecked(0)->setTopLeftPosition(0, 0);
+    decks.getUnchecked(1)->setTopLeftPosition(0, getHeight()/2);
+}
+
+
 void MixView::hiResTimerCallback()
 {
     // Tell each deck to fetch the playhead position before updating
@@ -36,16 +46,6 @@ void MixView::hiResTimerCallback()
     juce::MessageManager::callAsync(std::function<void()>([this]() {
         repaint();
     }));
-}
-
-
-void MixView::resized()
-{
-    decks.getUnchecked(0)->setSize(getWidth(), getHeight()/2);
-    decks.getUnchecked(1)->setSize(getWidth(), getHeight()/2);
-    
-    decks.getUnchecked(0)->setTopLeftPosition(0, 0);
-    decks.getUnchecked(1)->setTopLeftPosition(0, getHeight()/2);
 }
 
 

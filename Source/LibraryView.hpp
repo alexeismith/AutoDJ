@@ -23,6 +23,7 @@ public:
     /** Destructor. */
     ~LibraryView() {}
     
+    /** Called by the JUCE message when this component is resized - set size/position of child components here. */
     void resized() override;
     
     void refreshTable() { trackTable->sort(); }

@@ -74,12 +74,6 @@ ToolBarComponent::ToolBarComponent(juce::Component* mainComp, AudioProcessor* ap
 }
 
 
-void ToolBarComponent::paint(juce::Graphics& g)
-{
-    g.drawImage(volumeImg, volumeArea, juce::RectanglePlacement::centred);
-}
-
-
 void ToolBarComponent::resized()
 {
     libraryBtn->setSize(68, 28);
@@ -105,6 +99,12 @@ void ToolBarComponent::resized()
     
     settingsBtn->setSize(25, 25);
     settingsBtn->setCentrePosition(getWidth() - 25, getHeight()/2);
+}
+
+
+void ToolBarComponent::paint(juce::Graphics& g)
+{
+    g.drawImage(volumeImg, volumeArea, juce::RectanglePlacement::centred);
 }
 
 

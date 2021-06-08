@@ -32,6 +32,18 @@ TrackTableComponent::TrackTableComponent(TrackEditor* editor) :
 }
 
 
+void TrackTableComponent::resized()
+{
+    int availableWidth = getWidth() - fixedColumnWidth - table->getVerticalScrollBar().getWidth();
+
+    table->getHeader().setColumnWidth(2, availableWidth);
+    
+    table->setSize(getWidth(), getHeight());
+    
+    table->getHorizontalScrollBar().setColour(juce::ScrollBar::ColourIds::thumbColourId, juce::Colours::black.withAlpha(0.f));
+}
+
+
 void TrackTableComponent::cellClicked(int rowNumber, int columnId, const juce::MouseEvent& e)
 {
     TrackInfo* info = tracksSorted.getReference(rowNumber);
@@ -101,18 +113,6 @@ void TrackTableComponent::paintCell(juce::Graphics& g, int rowNumber, int column
 
     g.setColour(getLookAndFeel().findColour(juce::ListBox::backgroundColourId));
     g.fillRect(width - 1, 0, 1, height);
-}
-
-
-void TrackTableComponent::resized()
-{
-    int availableWidth = getWidth() - fixedColumnWidth - table->getVerticalScrollBar().getWidth();
-
-    table->getHeader().setColumnWidth(2, availableWidth);
-    
-    table->setSize(getWidth(), getHeight());
-    
-    table->getHorizontalScrollBar().setColour(juce::ScrollBar::ColourIds::thumbColourId, juce::Colours::black.withAlpha(0.f));
 }
 
 

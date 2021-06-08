@@ -22,8 +22,6 @@ public:
     /** Destructor. */
     ~TrackDotComponent() {}
     
-    TrackInfo* getTrack() { return info; }
-    
     /** Called by the JUCE message thread to paint this component.
      
      @param[in] g  JUCE graphics handler */
@@ -34,6 +32,8 @@ public:
     void mouseEnter(const juce::MouseEvent &event) override;
     
     void mouseExit(const juce::MouseEvent &event) override;
+    
+    TrackInfo* getTrack() { return info; }
     
     void update();
     

@@ -25,16 +25,17 @@ public:
     /** Destructor. */
     ~DirectionView() { reset(); }
     
-    // Using hi res timer because it runs on a separate thread,
-    // to avoid clogging message thread
-    void hiResTimerCallback() override;
+    /** Called by the JUCE message when this component is resized - set size/position of child components here. */
+    void resized() override;
     
     /** Called by the JUCE message thread to paint this component.
      
      @param[in] g  JUCE graphics handler */
     void paint(juce::Graphics& g) override;
     
-    void resized() override;
+    // Using hi res timer because it runs on a separate thread,
+    // to avoid clogging message thread
+    void hiResTimerCallback() override;
     
     void updateData();
     

@@ -20,6 +20,27 @@ DeckComponent::DeckComponent(int id, TrackProcessor* processor) :
 }
 
 
+void DeckComponent::resized()
+{
+    waveform->setSize(getWidth(), WAVEFORM_VIEW_HEIGHT);
+    
+    if (deckId == 0)
+    {
+        waveform->setTopLeftPosition(0, getHeight() - waveform->getHeight());
+        
+        titlePosY = waveform->getY() - 30;
+        infoPosY = titlePosY - 30;
+    }
+    else
+    {
+        waveform->setTopLeftPosition(0, 0);
+        
+        titlePosY = waveform->getY() + waveform->getHeight() + 30;
+        infoPosY = titlePosY + 30;
+    }
+}
+
+
 void DeckComponent::paint(juce::Graphics& g)
 {
     int startY, endY;
@@ -45,27 +66,6 @@ void DeckComponent::paint(juce::Graphics& g)
     g.drawText(title, 20, titlePosY, getWidth(), 1, juce::Justification::left);
     g.setFont(juce::Font(18));
     g.drawText(info, 20, infoPosY, getWidth(), 1, juce::Justification::left);
-}
-
-
-void DeckComponent::resized()
-{
-    waveform->setSize(getWidth(), WAVEFORM_VIEW_HEIGHT);
-    
-    if (deckId == 0)
-    {
-        waveform->setTopLeftPosition(0, getHeight() - waveform->getHeight());
-        
-        titlePosY = waveform->getY() - 30;
-        infoPosY = titlePosY - 30;
-    }
-    else
-    {
-        waveform->setTopLeftPosition(0, 0);
-        
-        titlePosY = waveform->getY() + waveform->getHeight() + 30;
-        infoPosY = titlePosY + 30;
-    }
 }
 
 

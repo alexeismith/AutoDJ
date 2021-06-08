@@ -13,6 +13,12 @@ WaveformScrollBar::WaveformScrollBar()
 }
 
 
+void WaveformScrollBar::resized()
+{
+    imageScaled = image.rescaled(getWidth(), getHeight(), juce::Graphics::ResamplingQuality::mediumResamplingQuality);
+}
+
+
 void WaveformScrollBar::paint(juce::Graphics& g)
 {
     if (!ready.load())
@@ -26,12 +32,6 @@ void WaveformScrollBar::paint(juce::Graphics& g)
     
     g.setColour(juce::Colours::white);
     g.drawRect(windowStartX, 0, windowWidth, getHeight());
-}
-
-
-void WaveformScrollBar::resized()
-{
-    imageScaled = image.rescaled(getWidth(), getHeight(), juce::Graphics::ResamplingQuality::mediumResamplingQuality);
 }
 
 

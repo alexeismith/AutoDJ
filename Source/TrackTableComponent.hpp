@@ -43,6 +43,9 @@ public:
     /** Destructor. */
     ~TrackTableComponent() {}
     
+    /** Called by the JUCE message when this component is resized - set size/position of child components here. */
+    void resized() override;
+    
     void cellClicked(int rowNumber, int columnId, const juce::MouseEvent& e) override;
     
     void populate(TrackInfo* tracks, int numTracks);
@@ -52,8 +55,6 @@ public:
     void paintRowBackground(juce::Graphics& g, int rowNumber, int /*width*/, int /*height*/, bool rowIsSelected) override;
     
     void paintCell(juce::Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override;
-    
-    void resized() override;
     
     void sortOrderChanged(int newSortColumnId, bool isForwards) override;
     

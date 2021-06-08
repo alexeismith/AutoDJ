@@ -23,6 +23,13 @@ AnalysisProgressBar::AnalysisProgressBar(AnalysisManager* am) :
 }
 
 
+void AnalysisProgressBar::resized()
+{
+    imageArea.setSize(18, 18);
+    imageArea.setCentre(getWidth()/2, getHeight()/2);
+}
+
+
 void AnalysisProgressBar::paint(juce::Graphics& g)
 {
     juce::ProgressBar::paint(g);
@@ -34,13 +41,6 @@ void AnalysisProgressBar::paint(juce::Graphics& g)
         else
             g.drawImage(pauseImg, imageArea);
     }
-}
-
-
-void AnalysisProgressBar::resized()
-{
-    imageArea.setSize(18, 18);
-    imageArea.setCentre(getWidth()/2, getHeight()/2);
 }
 
 

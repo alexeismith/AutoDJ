@@ -27,6 +27,12 @@ WaveformComponent::WaveformComponent()
 }
 
 
+void WaveformComponent::resized()
+{
+    beatMarkerHeight = WAVEFORM_BEAT_MARKER_SIZE * getHeight();
+}
+
+
 void WaveformComponent::paint(juce::Graphics& g)
 {
     g.setColour(colourBackground);
@@ -38,12 +44,6 @@ void WaveformComponent::paint(juce::Graphics& g)
     
     g.setColour(colourBackground.withAlpha(1.f - brightness));
     g.fillAll();
-}
-
-
-void WaveformComponent::resized()
-{
-    beatMarkerHeight = WAVEFORM_BEAT_MARKER_SIZE * getHeight();
 }
 
 

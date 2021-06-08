@@ -116,9 +116,9 @@ void TrackTableComponent::paintCell(juce::Graphics& g, int rowNumber, int column
 }
 
 
-void TrackTableComponent::sortOrderChanged(int newSortColumnId, bool isForwards)
+void TrackTableComponent::sortOrderChanged(int columnId, bool ascending)
 {
-    sorter.reset(new TrackTableSorter(newSortColumnId, isForwards));
+    sorter.reset(new TrackTableSorter(columnId, ascending));
     sort();
 }
 

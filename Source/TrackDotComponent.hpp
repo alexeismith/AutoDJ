@@ -27,11 +27,18 @@ public:
      @param[in] g  JUCE graphics handler */
     void paint(juce::Graphics& g) override;
     
+    /** JUCE timer callback, which animates the dot when its associated track is playing. */
     void timerCallback() override;
     
-    void mouseEnter(const juce::MouseEvent &event) override;
+    /** Mouse input handler, called when the mouse enters the area of this component.
+     
+    @param[in] e Information about the input event that occured, such as mouse position */
+    void mouseEnter(const juce::MouseEvent& e) override;
     
-    void mouseExit(const juce::MouseEvent &event) override;
+    /** Mouse input handler, called when the mouse exits the area of this component.
+     
+    @param[in] e Information about the input event that occured, such as mouse position */
+    void mouseExit(const juce::MouseEvent& e) override;
     
     TrackInfo* getTrack() { return info; }
     

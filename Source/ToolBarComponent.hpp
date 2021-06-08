@@ -39,10 +39,17 @@ public:
      @param[in] g  JUCE graphics handler */
     void paint(juce::Graphics& g) override;
     
+    /** JUCE timer callback, which checks the state of various flags and refreshes the toolbar accordingly. */
     void timerCallback() override;
     
+    /** Input handler, called when a child button is pressed.
+    
+    @param[in] button Pointer to button that was pressed */
     void buttonClicked(juce::Button* button) override;
     
+    /** Input handler, called when a child slider is moved.
+    
+    @param[in] slider Pointer to slider that was moved */
     void sliderValueChanged(juce::Slider* slider) override;
     
     void setCanPlay(bool state) { playPauseBtn->setEnabled(state); }

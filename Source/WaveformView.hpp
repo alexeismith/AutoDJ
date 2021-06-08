@@ -38,9 +38,20 @@ public:
     
     void clearMarkers();
     
-    void mouseDown(const juce::MouseEvent &event) override { scroll(event.getPosition()); }
-    void mouseUp(const juce::MouseEvent &event) override { scrolling = false; }
-    void mouseDrag(const juce::MouseEvent &event) override { scroll(event.getPosition()); }
+    /** Mouse input handler, called when the mouse is pressed on this component.
+     
+    @param[in] e Information about the input event that occured, such as mouse position */
+    void mouseDown(const juce::MouseEvent& e) override { scroll(e.getPosition()); }
+    
+    /** Mouse input handler, called when the mouse is released after pressing on this component.
+     
+    @param[in] e Information about the input event that occured, such as mouse position */
+    void mouseUp(const juce::MouseEvent& e) override { scrolling = false; }
+    
+    /** Mouse input handler, called when the mouse is dragged after pressing on this component.
+     
+    @param[in] e Information about the input event that occured, such as mouse position */
+    void mouseDrag(const juce::MouseEvent& e) override { scroll(e.getPosition()); }
     
 private:
     

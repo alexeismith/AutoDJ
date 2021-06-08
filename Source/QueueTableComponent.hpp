@@ -28,10 +28,19 @@ public:
     /** Destructor. */
     ~QueueTableComponent() { table.reset(); }
     
+    /** Mouse input handler, called when the mouse is pressed on this component.
+     
+    @param[in] e Information about the input event that occured, such as mouse position */
     void mouseDown(const juce::MouseEvent& e) override;
     
+    /** Mouse input handler, called when the mouse is dragged after pressing on this component.
+     
+    @param[in] e Information about the input event that occured, such as mouse position */
     void mouseDrag(const juce::MouseEvent& e) override;
     
+    /** Mouse input handler, called when the mouse is released after pressing on this component.
+     
+    @param[in] e Information about the input event that occured, such as mouse position */
     void mouseUp(const juce::MouseEvent& e) override { isDragging = false; }
 
     void addColumns() override;

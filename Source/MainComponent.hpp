@@ -52,7 +52,7 @@ public:
     /** Called when the audio device stops or restarts (Currently unused). */
     void releaseResources() override {}
 
-    /** JUCE timer callback, used to check the state of various flags and refresh the app state accordingly. */
+    /** JUCE timer callback, which checks the state of various flags and refreshes the app state accordingly. */
     void timerCallback() override;
     
     /** Input handler, called when a child button is pressed.

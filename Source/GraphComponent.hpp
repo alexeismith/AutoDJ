@@ -35,11 +35,13 @@ public:
      @param[in] g  JUCE graphics handler */
     void paint(juce::Graphics& g) override;
     
-    /** JUCE timer callback, used to trigger a repaint */
+    /** JUCE timer callback, which triggers a repaint. */
     void timerCallback() override;
     
-    /** Mouse input handler, called when the mouse is over this object */
-    void mouseMove (const juce::MouseEvent&) override;
+    /** Mouse input handler, called when the mouse is over this component.
+     
+     @param[in] e Information about the input event that occured, such as mouse position */
+    void mouseMove (const juce::MouseEvent& e) override;
     
     /** Gives the graph a data array to display
      

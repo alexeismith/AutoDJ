@@ -33,8 +33,8 @@ public:
      @param[in] g  JUCE graphics handler */
     void paint(juce::Graphics& g) override;
     
-    // Using hi res timer because it runs on a separate thread,
-    // to avoid clogging message thread
+    /** JUCE high-resolution timer callback, which is called on its own thread.
+     Updates and animates the direction line, without clogging the message thread. */
     void hiResTimerCallback() override;
     
     void updateData();

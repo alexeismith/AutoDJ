@@ -31,11 +31,20 @@ public:
      @param[in] g  JUCE graphics handler */
     void paint(juce::Graphics& g) override;
     
-    void mouseEnter(const juce::MouseEvent &event) override;
+    /** Mouse input handler, called when the mouse enters the area of this component.
+     
+    @param[in] e Information about the input event that occured, such as mouse position */
+    void mouseEnter(const juce::MouseEvent& e) override;
     
-    void mouseExit(const juce::MouseEvent &event) override;
+    /** Mouse input handler, called when the mouse exits the area of this component.
+     
+    @param[in] e Information about the input event that occured, such as mouse position */
+    void mouseExit(const juce::MouseEvent& e) override;
     
-    void mouseDown(const juce::MouseEvent &event) override;
+    /** Mouse input handler, called when the mouse is pressed on this component.
+     
+    @param[in] e Information about the input event that occured, such as mouse position */
+    void mouseDown(const juce::MouseEvent& e) override;
     
     void update(double progress);
     

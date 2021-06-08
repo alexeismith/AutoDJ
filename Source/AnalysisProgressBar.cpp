@@ -44,20 +44,20 @@ void AnalysisProgressBar::paint(juce::Graphics& g)
 }
 
 
-void AnalysisProgressBar::mouseEnter(const juce::MouseEvent &event)
+void AnalysisProgressBar::mouseEnter(const juce::MouseEvent& e)
 {
     mouseOver = true;
     updateText();
 }
 
 
-void AnalysisProgressBar::mouseDown(const juce::MouseEvent &event)
+void AnalysisProgressBar::mouseDown(const juce::MouseEvent& e)
 {
     playPause();
 }
 
 
-void AnalysisProgressBar::mouseExit(const juce::MouseEvent &event)
+void AnalysisProgressBar::mouseExit(const juce::MouseEvent& e)
 {
     mouseOver = false;
     updateText();

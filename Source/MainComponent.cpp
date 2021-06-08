@@ -63,7 +63,7 @@ MainComponent::MainComponent() :
     // Instantiate the choose folder button and add it as a visible child (shown on start screen)
     chooseFolderBtn.reset(new juce::TextButton("Choose Folder"));
     addAndMakeVisible(chooseFolderBtn.get());
-    // Set the ID of the button, used to identify it when clicked
+    // Set the ID of the button, which indentifies it when clicked
     chooseFolderBtn->setComponentID(juce::String(ComponentID::chooseFolderBtn));
     // Add this component as a listener, to handle clicks of the button
     chooseFolderBtn->addListener(this);

@@ -25,8 +25,13 @@ public:
     /** Called by the JUCE message when this component is resized - set size/position of child components here. */
     void resized() override;
     
+    /** JUCE high-resolution timer callback, which is called on its own thread.
+    Updates and animates the deck waveforms, without clogging the message thread. */
     void hiResTimerCallback() override;
     
+    /** Input handler, called when a child button is pressed.
+    
+    @param[in] button Pointer to button that was pressed */
     void buttonClicked(juce::Button* button) override;
     
     void paintOverChildren(juce::Graphics &g) override;

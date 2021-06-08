@@ -45,14 +45,14 @@ void TrackDotComponent::timerCallback()
 }
 
 
-void TrackDotComponent::mouseEnter(const juce::MouseEvent &event)
+void TrackDotComponent::mouseEnter(const juce::MouseEvent& e)
 {
     dotSize = DOT_SIZE_HIGHLIGHT;
     repaint();
 }
 
 
-void TrackDotComponent::mouseExit(const juce::MouseEvent &event)
+void TrackDotComponent::mouseExit(const juce::MouseEvent& e)
 {
     dotSize = DOT_SIZE;
     repaint();

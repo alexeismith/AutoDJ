@@ -16,8 +16,10 @@ class MixView : public juce::Component, public juce::Button::Listener, public ju
 {
 public:
     
+    /** Constructor. */
     MixView(TrackProcessor** trackProcessors);
     
+    /** Destructor. */
     ~MixView() { stopTimer(); }
     
     void hiResTimerCallback() override;

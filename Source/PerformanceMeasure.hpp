@@ -21,8 +21,10 @@ class PerformanceMeasure
 {
 public:
     
+    /** Constructor. */
     PerformanceMeasure() {}
     
+    /** Destructor. */
     ~PerformanceMeasure() {}
     
     static void addResult(double measurement);

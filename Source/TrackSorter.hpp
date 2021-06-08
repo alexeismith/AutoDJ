@@ -32,8 +32,10 @@ class TrackSorter
 {
 public:
     
+    /** Constructor. */
     TrackSorter();
     
+    /** Destructor. */
     ~TrackSorter() {}
     
     void addAnalysed(TrackInfo* track);

@@ -18,10 +18,15 @@ class DeckComponent : public juce::Component
 {
 public:
     
+    /** Constructor. */
     DeckComponent(int id, TrackProcessor* processor);
     
+    /** Destructor. */
     ~DeckComponent() {}
     
+    /** Called by the JUCE message thread to paint this component.
+     
+     @param[in] g  JUCE graphics handler */
     void paint(juce::Graphics& g) override;
     
     void resized() override;

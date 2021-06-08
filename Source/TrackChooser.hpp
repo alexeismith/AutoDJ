@@ -20,8 +20,10 @@ class TrackChooser
 {
 public:
     
+    /** Constructor. */
     TrackChooser(DataManager* dm, RandomGenerator* random);
     
+    /** Destructor. */
     ~TrackChooser() {}
     
     void initialise();

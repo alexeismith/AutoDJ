@@ -15,8 +15,10 @@ class TrackInfo
 {
 public:
     
+    /** Constructor. */
     TrackInfo() {}
     
+    /** Destructor. */
     ~TrackInfo() {}
     
     int getSampleOfBeat(int beat);

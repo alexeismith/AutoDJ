@@ -16,8 +16,10 @@ class AnalyserKey
 {
 public:
     
+    /** Constructor. */
     AnalyserKey() {}
     
+    /** Destructor. */
     ~AnalyserKey() {}
     
     void analyse(juce::AudioBuffer<float>* audio, int& key);

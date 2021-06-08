@@ -16,8 +16,10 @@ class AudioProcessor
 {
 public:
     
+    /** Constructor. */
     AudioProcessor(DataManager* dataManager, ArtificialDJ* dj, int initBlockSize);
     
+    /** Destructor. */
     ~AudioProcessor() {}
     
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);

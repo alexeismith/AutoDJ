@@ -17,8 +17,10 @@ class WaveformView : public juce::Component
 {
 public:
     
+    /** Constructor. */
     WaveformView(DataManager* dm, bool clickToScroll, bool scrollBarAtBottom, bool hideWhenEmpty);
     
+    /** Destructor. */
     ~WaveformView() {}
     
     void resized() override;

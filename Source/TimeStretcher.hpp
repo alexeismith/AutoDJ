@@ -21,8 +21,10 @@ class TimeStretcher
 {
 public:
     
+    /** Constructor. */
     TimeStretcher();
     
+    /** Destructor. */
     ~TimeStretcher() {}
     
     void prepare(int blockSize);

@@ -23,8 +23,10 @@ class AnalysisThread : public juce::Thread
 {
 public:
     
+    /** Constructor. */
     AnalysisThread(int ID, AnalysisManager* am, DataManager* dm, essentia::standard::AlgorithmFactory& factory);
     
+    /** Destructor. */
     ~AnalysisThread() {}
     
     void run();

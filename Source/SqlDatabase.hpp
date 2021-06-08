@@ -18,8 +18,10 @@ class SqlDatabase
 {
 public:
       
+    /** Constructor. */
     SqlDatabase() {}
       
+    /** Destructor. */
     ~SqlDatabase();
     
     bool initialise(juce::File directory);

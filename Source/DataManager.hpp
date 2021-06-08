@@ -21,8 +21,10 @@ class DataManager
 {
 public:
       
+    /** Constructor. */
     DataManager();
       
+    /** Destructor. */
     ~DataManager();
     
     bool initialise(juce::File directory, DirectionView* directionView);

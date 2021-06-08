@@ -19,8 +19,10 @@ class AnalyserBeatsEssentia
 {
 public:
     
+    /** Constructor. */
     AnalyserBeatsEssentia(essentia::standard::AlgorithmFactory& factory);
     
+    /** Destructor. */
     ~AnalyserBeatsEssentia() {}
     
     void analyse(juce::AudioBuffer<float>* audio, std::atomic<double>* progress, int& bpm, int& beatPhase, int& downbeat);

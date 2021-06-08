@@ -16,8 +16,10 @@ class WaveformLoader : juce::Thread
 {
 public:
     
+    /** Constructor. */
     WaveformLoader(DataManager* dm, WaveformComponent* waveform, WaveformScrollBar* scrollBar, bool hideWhenEmpty);
     
+    /** Destructor. */
     ~WaveformLoader() { stopThread(3000); }
     
     void load(Track* track, bool force);

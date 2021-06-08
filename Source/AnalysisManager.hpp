@@ -29,8 +29,10 @@ class AnalysisManager
 {
 public:
     
+    /** Constructor. */
     AnalysisManager();
     
+    /** Destructor. */
     virtual ~AnalysisManager();
     
     void addJob(TrackInfo* track) { jobs.add(track); }

@@ -17,8 +17,10 @@ class LibraryView : public juce::Component
 {
 public:
     
+    /** Constructor. */
     LibraryView(DataManager* dataManager);
     
+    /** Destructor. */
     ~LibraryView() {}
     
     void resized() override;

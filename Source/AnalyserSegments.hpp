@@ -19,8 +19,10 @@ class AnalyserSegments
 {
 public:
     
+    /** Constructor. */
     AnalyserSegments();
     
+    /** Destructor. */
     ~AnalyserSegments() {}
     
     juce::Array<int> analyse(TrackInfo* track, juce::AudioBuffer<float>* audio);

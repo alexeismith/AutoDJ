@@ -18,8 +18,10 @@ class AnalyserGroove
 {
 public:
     
+    /** Constructor. */
     AnalyserGroove(essentia::standard::AlgorithmFactory& factory);
     
+    /** Destructor. */
     ~AnalyserGroove() {}
     
     void analyse(juce::AudioBuffer<float>* audio, float& groove);

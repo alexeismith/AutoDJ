@@ -16,12 +16,17 @@ class TrackDotComponent : public juce::Component, public juce::SettableTooltipCl
 {
 public:
     
+    /** Constructor. */
     TrackDotComponent(TrackInfo* track);
     
+    /** Destructor. */
     ~TrackDotComponent() {}
     
     TrackInfo* getTrack() { return info; }
     
+    /** Called by the JUCE message thread to paint this component.
+     
+     @param[in] g  JUCE graphics handler */
     void paint(juce::Graphics& g) override;
     
     void timerCallback() override;

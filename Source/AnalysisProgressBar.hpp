@@ -17,10 +17,15 @@ class AnalysisProgressBar : public juce::ProgressBar
 {
 public:
     
+    /** Constructor. */
     AnalysisProgressBar(AnalysisManager* analysisManager);
     
+    /** Destructor. */
     ~AnalysisProgressBar() {}
     
+    /** Called by the JUCE message thread to paint this component.
+     
+     @param[in] g  JUCE graphics handler */
     void paint(juce::Graphics& g) override;
     
     void resized() override;

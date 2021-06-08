@@ -29,8 +29,10 @@ class AnalysisTest : public AnalysisManager
 {
 public:
     
+    /** Constructor. */
     AnalysisTest() {}
     
+    /** Destructor. */
     ~AnalysisTest() {}
     
     void startAnalysis(DataManager* dataManager) override;

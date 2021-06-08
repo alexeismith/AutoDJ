@@ -23,8 +23,10 @@ class TrackProcessor
 {
 public:
     
+    /** Constructor. */
     TrackProcessor(DataManager* dm, ArtificialDJ* DJ);
     
+    /** Destructor. */
     ~TrackProcessor() {}
     
     int getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);

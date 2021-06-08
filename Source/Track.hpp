@@ -19,8 +19,10 @@ class Track
 {
 public:
     
+    /** Constructor. */
     Track() {}
     
+    /** Destructor. */
     ~Track() {}
     
     // Returns true if current mix has finished

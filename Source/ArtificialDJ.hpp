@@ -26,8 +26,10 @@ class ArtificialDJ : public juce::Thread
 {
 public:
     
+    /** Constructor. */
     ArtificialDJ(DataManager* dm);
     
+    /** Destructor. */
     ~ArtificialDJ() { stopThread(5000); }
     
     void run();

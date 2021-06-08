@@ -22,8 +22,10 @@ class QueueTableComponent : public TrackTableComponent
 {
 public:
     
+    /** Constructor. */
     QueueTableComponent(TrackEditor* editor);
     
+    /** Destructor. */
     ~QueueTableComponent() { table.reset(); }
     
     void mouseDown(const juce::MouseEvent& e) override;

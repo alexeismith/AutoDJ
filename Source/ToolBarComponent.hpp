@@ -14,17 +14,26 @@
 #include "ArtificialDJ.hpp"
 #include "CommonDefs.hpp"
 
-#define TOOLBAR_HEIGHT (48)
+#define TOOLBAR_HEIGHT (48) ///< The height in pixels of the tool bar
 
 
+/**
+ The tool bar that holds the primary navigation and audio controls in AutoDJ.
+ Allows the user to switch between the different views.
+ */
 class ToolBarComponent : public juce::Component, public juce::Timer, public juce::Button::Listener, public juce::Slider::Listener
 {
 public:
     
+    /** Constructor. */
     ToolBarComponent(juce::Component* mainComponent, AudioProcessor* audioProcessor, ArtificialDJ* dj);
     
+    /** Destructor. */
     ~ToolBarComponent() {}
 
+    /** Called by the JUCE message thread to paint this component.
+     
+     @param[in] g  JUCE graphics handler */
     void paint(juce::Graphics& g) override;
     
     void resized() override;

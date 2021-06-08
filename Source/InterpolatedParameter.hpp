@@ -12,8 +12,10 @@ class InterpolatedParameter
 {
 public:
     
+    /** Constructor. */
     InterpolatedParameter() {}
     
+    /** Destructor. */
     ~InterpolatedParameter() {}
     
     void update(int currentSample, int numSamples);

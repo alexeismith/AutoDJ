@@ -12,29 +12,27 @@
 
 // ----------------------------------------------------------------------
 // Set the data type to be given to the graph here:
-#define GRAPH_DATA_TYPE float
+#define GRAPH_DATA_TYPE float ///< Data type to be displayed by the graph
 // ----------------------------------------------------------------------
 
 /**
- Debugging tool that displays a graph of any data array
- Instantiated by MainComponent in its own window
+ Debugging tool that displays a graph of any data array, instantiated by MainComponent in its own window.
  
- Data access is fully static and thread-safe, so just include this file and call store() from anywhere within the codebase
+ Data access is fully static and thread-safe, so just include this file and call store() from anywhere within the codebase.
  */
 class GraphComponent : public juce::Component, public juce::Timer
 {
 public:
     
-    /** Constructor: creates GraphComponent and starts its refresh timer */
+    /** Constructor. */
     GraphComponent();
     
-    /** Destructor */
+    /** Destructor. */
     ~GraphComponent() {}
     
-    /** Called by the JUCE message thread to paint this component
+    /** Called by the JUCE message thread to paint this component.
      
-     @param[in] g  JUCE graphics handler
-     */
+     @param[in] g  JUCE graphics handler */
     void paint(juce::Graphics& g) override;
     
     /** JUCE timer callback, used to trigger a repaint */
@@ -46,14 +44,12 @@ public:
     /** Gives the graph a data array to display
      
      @param[in] data    Array of data to display, must be the GRAPH_DATA_TYPE defined at the top of this file
-     @param[in] size    Number of elements in the data array
-     */
+     @param[in] size    Number of elements in the data array */
     static void store(const GRAPH_DATA_TYPE* data, int size);
     
     /** Gives the graph a title
      
-     @param[in] title   The title to display
-     */
+     @param[in] title   The title to display */
     static void setTitle(juce::String title);
     
 private:
@@ -62,16 +58,14 @@ private:
      
      @param[in] index   Index of the data array element to be positioned
      
-     @return Coordinate of data element in JUCE float point
-     */
+     @return Coordinate of data element in JUCE float point */
     juce::Point<float> getPositionForElement(int index);
     
     /** Gets the index of the data array element displayed at a given screen coordinate
      
      @param[in] xPos Local x-coordinate of the mouse
      
-     @return Index of the array element displayed at pos
-     */
+     @return Index of the array element displayed at pos */
     int getElementAtPosition(float xPos);
     
     

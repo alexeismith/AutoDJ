@@ -16,6 +16,10 @@
 class TrackTableSorter
 {
 public:
+    
+    /** Constructor.
+     Ternary operator converts boolean direction into int to be stored.
+     */
     TrackTableSorter(int columnId, bool forwards)
         : columnId(columnId),
           direction(forwards ? 1 : -1) {}
@@ -33,8 +37,10 @@ class TrackTableComponent : public juce::Component, public juce::TableListBoxMod
 {
 public:
     
+    /** Constructor. */
     TrackTableComponent(TrackEditor* editor);
     
+    /** Destructor. */
     ~TrackTableComponent() {}
     
     void cellClicked(int rowNumber, int columnId, const juce::MouseEvent& e) override;

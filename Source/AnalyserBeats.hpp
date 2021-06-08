@@ -18,8 +18,10 @@ class AnalyserBeats
 {
 public:
     
+    /** Constructor. */
     AnalyserBeats();
     
+    /** Destructor. */
     ~AnalyserBeats() {}
     
     void analyse(juce::AudioBuffer<float>* audio, std::atomic<double>* progress, int& bpm, int& beatPhase, int& downbeat);

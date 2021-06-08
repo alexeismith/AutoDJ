@@ -15,63 +15,59 @@
 //#define SHOW_GRAPH
 
 /**
- The top-level JUCE window, which owns all other objects in the application
- 
- Handles switching between views, audio settings, and selecting the user's music folder at launch
+ The top-level JUCE window, which owns all other objects in the application.
+ Handles switching between views, audio settings, and selecting the user's music folder at launch.
  */
 class MainComponent : public juce::AudioAppComponent, public juce::Timer, public juce::Button::Listener
 {
 public:
     
-    /** Constructor - instantiates most of the app's top-level objects */
+    /** Constructor - instantiates most of the app's top-level objects. */
     MainComponent();
     
-    /** Destructor - called when the app wants to exit */
+    /** Destructor - called when the app wants to exit. */
     ~MainComponent() override;
 
     /** Usually called when audio settings change, to prepare the audio processing pipeline.
      
      @param[in] samplesPerBlockExpected Expected block size for audio processing
-     @param[in] sampleRate Sample rate for audio processing
-     */
+     @param[in] sampleRate Sample rate for audio processing */
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override;
     
-    /** Top-level audio processing loop - calls AudioProcessor::getNextAudioBlock()
+    /** Top-level audio processing loop - calls AudioProcessor::getNextAudioBlock().
      
      @param[in] bufferToFill Buffer to fill with desired audio output samples
      
-     @see AudioProcessor::getNextAudioBlock
-     */
+     @see AudioProcessor::getNextAudioBlock */
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override;
     
-    /** Called when the audio device stops or restarts (Currently unused) */
+    /** Called when the audio device stops or restarts (Currently unused). */
     void releaseResources() override {}
 
-    /** Called by the JUCE message thread to paint this component
+    /** Called by the JUCE message thread to paint this component.
      
-     @param[in] g  JUCE graphics handler
-     */
+     @param[in] g  JUCE graphics handler */
     void paint(juce::Graphics& g) override;
     
-    /** Called by the JUCE message when this component is resized - set size/position of child components here*/
+    /** Called by the JUCE message when this component is resized - set size/position of child components here. */
     void resized() override;
     
-    /** JUCE timer callback, used to check the state of various flags and refresh the app state accordingly */
+    /** JUCE timer callback, used to check the state of various flags and refresh the app state accordingly. */
     void timerCallback() override;
     
-    /** Input handler, called when a child button is pressed
+    /** Input handler, called when a child button is pressed.
      
      @param[in] button Pointer to button that was pressed */
     void buttonClicked(juce::Button* button) override;
     
-    /** Checks whether the current audio settings are valid - currently only checks sample rate
+    /** Checks whether the current audio settings are valid - currently only checks sample rate.
      
      @param[in] showError Indicates whether an error message should be displayed if the settings are invalid
      
      @return Validity of current audio settings */
     bool validAudioSettings(bool showError = false);
     
-    /** Changes which view is shown to the user, usually called by ToolBarComponent
+    /** Changes which view is shown to the user, usually called by ToolBarComponent.
      
      @param[in] view ID of the view to be shown
      
@@ -80,13 +76,13 @@ public:
 
 private:
     
-    /** Resets the state of the entire DJ mix, ready for a new performance */
+    /** Resets the state of the entire DJ mix, ready for a new performance. */
     void resetMix();
     
-    /** Sets the colour scheme of the app */
+    /** Sets the colour scheme of the app. */
     void setAppearance();
     
-    /** Triggers the process of choosing a music folder */
+    /** Triggers the process of choosing a music folder. */
     void chooseFolder();
     
     

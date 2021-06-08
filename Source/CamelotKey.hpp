@@ -14,8 +14,10 @@ class CamelotKey
 {
 public:
     
+    /** Constructor. */
     CamelotKey(int chromaKey) { fromChromaKey(chromaKey); }
     
+    /** Destructor. */
     ~CamelotKey() {}
     
     int compability(CamelotKey key);

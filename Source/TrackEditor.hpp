@@ -16,12 +16,17 @@ class TrackEditor : public juce::Component
 {
 public:
     
+    /** Constructor. */
     TrackEditor(DataManager* dm);
     
+    /** Destructor. */
     ~TrackEditor() {}
     
     void resized() override;
     
+    /** Called by the JUCE message thread to paint this component.
+     
+     @param[in] g  JUCE graphics handler */
     void paint(juce::Graphics& g) override;
     
     void load(Track track);

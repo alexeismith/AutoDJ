@@ -21,10 +21,15 @@ class WaveformComponent : public juce::Component
 {
 public:
     
+    /** Constructor. */
     WaveformComponent();
     
+    /** Destructor. */
     ~WaveformComponent() {}
     
+    /** Called by the JUCE message thread to paint this component.
+     
+     @param[in] g  JUCE graphics handler */
     virtual void paint(juce::Graphics& g) override;
     
     void resized() override;

@@ -31,7 +31,12 @@
         </GROUP>
         <FILE id="OYsJkP" name="MainComponent.cpp" compile="1" resource="0"
               file="Source/MainComponent.cpp"/>
-        <FILE id="MM3lb8" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+        <FILE id="PNFbXQ" name="MainComponent.hpp" compile="0" resource="0"
+              file="Source/MainComponent.hpp"/>
+        <FILE id="oN0rXt" name="ToolBarComponent.cpp" compile="1" resource="0"
+              file="Source/ToolBarComponent.cpp"/>
+        <FILE id="h6vRH7" name="ToolBarComponent.hpp" compile="0" resource="0"
+              file="Source/ToolBarComponent.hpp"/>
         <FILE id="RfPn63" name="LibraryView.cpp" compile="1" resource="0" file="Source/LibraryView.cpp"/>
         <FILE id="e9qGGt" name="LibraryView.hpp" compile="0" resource="0" file="Source/LibraryView.hpp"/>
         <FILE id="yV87zV" name="TrackTableComponent.cpp" compile="1" resource="0"
@@ -48,10 +53,10 @@
               file="Source/DirectionView.cpp"/>
         <FILE id="EDxRzB" name="DirectionView.hpp" compile="0" resource="0"
               file="Source/DirectionView.hpp"/>
-        <FILE id="fvUQmn" name="DirectionLine.cpp" compile="1" resource="0"
-              file="Source/DirectionLine.cpp"/>
-        <FILE id="ySElCu" name="DirectionLine.hpp" compile="0" resource="0"
-              file="Source/DirectionLine.hpp"/>
+        <FILE id="SclVUh" name="TransitionLine.cpp" compile="1" resource="0"
+              file="Source/TransitionLine.cpp"/>
+        <FILE id="wISc6A" name="TransitionLine.hpp" compile="0" resource="0"
+              file="Source/TransitionLine.hpp"/>
         <FILE id="SqRZXp" name="TrackDotComponent.cpp" compile="1" resource="0"
               file="Source/TrackDotComponent.cpp"/>
         <FILE id="H0YSoL" name="TrackDotComponent.hpp" compile="0" resource="0"
@@ -273,10 +278,8 @@
           </GROUP>
           <FILE id="TgJ3yC" name="xxhash32.h" compile="0" resource="0" file="Source/ThirdParty/xxhash32.h"/>
         </GROUP>
-        <FILE id="kqk0eM" name="TrackDataManager.cpp" compile="1" resource="0"
-              file="Source/TrackDataManager.cpp"/>
-        <FILE id="lBTfyV" name="TrackDataManager.hpp" compile="0" resource="0"
-              file="Source/TrackDataManager.hpp"/>
+        <FILE id="rZfelQ" name="DataManager.cpp" compile="1" resource="0" file="Source/DataManager.cpp"/>
+        <FILE id="ag5j94" name="DataManager.hpp" compile="0" resource="0" file="Source/DataManager.hpp"/>
         <FILE id="Exu3LO" name="TrackSorter.cpp" compile="1" resource="0" file="Source/TrackSorter.cpp"/>
         <FILE id="EJfg8Y" name="TrackSorter.hpp" compile="0" resource="0" file="Source/TrackSorter.hpp"/>
         <FILE id="ut91i0" name="TrackInfo.cpp" compile="1" resource="0" file="Source/TrackInfo.cpp"/>

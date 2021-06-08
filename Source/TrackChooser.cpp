@@ -92,7 +92,7 @@ TrackInfo* TrackChooser::chooseTrack()
     }
     
     // Sort the candidates by key compatibility with the current key
-    KeySorter keySorter(currentKey);
+    KeySorter keySorter((CamelotKey)currentKey);
     candidates.sort(keySorter);
     
     // Make a random choice between the first two tracks in the sorted array

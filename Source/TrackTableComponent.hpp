@@ -13,23 +13,35 @@
 #include "TrackEditor.hpp"
 
 
+/**
+ Simple class for sorting tracks in the TrackTableComponent.
+ Conforms to JUCE's element comparator template:
+ https://docs.juce.com/master/tutorial_table_list_box.html#tutorial_table_list_box_sorting_data
+ */
 class TrackTableSorter
 {
 public:
     
-    /** Constructor.
-     Ternary operator converts boolean direction into int to be stored.
-     */
-    TrackTableSorter(int columnId, bool forwards)
+    /** Constructor. Ternary operator converts boolean direction into int to be stored. */
+    TrackTableSorter(int columnId, bool ascending)
         : columnId(columnId),
-          direction(forwards ? 1 : -1) {}
+          direction(ascending ? 1 : -1) {}
     
+    /** Destructor. */
+    ~TrackTableSorter() {}
+    
+    /** Element comparator function.
+     
+     @param[in] first Pointer to first track to be compared
+     @param[in] second Pointer to second track to be compared
+     
+     @return -1 if first element sorts higher, 1 if second element sorts higher, 0 if it's a draw */
     int compareElements(TrackInfo* first, TrackInfo* second);
     
 private:
     
-    int columnId;
-    int direction;
+    int columnId; ///< ID of track table column to sort against
+    int direction; ///< Direction of sort (1: ascending, -1: descending)
 };
 
 

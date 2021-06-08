@@ -12,6 +12,9 @@
 #include "CamelotKey.hpp"
 
 
+/**
+ Circle element to represent tracks in the Direction view. Animated while the track is playing, and colour-coded to its Camelot key signature.
+ */
 class TrackDotComponent : public juce::Component, public juce::SettableTooltipClient, public juce::Timer
 {
 public:
@@ -40,28 +43,46 @@ public:
     @param[in] e Information about the input event that occured, such as mouse position */
     void mouseExit(const juce::MouseEvent& e) override;
     
+    /** Fetches the information of the track associated with this dot.
+     
+     @return Pointer to track information */
     TrackInfo* getTrack() { return info; }
     
+    /** Triggers an update of the dot's state, to check whether the track is playing, or played. */
     void update();
     
+    /** Fetches the coordinate of the dot's centre point.
+     
+     @return Screen coordinates of centre */
     juce::Point<float> getCentre();
     
+    /** Sets a new position for the centre of the dot, in terms of its parent's area.
+     Proportion is used so that the parent can be resized without recalculating this position.
+     
+     @param[in] xProportion Position across the parent's width that this dot will be placed at
+     @param[in] yProportion Position down the parent's height that this dot will be placed at */
     void setPosition(float xProportion, float yProportion);
     
+    /** Fetches the horizontal position of this dot, in terms of its parent's width.
+     
+     @return Position across the parent's width that this dot should be placed at */
     float getXProportion() { return xProportion; }
-    float getYProportion() { return yProportion; }
     
-    bool unplayed = true;
+    /** Fetches the vertical position of this dot, in terms of its parent's height.
+    
+    @return Position across the parent's height that this dot should be placed at */
+    float getYProportion() { return yProportion; }
     
 private:
     
-    TrackInfo* info;
+    TrackInfo* info; ///< Pointer to information on the associated track
     
-    int dotSize;
+    int diameter; ///< Current size of the dot - changes based on animation and mouse position
     
-    juce::Colour colour;
+    juce::Colour colour; ///< Colour of the dot, determined by the track's Camelot key signature
     
-    float xProportion, yProportion;
+    float xProportion; ///< Position across the parent's width that this dot should be placed at
+    float yProportion; ///< Position down the parent's height that this dot should be placed at
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackDotComponent) ///< JUCE macro to add a memory leak detector

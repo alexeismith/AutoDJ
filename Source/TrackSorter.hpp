@@ -46,7 +46,7 @@ public:
     
 private:
     
-    juce::CriticalSection lock;
+    juce::CriticalSection lock; ///< RAII lock to ensure thread-safety while acessing data within this class
     
     GetBoxObj getBoxObj;
     

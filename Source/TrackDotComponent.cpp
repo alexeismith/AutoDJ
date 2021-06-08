@@ -7,8 +7,8 @@
 
 #include "TrackDotComponent.hpp"
 
-#define DOT_SIZE (7)
-#define DOT_SIZE_HIGHLIGHT (14)
+#define DOT_DIAMETER (7)
+#define DOT_DIAMETER_HIGHLIGHTED (14)
 
 
 TrackDotComponent::TrackDotComponent(TrackInfo* track)
@@ -19,16 +19,16 @@ TrackDotComponent::TrackDotComponent(TrackInfo* track)
 
     colour = CamelotKey(info->key).getColour();
     
-    dotSize = DOT_SIZE;
+    diameter = DOT_DIAMETER;
     
-    setSize(DOT_SIZE_HIGHLIGHT, DOT_SIZE_HIGHLIGHT);
+    setSize(DOT_DIAMETER_HIGHLIGHTED, DOT_DIAMETER_HIGHLIGHTED);
 }
 
 
 void TrackDotComponent::paint(juce::Graphics& g)
 {
     g.setColour(colour);
-    g.fillEllipse(getLocalBounds().withSizeKeepingCentre(dotSize, dotSize).toFloat());
+    g.fillEllipse(getLocalBounds().withSizeKeepingCentre(diameter, diameter).toFloat());
 }
 
 
@@ -40,21 +40,21 @@ void TrackDotComponent::timerCallback()
     juce::uint32 seconds = juce::Time::getApproximateMillisecondCounter();
     double sine = (std::sin(double(seconds) / 100) + 1.0) / 2.0;
     
-    dotSize = DOT_SIZE + sine * (DOT_SIZE_HIGHLIGHT - DOT_SIZE);
+    diameter = DOT_DIAMETER + sine * (DOT_DIAMETER_HIGHLIGHTED - DOT_DIAMETER);
     repaint();
 }
 
 
 void TrackDotComponent::mouseEnter(const juce::MouseEvent& e)
 {
-    dotSize = DOT_SIZE_HIGHLIGHT;
+    diameter = DOT_DIAMETER_HIGHLIGHTED;
     repaint();
 }
 
 
 void TrackDotComponent::mouseExit(const juce::MouseEvent& e)
 {
-    dotSize = DOT_SIZE;
+    diameter = DOT_DIAMETER;
     repaint();
 }
 
@@ -68,7 +68,7 @@ void TrackDotComponent::update()
     else if (info->played)
     {
         stopTimer();
-        dotSize = DOT_SIZE;
+        diameter = DOT_DIAMETER;
         colour = colour.withAlpha(0.25f);
     }
 }

@@ -1,23 +1,23 @@
 //
-//  DirectionLine.cpp
+//  TransitionLine.cpp
 //  AutoDJ - App
 //
 //  Created by Alexei Smith on 12/05/2021.
 //
 
-#include "DirectionLine.hpp"
+#include "TransitionLine.hpp"
 
 #define LINE_THICKNESS (3)
 
 
-void DirectionLine::paint(juce::Graphics& g)
+void TransitionLine::paint(juce::Graphics& g)
 {
     g.setColour(juce::Colours::white);
     g.drawDashedLine(line, dashLength, 2, LINE_THICKNESS);
 }
 
 
-void DirectionLine::update(TrackDotComponent* leader, TrackDotComponent* follower)
+void TransitionLine::update(TrackDotComponent* leader, TrackDotComponent* follower)
 {
     if (follower == nullptr)
     {
@@ -51,7 +51,7 @@ void DirectionLine::update(TrackDotComponent* leader, TrackDotComponent* followe
 }
 
 
-void DirectionLine::updateBounds()
+void TransitionLine::updateBounds()
 {
     setBounds(bounds.toNearestInt());
 }

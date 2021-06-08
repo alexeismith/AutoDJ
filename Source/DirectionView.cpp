@@ -16,7 +16,7 @@ DirectionView::DirectionView(AnalysisManager* am) :
     toolTip.reset(new juce::TooltipWindow(this, 0));
     addAndMakeVisible(toolTip.get());
     
-    addChildComponent(directionLine);
+    addChildComponent(transitionLine);
     
     colourBackground = getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId);
     
@@ -49,8 +49,8 @@ void DirectionView::resized()
     axesArea.setX(35);
     axesArea.setY(getHeight() - 25 - axesArea.getHeight());
     
-    directionLine.update(leader, follower);
-    directionLine.updateBounds();
+    transitionLine.update(leader, follower);
+    transitionLine.updateBounds();
 }
 
 
@@ -66,7 +66,7 @@ void DirectionView::paint(juce::Graphics& g)
 
 void DirectionView::hiResTimerCallback()
 {
-    directionLine.update(leader, follower);
+    transitionLine.update(leader, follower);
 }
 
 

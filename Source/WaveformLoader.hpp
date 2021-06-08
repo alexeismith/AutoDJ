@@ -34,7 +34,7 @@ private:
     
     void reset();
     
-    juce::CriticalSection lock;
+    juce::CriticalSection lock; ///< RAII lock to ensure thread-safety while acessing data within this class
     
     DataManager* dataManager = nullptr; ///< Pointer to the app's track data manager
     

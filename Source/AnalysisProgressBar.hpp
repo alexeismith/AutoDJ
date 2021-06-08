@@ -56,7 +56,7 @@ private:
     
     void updateText();
     
-    juce::CriticalSection lock;
+    juce::CriticalSection lock; ///< RAII lock to ensure thread-safety while acessing data within this class
     
     AnalysisManager* analysisManager = nullptr; ///< Pointer to the audio analysis manager
     

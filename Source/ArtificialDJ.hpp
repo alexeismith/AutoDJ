@@ -71,7 +71,7 @@ private:
     
     int mixIdCounter = 0;
     
-    juce::CriticalSection lock;
+    juce::CriticalSection lock; ///< RAII lock to ensure thread-safety while acessing data within this class
     
     juce::Array<MixInfo> mixQueue;
     

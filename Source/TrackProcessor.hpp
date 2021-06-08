@@ -74,7 +74,7 @@ private:
     void processShifts(int numSamples);
     
     
-    juce::CriticalSection lock;
+    juce::CriticalSection lock; ///< RAII lock to ensure thread-safety while acessing data within this class
 
     TrackProcessor* partner = nullptr; ///< Pointer to the companion instance of TrackProcessor
     DataManager* dataManager = nullptr; ///< Pointer to the app's track data manager

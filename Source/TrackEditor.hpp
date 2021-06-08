@@ -12,6 +12,9 @@
 #include "DataManager.hpp"
 #include "AnalyserSegments.hpp"
 
+/**
+ Shows the waveform view of a track. In future, should also be used to correct temporal analysis data.
+ */
 class TrackEditor : public juce::Component
 {
 public:
@@ -30,20 +33,22 @@ public:
      @param[in] g  JUCE graphics handler */
     void paint(juce::Graphics& g) override;
     
+    /** Loads a new track into the editor.
+     
+     @param[in] track Information on the track to be loaded */
     void load(Track track);
     
 private:
     
-    std::unique_ptr<WaveformView> waveform;
+    std::unique_ptr<WaveformView> waveform; ///< Scrollable waveform view of track audio
     
-    Track track;
+    Track track; ///< Current track information
     
     DataManager* dataManager = nullptr; ///< Pointer to the app's track data manager
     
-    juce::String message;
+    juce::String message; ///< String to display when no track is loaded
     
-    
-    std::unique_ptr<AnalyserSegments> analyserSegments;
+    std::unique_ptr<AnalyserSegments> analyserSegments; ///< Track segmentation analyser, for debugging of the segmentation algorithm (see SHOW_SEGMENTS macro in .cpp file)
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackEditor) ///< JUCE macro to add a memory leak detector

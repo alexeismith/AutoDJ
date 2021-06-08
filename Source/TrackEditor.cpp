@@ -7,6 +7,7 @@
 
 #include "TrackEditor.hpp"
 
+// Enable the following macro to show markers at the segment boundaries found in each track
 //#define SHOW_SEGMENTS
 
 
@@ -18,7 +19,9 @@ TrackEditor::TrackEditor(DataManager* dm) :
     
     message = "Select a track to view it here.";
     
+#ifdef SHOW_SEGMENTS
     analyserSegments.reset(new AnalyserSegments());
+#endif
 }
 
 

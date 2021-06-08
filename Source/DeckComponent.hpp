@@ -54,11 +54,11 @@ private:
     
     std::atomic<bool> ready = false;
     
-    TrackProcessor* trackProcessor = nullptr;
+    TrackProcessor* trackProcessor = nullptr; ///< Pointer to 
     
     std::unique_ptr<WaveformView> waveform;
     
-    juce::Colour colourBackground;
+    juce::Colour colourBackground; ///< Base colour to paint as the background (this is transformed into a gradient - see paint())
 
     Track track;
     

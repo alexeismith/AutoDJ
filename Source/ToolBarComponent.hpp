@@ -52,44 +52,57 @@ public:
     @param[in] slider Pointer to slider that was moved */
     void sliderValueChanged(juce::Slider* slider) override;
     
+    /** Enables or disables the play/pause button.
+     
+     @param[in] state Determines new state of button */
     void setCanPlay(bool state) { playPauseBtn->setEnabled(state); }
     
+    /** Shows the settings page. */
     void showSettings();
     
 private:
     
+    /** Sets the state of the play/pause button.
+     
+     @param[in] play Determines new state of button */
     void setPlayPause(bool play);
     
+    /** Changes which view is displayed, adjusting the tab button colours accordingly.
+     MainComponent is called to do the actual showing/hiding of views.
+     
+     @param[in] view ID of the view to be shown
+     
+     @see ViewID */
     void changeView(ViewID view);
     
-    juce::Component* mainComponent = nullptr;
-    
-    AudioProcessor* audioProcessor = nullptr;
-    ArtificialDJ* dj = nullptr;
+    juce::Component* mainComponent = nullptr; ///< Pointer to the top-level app component
+    AudioProcessor* audioProcessor = nullptr; ///< Pointer to the top-level audio processor
+    ArtificialDJ* dj = nullptr; ///< Pointer to artificial DJ brain
 
-    std::unique_ptr<juce::Button> libraryBtn;
-    std::unique_ptr<juce::Button> directionBtn;
-    std::unique_ptr<juce::Button> mixBtn;
+    std::unique_ptr<juce::Button> libraryBtn; ///< Tab button to show the Library view
+    std::unique_ptr<juce::Button> directionBtn; ///< Tab button to show the Direction view
+    std::unique_ptr<juce::Button> mixBtn; ///< Tab button to show the Mix view
+    std::unique_ptr<juce::ImageButton> settingsBtn; ///< Button to show settings page
     
-    ViewID currentView = ViewID::library, prevView = ViewID::library;
+    ViewID currentView = ViewID::library; ///< ID of the view currently showing
+    ViewID prevView = ViewID::library; ///< ID of the view previously shown
     
-    std::unique_ptr<juce::ImageButton> playPauseBtn;
-    std::unique_ptr<juce::ImageButton> skipBtn;
-    std::unique_ptr<juce::ImageButton> settingsBtn;
+    std::unique_ptr<juce::ImageButton> playPauseBtn; ///< Button to start/pause the DJ mix
+    std::unique_ptr<juce::ImageButton> skipBtn; ///< Button to skip to the next mix event
     
-    std::unique_ptr<juce::Slider> volumeSld;
+    std::unique_ptr<juce::Slider> volumeSld; ///< Slider to control audio volume
     
-    juce::Colour colourBackground;
+    juce::Colour colourBackground; ///< Base colour to paint as the background
     
-    juce::Image playImg;
-    juce::Image pauseImg;
+    juce::Image playImg; ///< Image icon to render as the play/pause button while paused
+    juce::Image pauseImg; ///< Image icon to render as the play/pause button while playing
     
-    juce::Image volumeImg;
-    juce::Rectangle<float> volumeArea;
+    juce::Image volumeImg; ///< Image icon to render next to the volume slider, to indicate its function
+    juce::Rectangle<float> volumeArea; ///< Area in which to render volumeImg
     
-    bool playing = false;
-    bool ended = false;
-    bool waitingForDJ = false;
+    bool playing = false; ///< Flag to track the state of mix/audio playback
+    bool ended = false; ///< Flag to track whether the mix has ended
+    bool waitingForDJ = false; ///< Flag to track whether the DJ is generating a mix to begin playback (play/pause button is animated while this is true)
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ToolBarComponent) ///< JUCE macro to add a memory leak detector
 };

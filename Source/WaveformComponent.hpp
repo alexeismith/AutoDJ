@@ -63,7 +63,7 @@ protected:
     
     juce::Image image, imageScaled;
     
-    juce::Colour colourBackground;
+    juce::Colour colourBackground; ///< Base colour to paint as the background
     
 private:
     

@@ -58,7 +58,7 @@ private:
     
     juce::CriticalSection lock;
     
-    AnalysisManager* analysisManager = nullptr;
+    AnalysisManager* analysisManager = nullptr; ///< Pointer to 
     
     double progress = 0.0;
     

@@ -76,9 +76,9 @@ private:
     
     juce::CriticalSection lock;
 
-    TrackProcessor* partner = nullptr;
-    DataManager* dataManager = nullptr;
-    ArtificialDJ* dj = nullptr;
+    TrackProcessor* partner = nullptr; ///< Pointer to 
+    DataManager* dataManager = nullptr; ///< Pointer to app's track data manager
+    ArtificialDJ* dj = nullptr; ///< Pointer to artificial DJ brain
     
     std::atomic<bool> newTrack = true;
     std::atomic<bool> mixEnd = false;

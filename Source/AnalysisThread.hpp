@@ -47,8 +47,8 @@ private:
     
     std::atomic<bool> pause = false;
     
-    AnalysisManager* analysisManager = nullptr;
-    DataManager* dataManager = nullptr;
+    AnalysisManager* analysisManager = nullptr; ///< Pointer to 
+    DataManager* dataManager = nullptr; ///< Pointer to app's track data manager
     
     std::unique_ptr<AnalyserBeats> analyserBeats;
     std::unique_ptr<AnalyserBeatsEssentia> analyserBeatsEssentia;

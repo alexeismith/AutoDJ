@@ -54,7 +54,7 @@ private:
     juce::OwnedArray<TrackDotComponent> dots;
     int numDotsAdded = 0;
     
-    juce::Colour colourBackground;
+    juce::Colour colourBackground; ///< Base colour to paint as the background (this is transformed into a gradient - see paint())
     
     juce::Image logo;
     juce::Rectangle<float> logoArea;
@@ -66,8 +66,8 @@ private:
     
     std::atomic<bool> needsUpdate = false;
     
-    TrackDotComponent* leader = nullptr;
-    TrackDotComponent* follower = nullptr;
+    TrackDotComponent* leader = nullptr; ///< Pointer to 
+    TrackDotComponent* follower = nullptr; ///< Pointer to 
     
     DirectionLine directionLine;
 

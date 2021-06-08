@@ -36,10 +36,10 @@ private:
     
     juce::CriticalSection lock;
     
-    DataManager* dataManager = nullptr;
+    DataManager* dataManager = nullptr; ///< Pointer to app's track data manager
     
-    WaveformComponent* waveform = nullptr;
-    WaveformScrollBar* scrollBar = nullptr;
+    WaveformComponent* waveform = nullptr; ///< Pointer to 
+    WaveformScrollBar* scrollBar = nullptr; ///< Pointer to 
     
     Track track;
     Track newTrack;

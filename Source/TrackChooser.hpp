@@ -36,8 +36,8 @@ private:
     
     void updatePosition();
     
-    DataManager* dataManager = nullptr;
-    TrackSorter* sorter = nullptr;
+    DataManager* dataManager = nullptr; ///< Pointer to app's track data manager
+    TrackSorter* sorter = nullptr; ///< Pointer to 
     
     int currentKey = -1;
     

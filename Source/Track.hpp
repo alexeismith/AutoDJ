@@ -39,7 +39,7 @@ public:
     
     MixInfo* getCurrentMix() { return currentMix; }
     
-    TrackInfo* info = nullptr;
+    TrackInfo* info = nullptr; ///< Pointer to 
     
     bool leader = false;
     

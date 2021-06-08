@@ -75,7 +75,7 @@ private:
     
     std::unique_ptr<TrackTableSorter> sorter;
     
-    TrackEditor* trackEditor = nullptr;
+    TrackEditor* trackEditor = nullptr; ///< Pointer to 
     
     int fixedColumnWidth;
     

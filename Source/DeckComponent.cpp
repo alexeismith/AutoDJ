@@ -90,7 +90,7 @@ void DeckComponent::update()
     if (trackProcessor->isLeader() && !track.leader)
     {
         track.leader = true;
-        setMixMarkers();
+        updateMixMarkers();
     }
     
     if (ready.load())
@@ -118,7 +118,7 @@ void DeckComponent::load(Track* trackPtr)
     
     waveform->load(&track);
     
-    setMixMarkers();
+    updateMixMarkers();
     
     ready.store(true);
 }
@@ -136,7 +136,7 @@ void DeckComponent::reset()
 }
 
 
-void DeckComponent::setMixMarkers()
+void DeckComponent::updateMixMarkers()
 {
     ready.store(false);
     

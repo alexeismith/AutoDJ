@@ -22,12 +22,12 @@ AudioProcessor::AudioProcessor(DataManager* dataManager, ArtificialDJ* dj, int i
 }
 
 
-void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
+void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& outputBuffer)
 {
     TrackProcessor* leader = nullptr;
     TrackProcessor* follower = nullptr;
     
-    bufferToFill.clearActiveBufferRegion();
+    outputBuffer.clearActiveBufferRegion();
     
     // If a skip has been requested, skip to the next mix event
     if (skipFlag.load())
@@ -40,8 +40,8 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
     
     if (leader)
     {
-        int playhead = leader->getNextAudioBlock(bufferToFill);
-        follower->getNextAudioBlock(bufferToFill);
+        int playhead = leader->getNextAudioBlock(outputBuffer);
+        follower->getNextAudioBlock(outputBuffer);
         
         // Check whether the follower should start playing, if it isn't already
         follower->cue(playhead);
@@ -53,12 +53,12 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffe
     
     if (volume != targetVolume.load())
     {
-        bufferToFill.buffer->applyGainRamp(bufferToFill.startSample, bufferToFill.numSamples, volume, targetVolume.load());
+        outputBuffer.buffer->applyGainRamp(outputBuffer.startSample, outputBuffer.numSamples, volume, targetVolume.load());
         volume = targetVolume.load();
     }
     else
     {
-        bufferToFill.buffer->applyGain(bufferToFill.startSample, bufferToFill.numSamples, volume);
+        outputBuffer.buffer->applyGain(outputBuffer.startSample, outputBuffer.numSamples, volume);
     }
 }
 

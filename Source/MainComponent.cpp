@@ -195,13 +195,13 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
 }
 
 
-void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
+void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& outputBuffer)
 {
     // If the audio settings are invalid or the audio processor has not been instantiated, return
     if (!validAudioSettings() || audioProcessor.get() == nullptr) return;
     
     // Pass the audio output buffer to the audio processing object
-    audioProcessor->getNextAudioBlock(bufferToFill);
+    audioProcessor->getNextAudioBlock(outputBuffer);
 }
 
 

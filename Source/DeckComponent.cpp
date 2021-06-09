@@ -71,11 +71,9 @@ void DeckComponent::paint(juce::Graphics& g)
 
 void DeckComponent::update()
 {
-    bool mixEnd;
-    
-    if (!trackProcessor->isReady(mixEnd))
+    if (!trackProcessor->isReady())
     {
-        if (mixEnd)
+        if (trackProcessor->mixEnded())
             reset();
         else
             waveform->reset();
@@ -83,9 +81,8 @@ void DeckComponent::update()
         return;
     }
     
-    Track* newTrack = trackProcessor->getNewTrack();
-    if (newTrack)
-        load(newTrack);
+    if (!ready.load() || trackProcessor->getTrack()->info->hash != track.info->hash)
+        load(trackProcessor->getTrack());
     
     if (trackProcessor->isLeader() && !track.leader)
     {

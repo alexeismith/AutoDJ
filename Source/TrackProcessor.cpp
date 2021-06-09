@@ -23,7 +23,7 @@ TrackProcessor::TrackProcessor(DataManager* dm, ArtificialDJ* DJ) :
 }
 
 
-int TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
+int TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& outputBuffer)
 {
     if (!ready.load()) return false;
     
@@ -31,22 +31,22 @@ int TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
     
     if (play)
     {
-        if (output.getNumSamples() != bufferToFill.numSamples) jassert(false);
+        if (processBuffer.getNumSamples() != outputBuffer.numSamples) jassert(false);
         
-        int numProcessed = stretcher->process(track->audio, &output, bufferToFill.numSamples);
+        int numProcessed = stretcher->process(track->audio, &processBuffer, outputBuffer.numSamples);
         
         update(numProcessed);
         
-        output.applyGain(std::sqrt(track->gain.currentValue));
+        processBuffer.applyGain(std::sqrt(track->gain.currentValue));
         
         if (filterOn)
         {
-            highPassFilterL.processSamples(output.getWritePointer(0), bufferToFill.numSamples);
-            highPassFilterR.processSamples(output.getWritePointer(1), bufferToFill.numSamples);
+            highPassFilterL.processSamples(processBuffer.getWritePointer(0), outputBuffer.numSamples);
+            highPassFilterR.processSamples(processBuffer.getWritePointer(1), outputBuffer.numSamples);
         }
         
-        bufferToFill.buffer->addFrom(0, bufferToFill.startSample, output.getReadPointer(0), bufferToFill.numSamples);
-        bufferToFill.buffer->addFrom(1, bufferToFill.startSample, output.getReadPointer(1), bufferToFill.numSamples);
+        outputBuffer.buffer->addFrom(0, outputBuffer.startSample, processBuffer.getReadPointer(0), outputBuffer.numSamples);
+        outputBuffer.buffer->addFrom(1, outputBuffer.startSample, processBuffer.getReadPointer(1), outputBuffer.numSamples);
         
         if (trackEnd)
             loadNextTrack();
@@ -60,13 +60,6 @@ void TrackProcessor::nextMix()
 {
     currentMix = dj->getNextMix(currentMix);
     track->applyNextMix(&currentMix);
-}
-
-
-bool TrackProcessor::isReady(bool& end)
-{
-    end = mixEnd.load();
-    return ready.load();
 }
 
 
@@ -86,7 +79,6 @@ void TrackProcessor::loadNextTrack()
     {
         play = false;
         trackEnd = false;
-        newTrack = true;
         
         ready.store(true);
     }
@@ -124,28 +116,14 @@ void TrackProcessor::loadFirstTrack(TrackInfo* trackInfo, bool leader, juce::Aud
         track->applyNextMix(&currentMix);
     }
     
-    newTrack = true;
-    
     ready.store(true);
 }
 
 
 void TrackProcessor::prepare(int blockSize)
 {
-    output.setSize(2, blockSize);
+    processBuffer.setSize(2, blockSize);
     stretcher->prepare(blockSize);
-}
-
-
-Track* TrackProcessor::getNewTrack()
-{
-    if (newTrack.load())
-    {
-        newTrack.store(false);
-        return getTrack();
-    }
-    
-    return nullptr;
 }
 
 
@@ -188,11 +166,10 @@ void TrackProcessor::reset()
     play = false;
     trackEnd = false;
     
-    newTrack.store(true);
     mixEnd.store(false);
 
     stretcher->reset();
-    output.clear();
+    processBuffer.clear();
     
     track.reset(new Track());
     

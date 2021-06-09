@@ -45,7 +45,7 @@ public:
     
     /** Top-level audio processing loop - calls AudioProcessor::getNextAudioBlock().
      
-     @param[in] outputBuffer Buffer to fill with desired audio output samples
+     @param[out] outputBuffer Buffer to fill with desired audio output samples
      
      @see AudioProcessor::getNextAudioBlock */
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& outputBuffer) override;

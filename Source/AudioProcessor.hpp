@@ -29,7 +29,7 @@ public:
     
     /** Audio processing loop - applies master DSP and delegates track-specific DSP to TrackProcessor children.
     
-     @param[in] outputBuffer Buffer to fill with desired audio output samples
+     @param[out] outputBuffer Buffer to fill with desired audio output samples
     
      @see TrackProcessor::getNextAudioBlock */
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& outputBuffer);

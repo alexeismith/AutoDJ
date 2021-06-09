@@ -32,7 +32,7 @@ public:
     
     /** Audio processing loop - applies mixing parameters.
     
-     @param[in] outputBuffer Buffer to fill with desired audio output samples
+     @param[out] outputBuffer Buffer to fill with desired audio output samples
      
      @return Playhead position reached in track (used for synchronising leader and follower) */
     int getNextAudioBlock(const juce::AudioSourceChannelInfo& outputBuffer);

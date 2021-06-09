@@ -27,6 +27,10 @@ struct GetBoxObj {
 using Quadtree = quadtree::Quadtree<TrackInfo*, GetBoxObj>;
 
 
+/**
+ Wrapper class for a Quadtree, which sorts tracks in 2 dimensions: tempo and groove
+ Quadtree in use: https://github.com/MoonCollider/Quadtree
+ */
 class TrackSorter
 {
 public:

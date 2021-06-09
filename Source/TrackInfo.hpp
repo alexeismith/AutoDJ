@@ -11,6 +11,9 @@
 #include <JuceHeader.h>
 
 
+/**
+ Data structure used to representation music tracks throughout AutoDJ
+ */
 class TrackInfo
 {
 public:

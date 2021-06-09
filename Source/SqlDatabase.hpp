@@ -15,6 +15,9 @@
 #define DATABASE_FILENAME (".AutoDjData.db")
 
 
+/**
+ SQLite3 database used for persistent storage of track data.
+ */
 class SqlDatabase
 {
 public:

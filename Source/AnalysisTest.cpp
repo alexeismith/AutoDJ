@@ -43,6 +43,16 @@ bool AnalysisTest::isFinished(double& progress)
 }
 
 
+void AnalysisTest::storeAnalysis(TrackInfo* track)
+{
+    const juce::ScopedLock sl(lock);
+    
+    processResult(track);
+    
+    jobProgress += 1;
+}
+
+
 void AnalysisTest::processResult(TrackInfo* estimate)
 {
     AnalysisTestResult testResult; // Stores the test result for this track
@@ -161,14 +171,4 @@ void AnalysisTest::printResults()
     // Also print average time taken, measured by the static PerformanceMeasure class
     DBG("\nAverage Time: " << PerformanceMeasure::getAverage());
     PerformanceMeasure::reset();
-}
-
-
-void AnalysisTest::storeAnalysis(TrackInfo* track)
-{
-    const juce::ScopedLock sl(lock);
-    
-    processResult(track);
-    
-    jobProgress += 1;
 }

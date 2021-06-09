@@ -7,6 +7,8 @@
 
 #pragma once
 
+// The following macros define the temporal analysis configuration
+
 // Pick only ONE of the following
 //#define BEATS_QM
 //#define BEATS_MULTIFEATURE

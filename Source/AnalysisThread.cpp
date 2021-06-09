@@ -49,7 +49,7 @@ void AnalysisThread::analyse(TrackInfo& track)
     
     buffer = dataManager->loadAudio(track.getFilename(), true);
     
-    if (shouldExit()) return;
+    if (checkPauseOrExit()) return;
     
     progress.store(0.1);
     
@@ -63,7 +63,7 @@ void AnalysisThread::analyse(TrackInfo& track)
     
     PERFORMANCE_END
     
-    if (shouldExit()) return;
+    if (checkPauseOrExit()) return;
     
     progress.store(0.7);
     
@@ -75,13 +75,13 @@ void AnalysisThread::analyse(TrackInfo& track)
     
     progress.store(0.9);
     
-    if (shouldExit()) return;
+    if (checkPauseOrExit()) return;
     
     track.analysed = true;
     
     dataManager->releaseAudio(buffer);
     
-    if (shouldExit()) return;
+    if (checkPauseOrExit()) return;
     
     analysisManager->storeAnalysis(&track);
     
@@ -89,13 +89,15 @@ void AnalysisThread::analyse(TrackInfo& track)
 }
 
 
-bool AnalysisThread::shouldExit()
+bool AnalysisThread::checkPauseOrExit()
 {
+    // If analysis is paused, and there is no exit request, sleep for 1 second
     while (pause.load() && !threadShouldExit())
         sleep(1000);
     
+    // If there is an exit request, return true
     if (threadShouldExit())
         return true;
-    
+    // Otherwise, return false
     return false;
 }

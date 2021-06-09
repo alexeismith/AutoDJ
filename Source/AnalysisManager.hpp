@@ -26,7 +26,7 @@ typedef struct AnalysisResults
 
 
 /**
- Handles the MIR audio analysis process, delegating the actual DSP to a number of AnalysisThreads.
+ Handles the MIR audio analysis process, delegating the actual track processing to a number of AnalysisThreads.
  */
 class AnalysisManager
 {

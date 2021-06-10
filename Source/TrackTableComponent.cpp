@@ -57,7 +57,7 @@ void TrackTableComponent::addColumns()
 {
     uint8_t columnFlags = juce::TableHeaderComponent::visible | juce::TableHeaderComponent::sortable;
     
-    table->getHeader().addColumn("", 1, 28, 0, 1000, juce::TableHeaderComponent::visible);
+    table->getHeader().addColumn("", 1, 28, 0, 1000, juce::TableHeaderComponent::visible); // Dummy column to provide some visual padding at left
     table->getHeader().addColumn("Title", 2, 310, 0, 2000, columnFlags);
     table->getHeader().addColumn("Length", 3, 80, 0, 1000, columnFlags);
     table->getHeader().addColumn("BPM", 4, 60, 0, 1000, columnFlags);
@@ -79,12 +79,15 @@ void TrackTableComponent::populate(TrackInfo* tracks, int numTracks)
 
 void TrackTableComponent::paintRowBackground(juce::Graphics& g, int rowNumber, int /*width*/, int /*height*/, bool rowIsSelected)
 {
-    auto alternateColour = getLookAndFeel().findColour (juce::ListBox::backgroundColourId)
-                                           .interpolatedWith (getLookAndFeel().findColour (juce::ListBox::textColourId), 0.03f);
+    // Generate a colour for rows when unselected
+    juce::Colour alternateColour = getLookAndFeel().findColour(juce::ListBox::backgroundColourId)
+                                           .interpolatedWith(getLookAndFeel().findColour (juce::ListBox::textColourId), 0.03f);
+    
+    // Paint row colour based on selection state
     if (rowIsSelected)
-        g.fillAll (juce::Colours::lightblue);
+        g.fillAll(juce::Colours::lightblue);
     else if (rowNumber % 2)
-        g.fillAll (alternateColour);
+        g.fillAll(alternateColour);
 }
 
 
@@ -92,17 +95,18 @@ void TrackTableComponent::paintCell(juce::Graphics& g, int rowNumber, int column
 {
     TrackInfo* track = tracksSorted.getReference(rowNumber);
     
-    if (rowIsSelected)
+    // Text colour depends on the state of the track, as well as the column being painted
+    if (rowIsSelected) // Dark blue colour for the selected row
         g.setColour(juce::Colours::darkblue);
-    else if (columnId == TrackTableColumns::key && track->analysed)
+    else if (columnId == TrackTableColumns::key && track->analysed) // Colour-coded with key signature for the 'Key' column
         g.setColour(CamelotKey(track->key).getColour());
-    else if (!track->analysed)
+    else if (!track->analysed) // Grey text for un-analysed tracks
         g.setColour(juce::Colours::lightslategrey.brighter());
-    else if (track->playing)
+    else if (track->playing) // Cyan for tracks currently playing
         g.setColour(juce::Colours::cyan);
-    else if (track->played)
+    else if (track->played) // Green for tracks already played
         g.setColour(juce::Colours::lightgreen.darker());
-    else
+    else // Normal text colour for analysed tracks, that are not playing or played
         g.setColour(getLookAndFeel().findColour(juce::ListBox::textColourId));
         
     g.setFont(font);
@@ -110,9 +114,6 @@ void TrackTableComponent::paintCell(juce::Graphics& g, int rowNumber, int column
     juce::String text = getValueForColumn(track, columnId);
 
     g.drawText(text, 2, 0, width - 4, height, juce::Justification::centredLeft, true);
-
-    g.setColour(getLookAndFeel().findColour(juce::ListBox::backgroundColourId));
-    g.fillRect(width - 1, 0, 1, height);
 }
 
 
@@ -183,7 +184,7 @@ juce::String TrackTableComponent::getValueForColumn(TrackInfo* track, int column
     {
         case TrackTableColumns::artist:
             return juce::String();
-//            return track->getArtist();
+//            return track->getArtist(); // TODO: Artist metadata extraction not working, so only showing title for now
             
         case TrackTableColumns::title:
             return track->getTitle();

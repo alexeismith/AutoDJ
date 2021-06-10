@@ -27,6 +27,8 @@
 
 AnalyserBeatsEssentia::AnalyserBeatsEssentia(essentia::standard::AlgorithmFactory& factory)
 {
+    // Set up the audio processing algorithms based on this configuration defined in BeatTests.hpp
+    
 #ifdef BEATS_MULTIFEATURE
     rhythmExtractor.reset(factory.create("RhythmExtractor2013", "minTempo", MIN_TEMPO, "maxTempo", MAX_TEMPO, "method", "multifeature"));
 #elif defined BEATS_DEGARA
@@ -57,34 +59,40 @@ void AnalyserBeatsEssentia::analyse(juce::AudioBuffer<float>* audio, std::atomic
 {
     reset();
     
+    // If performing filtering, prepare the audio buffer in which it will take place
 #if defined LOW_PASS_ALL || defined LOW_PASS_PHASE || defined LOW_PASS_DOWNBEAT
     filteredBuffer.setSize(1, audio->getNumSamples());
+    // Copy input audio into filtered buffer
     filteredBuffer.copyFrom(0, 0, audio->getReadPointer(0), audio->getNumSamples());
 #endif
     
+    // If low-passing at the input stage, process the filtering and point 'audio' at the filtered buffer, rather than the input
 #ifdef LOW_PASS_ALL
     filter.processSamples(filteredBuffer.getWritePointer(0), audio->getNumSamples());
+    // Change audio pointer
     audio = &filteredBuffer;
 #endif
     
+    // Perform beat tracking to extract tempo and beat phase
     getTempo(audio, progress, bpm, beatPhase);
     
+    progress->store(0.6);
+    
+    // If low-passing just before the downbeat stage, process the filtering now and point 'audio' at the filtered buffer
 #ifdef LOW_PASS_DOWNBEAT
     filter.processSamples(filteredBuffer.getWritePointer(0), audio->getNumSamples());
     audio = &filteredBuffer;
 #endif
-    
-    progress->store(0.6);
-    
+
+    // Perform downbeat detection
     getDownbeat(audio, bpm, beatPhase, downbeat);
 }
 
 
 void AnalyserBeatsEssentia::reset()
 {
-    downBeat->resetAudioBuffer();
-    
-    filteredBuffer.clear();
+    // Only reset the relevant processing objects because reset itself takes time,
+    // which could add up over a batch of tracks
     
 #if defined BEATS_MULTIFEATURE || defined BEATS_DEGARA
     rhythmExtractor->reset();
@@ -96,10 +104,13 @@ void AnalyserBeatsEssentia::reset()
     onsetGlobal->reset();
     percivalPulseTrains->reset();
 #endif
+    
+    downBeat->resetAudioBuffer();
 
 #if defined LOW_PASS_ALL || defined LOW_PASS_PHASE || defined LOW_PASS_DOWNBEAT
     filter.reset();
 #endif
+    filteredBuffer.clear();
 }
 
 
@@ -109,38 +120,48 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
     
 #if defined BEATS_MULTIFEATURE || defined BEATS_DEGARA
     
+    // Convert input buffer to a std::vector, ready to give to Essentia
     std::vector<float> buffer(audio->getReadPointer(0), audio->getReadPointer(0) + audio->getNumSamples());
+    
+    // Instantiate output variables to give to Essentia
+    float bpmFloat;
+    float confidence;
     std::vector<float> ticks;
     std::vector<float> estimates;
     std::vector<float> bpmIntervals;
     std::vector<double> beats;
-
-    float bpmFloat;
-    float confidence;
+    
+    // Set the algorithm's input and outputs...
     
     rhythmExtractor->input("signal").set(buffer);
 
     rhythmExtractor->output("bpm").set(bpmFloat);
-    rhythmExtractor->output("ticks").set(ticks);
     rhythmExtractor->output("confidence").set(confidence);
+    rhythmExtractor->output("ticks").set(ticks);
     rhythmExtractor->output("estimates").set(estimates);
     rhythmExtractor->output("bpmIntervals").set(bpmIntervals);
 
+    // Perform beat tracking (during which, the output data is placed in the above variables)
     rhythmExtractor->compute();
 
+    // Round the BPM estimate to an integer
     bpm = round(bpmFloat);
     
 #elif defined BEATS_PERCIVAL
 
+    // Convert input buffer to a std::vector, ready to give to Essentia
     std::vector<float> buffer(audio->getReadPointer(0), audio->getReadPointer(0) + audio->getNumSamples());
-
+    // Instantiate output variable to give to Essentia
     float bpmFloat;
 
+    // Set the algorithm's input and output
     percivalTempo->input("signal").set(buffer);
     percivalTempo->output("bpm").set(bpmFloat);
 
+    // Perform beat tracking (during which, the output data is placed in the above variable)
     percivalTempo->compute();
 
+    // Round the BPM estimate to an integer
     bpm = round(bpmFloat);
     
 #else
@@ -152,6 +173,9 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
     // Beat phase analysis...
     // (Currently no phase available using percival method)
 #if defined BEATS_MULTIFEATURE || defined BEATS_DEGARA
+    
+    // The array of ticks output by Essentia is like a beat grid, but in terms of seconds
+    // We need a beat grid in terms of audio samples, so multiply each value by the sample rate
     for (auto tick : ticks)
         beats.push_back(tick*SUPPORTED_SAMPLERATE);
 
@@ -174,45 +198,72 @@ void AnalyserBeatsEssentia::getTempo(juce::AudioBuffer<float>* audio, std::atomi
 
 void AnalyserBeatsEssentia::processBeats(std::vector<double> beats, int bpm, int& beatPhase)
 {
+    // Find sections in the provided beat grid that have constant tempo
     std::vector<BeatUtils::ConstRegion> constantRegions = BeatUtils::retrieveConstRegions(beats, SUPPORTED_SAMPLERATE);
 
-    double firstBeat = 0;
-    bpm = BeatUtils::makeConstBpm(constantRegions, SUPPORTED_SAMPLERATE, &firstBeat);
-    firstBeat = BeatUtils::adjustPhase(firstBeat, bpm, SUPPORTED_SAMPLERATE, beats);
+    // Declare a variable in which to store the beat phase
+    // makeConstBpm() needs a double, so can't use beatPhase argument that was passed in
+    double phase = 0;
     
-    // 'Rewind' firstBeat to start of track
-    double beatLength = AutoDJ::getBeatPeriod(bpm);
-    beatPhase = firstBeat - floor(firstBeat / beatLength) * beatLength;
+    // Use the constant regions of the beat grid to find an overall BPM and beat phase
+    bpm = BeatUtils::makeConstBpm(constantRegions, SUPPORTED_SAMPLERATE, &phase);
+    // Adjust the phase (not sure what this does, but it improves the phase estimate)
+    phase = BeatUtils::adjustPhase(phase, bpm, SUPPORTED_SAMPLERATE, beats);
+    
+    // 'Rewind' the phase to the first beat in the track...
+    int beatLength = AutoDJ::getBeatPeriod(bpm);
+    beatPhase = int(phase) % beatLength;
 }
 
 
 void AnalyserBeatsEssentia::pulseTrainsPhase(juce::AudioBuffer<float>* audio, int bpm, int& beatPhase)
 {
+    // Convert input buffer to a std::vector, ready to give to Essentia
     std::vector<float> buffer(audio->getReadPointer(0), audio->getReadPointer(0) + audio->getNumSamples());
+    // Instantiate array for Essentia to store the onset signal in
     std::vector<float> onsetSignal;
     
+    // Set the onset algorithm's input and output
     onsetGlobal->input("signal").set(buffer);
     onsetGlobal->output("onsetDetections").set(onsetSignal);
     
+    // Generate onset strength signal (OSS)
     onsetGlobal->compute();
     
-    std::vector<float> bpmLag;
-    bpmLag.push_back((60 * (44100 / STEP_SIZE_ONSETS)) / bpm);
-    float phaseNew;
-
-    percivalPulseTrains->input("oss").set(onsetSignal);
-    percivalPulseTrains->input("positions").set(bpmLag);
-    percivalPulseTrains->output("lag").set(phaseNew);
+    // Get the beat period in terms of onset frames
+    // (Number of onset frames per beat)
+    std::vector<float> beatPeriodOss;
+    beatPeriodOss.push_back((60 * (44100 / STEP_SIZE_ONSETS)) / bpm);
     
+    // Instantiate an output variable for the pulse train phase
+    float phasePulses;
+
+    // Set the pulse train algorithm's inputs and output
+    percivalPulseTrains->input("oss").set(onsetSignal);
+    percivalPulseTrains->input("positions").set(beatPeriodOss); // This input is inteded to be a number of beat period (tempo) candidates, but we just pass in our final estimate
+    percivalPulseTrains->output("lag").set(phasePulses);
+    
+    // Perform cross correlation of OSS and pulse train at various phases
     percivalPulseTrains->compute();
     
-    phaseNew *= STEP_SIZE_ONSETS;
+    // The output phase is the pulse train alignment that correlated most highly with the OSS
+    // It is measured in OSS frames, so we must multiply by the step size
+    // between these frames to get it in terms of audio samples
+    phasePulses *= STEP_SIZE_ONSETS;
     
+    // Now we check whether the pulse train phase is near the off-beat of our original phase estimate: 'beatPhase'
+    
+    // Find the number of samples per beat
     int beatPeriod = AutoDJ::getBeatPeriod(bpm);
+    // Find the off-beat of the original beat phase estimate
     int offbeat = beatPhase + beatPeriod/2;
+    // Ensure the phase value doesn't include any whole beats
     offbeat %= beatPeriod;
     
-    if (abs(offbeat - phaseNew) < beatPeriod*0.15)
+    // If the pulse train phase is close to the off-beat phase (within 15% of the beat period)...
+    if (abs(offbeat - phasePulses) < beatPeriod*0.15)
+        // Take the off-beat as the final phase estimate
+        // (Pulse train phase is not precise enough to use as final estimate, it is just for correction)
         beatPhase = offbeat;
 }
 

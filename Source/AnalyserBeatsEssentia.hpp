@@ -54,12 +54,12 @@ private:
      @param[out] beatPhase Output location for beat phase result */
     void getTempo(juce::AudioBuffer<float>* audio, std::atomic<double>* progress, int& bpm, int& beatPhase);
     
-    /** Determines an overall tempo and beat phase from the provided beat grid,
-     by finding the values which are dominnat across the constant sections of the beat grid.
+    /** Determines an overall beat phase from the provided beat grid,
+     by finding sections with constant tempo and determining the most dominant phase in those.
      This is called by getTempo() after beat tracking is performed.
     
      @param[in] beats Beat grid (array of beat positions)
-     @param[out] bpm Output location for tempo result
+     @param[in] bpm Output location for tempo result
      @param[out] beatPhase Output location for beat phase result */
     void processBeats(std::vector<double> beats, int bpm, int& beatPhase);
     

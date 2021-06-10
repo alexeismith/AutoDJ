@@ -67,18 +67,31 @@ public:
     /** Checks the state of the directory parsing process.
      
      @param[out] progress Fractional progress value (0.0 to 1.0)
-     @param[out] validDirectory If loading is complete, this indicates whether the directory is valid
      
      @return True if loading has completed (progress variable is not a safe indicator of this) */
-    bool isLoading(double& progress, bool& validDirectory);
+    bool isLoading(double& progress);
     
-    /** Checks the state of the analysis process
+    /** Checks whether the loaded directory had enough valid tracks.
+     
+     @return Result of the check */
+    bool isDirectoryValid() { return validDirectory.load(); }
+    
+    /** Checks whether analysis has finished and fetches a progress update.
      
      @param[out] progress Fractional progress of analysis (0.0 to 1.0)
-     @param[out] canStartPlaying Indicates whether there are now enough analysed tracks to begin the DJ mix
      
      @return True if analysis is fully complete (progress variable is not a safe indicator of this) */
-    bool analysisProgress(double& progress, bool& canStartPlaying);
+    bool isAnalysisFinished(double& progress);
+    
+    /** Checks whether analysis if finished, without returning a progress update.
+     
+     @return True if analysis is fully complete */
+    bool isAnalysisFinished();
+    
+    /** Checks whether the DJ mix can begin, which requires a valid music directory loaded, and enough tracks analysed.
+     
+     @return Result of the check */
+    bool canStartPlaying();
     
     /** Loads the audio data for a given file, optionally converting stereo to mono.
      

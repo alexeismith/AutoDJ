@@ -88,20 +88,32 @@ void DataManager::storeAnalysis(TrackInfo* track)
 }
 
 
-bool DataManager::isLoading(double& progress, bool& valid)
+bool DataManager::isLoading(double& progress)
 {
     progress = parser->getProgress();
-    
-    valid = validDirectory.load();
-    
     return (parser->isThreadRunning());
 }
 
 
-bool DataManager::analysisProgress(double& progress, bool& canStartPlaying)
+bool DataManager::isAnalysisFinished(double& progress)
 {
-    canStartPlaying = numTracksAnalysed >= NUM_TRACKS_MIN;
     return analysisManager->isFinished(progress);
+}
+
+
+bool DataManager::isAnalysisFinished()
+{
+    double progressTemp;
+    return analysisManager->isFinished(progressTemp);
+}
+
+
+bool DataManager::canStartPlaying()
+{
+    if (validDirectory.load() && numTracksAnalysed >= NUM_TRACKS_MIN)
+        return true;
+    
+    return false;
 }
 
 

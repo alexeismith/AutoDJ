@@ -210,11 +210,8 @@ void MainComponent::timerCallback()
     // If in a loading files state
     if (loadingFiles)
     {
-        // Declare variable to store whether the selected directory is valid
-        bool validDirectory;
-        
         // Check the progress of the file parsing (loadingProgress and validDirectory are both output arguments here)
-        if (!dataManager->isLoading(loadingProgress, validDirectory))
+        if (!dataManager->isLoading(loadingProgress))
         {
             // If loading has completed...
             
@@ -226,7 +223,7 @@ void MainComponent::timerCallback()
             loadingProgress = 0.0;
             
             // If the directory was not valid, show an error message and return
-            if (!validDirectory)
+            if (!dataManager->isDirectoryValid())
             {
                 // Construct error message
                 std::stringstream errorMessage;
@@ -243,11 +240,21 @@ void MainComponent::timerCallback()
             
             // Set the start screen flag to false
             startScreen = false;
-            // We are now waiting for audio analysis to complete
-            // (this is automatically reset if there are no new files to analyse)
-            waitingForAnalysis = true;
-            // Show the analysis progress bar
-            analysisProgress->setVisible(true);
+            
+            // If analysis is underway...
+            if (!dataManager->isAnalysisFinished())
+            {
+                // We are now waiting for audio analysis to complete
+                // (this is automatically reset if there are no new files to analyse)
+                waitingForAnalysis = true;
+                // Show the analysis progress bar
+                analysisProgress->setVisible(true);
+            }
+            
+            if (dataManager->canStartPlaying())
+            {
+                toolBar->setCanPlay(true);
+            }
             
             // Tell the Library view to load the files into its table
             libraryView->loadFiles();
@@ -267,11 +274,8 @@ void MainComponent::timerCallback()
     // Or if waiting for files to be analysed
     else if (waitingForAnalysis)
     {
-        // Declare variable to store whether playback can be started
-        bool canStartPlaying;
-        
         // Get an analysis progress update from the data manager (loadingProgress and canStartPlaying are both output arguments here)
-        if (dataManager->analysisProgress(loadingProgress, canStartPlaying))
+        if (dataManager->isAnalysisFinished(loadingProgress))
         {
             // If analysis has finished, reset the state flag and hide the progress bar
             waitingForAnalysis = false;
@@ -284,7 +288,7 @@ void MainComponent::timerCallback()
         }
         
         // If there are now enough analysed files, we can enable the play button
-        if (canStartPlaying)
+        if (dataManager->canStartPlaying())
             toolBar->setCanPlay(true);
     }
     

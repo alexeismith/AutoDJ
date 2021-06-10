@@ -126,7 +126,7 @@ public:
     int bpm = -1; ///< Tempo in beats-per-minute
     int beatPhase = -1; ///< Phase of beat grid, measured in audio samples, as an offset from the very first sample
     int downbeat = -1; ///< Index of first downbeat, indicating which of the first four beats is a downbeat (can also be thought of as the phase of downbeats)
-    int key = -1; ///< Musical key signature
+    int key = -1; ///< Musical key signature, chromatic key is used for storage, rather than Camelot, because it is a simpler representation
     float groove = -1.f; ///< The track's danceability metric
     
     

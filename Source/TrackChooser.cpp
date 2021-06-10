@@ -128,35 +128,21 @@ void TrackChooser::printChoice(TrackInfo* track)
 
 void TrackChooser::updatePosition()
 {
-    const double momentum = 0.9;
+    const double randomness = 0.15;
     
-    accelerationBpm = accelerationBpm*momentum + randomGenerator->getGaussian(0.5)*(1.0 - momentum);
-    accelerationGroove = accelerationGroove*momentum + randomGenerator->getGaussian(0.5)*(1.0 - momentum);
+    // Adjust BPM and groove acceleration, using a normal distribution with standard deviation of 0.5
+    accelerationBpm += randomGenerator->getGaussian(0.5) * randomness;
+    accelerationGroove += randomGenerator->getGaussian(0.5) * randomness;
     
+    // Add the acceleration to the velocity
     velocityBpm += accelerationBpm;
     velocityGroove += accelerationGroove;
     
+    // Limit velocity to +-1
     velocityBpm = juce::jlimit(-1.0, 1.0, velocityBpm);
     velocityGroove = juce::jlimit(-1.0, 1.0, velocityGroove);
     
+    // Apply the velocity for this update
     currentBpm += velocityBpm;
     currentGroove += velocityGroove;
-    
-    // TODO: check the values are within a valid range
-    
-//    DBG("velocityBpm: " << velocityBpm << " velocityGroove: " << velocityGroove);
-}
-
-
-int KeySorter::compareElements(TrackInfo* first, TrackInfo* second)
-{
-    int compatibilityFirst = reference.compability(CamelotKey(first->key));
-    int compatibilitySecond = reference.compability(CamelotKey(second->key));
-    
-    if (compatibilityFirst > compatibilitySecond)
-        return -1;
-    else if (compatibilitySecond > compatibilityFirst)
-        return 1;
-    
-    return 0;
 }

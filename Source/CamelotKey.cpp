@@ -15,30 +15,38 @@ int CamelotKey::compability(CamelotKey key)
     // See the following page for a guide on how camelot harmonic mixing works:
     // https://mixedinkey.com/harmonic-mixing-guide/
     
-    if (key.value == value)
+    // Scoring:
+    // 2: keys are the same, 1: keys are not equal, but still compatible, 0: keys are not compatible
+    
+    if (key.value == value) // Keys have same tonic
     {
-        if (key.major == major)
+        if (key.major == major) // Keys are the same - very compatible
             return 2;
-        else
+        else // Keys have same tonic, different modes - compatible
             return 1;
     }
-    else if (key.major == major)
+    else if (key.major == major) // Keys have same mode (not necessarily major)
     {
-        if (abs(key.value - value) == 1)
+        if (abs(key.value - value) == 1) // Keys are adjacent on Camelot wheel - compatible
             return 1;
     }
     
+    // Keys are not the same, and not adjacent - not compatible
     return 0;
 }
 
 
-int CamelotKey::sort(CamelotKey first, CamelotKey second)
+int CamelotKey::sortByName(CamelotKey first, CamelotKey second)
 {
+    // Sorts the two provided keys in terms of their names...
+    
+    // Ascending Camelot number...
     if (first.value < second.value)
         return -1;
     else if (first.value > second.value)
         return 1;
     
+    // Minor before major (for the same tonic)...
     if (!first.major && second.major)
         return -1;
     else if (first.major && !second.major)
@@ -82,11 +90,18 @@ juce::Colour CamelotKey::getColour()
 
 void CamelotKey::fromChromaKey(int chromaKey)
 {
-    if (chromaKey > 12)
-        major = false;
-    else
-        major = true;
+    // Convert a chromatic key number to Camelot representation...
     
+    //
+    
+    // Chromatic key is in the range 1-24, where 1-12 is major and 13-24 is minor
+    if (chromaKey <= 12)
+        major = true;
+    else
+        major = false;
+    
+    // The tonic notes ascend chromatically within those ranges, e.g: 1 = C, 2 = Db, 13 = Cm, 14 = Dbm
+    // Map the chromatic note number to Camelot number, using the wheel as reference: https://mixedinkey.com/harmonic-mixing-guide/
     switch(chromaKey)
     {
         case 1:
@@ -166,4 +181,22 @@ void CamelotKey::fromChromaKey(int chromaKey)
         default:
             jassert(false); // chromaKey not recognised
     }
+}
+
+
+int KeySorter::compareElements(TrackInfo* first, TrackInfo* second)
+{
+    // Get the compatibility of each key with the reference key
+    int compatibilityFirst = reference.compability(CamelotKey(first->key));
+    int compatibilitySecond = reference.compability(CamelotKey(second->key));
+    
+    // Compare the compatibility ratings
+    // JUCE element comparator architecture dictates that:
+    // -1 if first element sorts higher, 1 if second element sorts higher, 0 if it's a draw
+    if (compatibilityFirst > compatibilitySecond)
+        return -1;
+    else if (compatibilitySecond > compatibilityFirst)
+        return 1;
+    
+    return 0;
 }

@@ -110,10 +110,14 @@ void ToolBarComponent::paint(juce::Graphics& g)
 
 void ToolBarComponent::timerCallback()
 {
+    // If we are waiting for the DJ to initialise the mix queue
     if (waitingForDJ)
     {
+        // Check wether the mix queue is now initialised
         if (dj->isInitialised())
         {
+            // If initialised, the mix is now playing...
+            
             waitingForDJ = false;
             playing = true;
             playPauseBtn->setAlpha(1.f);
@@ -122,20 +126,30 @@ void ToolBarComponent::timerCallback()
         }
         else
         {
+            // If the DJ is still thinking, reflect this by animating the play button...
+            
+            // Use the current time to generate a sine signal
             juce::uint32 seconds = juce::Time::getApproximateMillisecondCounter();
             double sine = (std::sin(double(seconds) / 150) + 1.0) / 3.0;
+            // Apply the sine signal to the transparency of the play button
             playPauseBtn->setAlpha(sine + 0.3f);
         }
     }
     
+    // If the audio processor says the mix has finished, and we haven't reacted to it here
     if (audioProcessor->mixEnded() && !ended)
     {
+        // Set playback at paused
         setPlayPause(false);
-        
+        // Set the mix end flag
         ended = true;
     }
     
-    skipBtn->setEnabled(dj->canSkip() && ((MainComponent*)mainComponent)->validAudioSettings());
+    // If the DJ is ready, and the audio hardware settings are valid, enable the skip button
+    if (dj->canSkip() && ((MainComponent*)mainComponent)->validAudioSettings())
+        skipBtn->setEnabled(true);
+    else // Otherwise, disable it
+        skipBtn->setEnabled(false);
 }
 
 
@@ -178,7 +192,11 @@ void ToolBarComponent::buttonClicked(juce::Button* button)
             break;
 
         case ComponentID::settingsBtn:
-            changeView(ViewID::settings);
+            // If the settings view is not already showing, show it
+            if (currentView != ViewID::settings)
+                changeView(ViewID::settings);
+            else // Otherwise, show the previous view
+                changeView(prevView);
             break;
             
         default:
@@ -216,33 +234,35 @@ void ToolBarComponent::setPlayPause(bool play)
 
 void ToolBarComponent::changeView(ViewID view)
 {
+    // First, set all the tab buttons to the 'unselected' colour
     libraryBtn->setColour(juce::TextButton::ColourIds::buttonColourId, colourBackground.withBrightness(0.24f));
     directionBtn->setColour(juce::TextButton::ColourIds::buttonColourId, colourBackground.withBrightness(0.24f));
     mixBtn->setColour(juce::TextButton::ColourIds::buttonColourId, colourBackground.withBrightness(0.24f));
     
+    // Tell the main UI to change view
     ((MainComponent*)mainComponent)->changeView(view);
     
+    // Set the relevant tab button to the 'selected' colour
+    // (All are already unselected if we are changing to the settings view)
     switch (view)
     {
         case ViewID::library:
             libraryBtn->setColour(juce::TextButton::ColourIds::buttonColourId, getLookAndFeel().findColour(juce::TextButton::ColourIds::buttonOnColourId));
             break;
             
-        case ViewID::direction: directionBtn->setColour(juce::TextButton::ColourIds::buttonColourId, getLookAndFeel().findColour(juce::TextButton::ColourIds::buttonOnColourId));
+        case ViewID::direction:
+            directionBtn->setColour(juce::TextButton::ColourIds::buttonColourId, getLookAndFeel().findColour(juce::TextButton::ColourIds::buttonOnColourId));
             break;
             
         case ViewID::mix:
             mixBtn->setColour(juce::TextButton::ColourIds::buttonColourId, getLookAndFeel().findColour(juce::TextButton::ColourIds::buttonOnColourId));
             break;
             
-        case ViewID::settings:
-            if (currentView == ViewID::settings)
-            {
-                changeView(prevView);
-                return;
-            }
+        default:
+            break;
     }
     
+    // Update the current and previous view trackers
     prevView = currentView;
     currentView = view;
 }

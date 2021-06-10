@@ -309,13 +309,13 @@ void MainComponent::timerCallback()
         // Change to the audio settings
         toolBar->showSettings();
         
+        // Log an error as shown - must do this before showing error so no more are shown
+        errorShown.store(true);
+        
         // Create error message about sample rate
         juce::String errorMessage = "Unsupported Sample Rate: please set to " + juce::String(SUPPORTED_SAMPLERATE) + "Hz.";
         // Show an error window containing the message
         juce::AlertWindow::showMessageBox(juce::AlertWindow::WarningIcon, "Error", errorMessage, "OK");
-        
-        // Log an error as shown
-        errorShown.store(true);
     }
     
     // If the audio processor says the mix has ended, and the flag here hasn't updated yet

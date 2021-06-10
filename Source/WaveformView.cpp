@@ -91,16 +91,24 @@ void WaveformView::clearMarkers()
 
 void WaveformView::scroll(juce::Point<int> pos)
 {
+    // If this view is not supposed to be scrollable, abort
     if (!scrollable) return;
     
+    // If a scroll has not yet been initiated
     if (!scrolling)
+        // If the mouse is not within the bounds of the scrollbar, abort
         if (!scrollBar->getBounds().contains(pos)) return;
     
+    // A scroll is now initiated
     scrolling = true;
     
+    // Get the mouse x-coord, limited to the width of the scrollbar
     double xPos = juce::jlimit(0, getWidth() - scrollBar->getWindowWidth()/2 - 3, pos.getX());
-    
+    // Find the proportion of the scrollbar that this position represents
     double proportionX = xPos / getWidth();
+    
+    // Update the track playhead position based on the mouse scroll position
     update(trackLength * proportionX);
+    // Trigger a repaint of the waveforms
     repaint();
 }

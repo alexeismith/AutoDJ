@@ -72,8 +72,6 @@ void CamelotKey::fromChromaKey(int chromaKey)
 {
     // Convert a chromatic key number to Camelot representation...
     
-    //
-    
     // Chromatic key is in the range 1-24, where 1-12 is major and 13-24 is minor
     if (chromaKey <= 12)
         major = true;

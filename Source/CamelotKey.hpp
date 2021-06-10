@@ -54,7 +54,7 @@ private:
      */
     void fromChromaKey(int chromaKey);
     
-    int value; ///< Camelot number, indicating the tonic of this key signature (see Camelot wheel)
+    int value = -1; ///< Camelot number, indicating the tonic of this key signature (see Camelot wheel)
     bool major; ///< Mode of this key signature
     
     // Give KeySorter access to private member variables

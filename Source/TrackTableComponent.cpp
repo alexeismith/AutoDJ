@@ -152,7 +152,7 @@ int TrackTableSorter::compareElements(TrackInfo* first, TrackInfo* second)
             else result = first->bpm > second->bpm ? 1 : -1;
             break;
         case TrackTableColumns::key:
-            result = CamelotKey::sortByName(CamelotKey(first->key), CamelotKey(second->key));
+            result = KeySorter::sortByName(CamelotKey(first->key), CamelotKey(second->key));
             break;
         case TrackTableColumns::groove:
             if (first->groove == second->groove) result = 0;

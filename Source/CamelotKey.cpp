@@ -36,26 +36,6 @@ int CamelotKey::compability(CamelotKey key)
 }
 
 
-int CamelotKey::sortByName(CamelotKey first, CamelotKey second)
-{
-    // Sorts the two provided keys in terms of their names...
-    
-    // Ascending Camelot number...
-    if (first.value < second.value)
-        return -1;
-    else if (first.value > second.value)
-        return 1;
-    
-    // Minor before major (for the same tonic)...
-    if (!first.major && second.major)
-        return -1;
-    else if (first.major && !second.major)
-        return 1;
-    
-    return 0;
-}
-
-
 juce::String CamelotKey::getName()
 {
     if (value == -1)
@@ -196,6 +176,26 @@ int KeySorter::compareElements(TrackInfo* first, TrackInfo* second)
     if (compatibilityFirst > compatibilitySecond)
         return -1;
     else if (compatibilitySecond > compatibilityFirst)
+        return 1;
+    
+    return 0;
+}
+
+
+int KeySorter::sortByName(CamelotKey first, CamelotKey second)
+{
+    // Sorts the two provided keys in terms of their names...
+    
+    // Ascending Camelot number...
+    if (first.value < second.value)
+        return -1;
+    else if (first.value > second.value)
+        return 1;
+    
+    // Minor before major (for the same tonic)...
+    if (!first.major && second.major)
+        return -1;
+    else if (first.major && !second.major)
         return 1;
     
     return 0;

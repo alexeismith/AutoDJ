@@ -32,15 +32,6 @@ public:
      @return 2: keys are equal, 1: keys are not equal, but still compatible, 0: keys are not compatible */
     int compability(CamelotKey key);
     
-    /** Sorts the two provided keys in terms of their names.
-     (Ascending Camelot number, and minor before major)
-     
-     @param[in] first Pointer to first track to be compared
-     @param[in] second Pointer to second track to be compared
-     
-     @return -1 if first element sorts higher, 1 if second element sorts higher, 0 if it's a draw */
-    static int sortByName(CamelotKey first, CamelotKey second);
-    
     /** Generates the name of this key.
      
      @return Camelot key name */
@@ -63,8 +54,11 @@ private:
      */
     void fromChromaKey(int chromaKey);
     
-    int value = -1; ///< Camelot number, indicating the tonic of this key signature (see Camelot wheel)
+    int value; ///< Camelot number, indicating the tonic of this key signature (see Camelot wheel)
     bool major; ///< Mode of this key signature
+    
+    // Give KeySorter access to private member variables
+    friend class KeySorter;
     
 };
 
@@ -78,7 +72,7 @@ class KeySorter
 {
 public:
     
-    /** Constructor. */
+    /** Constructor - sets the key to compare against for the compareElements() function. */
     KeySorter(CamelotKey referenceKey) : reference(referenceKey) {}
     
     /** Destructor. */
@@ -91,6 +85,15 @@ public:
     
     @return -1 if first element sorts higher, 1 if second element sorts higher, 0 if it's a draw */
     int compareElements(TrackInfo* first, TrackInfo* second);
+    
+    /** Sorts the two provided keys in terms of their names.
+     (Ascending Camelot number, and minor before major)
+     
+     @param[in] first Pointer to first track to be compared
+     @param[in] second Pointer to second track to be compared
+     
+     @return -1 if first element sorts higher, 1 if second element sorts higher, 0 if it's a draw */
+    static int sortByName(CamelotKey first, CamelotKey second);
     
 private:
     

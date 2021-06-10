@@ -33,30 +33,30 @@ void AudioProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& outpu
     if (skipFlag.load())
         skipToNextEvent();
     
+    // If audio is paused, return
     if (paused.load())
         return;
     
+    // Find which is the leading track processor (i.e. the one playing the current track)
     getTrackProcessors(&leader, &follower);
-    
-    if (leader)
-    {
-        int playhead = leader->getNextAudioBlock(outputBuffer);
-        follower->getNextAudioBlock(outputBuffer);
-        
-        // Check whether the follower should start playing, if it isn't already
-        follower->cue(playhead);
-    }
-    else
-    {
+    // If no leader was found, throw a debug error
+    if (!leader)
         jassert(false); // No leader!
-    }
     
+    // Process audio through the leader and follower (order here doesn't matter)
+    leader->getNextAudioBlock(outputBuffer);
+    follower->getNextAudioBlock(outputBuffer);
+    
+    // Check whether the follower should start playing, if it isn't already
+    follower->cue(leader->getPlayheadPosition());
+    
+    // If the output volume isn't at the target set in the UI, ramp to the target value over the duration of the audio buffer
     if (volume != targetVolume.load())
     {
         outputBuffer.buffer->applyGainRamp(outputBuffer.startSample, outputBuffer.numSamples, volume, targetVolume.load());
         volume = targetVolume.load();
     }
-    else
+    else // Otherwise, just apply the current output volume
     {
         outputBuffer.buffer->applyGain(outputBuffer.startSample, outputBuffer.numSamples, volume);
     }

@@ -23,36 +23,50 @@ TrackProcessor::TrackProcessor(DataManager* dm, ArtificialDJ* DJ) :
 }
 
 
-int TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& outputBuffer)
+void TrackProcessor::getNextAudioBlock(const juce::AudioSourceChannelInfo& outputBuffer)
 {
-    if (!ready.load()) return false;
+    // If a track isn't loaded, return
+    if (!ready.load()) return;
     
     const juce::ScopedLock sl(lock);
     
-    if (play)
+    // If this track should not be playing yet, return
+    if (!play)
+        return;
+
+    // Throw a debug error if the intermediate audio buffer is not the same size as the output
+    // We perform processing for this track in an intermediate buffer,
+    // so that any samples already in the output buffer are not disurbed
+    if (processBuffer.getNumSamples() != outputBuffer.numSamples) jassert(false);
+    
+    // The number of output samples required is outputBuffer.numSamples
+    // We need to fetch that many samples of the track POST-stretch
+    // This function gets the stretched samples and return the number of input samples that were processed (PRE-stretch)
+    // See TimeStretcher for more info on the time-strech factor and its effects
+    int numProcessed = stretcher->process(track->audio, &processBuffer, outputBuffer.numSamples);
+    
+    // Update the track parameters based on how many samples were processed
+    // The timing of mix parameters in MixInfo is measured in terms of the original track audio,
+    // hence we update by the number of PRE-stretch samples that were processed, to progress the parameters according to the original audio
+    update(numProcessed);
+    
+    // Apply any crossfade gain
+    processBuffer.applyGain(std::sqrt(track->gain.currentValue));
+    
+    // If the high-pass crossfade filtering is active, apply the left and right channel filters
+    if (filterOn)
     {
-        if (processBuffer.getNumSamples() != outputBuffer.numSamples) jassert(false);
-        
-        int numProcessed = stretcher->process(track->audio, &processBuffer, outputBuffer.numSamples);
-        
-        update(numProcessed);
-        
-        processBuffer.applyGain(std::sqrt(track->gain.currentValue));
-        
-        if (filterOn)
-        {
-            highPassFilterL.processSamples(processBuffer.getWritePointer(0), outputBuffer.numSamples);
-            highPassFilterR.processSamples(processBuffer.getWritePointer(1), outputBuffer.numSamples);
-        }
-        
-        outputBuffer.buffer->addFrom(0, outputBuffer.startSample, processBuffer.getReadPointer(0), outputBuffer.numSamples);
-        outputBuffer.buffer->addFrom(1, outputBuffer.startSample, processBuffer.getReadPointer(1), outputBuffer.numSamples);
-        
-        if (trackEnd)
-            loadNextTrack();
+        highPassFilterL.processSamples(processBuffer.getWritePointer(0), outputBuffer.numSamples);
+        highPassFilterR.processSamples(processBuffer.getWritePointer(1), outputBuffer.numSamples);
     }
     
-    return track->getPlayhead();
+    // Add the processed audio from the intermediate buffer into the output
+    outputBuffer.buffer->addFrom(0, outputBuffer.startSample, processBuffer.getReadPointer(0), outputBuffer.numSamples);
+    outputBuffer.buffer->addFrom(1, outputBuffer.startSample, processBuffer.getReadPointer(1), outputBuffer.numSamples);
+    
+    // If the track has ended, load the next one
+    if (trackEnd)
+        loadNextTrack();
 }
 
 
@@ -129,10 +143,15 @@ void TrackProcessor::prepare(int blockSize)
 
 void TrackProcessor::cue(int leaderPlayhead)
 {
+    // If this processor is not already playing, and the leading processor
+    // has reached the point where the transition should start...
     if (!play && leaderPlayhead >= currentMix.leaderStart)
     {
+        // Set the playhead to the start point
         resetPlayhead(currentMix.followerStart + (leaderPlayhead - currentMix.leaderStart));
+        // Start this track
         play = true;
+        // Update the track info so it shows as playing in the Library and Direction views
         track->info->playing = true;
         dataManager->trackDataUpdate.store(true);
     }
@@ -143,20 +162,26 @@ void TrackProcessor::skipToNextEvent()
 {
     jassert(isLeader()); // Must invoke this call on the leader only!
     
+    // Fetch the track playhead and current mix
     int playhead = track->getPlayhead();
     MixInfo* mix = track->getCurrentMix();
     
+    // If we have not yet reached the next transition
     if (playhead < mix->leaderStart)
     {
+        // Skip to the next transition
         playhead = mix->leaderStart;
         track->bpm.resetTo(mix->bpm);
     }
+    // Otherwise, if we are mid-transition
     else if (playhead < mix->leaderEnd)
     {
+        // Skip to the end of the transition
         playhead = mix->leaderEnd;
         partner->resetPlayhead(mix->followerEnd);
     }
     
+    // Apply the playhead change
     resetPlayhead(playhead);
 }
 
@@ -180,6 +205,7 @@ void TrackProcessor::reset()
 
 void TrackProcessor::setHighPass(int frequency)
 {
+    // If the supplied frequency is 0, just turn off filtering and reset
     if (frequency <= 0)
     {
         filterOn = false;
@@ -187,6 +213,7 @@ void TrackProcessor::setHighPass(int frequency)
         highPassFilterR.reset();
         return;
     }
+    // Otherwise, filtering is active so apply the filters of the left and right channels...
     
     filterOn = true;
     

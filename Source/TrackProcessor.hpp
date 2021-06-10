@@ -32,10 +32,8 @@ public:
     
     /** Audio processing loop - applies mixing parameters.
     
-     @param[out] outputBuffer Buffer to fill with desired audio output samples
-     
-     @return Playhead position reached in track (used for synchronising leader and follower) */
-    int getNextAudioBlock(const juce::AudioSourceChannelInfo& outputBuffer);
+     @param[out] outputBuffer Buffer to fill with desired audio output samples */
+    void getNextAudioBlock(const juce::AudioSourceChannelInfo& outputBuffer);
     
     /** Fetches the Track data structure.
      This contains a pointer to the TrackInfo for the currently loaded track,
@@ -91,6 +89,11 @@ public:
      
      @return Information on the current/next transition */
     MixInfo getCurrentMix() { return currentMix; }
+    
+    /** Fetches the current position in the track, in samples.
+     
+     @return Current playhead position */
+    int getPlayheadPosition() { return track->getPlayhead(); }
     
     /** Synchronises the start of this processor with the provided leader playhead position.
      Only used when this is the following TrackProcessor.

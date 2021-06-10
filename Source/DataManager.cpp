@@ -75,7 +75,7 @@ void DataManager::storeAnalysis(TrackInfo* track)
     database.store(*track);
 
     // Pass the track to the sorter
-    sorter.addAnalysed(track);
+    sorter.addTrack(track);
     
     // Pass the track to the direction view
     directionView->addAnalysed(track);
@@ -211,7 +211,7 @@ void DataManager::parseFile(juce::File file)
         if (trackInfo.analysed)
         {
             analysisManager->processResult(trackPtr);
-            sorter.addAnalysed(trackPtr);
+            sorter.addTrack(trackPtr);
             directionView->addAnalysed(trackPtr);
             
             trackDataUpdate.store(true);
@@ -286,7 +286,7 @@ void DataManager::clearHistory()
             
             analysisManager->processResult(track);
             
-            sorter.addAnalysed(track);
+            sorter.addTrack(track);
             
             // Pass the track to the direction view
             directionView->addAnalysed(track);

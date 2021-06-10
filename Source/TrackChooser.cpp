@@ -71,7 +71,7 @@ TrackInfo* TrackChooser::chooseTrack()
     // This returns the track nearest in both BPM and groove
     for (int i = 0; i < numCandidates; i++)
     {
-        candidate = sorter->findClosestAndRemove(currentBpm, currentGroove);
+        candidate = sorter->removeClosestTrack(currentBpm, currentGroove);
         if (candidate == nullptr)
             break;
         candidates.add(candidate);
@@ -104,7 +104,7 @@ TrackInfo* TrackChooser::chooseTrack()
     candidates.remove(choice);
     // Add others into tree
     for (auto track : candidates)
-        sorter->addAnalysed(track);
+        sorter->addTrack(track);
     
     printChoice(result);
     

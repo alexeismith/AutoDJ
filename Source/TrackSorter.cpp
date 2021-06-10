@@ -18,7 +18,7 @@ TrackSorter::TrackSorter()
 }
 
 
-void TrackSorter::addAnalysed(TrackInfo* track)
+void TrackSorter::addTrack(TrackInfo* track)
 {
     const juce::ScopedLock sl(lock);
     
@@ -26,7 +26,7 @@ void TrackSorter::addAnalysed(TrackInfo* track)
 }
 
 
-TrackInfo* TrackSorter::findClosestAndRemove(float bpm, float groove)
+TrackInfo* TrackSorter::removeClosestTrack(float bpm, float groove)
 {
     TrackInfo* const result = *tree->findClosest(quadtree::Box<float>(bpm, groove*GROOVE_MULTIPLIER, 0.f, 0.f));
     

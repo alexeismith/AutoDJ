@@ -12,12 +12,16 @@
 
 int TrackInfo::getSampleOfBeat(int beat)
 {
+    if (!analysed) jassert(false); // Track must be analysed to calculate this!
+    
     return beat * getBeatPeriod() + beatPhase;
 }
 
 
 int TrackInfo::getNearestDownbeat(int sample)
 {
+    if (!analysed) jassert(false); // Track must be analysed to calculate this!
+    
     if (sample <= getFirstDownbeat())
         return getFirstDownbeat();
     
@@ -36,18 +40,24 @@ int TrackInfo::getNearestDownbeat(int sample)
 
 int TrackInfo::getBeatPeriod()
 {
+    if (!analysed) jassert(false); // Track must be analysed to calculate this!
+    
     return AutoDJ::getBeatPeriod(bpm);
 }
 
 
 int TrackInfo::getBarLength()
 {
+    if (!analysed) jassert(false); // Track must be analysed to calculate this!
+    
     return getBeatPeriod() * BEATS_PER_BAR;
 }
 
 
 int TrackInfo::getLengthSamples()
 {
+    if (!analysed) jassert(false); // Track must be analysed to calculate this!
+    
     return length * SUPPORTED_SAMPLERATE;
 }
 

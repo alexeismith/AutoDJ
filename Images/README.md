@@ -1,0 +1,1 @@
+These are bespoke AutoDJ images/icons created in Adobe Photoshop and Illustrator

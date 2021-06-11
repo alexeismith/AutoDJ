@@ -8,6 +8,11 @@ The software was designed by Alexei Smith as part of a study exploring audio ana
 
 <em>"Music Information Retrieval (MIR) allows musical knowledge to be extracted directly from audio data. The field of research is maturing and there are now many powerful techniques in temporal, tonal and higher-level analysis, which can be used in combination to build intelligent music systems. A number of automatic DJ systems have been developed in the past, but the primary focus has been on modelling a human DJ using MIR algorithms. This project looks at automatic DJ software from a user perspective, investigating how it can be designed to meet user needs, as well as where it fits into the larger world of DJing and music performance. AutoDJ is a fully-automatic desktop app, written in C++, which can produce a coherent mix of dance music tracks. The mixing decisions are driven by a combination of beat tracking, key signature detection, track segmentation and danceability analysis. Powerful off-beat transients are a stylistic feature of house music and surrounding dance-focused genres, which often confuse the phase estimation of beat-tracking algorithms. A novel method for correcting beat phase estimations is discussed, which uses correlation with pulse trains (Percival & Tzanetakis, 2014) to establish whether an existing estimate is offset by half a beat period. A pipeline for modelling the creativity of a human performer is proposed, with a discussion of how this can be integrated into AutoDJ. In a test with 18 users, the software was rated highly and results suggested there is a strong use case for automatic DJ software on desktop. Future open-source development objectives are proposed, with the aim of readying AutoDJ for a wider test and subsequent release. The testing methodology used here can serve as a framework for further investigations into the automation of music performance."</em>
 
+### Documentation
+
+A full class list can be found here: [Doxygen](https://codedocs.xyz/alexeismith/AutoDJ/annotated.html)
+
+Other documentation can be found on the [wiki](https://github.com/alexeismith/AutoDJ/wiki/).
 
 ## Installing
 

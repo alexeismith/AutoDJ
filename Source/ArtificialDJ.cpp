@@ -138,24 +138,35 @@ void ArtificialDJ::removeMix(MixInfo mix)
 
 void ArtificialDJ::initialise()
 {
+    // Fetch the track processors
+    // (Doesn't matter which one becomes the leader)
     TrackProcessor* leader = audioProcessor->getTrackProcessor(0);
     TrackProcessor* follower = audioProcessor->getTrackProcessor(1);
     
+    // Initialise the track chooser
     chooser->initialise();
     
+    // Choose the first track to play
     TrackInfo* firstTrack = chooser->chooseTrack();
+    // This track will lead the mix, until a transition to the next track is fully completed
     leadingTrack = firstTrack;
     
+    // Load the audio for the first track
     juce::AudioBuffer<float>* firstTrackAudio = dataManager->loadAudio(firstTrack->getFilename());
+    // Find musical segments in the first track
     leadingTrackSegments = segmenter.analyse(firstTrack, firstTrackAudio);
     
+    // Generate the first transition (this picks the second track)
     generateMix();
     
+    // Tell the processors to load the track information and prepare to play
     leader->loadFirstTrack(firstTrack, true, firstTrackAudio);
     follower->loadFirstTrack(leadingTrack, false);
     
+    // Initialisation is complete
     initialised.store(true);
     
+    // We are currently paused, so play
     playPause();
 }
 
@@ -167,9 +178,11 @@ void ArtificialDJ::generateMixSimple()
     if (endingConfirm.load())
         return;
     
+    // Set ID for the new mix
     mix.id = mixIdCounter;
     mixIdCounter += 1;
     
+    // Set the leading track as the previously chosen one
     mix.leadingTrack = leadingTrack;
     
     // Choose a new track to play
@@ -203,22 +216,35 @@ void ArtificialDJ::generateMixSimple()
     
     // Otherwise, we can proceed normally...
     
+    
     mix.nextTrack = nextTrack;
+    
+    // Set the mix bpm to half way between each track
+    mix.bpm = double(mix.leadingTrack->bpm + nextTrack->bpm) / 2;
+    
+    // Load the audio for the next track
     mix.nextTrackAudio = dataManager->loadAudio(nextTrack->getFilename());
     
+    // Choose a constant mix length (see generateMixComplex() for intelligent mixing)
     int mixLengthBeats = 16;
     
+    // LEADING TRACK START --------------------------------------------------------------
+    
+    // We will start the transition 2xmixLengthBeats into the leading track
     int mixStartBeats = mix.leadingTrack->downbeat + 2 * mixLengthBeats;
     
     mix.leaderStart = mix.leadingTrack->getSampleOfBeat(mixStartBeats);
     mix.leaderEnd = mix.leadingTrack->getSampleOfBeat(mixStartBeats + mixLengthBeats);
     
+    // NEXT TRACK START ----------------------------------------------------------------
+    
+    // We will start the next track at its first downbeat
     mixStartBeats = mix.nextTrack->downbeat;
     
     mix.followerStart = mix.nextTrack->getSampleOfBeat(mixStartBeats);
     mix.followerEnd = mix.nextTrack->getSampleOfBeat(mixStartBeats + mixLengthBeats);
     
-    mix.bpm = double(mix.leadingTrack->bpm + mix.nextTrack->bpm) / 2;
+    // FINALISE ------------------------------------------------------------------------
     
     mixQueue.add(mix);
     

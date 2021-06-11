@@ -39,6 +39,10 @@ void WaveformScrollBar::update(int playhead, double timeStretch, double gain)
 {
     if (!ready.load()) return;
     
+    // No stretching needed, so update is much simpler than WaveformComponent::update()
+    // Although the whole waveform is shown, we still need to calculate the visible width
+    // of the zoomed waveform, so we can draw a white window around the corresponding area in the track
+    
     int visibleWidth = getWidth() * timeStretch;
     double playheadAdjust = playhead - double(WAVEFORM_FRAME_SIZE * visibleWidth)/2;
     double multiplier = double(getWidth()) / numFrames;
@@ -55,12 +59,14 @@ void WaveformScrollBar::draw(juce::Array<juce::Colour>* colours, juce::Array<flo
 {
     WaveformComponent::draw(colours, levels);
     
+    // For scrollbar, waveform is simply scaled to the width of the component, so we can see it all
     imageScaled = image.rescaled(getWidth(), getHeight(), juce::Graphics::ResamplingQuality::mediumResamplingQuality);
 }
 
 
 bool WaveformScrollBar::isBeat(int frameIndex, bool& downbeat)
 {
+    // Don't want to draw any beat markers in scroll bar waveform, so exit
     downbeat = false;
     return false;
 }

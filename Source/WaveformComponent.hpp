@@ -93,7 +93,7 @@ protected:
     /** Checks whether a given waveform frame contains a mix marker. */
     bool isMarker(int frameIndex);
     
-    std::atomic<bool> ready; ///< Thread-safe flag to indicate whether the graph data is ready to display
+    std::atomic<bool> ready = false; ///< Thread-safe flag to indicate whether the graph data is ready to display
     
     int numFrames = 0; ///< Number of waveform frames, determined by length of current track
     int startFrame = 0; ///< Index of the first frame to render at the left of the waveform
@@ -112,7 +112,7 @@ private:
     juce::Array<int> markers; ///< Array of mix markers (stored in terms of audio sample, not waveform frame number)
     int markerThickness = 3; ///< Thickness to render mix markers, in pixels
     
-    int imageOffset; ///< Horizontal offset at which to render waveform image, in pixels (determined by playhead position in track)
+    int imageOffset = 0; ///< Horizontal offset at which to render waveform image, in pixels (determined by playhead position in track)
     
     float brightness = 0.0; ///< Brightness at which to render waveform colours, determined by current volume gain of track (0.0 to 1.0)
     

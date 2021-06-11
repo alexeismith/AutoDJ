@@ -40,8 +40,7 @@ private:
     std::unique_ptr<GetKeyMode> keyDetector; ///< QM-DSP key signature detector
     
     juce::Array<int> keys; ///< Intermediate storage for all keys detected within a single track
-    int prevKey; ///< The previous key to be added to the keys array
-    juce::Array<int> changes; ///< Intermediate storage for any locations where the key changes within a single track
+//    juce::Array<int> changes; ///< Intermediate storage for any locations where the key changes within a single track (unused)
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AnalyserKey) ///< JUCE macro to add a memory leak detector

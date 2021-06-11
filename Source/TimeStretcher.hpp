@@ -37,8 +37,6 @@ public:
     @param[in] blockSize Number of audio samples to expect in each processing block */
     void prepare(int blockSize);
     
-    // Returns the number of input samples that correspond to the number output,
-    // taking into account the stretch applied
     /** Time-stretches the supplied audio data.
      First, set the time stretch factor using update().
      The desired number of output samples is specified, while the number of input samples processed depends on the stretch factor.
@@ -47,7 +45,7 @@ public:
      @param[in] output Pointer to buffer in which to place output audio
      @param[in] numSamples Number of samples required in the output
      
-     @return Number of input samples that were processed
+     @return Number of input samples that correspond to the stretched output
      */
     int process(juce::AudioBuffer<float>* input, juce::AudioBuffer<float>* output, int numSamples);
     

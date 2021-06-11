@@ -216,7 +216,6 @@ void ArtificialDJ::generateMixSimple()
     
     // Otherwise, we can proceed normally...
     
-    
     mix.nextTrack = nextTrack;
     
     // Set the mix bpm to half way between each track

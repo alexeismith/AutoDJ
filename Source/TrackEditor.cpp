@@ -44,10 +44,13 @@ void TrackEditor::paint(juce::Graphics& g)
 }
 
 
-void TrackEditor::load(Track t)
+void TrackEditor::load(TrackInfo* t)
 {
-    track = t;
+    track = Track();
+    track.info = t;
     track.audio = nullptr;
+    trackAnalysed = t->analysed;
+    
     
 #ifdef SHOW_SEGMENTS
     
@@ -71,4 +74,17 @@ void TrackEditor::load(Track t)
     message = "Loading...";
     
     repaint();
+}
+
+
+void TrackEditor::refresh()
+{
+    if (track.info == nullptr)
+        return;
+    
+    if (!trackAnalysed && track.info->analysed)
+    {
+        waveform->load(&track, true);
+        trackAnalysed = true;
+    }
 }

@@ -35,3 +35,10 @@ void LibraryView::loadFiles()
 {
     trackTable->populate(dataManager->getTracks(), dataManager->getNumTracks());
 }
+
+
+void LibraryView::refresh()
+{
+    trackTable->sort();
+    trackEditor->refresh();
+}

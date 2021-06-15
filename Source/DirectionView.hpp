@@ -40,7 +40,7 @@ public:
     void hiResTimerCallback() override;
     
     /** Triggers a refresh of the track information. */
-    void updateData();
+    void refresh();
     
     /** Adds a newly-analysed track to be displayed.
      

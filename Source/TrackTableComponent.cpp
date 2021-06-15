@@ -47,9 +47,7 @@ void TrackTableComponent::resized()
 void TrackTableComponent::cellClicked(int rowNumber, int columnId, const juce::MouseEvent& e)
 {
     TrackInfo* info = tracksSorted.getReference(rowNumber);
-    Track track;
-    track.info = info;
-    trackEditor->load(track);
+    trackEditor->load(info);
 }
 
 

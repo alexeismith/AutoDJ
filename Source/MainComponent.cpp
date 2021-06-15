@@ -298,8 +298,8 @@ void MainComponent::timerCallback()
         // Reset the flag
         dataManager->trackDataUpdate.store(false);
         // Tell the Library and Direction view to update
-        libraryView->refreshTable();
-        directionView->updateData();
+        libraryView->refresh();
+        directionView->refresh();
     }
     
     // If we are not on the start screen, and the chosen sample rate is invalid,

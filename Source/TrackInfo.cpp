@@ -56,8 +56,6 @@ int TrackInfo::getBarLength()
 
 int TrackInfo::getLengthSamples()
 {
-    if (!analysed) jassert(false); // Track must be analysed to calculate this!
-    
     return length * SUPPORTED_SAMPLERATE;
 }
 

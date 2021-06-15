@@ -37,7 +37,10 @@ public:
     /** Loads a new track into the editor.
      
      @param[in] track Information on the track to be loaded */
-    void load(Track track);
+    void load(TrackInfo* track);
+    
+    /** Reloads the current track if there is new analysis data present. */
+    void refresh();
     
 private:
     
@@ -50,6 +53,8 @@ private:
     juce::String message; ///< String to display when no track is loaded
     
     std::unique_ptr<AnalyserSegments> analyserSegments; ///< Track segmentation analyser, for debugging of the segmentation algorithm (see SHOW_SEGMENTS macro in .cpp file)
+    
+    bool trackAnalysed = false; ///< Indicates whether the current track had analysis data when it was first loaded, used to check wether a reload is necessary
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackEditor) ///< JUCE macro to add a memory leak detector

@@ -30,11 +30,11 @@ public:
     /** Called by the JUCE message when this component is resized - set size/position of child components here. */
     void resized() override;
     
-    /** Triggers the table to be re-sorted - useful when track data has changed. */
-    void refreshTable() { trackTable->sort(); }
-    
     /** Populates the table with tracks from the data manager. */
     void loadFiles();
+    
+    /** Triggers a refresh of the view, which re-sorts the table and tells the track editor to check for new analysis data. */
+    void refresh();
     
 private:
     

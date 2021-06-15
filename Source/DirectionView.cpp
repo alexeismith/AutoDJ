@@ -70,7 +70,7 @@ void DirectionView::hiResTimerCallback()
 }
 
 
-void DirectionView::updateData()
+void DirectionView::refresh()
 {
     TrackDotComponent* dot;
     

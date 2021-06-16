@@ -28,7 +28,7 @@ If you just want to run the AutoDJ app, please see the [releases](https://github
 ### Building in your IDE
 
 ##### Install JUCE
-1. Download and install [JUCE](https://juce.com/get-juce/download) (including the Projucer)
+1. Download and install [JUCE](https://juce.com/get-juce/download) (which comes with the Projucer)
 2. Set up [global module paths](https://forum.juce.com/t/global-module-paths/25299/3) in the Projucer
 
 ##### Clone this repo (in Terminal)
